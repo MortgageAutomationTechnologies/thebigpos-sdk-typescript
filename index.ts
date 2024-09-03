@@ -189,18 +189,10 @@ export interface Attachment {
 }
 
 /** @format int32 */
-export enum BorrowerRelationship {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-}
+export type BorrowerRelationship = NotApplicable | Spouse | NonSpouse;
 
 /** @format int32 */
-export enum BorrowerType {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-}
+export type BorrowerType = Borrower | CoBorrower | Unknown;
 
 export interface BranchReduced {
   /** @format uuid */
@@ -288,7 +280,6 @@ export interface BusinessRuleRequest {
   description?: string | null;
   tasks: TaskRequest[];
   filter: BusinessRuleCondition[];
-  targetUserRole: string;
   applyToAllBorrowerPairs: boolean;
 }
 
@@ -775,21 +766,20 @@ export interface FileSearchCriteria {
 }
 
 /** @format int32 */
-export enum FilterType {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-  Value3 = 3,
-  Value4 = 4,
-  Value5 = 5,
-  Value6 = 6,
-  Value7 = 7,
-  Value8 = 8,
-  Value9 = 9,
-  Value10 = 10,
-  Value11 = 11,
-  Value12 = 12,
-}
+export type FilterType =
+  | DateGreaterThanOrEqualTo
+  | DateGreaterThan
+  | DateLessThan
+  | DateLessThanOrEqualTo
+  | DateEquals
+  | DateDoesntEqual
+  | DateNonEmpty
+  | DateEmpty
+  | StringContains
+  | StringEquals
+  | StringNotEmpty
+  | StringNotEquals
+  | StringNotContains;
 
 export interface FormRequest {
   formJSON: any;
@@ -1320,6 +1310,9 @@ export interface LoanRecord {
   loanFields: Record<string, string>;
 }
 
+/** @format int32 */
+export type LoanTaskRole = Borrowers | Borrower | CoBorrower;
+
 export interface LoanUser {
   /** @format uuid */
   id: string;
@@ -1527,15 +1520,7 @@ export interface Operation {
 }
 
 /** @format int32 */
-export enum OperationType {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-  Value3 = 3,
-  Value4 = 4,
-  Value5 = 5,
-  Value6 = 6,
-}
+export type OperationType = Add | Remove | Replace | Move | Copy | Test | Invalid;
 
 export interface OverridePasswordRequest {
   /** @minLength 8 */
@@ -2097,9 +2082,9 @@ export interface Task {
   deletedAt?: string | null;
   name: string;
   description?: string | null;
-  type: string;
+  type: TaskType;
   losTarget?: string | null;
-  targetUserRole?: string | null;
+  targetUserRole: LoanTaskRole;
   /** @format int32 */
   daysDueFromApplication?: number | null;
   isGlobal: boolean;
@@ -2114,9 +2099,8 @@ export interface TaskRequest {
   name: string;
   description?: string | null;
   losTarget?: string | null;
-  /** @minLength 1 */
-  type: string;
-  targetUserRole?: string | null;
+  type: TaskType;
+  targetUserRole: LoanTaskRole;
   /**
    * @format int32
    * @min 0
@@ -2132,6 +2116,21 @@ export interface TaskSearchCriteria {
   isGlobal?: boolean | null;
   excludedIds?: string[] | null;
 }
+
+/** @format int32 */
+export type TaskType =
+  | Document
+  | Field
+  | Signature
+  | EDisclosure
+  | EConsent
+  | VerificationOfAssets
+  | VerificationOfIncome
+  | VerificationOfEmployment
+  | VerificationOfCredit
+  | Payment
+  | VerificationOfIncomeAndEmployment
+  | VerificationOfTaxes;
 
 export interface TestSendNotificationForLoanRequest {
   loanData: Record<string, string>;
@@ -2443,18 +2442,17 @@ export interface UserRelationshipProspect {
 }
 
 /** @format int32 */
-export enum UserRole {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-  Value3 = 3,
-  Value4 = 4,
-  Value5 = 5,
-  Value6 = 6,
-  Value7 = 7,
-  Value17 = 17,
-  Value1000 = 1000,
-}
+export type UserRole =
+  | Borrower
+  | LoanOfficer
+  | Admin
+  | SuperAdmin
+  | Realtor
+  | SettlementAgent
+  | LoanProcessor
+  | LoanOfficerAssistant
+  | BranchManager
+  | SystemAdmin;
 
 export interface UserSearchCriteria {
   searchText?: string | null;
