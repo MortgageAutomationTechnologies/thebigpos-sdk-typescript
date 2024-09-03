@@ -188,11 +188,9 @@ export interface Attachment {
   base64Data?: string | null;
 }
 
-/** @format int32 */
-export type BorrowerRelationship = NotApplicable | Spouse | NonSpouse;
+export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 
-/** @format int32 */
-export type BorrowerType = Borrower | CoBorrower | Unknown;
+export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 
 export interface BranchReduced {
   /** @format uuid */
@@ -765,21 +763,20 @@ export interface FileSearchCriteria {
   isPublic?: boolean | null;
 }
 
-/** @format int32 */
 export type FilterType =
-  | DateGreaterThanOrEqualTo
-  | DateGreaterThan
-  | DateLessThan
-  | DateLessThanOrEqualTo
-  | DateEquals
-  | DateDoesntEqual
-  | DateNonEmpty
-  | DateEmpty
-  | StringContains
-  | StringEquals
-  | StringNotEmpty
-  | StringNotEquals
-  | StringNotContains;
+  | "DateGreaterThanOrEqualTo"
+  | "DateGreaterThan"
+  | "DateLessThan"
+  | "DateLessThanOrEqualTo"
+  | "DateEquals"
+  | "DateDoesntEqual"
+  | "DateNonEmpty"
+  | "DateEmpty"
+  | "StringContains"
+  | "StringEquals"
+  | "StringNotEmpty"
+  | "StringNotEquals"
+  | "StringNotContains";
 
 export interface FormRequest {
   formJSON: any;
@@ -1310,8 +1307,7 @@ export interface LoanRecord {
   loanFields: Record<string, string>;
 }
 
-/** @format int32 */
-export type LoanTaskRole = Borrowers | Borrower | CoBorrower;
+export type LoanTaskRole = "Borrowers" | "Borrower" | "CoBorrower";
 
 export interface LoanUser {
   /** @format uuid */
@@ -1519,8 +1515,7 @@ export interface Operation {
   value?: any;
 }
 
-/** @format int32 */
-export type OperationType = Add | Remove | Replace | Move | Copy | Test | Invalid;
+export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 
 export interface OverridePasswordRequest {
   /** @minLength 8 */
@@ -2117,20 +2112,19 @@ export interface TaskSearchCriteria {
   excludedIds?: string[] | null;
 }
 
-/** @format int32 */
 export type TaskType =
-  | Document
-  | Field
-  | Signature
-  | EDisclosure
-  | EConsent
-  | VerificationOfAssets
-  | VerificationOfIncome
-  | VerificationOfEmployment
-  | VerificationOfCredit
-  | Payment
-  | VerificationOfIncomeAndEmployment
-  | VerificationOfTaxes;
+  | "Document"
+  | "Field"
+  | "Signature"
+  | "EDisclosure"
+  | "EConsent"
+  | "VerificationOfAssets"
+  | "VerificationOfIncome"
+  | "VerificationOfEmployment"
+  | "VerificationOfCredit"
+  | "Payment"
+  | "VerificationOfIncomeAndEmployment"
+  | "VerificationOfTaxes";
 
 export interface TestSendNotificationForLoanRequest {
   loanData: Record<string, string>;
@@ -2441,18 +2435,17 @@ export interface UserRelationshipProspect {
   deletedAt?: string | null;
 }
 
-/** @format int32 */
 export type UserRole =
-  | Borrower
-  | LoanOfficer
-  | Admin
-  | SuperAdmin
-  | Realtor
-  | SettlementAgent
-  | LoanProcessor
-  | LoanOfficerAssistant
-  | BranchManager
-  | SystemAdmin;
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "BranchManager"
+  | "SystemAdmin";
 
 export interface UserSearchCriteria {
   searchText?: string | null;
