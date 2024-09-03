@@ -1,0 +1,2539 @@
+"use strict";
+/* eslint-disable */
+/* tslint:disable */
+/*
+ * ---------------------------------------------------------------
+ * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
+ * ##                                                           ##
+ * ## AUTHOR: acacode                                           ##
+ * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
+ * ---------------------------------------------------------------
+ */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Api = exports.HttpClient = exports.ContentType = void 0;
+var ContentType;
+(function (ContentType) {
+    ContentType["Json"] = "application/json";
+    ContentType["FormData"] = "multipart/form-data";
+    ContentType["UrlEncoded"] = "application/x-www-form-urlencoded";
+    ContentType["Text"] = "text/plain";
+})(ContentType || (exports.ContentType = ContentType = {}));
+class HttpClient {
+    constructor(apiConfig = {}) {
+        this.baseUrl = "";
+        this.securityData = null;
+        this.abortControllers = new Map();
+        this.customFetch = (...fetchParams) => fetch(...fetchParams);
+        this.baseApiParams = {
+            credentials: "same-origin",
+            headers: {},
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        };
+        this.setSecurityData = (data) => {
+            this.securityData = data;
+        };
+        this.contentFormatters = {
+            [ContentType.Json]: (input) => input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+            [ContentType.Text]: (input) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
+            [ContentType.FormData]: (input) => (Array.from(input.keys()) || []).reduce((formData, key) => {
+                const property = input.get(key);
+                formData.append(key, property instanceof Blob
+                    ? property
+                    : typeof property === "object" && property !== null
+                        ? JSON.stringify(property)
+                        : `${property}`);
+                return formData;
+            }, new FormData()),
+            [ContentType.UrlEncoded]: (input) => this.toQueryString(input),
+        };
+        this.createAbortSignal = (cancelToken) => {
+            if (this.abortControllers.has(cancelToken)) {
+                const abortController = this.abortControllers.get(cancelToken);
+                if (abortController) {
+                    return abortController.signal;
+                }
+                return void 0;
+            }
+            const abortController = new AbortController();
+            this.abortControllers.set(cancelToken, abortController);
+            return abortController.signal;
+        };
+        this.abortRequest = (cancelToken) => {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                abortController.abort();
+                this.abortControllers.delete(cancelToken);
+            }
+        };
+        this.request = (_a) => __awaiter(this, void 0, void 0, function* () {
+            var { body, secure, path, type, query, format, baseUrl, cancelToken } = _a, params = __rest(_a, ["body", "secure", "path", "type", "query", "format", "baseUrl", "cancelToken"]);
+            const secureParams = ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
+                this.securityWorker &&
+                (yield this.securityWorker(this.securityData))) ||
+                {};
+            const requestParams = this.mergeRequestParams(params, secureParams);
+            const queryString = query && this.toQueryString(query);
+            const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+            const responseFormat = format || requestParams.format;
+            return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type && type !== ContentType.FormData ? { "Content-Type": type } : {})), signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null, body: typeof body === "undefined" || body === null ? null : payloadFormatter(body) })).then((response) => __awaiter(this, void 0, void 0, function* () {
+                const r = response.clone();
+                r.data = null;
+                r.error = null;
+                const data = !responseFormat
+                    ? r
+                    : yield response[responseFormat]()
+                        .then((data) => {
+                        if (r.ok) {
+                            r.data = data;
+                        }
+                        else {
+                            r.error = data;
+                        }
+                        return r;
+                    })
+                        .catch((e) => {
+                        r.error = e;
+                        return r;
+                    });
+                if (cancelToken) {
+                    this.abortControllers.delete(cancelToken);
+                }
+                if (!response.ok)
+                    throw data;
+                return data;
+            }));
+        });
+        Object.assign(this, apiConfig);
+    }
+    encodeQueryParam(key, value) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+    addQueryParam(query, key) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+    addArrayQueryParam(query, key) {
+        const value = query[key];
+        return value.map((v) => this.encodeQueryParam(key, v)).join("&");
+    }
+    toQueryString(rawQuery) {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+    addQueryParams(rawQuery) {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
+    }
+    mergeRequestParams(params1, params2) {
+        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.baseApiParams), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, (this.baseApiParams.headers || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
+    }
+}
+exports.HttpClient = HttpClient;
+/**
+ * @title The Big POS API
+ * @version v2.8.2
+ * @termsOfService https://www.thebigpos.com/terms-of-use/
+ * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
+ */
+class Api extends HttpClient {
+    constructor() {
+        super(...arguments);
+        /**
+         * No description
+         *
+         * @tags Saml
+         * @name PostRoot
+         * @request POST:/
+         * @secure
+         */
+        this.postRoot = (params = {}) => this.request(Object.assign({ path: `/`, method: "POST", secure: true }, params));
+        this.api = {
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name GetAccount
+             * @summary Get
+             * @request GET:/api/account
+             * @secure
+             */
+            getAccount: (params = {}) => this.request(Object.assign({ path: `/api/account`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name ReplaceAccount
+             * @summary Replace
+             * @request PUT:/api/account
+             * @secure
+             */
+            replaceAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name UpdateAccount
+             * @summary Update
+             * @request PATCH:/api/account
+             * @secure
+             */
+            updateAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name GetSiteConfigurationByAccount
+             * @summary Get Site Configuration By Account
+             * @request GET:/api/account/site-configurations
+             * @secure
+             */
+            getSiteConfigurationByAccount: (params = {}) => this.request(Object.assign({ path: `/api/account/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name UpdateSiteConfigurationForAccount
+             * @summary Update Site Configuration For Account
+             * @request PUT:/api/account/site-configurations
+             * @secure
+             */
+            updateSiteConfigurationForAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account/site-configurations`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name GetBranches
+             * @summary Get Branches
+             * @request GET:/api/branches
+             * @secure
+             */
+            getBranches: (query, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name CreateBranches
+             * @summary Create Branches
+             * @request POST:/api/branches
+             * @secure
+             */
+            createBranches: (data, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name SearchBranches
+             * @summary Search
+             * @request POST:/api/branches/search
+             * @secure
+             */
+            searchBranches: (data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name GetBranch
+             * @summary Get Branch
+             * @request GET:/api/branches/{branchId}
+             * @secure
+             */
+            getBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name UpdateBranch
+             * @summary Update Branch
+             * @request PUT:/api/branches/{branchId}
+             * @secure
+             */
+            updateBranch: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name DeleteBranch
+             * @summary Delete Branch
+             * @request DELETE:/api/branches/{branchId}
+             * @secure
+             */
+            deleteBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name RestoreBranch
+             * @summary Restore Branch
+             * @request POST:/api/branches/{branchId}/restore
+             * @secure
+             */
+            restoreBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/restore`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name CreateBranchSiteConfiguration
+             * @summary Create Branch Site Configuration
+             * @request POST:/api/branches/{branchId}/site-configurations
+             * @secure
+             */
+            createBranchSiteConfiguration: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name UpdateBranchSiteConfiguration
+             * @summary Update Branch Site Configuration
+             * @request PUT:/api/branches/{branchId}/site-configurations
+             * @secure
+             */
+            updateBranchSiteConfiguration: (branchId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name GetBranchSiteConfiguration
+             * @summary Get Branch Site Configuration
+             * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getBranchSiteConfiguration: (branchId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name GetLoanOfficersByBranch
+             * @summary Get Branch Loan Officers
+             * @request GET:/api/branches/{branchId}/loan-officers
+             * @secure
+             */
+            getLoanOfficersByBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name GetBusinessRules
+             * @summary Get All
+             * @request GET:/api/business-rules
+             * @secure
+             */
+            getBusinessRules: (query, params = {}) => this.request(Object.assign({ path: `/api/business-rules`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name CreateBusinessRule
+             * @summary Create
+             * @request POST:/api/business-rules
+             * @secure
+             */
+            createBusinessRule: (data, params = {}) => this.request(Object.assign({ path: `/api/business-rules`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name GetBusinessRule
+             * @summary Get by ID
+             * @request GET:/api/business-rules/{id}
+             * @secure
+             */
+            getBusinessRule: (id, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name UpdateBusinessRule
+             * @summary Update
+             * @request PUT:/api/business-rules/{id}
+             * @secure
+             */
+            updateBusinessRule: (id, data, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name DeleteBusinessRule
+             * @summary Delete
+             * @request DELETE:/api/business-rules/{id}
+             * @secure
+             */
+            deleteBusinessRule: (id, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags BusinessRules
+             * @name RestoreBusinessRule
+             * @summary Restore
+             * @request POST:/api/business-rules/{id}/restore
+             * @secure
+             */
+            restoreBusinessRule: (id, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name GetCorporates
+             * @summary Get Corporates
+             * @request GET:/api/corporates
+             * @secure
+             */
+            getCorporates: (query, params = {}) => this.request(Object.assign({ path: `/api/corporates`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name CreateCorporate
+             * @summary Create Corporate
+             * @request POST:/api/corporates
+             * @secure
+             */
+            createCorporate: (data, params = {}) => this.request(Object.assign({ path: `/api/corporates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name SearchCorporate
+             * @summary Search
+             * @request POST:/api/corporates/search
+             * @secure
+             */
+            searchCorporate: (data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name GetCorporate
+             * @summary Get Corporate
+             * @request GET:/api/corporates/{id}
+             * @secure
+             */
+            getCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name UpdateCorporate
+             * @summary Update Corporate
+             * @request PUT:/api/corporates/{id}
+             * @secure
+             */
+            updateCorporate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name DeleteCorporate
+             * @summary Delete Corporate
+             * @request DELETE:/api/corporates/{id}
+             * @secure
+             */
+            deleteCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name RestoreCorporate
+             * @summary Restore Corporate
+             * @request POST:/api/corporates/{id}/restore
+             * @secure
+             */
+            restoreCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/restore`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name CreateCorporateSiteConfiguration
+             * @summary Create Corporate Site Configuration
+             * @request POST:/api/corporates/{corporateId}/site-configurations
+             * @secure
+             */
+            createCorporateSiteConfiguration: (corporateId, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name UpdateCorporateSiteConfiguration
+             * @summary Update Corporate Site Configuration
+             * @request PUT:/api/corporates/{corporateId}/site-configurations
+             * @secure
+             */
+            updateCorporateSiteConfiguration: (corporateId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name GetCorporateSiteConfiguration
+             * @summary Get Corporate Site Configuration
+             * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getCorporateSiteConfiguration: (corporateId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name GetBranchesByCorporate
+             * @summary Get Branches By Corporate
+             * @request GET:/api/corporates/{id}/branches
+             * @secure
+             */
+            getBranchesByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/branches`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name GetLoanOfficersByCorporate
+             * @summary Get Loan Officers By Corporate
+             * @request GET:/api/corporates/{id}/loan-officers
+             * @secure
+             */
+            getLoanOfficersByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Devices
+             * @name GetDevices
+             * @summary Get Devices
+             * @request GET:/api/devices
+             * @secure
+             */
+            getDevices: (query, params = {}) => this.request(Object.assign({ path: `/api/devices`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Devices
+             * @name GetDeviceById
+             * @summary Get Device by ID
+             * @request GET:/api/devices/{id}
+             * @secure
+             */
+            getDeviceById: (id, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Devices
+             * @name GetDeviceBySerialNumber
+             * @summary Get Device by serial number
+             * @request GET:/api/devices/{sn}/profile
+             * @secure
+             */
+            getDeviceBySerialNumber: (sn, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/profile`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Devices
+             * @name CreateActionBySerialNumber
+             * @summary Create action by serial number
+             * @request POST:/api/devices/{sn}/actions/{actionName}
+             * @secure
+             */
+            createActionBySerialNumber: (sn, actionName, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/actions/${actionName}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentBuckets
+             * @name GetDocumentBuckets
+             * @summary Get All
+             * @request GET:/api/document-buckets
+             * @secure
+             */
+            getDocumentBuckets: (params = {}) => this.request(Object.assign({ path: `/api/document-buckets`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name GetDocumentTemplates
+             * @summary Get All
+             * @request GET:/api/document-templates
+             * @secure
+             */
+            getDocumentTemplates: (query, params = {}) => this.request(Object.assign({ path: `/api/document-templates`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name CreateDocumentTemplate
+             * @summary Create Template
+             * @request POST:/api/document-templates
+             * @secure
+             */
+            createDocumentTemplate: (data, params = {}) => this.request(Object.assign({ path: `/api/document-templates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name GetCustomDocumentTemplates
+             * @summary Get Custom Templates
+             * @request GET:/api/document-templates/{type}
+             * @secure
+             */
+            getCustomDocumentTemplates: (type, query, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${type}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name GetDocumentTemplate
+             * @summary Get By ID
+             * @request GET:/api/document-templates/{id}
+             * @secure
+             */
+            getDocumentTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name UpdateDocumentTemplate
+             * @summary Update Template
+             * @request PUT:/api/document-templates/{id}
+             * @secure
+             */
+            updateDocumentTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name DeleteDocumentTemplate
+             * @summary Delete Template
+             * @request DELETE:/api/document-templates/{id}
+             * @secure
+             */
+            deleteDocumentTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplates
+             * @name RestoreDocumentTemplate
+             * @summary Restore Template
+             * @request POST:/api/document-templates/{id}/restore
+             * @secure
+             */
+            restoreDocumentTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}/restore`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplateVersions
+             * @name GetDocumentTemplateVersions
+             * @summary Get All
+             * @request GET:/api/document-templates/{documentId}/versions
+             * @secure
+             */
+            getDocumentTemplateVersions: (documentId, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplateVersions
+             * @name CreateDocumentTemplateVersion
+             * @summary Create
+             * @request POST:/api/document-templates/{documentId}/versions
+             * @secure
+             */
+            createDocumentTemplateVersion: (documentId, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplateVersions
+             * @name GetDocumentTemplateVersion
+             * @summary Get by ID
+             * @request GET:/api/document-templates/{documentId}/versions/{id}
+             * @secure
+             */
+            getDocumentTemplateVersion: (documentId, id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplateVersions
+             * @name UpdateDocumentTemplateVersion
+             * @summary Update
+             * @request PUT:/api/document-templates/{documentId}/versions/{id}
+             * @secure
+             */
+            updateDocumentTemplateVersion: (documentId, id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags DocumentTemplateVersions
+             * @name DeleteDocumentTemplateVersion
+             * @summary Delete
+             * @request DELETE:/api/document-templates/{documentId}/versions/{id}
+             * @secure
+             */
+            deleteDocumentTemplateVersion: (documentId, id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name GetAllFiles
+             * @summary Get All files
+             * @request GET:/api/files
+             * @secure
+             */
+            getAllFiles: (query, params = {}) => this.request(Object.assign({ path: `/api/files`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name UploadFile
+             * @summary Upload file
+             * @request POST:/api/files
+             * @secure
+             */
+            uploadFile: (data, params = {}) => this.request(Object.assign({ path: `/api/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name GetFileById
+             * @summary Get File By ID
+             * @request GET:/api/files/{id}
+             * @secure
+             */
+            getFileById: (id, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name UpdateFile
+             * @summary Update file
+             * @request PUT:/api/files/{id}
+             * @secure
+             */
+            updateFile: (id, data, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name DeleteFile
+             * @summary Delete file
+             * @request DELETE:/api/files/{id}
+             * @secure
+             */
+            deleteFile: (id, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Files
+             * @name SearchFiles
+             * @summary Search
+             * @request POST:/api/files/search
+             * @secure
+             */
+            searchFiles: (data, query, params = {}) => this.request(Object.assign({ path: `/api/files/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name GetFormBySiteConfigurationSlug
+             * @summary Get By Site Configuration Slug
+             * @request POST:/api/siteform
+             * @secure
+             */
+            getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/siteform`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name GetSiteForms
+             * @summary Get All Site Forms
+             * @request GET:/api/siteform
+             * @secure
+             */
+            getSiteForms: (params = {}) => this.request(Object.assign({ path: `/api/siteform`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name GetForms
+             * @summary Get All
+             * @request GET:/api/forms
+             * @secure
+             */
+            getForms: (query, params = {}) => this.request(Object.assign({ path: `/api/forms`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name CreateForm
+             * @summary Create
+             * @request POST:/api/forms
+             * @secure
+             */
+            createForm: (data, params = {}) => this.request(Object.assign({ path: `/api/forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name GetForm
+             * @summary Get By ID
+             * @request GET:/api/forms/{id}
+             * @secure
+             */
+            getForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name UpdateForm
+             * @summary Update
+             * @request PUT:/api/forms/{id}
+             * @secure
+             */
+            updateForm: (id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name DeleteForm
+             * @summary Delete
+             * @request DELETE:/api/forms/{id}
+             * @secure
+             */
+            deleteForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name RestoreForm
+             * @summary Restore
+             * @request POST:/api/forms/{id}/restore
+             * @secure
+             */
+            restoreForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name AddFormToSiteConfiguration
+             * @summary Add to Site Configuration
+             * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            addFormToSiteConfiguration: (formId, siteConfigurationId, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name RemoveFormFromSiteConfiguration
+             * @summary Remove from Site Configuration
+             * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            removeFormFromSiteConfiguration: (formId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Forms
+             * @name GetSiteConfigurationsByForm
+             * @summary Get Site Configurations by Form
+             * @request GET:/api/forms/{formId}/site-configurations
+             * @secure
+             */
+            getSiteConfigurationsByForm: (formId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissionFiles
+             * @name AddFormSubmissionFile
+             * @summary Add FormSubmission File
+             * @request POST:/api/form-submissions/{formSubmissionId}/files
+             * @secure
+             */
+            addFormSubmissionFile: (formSubmissionId, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${formSubmissionId}/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissionFiles
+             * @name DeleteFormSubmissionFile
+             * @summary Delete FormSubmission File
+             * @request DELETE:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}
+             * @secure
+             */
+            deleteFormSubmissionFile: (formSubmissionFileId, formSubmissionId, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name GetFormSubmissions
+             * @summary Get All
+             * @request GET:/api/form-submissions
+             * @secure
+             */
+            getFormSubmissions: (query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name CreateFormSubmission
+             * @summary Create
+             * @request POST:/api/form-submissions
+             * @secure
+             */
+            createFormSubmission: (data, query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name GetFormSubmission
+             * @summary Get by ID
+             * @request GET:/api/form-submissions/{id}
+             * @secure
+             */
+            getFormSubmission: (id, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name UpdateFormSubmission
+             * @summary Update
+             * @request PUT:/api/form-submissions/{id}
+             * @secure
+             */
+            updateFormSubmission: (id, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name DeleteFormSubmission
+             * @summary Delete
+             * @request DELETE:/api/form-submissions/{id}
+             * @secure
+             */
+            deleteFormSubmission: (id, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags FormSubmissions
+             * @name SearchFormSubmissions
+             * @summary Search
+             * @request POST:/api/form-submissions/search
+             * @secure
+             */
+            searchFormSubmissions: (data, query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormVersions
+             * @name GetFormVersions
+             * @summary Get All
+             * @request GET:/api/forms/{formId}/versions
+             * @secure
+             */
+            getFormVersions: (formId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormVersions
+             * @name CreateFormVersion
+             * @summary Create
+             * @request POST:/api/forms/{formId}/versions
+             * @secure
+             */
+            createFormVersion: (formId, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormVersions
+             * @name GetFormVersion
+             * @summary Get by ID
+             * @request GET:/api/forms/{formId}/versions/{id}
+             * @secure
+             */
+            getFormVersion: (formId, id, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormVersions
+             * @name UpdateFormVersion
+             * @summary Update
+             * @request PUT:/api/forms/{formId}/versions/{id}
+             * @secure
+             */
+            updateFormVersion: (formId, id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags FormVersions
+             * @name DeleteFormVersion
+             * @summary Delete
+             * @request DELETE:/api/forms/{formId}/versions/{id}
+             * @secure
+             */
+            deleteFormVersion: (formId, id, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoan
+             * @summary Get By ID
+             * @request GET:/api/los/loan/application/{loanID}
+             * @secure
+             */
+            getLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name UpdateLoan
+             * @summary Update Loan
+             * @request PATCH:/api/los/loan/application/{loanID}
+             * @secure
+             */
+            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoansReport
+             * @summary Get Report
+             * @request POST:/api/los/loan/reports
+             * @secure
+             */
+            getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetTaskTemplates
+             * @summary Get Task Templates
+             * @request GET:/api/los/loan/tasktemplate
+             * @secure
+             */
+            getTaskTemplates: (params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasktemplate`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name CreateLoan
+             * @summary Create Loan
+             * @request POST:/api/los/loan/application
+             * @secure
+             */
+            createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name UploadDocuments
+             * @summary Upload Documents
+             * @request POST:/api/los/loan/tasks/documents
+             * @secure
+             */
+            uploadDocuments: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name CreateEConsent
+             * @summary Create EConsent
+             * @request POST:/api/los/loan/econsent
+             * @secure
+             */
+            createEConsent: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/econsent`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name CreateCreditAuthorization
+             * @summary Create Credit Authorization
+             * @request POST:/api/los/loan/creditauth
+             * @secure
+             */
+            createCreditAuthorization: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/creditauth`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetTaskDocumentsByLoan
+             * @summary Get Documents
+             * @request GET:/api/los/loan/tasks/documents/{loanID}
+             * @secure
+             */
+            getTaskDocumentsByLoan: (loanId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents/${loanId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoanDocumentContent
+             * @summary Get Document Content
+             * @request GET:/api/los/loan/{loanID}/document/{documentId}/content
+             * @secure
+             */
+            getLoanDocumentContent: (loanId, documentId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/document/${documentId}/content`, method: "GET", query: query, secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoanRecipients
+             * @summary Get Loan Recipients
+             * @request GET:/api/los/loan/recipients/{loanID}
+             * @secure
+             */
+            getLoanRecipients: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/recipients/${loanId}`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoanContactInformation
+             * @summary Get Contact Information
+             * @request GET:/api/los/loan/contacts/{loanID}
+             * @secure
+             */
+            getLoanContactInformation: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/contacts/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetPreliminaryConditionsForLoan
+             * @summary Get all preliminary conditions from a loan
+             * @request GET:/api/los/loan/{loanID}/conditions/preliminary
+             * @secure
+             */
+            getPreliminaryConditionsForLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/conditions/preliminary`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetUnderwritingConditionsForLoan
+             * @summary Get all underwriting conditions from a loan
+             * @request GET:/api/los/loan/{loanID}/conditions/underwriting
+             * @secure
+             */
+            getUnderwritingConditionsForLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/conditions/underwriting`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name GetLoanEmbeddedSigningLink
+             * @summary Get Embedded Signing Link
+             * @request POST:/api/los/loan/embeddedsigning/{envelopeId}/{userName}/{email}
+             * @secure
+             */
+            getLoanEmbeddedSigningLink: (envelopeId, userName, email, params = {}) => this.request(Object.assign({ path: `/api/los/loan/embeddedsigning/${envelopeId}/${userName}/${email}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name CreateLegacyLoanDocument
+             * @summary Create Document
+             * @request POST:/api/los/loan/generatedocument
+             * @secure
+             */
+            createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingFiles
+             * @name AddListingFile
+             * @summary Add Listing File
+             * @request POST:/api/listings/{listingId}/files
+             * @secure
+             */
+            addListingFile: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingFiles
+             * @name UpdateListingFiles
+             * @summary Update Listing Files
+             * @request PUT:/api/listings/{listingId}/files
+             * @secure
+             */
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingFiles
+             * @name RemoveListingFile
+             * @summary Remove Listing File
+             * @request DELETE:/api/listings/{listingId}/files/{id}
+             * @secure
+             */
+            removeListingFile: (listingId, id, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingPhotos
+             * @name AddListingPhoto
+             * @summary Add Listing Photo
+             * @request POST:/api/listings/{listingId}/photos
+             * @secure
+             */
+            addListingPhoto: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingPhotos
+             * @name UpdateListingPhotos
+             * @summary Update Listing Photos
+             * @request PUT:/api/listings/{listingId}/photos
+             * @secure
+             */
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ListingPhotos
+             * @name RemoveListingPhoto
+             * @summary Remove Listing Photo
+             * @request DELETE:/api/listings/{listingId}/photos/{id}
+             * @secure
+             */
+            removeListingPhoto: (listingId, id, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name GetListings
+             * @summary Get All
+             * @request GET:/api/listings
+             * @secure
+             */
+            getListings: (query, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name CreateListing
+             * @summary Create
+             * @request POST:/api/listings
+             * @secure
+             */
+            createListing: (data, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name GetListingBySlug
+             * @summary Get by Slug
+             * @request GET:/api/listings/slug/{slug}
+             * @secure
+             */
+            getListingBySlug: (slug, params = {}) => this.request(Object.assign({ path: `/api/listings/slug/${slug}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name GetListing
+             * @summary Get by ID
+             * @request GET:/api/listings/{id}
+             * @secure
+             */
+            getListing: (id, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name UpdateListing
+             * @summary Update
+             * @request PUT:/api/listings/{id}
+             * @secure
+             */
+            updateListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name DeleteListing
+             * @summary Delete
+             * @request DELETE:/api/listings/{id}
+             * @secure
+             */
+            deleteListing: (id, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name SearchListings
+             * @summary Search
+             * @request POST:/api/listings/search
+             * @secure
+             */
+            searchListings: (data, query, params = {}) => this.request(Object.assign({ path: `/api/listings/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name UpdateListingBackgroundImage
+             * @summary Update Background Image
+             * @request PUT:/api/listings/{id}/background-image
+             * @secure
+             */
+            updateListingBackgroundImage: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}/background-image`, method: "PUT", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Listings
+             * @name GetListingOpenHouseFlyer
+             * @summary Get Open House Flyer
+             * @request GET:/api/listings/{id}/open-house-flyer
+             * @secure
+             */
+            getListingOpenHouseFlyer: (id, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}/open-house-flyer`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanCalculators
+             * @name GetLoanCalculator
+             * @summary Get Loan Calculator
+             * @request GET:/api/loans/{loanID}/calculators/loan-calculator
+             * @secure
+             */
+            getLoanCalculator: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanCalculators
+             * @name RunLoanCalculator
+             * @summary Run Loan Calculator
+             * @request POST:/api/loans/{loanID}/calculators/loan-calculator
+             * @secure
+             */
+            runLoanCalculator: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanComparison
+             * @name GetLoanComparisons
+             * @summary Get Loan Comparisons
+             * @request GET:/api/loans/{loanID}/loan-comparison
+             * @secure
+             */
+            getLoanComparisons: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanComparison
+             * @name CreateLoanComparison
+             * @summary Create Loan Comparison
+             * @request POST:/api/loans/{loanID}/loan-comparison/{index}
+             * @secure
+             */
+            createLoanComparison: (loanId, index, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/${index}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanComparison
+             * @name DeleteLoanComparison
+             * @summary Delete Loan Comparison
+             * @request DELETE:/api/loans/{loanID}/loan-comparison/{index}
+             * @secure
+             */
+            deleteLoanComparison: (loanId, index, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/${index}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanComparison
+             * @name CreateLoanComparisonPdf
+             * @summary Create Loan Comparison PDF
+             * @request POST:/api/loans/{loanID}/loan-comparison/pdf
+             * @secure
+             */
+            createLoanComparisonPdf: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/pdf`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name GetLoanDocumentBuckets
+             * @summary Get Buckets
+             * @request GET:/api/loans/{loanId}/documents/buckets
+             * @secure
+             */
+            getLoanDocumentBuckets: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/buckets`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name GetLoanDocument
+             * @summary Get By ID
+             * @request GET:/api/loans/{loanId}/documents/{documentId}
+             * @secure
+             */
+            getLoanDocument: (loanId, documentId, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name CreateLoanDocument
+             * @summary Create
+             * @request POST:/api/loans/{loanId}/documents
+             * @secure
+             */
+            createLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name CreateLoanDraft
+             * @summary Create Loan Draft
+             * @request POST:/api/loans/drafts
+             * @secure
+             */
+            createLoanDraft: (data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name GetLoanDrafts
+             * @summary Get Loan Drafts
+             * @request GET:/api/loans/drafts
+             * @secure
+             */
+            getLoanDrafts: (params = {}) => this.request(Object.assign({ path: `/api/loans/drafts`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name SearchLoanDrafts
+             * @summary Search Loan Drafts
+             * @request POST:/api/loans/drafts/search
+             * @secure
+             */
+            searchLoanDrafts: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name UpdateLoanDraft
+             * @summary Update Loan Draft
+             * @request PUT:/api/loans/drafts/{draftId}
+             * @secure
+             */
+            updateLoanDraft: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name GetLoanDraft
+             * @summary Get by ID
+             * @request GET:/api/loans/drafts/{draftId}
+             * @secure
+             */
+            getLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name DeleteLoanDraft
+             * @summary Delete Loan Draft
+             * @request DELETE:/api/loans/drafts/{draftId}
+             * @secure
+             */
+            deleteLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name GetLoanOfficers
+             * @summary Get Loan Officers
+             * @request GET:/api/loan-officers
+             * @secure
+             */
+            getLoanOfficers: (query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name SearchLoanOfficers
+             * @summary Search
+             * @request POST:/api/loan-officers/search
+             * @secure
+             */
+            searchLoanOfficers: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name GetLoanOfficer
+             * @summary Get Loan Officer
+             * @request GET:/api/loan-officers/{id}
+             * @secure
+             */
+            getLoanOfficer: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name GetLoanOfficerLoans
+             * @summary Get Loan Officer Loans
+             * @request GET:/api/loan-officers/applications
+             * @secure
+             */
+            getLoanOfficerLoans: (params = {}) => this.request(Object.assign({ path: `/api/loan-officers/applications`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name CreateLoanOfficerSiteConfiguration
+             * @summary Create Loan Officer Site Configuration
+             * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
+             * @secure
+             */
+            createLoanOfficerSiteConfiguration: (loanOfficerId, data, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name GetLoanOfficerSiteConfiguration
+             * @summary Get Loan Officer Site Configuration
+             * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanOfficers
+             * @name UpdateLoanOfficerSiteConfiguration
+             * @summary Update Loan Officer Site Configuration
+             * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            updateLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name GetLoans
+             * @summary Get Loans
+             * @request GET:/api/loans
+             * @secure
+             */
+            getLoans: (params = {}) => this.request(Object.assign({ path: `/api/loans`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskDocuments
+             * @name CreateLoanTaskDocument
+             * @summary Create
+             * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents
+             * @secure
+             */
+            createLoanTaskDocument: (loanId, loanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name GetLoanTasks
+             * @summary Get All
+             * @request GET:/api/loans/{loanID}/tasks
+             * @secure
+             */
+            getLoanTasks: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name GetLoanTask
+             * @summary Get by ID
+             * @request GET:/api/loans/{loanID}/tasks/{id}
+             * @secure
+             */
+            getLoanTask: (id, loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * @description Get the difference between the current loan tasks and the tasks generated by business rules
+             *
+             * @tags LoanTasks
+             * @name GetLoanTaskDifference
+             * @summary Get Difference
+             * @request GET:/api/loans/{loanID}/tasks/diff
+             * @secure
+             */
+            getLoanTaskDifference: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/diff`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name CreateLoanTask
+             * @summary Create
+             * @request POST:/api/loans/{loanID}/tasks/{taskID}
+             * @secure
+             */
+            createLoanTask: (loanId, taskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name UpdateLoanTask
+             * @summary Update
+             * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
+             * @secure
+             */
+            updateLoanTask: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name DeleteLoanTask
+             * @summary Delete
+             * @request DELETE:/api/loans/{loanID}/tasks/{userLoanTaskID}
+             * @secure
+             */
+            deleteLoanTask: (loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name SendOutstandingLoanTaskNotification
+             * @summary Send Outstanding Task Notification
+             * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
+             * @secure
+             */
+            sendOutstandingLoanTaskNotification: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/reminders/outstanding`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name GetLoanUsers
+             * @summary Get All
+             * @request GET:/api/loans/{loanId}/users
+             * @secure
+             */
+            getLoanUsers: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name GetLoanUser
+             * @summary Get Loan User
+             * @request GET:/api/loans/{loanId}/users/{userId}
+             * @secure
+             */
+            getLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name AddLoanUser
+             * @summary Add User to Loan
+             * @request POST:/api/loans/{loanId}/users/{userId}
+             * @secure
+             */
+            addLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Milestones
+             * @name GetMilestones
+             * @summary Get All
+             * @request GET:/api/milestones
+             * @secure
+             */
+            getMilestones: (params = {}) => this.request(Object.assign({ path: `/api/milestones`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Milestones
+             * @name CreateMilestone
+             * @summary Create
+             * @request POST:/api/milestones
+             * @secure
+             */
+            createMilestone: (data, params = {}) => this.request(Object.assign({ path: `/api/milestones`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Milestones
+             * @name GetMilestone
+             * @summary Get By ID
+             * @request GET:/api/milestones/{id}
+             * @secure
+             */
+            getMilestone: (id, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Milestones
+             * @name UpdateMilestone
+             * @summary Update
+             * @request PUT:/api/milestones/{id}
+             * @secure
+             */
+            updateMilestone: (id, data, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Milestones
+             * @name DeleteMilestone
+             * @summary Delete
+             * @request DELETE:/api/milestones/{id}
+             * @secure
+             */
+            deleteMilestone: (id, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Notifications
+             * @name SendNotificationForLoan
+             * @summary Send Notification for Loan
+             * @request POST:/api/notifications
+             * @secure
+             */
+            sendNotificationForLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/notifications`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Notifications
+             * @name SendTestNotificationForLoan
+             * @summary Send Test Notification for Loan
+             * @request POST:/api/notifications/test
+             * @secure
+             */
+            sendTestNotificationForLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/notifications/test`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name GetNotificationTemplates
+             * @summary Get Templates
+             * @request GET:/api/notification-templates
+             * @secure
+             */
+            getNotificationTemplates: (query, params = {}) => this.request(Object.assign({ path: `/api/notification-templates`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name CreateNotificationTemplate
+             * @summary Create Template
+             * @request POST:/api/notification-templates
+             * @secure
+             */
+            createNotificationTemplate: (data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name GetNotificationTemplate
+             * @summary Get Template
+             * @request GET:/api/notification-templates/{id}
+             * @secure
+             */
+            getNotificationTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name UpdateNotificationTemplate
+             * @summary Update Template
+             * @request PUT:/api/notification-templates/{id}
+             * @secure
+             */
+            updateNotificationTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name DeleteNotificationTemplate
+             * @summary Delete Template
+             * @request DELETE:/api/notification-templates/{id}
+             * @secure
+             */
+            deleteNotificationTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name RestoreNotificationTemplate
+             * @summary Restore Template
+             * @request POST:/api/notification-templates/{id}/restore
+             * @secure
+             */
+            restoreNotificationTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplateVersions
+             * @name GetNotificationTemplateVersions
+             * @summary Get All
+             * @request GET:/api/notification-templates/{notificationId}/versions
+             * @secure
+             */
+            getNotificationTemplateVersions: (notificationId, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplateVersions
+             * @name CreateNotificationTemplateVersion
+             * @summary Create
+             * @request POST:/api/notification-templates/{notificationId}/versions
+             * @secure
+             */
+            createNotificationTemplateVersion: (notificationId, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplateVersions
+             * @name GetNotificationTemplateVersion
+             * @summary Get by ID
+             * @request GET:/api/notification-templates/{notificationId}/versions/{id}
+             * @secure
+             */
+            getNotificationTemplateVersion: (notificationId, id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplateVersions
+             * @name UpdateNotificationTemplateVersion
+             * @summary Update
+             * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
+             * @secure
+             */
+            updateNotificationTemplateVersion: (notificationId, id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplateVersions
+             * @name DeleteNotificationTemplateVersion
+             * @summary Delete
+             * @request DELETE:/api/notification-templates/{notificationId}/versions/{id}
+             * @secure
+             */
+            deleteNotificationTemplateVersion: (notificationId, id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name GetPartners
+             * @summary Get Partners
+             * @request GET:/api/partners
+             * @secure
+             */
+            getPartners: (query, params = {}) => this.request(Object.assign({ path: `/api/partners`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name SearchPartners
+             * @summary Search
+             * @request POST:/api/partners/search
+             * @secure
+             */
+            searchPartners: (data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name GetRealtor
+             * @summary Get Realtor
+             * @request GET:/api/partners/{id}
+             * @secure
+             */
+            getRealtor: (id, params = {}) => this.request(Object.assign({ path: `/api/partners/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name CreateRealtorSiteConfiguration
+             * @summary Create Realtor Site Configuration
+             * @request POST:/api/partners/{realtorId}/site-configurations
+             * @secure
+             */
+            createRealtorSiteConfiguration: (realtorId, data, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name GetRealtorSiteConfiguration
+             * @summary Get Realtor Site Configuration
+             * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getRealtorSiteConfiguration: (realtorId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Partners
+             * @name UpdateRealtorSiteConfiguration
+             * @summary Update Realtor Site Configuration
+             * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            updateRealtorSiteConfiguration: (realtorId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Pricing
+             * @name GetPricingCalculation
+             * @summary Get Pricing Calculation
+             * @request POST:/api/pricing/calculator
+             * @secure
+             */
+            getPricingCalculation: (data, params = {}) => this.request(Object.assign({ path: `/api/pricing/calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags RequestQueue
+             * @name GetQueueRequests
+             * @summary Get Queue Requests
+             * @request GET:/api/request-queue
+             * @secure
+             */
+            getQueueRequests: (params = {}) => this.request(Object.assign({ path: `/api/request-queue`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags RequestQueue
+             * @name RunQueueRequest
+             * @summary Run Queue Request
+             * @request POST:/api/request-queue/{id}/run
+             * @secure
+             */
+            runQueueRequest: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}/run`, method: "POST", query: query, secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags RequestQueue
+             * @name DeleteQueueRequest
+             * @summary Delete Queue Request
+             * @request DELETE:/api/request-queue/{id}
+             * @secure
+             */
+            deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags SelfProvisioning
+             * @name CreateSelfProvisioningItem
+             * @summary Create
+             * @request POST:/api/selfprovisioning/newcustomer
+             * @secure
+             */
+            createSelfProvisioningItem: (data, params = {}) => this.request(Object.assign({ path: `/api/selfprovisioning/newcustomer`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name GetSiteConfiguration
+             * @summary Get By ID
+             * @request GET:/api/site-configurations/{id}
+             * @secure
+             */
+            getSiteConfiguration: (id, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name SearchSiteConfigurationByUrl
+             * @summary Search By URL
+             * @request POST:/api/site-configurations/url
+             * @deprecated
+             * @secure
+             */
+            searchSiteConfigurationByUrl: (data, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/url`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name GetSiteConfigurationByUrl
+             * @summary Get By URL
+             * @request GET:/api/site-configurations
+             * @secure
+             */
+            getSiteConfigurationByUrl: (query, params = {}) => this.request(Object.assign({ path: `/api/site-configurations`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name SearchSiteConfigurationByLoanOfficerUser
+             * @summary Search By Loan Officer User
+             * @request POST:/api/site-configurations/louser
+             * @deprecated
+             * @secure
+             */
+            searchSiteConfigurationByLoanOfficerUser: (data, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/louser`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name GetSiteConfigurationByLoanOfficerUser
+             * @summary Get By Loan Officer User
+             * @request GET:/api/site-configurations/louser/{loUserId}
+             * @secure
+             */
+            getSiteConfigurationByLoanOfficerUser: (loUserId, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/louser/${loUserId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name SearchSiteConfigurations
+             * @summary Search
+             * @request POST:/api/site-configurations/search
+             * @secure
+             */
+            searchSiteConfigurations: (data, query, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name GetFormsBySiteConfiguration
+             * @summary Get Forms by Site Configuration
+             * @request GET:/api/site-configurations/{id}/forms
+             * @secure
+             */
+            getFormsBySiteConfiguration: (id, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/${id}/forms`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name GetSamlMetadata
+             * @summary Get Saml Metadata
+             * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
+             * @secure
+             */
+            getSamlMetadata: (ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Surveys
+             * @name GetSurveysByUsers
+             * @summary Get by Users
+             * @request GET:/api/surveys
+             * @secure
+             */
+            getSurveysByUsers: (query, params = {}) => this.request(Object.assign({ path: `/api/surveys`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Surveys
+             * @name GetSurveysByUser
+             * @summary Get by User
+             * @request POST:/api/surveys
+             * @secure
+             */
+            getSurveysByUser: (data, params = {}) => this.request(Object.assign({ path: `/api/surveys`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name GetTasks
+             * @summary Get All
+             * @request GET:/api/tasks
+             * @secure
+             */
+            getTasks: (query, params = {}) => this.request(Object.assign({ path: `/api/tasks`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name CreateTask
+             * @summary Create
+             * @request POST:/api/tasks
+             * @secure
+             */
+            createTask: (data, params = {}) => this.request(Object.assign({ path: `/api/tasks`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name GetTask
+             * @summary Get By ID
+             * @request GET:/api/tasks/{id}
+             * @secure
+             */
+            getTask: (id, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name UpdateTask
+             * @summary Update
+             * @request PUT:/api/tasks/{id}
+             * @secure
+             */
+            updateTask: (id, data, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name DeleteTask
+             * @summary Delete
+             * @request DELETE:/api/tasks/{id}
+             * @secure
+             */
+            deleteTask: (id, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Tasks
+             * @name SearchTasks
+             * @summary Search
+             * @request POST:/api/tasks/search
+             * @secure
+             */
+            searchTasks: (data, query, params = {}) => this.request(Object.assign({ path: `/api/tasks/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name RequestImpersonation
+             * @summary Request Impersonation as Impersonator
+             * @request POST:/api/users/impersonation/request
+             * @secure
+             */
+            requestImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/request`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name AllowImpersonation
+             * @summary Allow Impersonation as Impersonatee
+             * @request POST:/api/users/impersonation/allow
+             * @secure
+             */
+            allowImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/allow`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name AllowImpersonationWithGuid
+             * @summary Allow Impersonation as Impersonatee via AllowGuid
+             * @request POST:/api/users/impersonation/allow/{allowToken}
+             * @secure
+             */
+            allowImpersonationWithGuid: (allowToken, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/allow/${allowToken}`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name BeginImpersonation
+             * @summary Begin Impersonation as Impersonator
+             * @request POST:/api/users/impersonation
+             * @secure
+             */
+            beginImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name StopImpersonation
+             * @summary Stop Impersonation as either Impersonator or Impersonatee
+             * @request DELETE:/api/users/impersonation
+             * @secure
+             */
+            stopImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name ExtendImpersonation
+             * @summary Extend Impersonation Session as Impersonator
+             * @request POST:/api/users/impersonation/extend
+             * @secure
+             */
+            extendImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/extend`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserInvites
+             * @name InviteUser
+             * @summary Invite User
+             * @request POST:/api/users/invites
+             * @secure
+             */
+            inviteUser: (data, params = {}) => this.request(Object.assign({ path: `/api/users/invites`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UserInvites
+             * @name VerifyUserInvite
+             * @summary Verify User Invite
+             * @request GET:/api/users/invites/{token}/verify
+             * @secure
+             */
+            verifyUserInvite: (token, params = {}) => this.request(Object.assign({ path: `/api/users/invites/${token}/verify`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserRelations
+             * @name CreateUserRelation
+             * @summary Create User Relation
+             * @request POST:/api/users/{userId}/relations
+             * @secure
+             */
+            createUserRelation: (userId, data, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UserRelations
+             * @name GetUserRelation
+             * @summary Get User Relation
+             * @request GET:/api/users/{userId}/relations
+             * @secure
+             */
+            getUserRelation: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserRelations
+             * @name GetUserRelationByAccount
+             * @summary Get User Relation by Account
+             * @request GET:/api/users/{userId}/relations/account
+             * @secure
+             */
+            getUserRelationByAccount: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/account`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserRelations
+             * @name DeleteUserRelation
+             * @summary Delete User Relation
+             * @request DELETE:/api/users/{userId}/relations/{id}
+             * @secure
+             */
+            deleteUserRelation: (id, userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name GetUsers
+             * @summary Get Users
+             * @request GET:/api/users
+             * @secure
+             */
+            getUsers: (query, params = {}) => this.request(Object.assign({ path: `/api/users`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name CreateUser
+             * @summary Create User
+             * @request POST:/api/users
+             * @secure
+             */
+            createUser: (data, params = {}) => this.request(Object.assign({ path: `/api/users`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name SearchUsers
+             * @summary Search
+             * @request POST:/api/users/search
+             * @secure
+             */
+            searchUsers: (data, query, params = {}) => this.request(Object.assign({ path: `/api/users/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name GetUserByEmail
+             * @summary Get by Email
+             * @request POST:/api/users/byemail
+             * @secure
+             */
+            getUserByEmail: (data, params = {}) => this.request(Object.assign({ path: `/api/users/byemail`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name SignUp
+             * @summary Sign Up
+             * @request POST:/api/users/register
+             * @secure
+             */
+            signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name UpdateUser
+             * @summary Update User
+             * @request PUT:/api/users/{id}
+             * @secure
+             */
+            updateUser: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name DeleteUser
+             * @summary Delete User
+             * @request DELETE:/api/users/{id}
+             * @secure
+             */
+            deleteUser: (id, query, params = {}) => this.request(Object.assign({ path: `/api/users/${id}`, method: "DELETE", query: query, secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name RestoreUser
+             * @summary Restore User
+             * @request POST:/api/users/{id}/restore
+             * @secure
+             */
+            restoreUser: (id, params = {}) => this.request(Object.assign({ path: `/api/users/${id}/restore`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name ChangePassword
+             * @summary Change Password
+             * @request POST:/api/users/change-password
+             * @secure
+             */
+            changePassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/change-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name VerifyPassword
+             * @summary Verify Password
+             * @request POST:/api/users/verify-password
+             * @secure
+             */
+            verifyPassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/verify-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name OverridePassword
+             * @summary Override Password
+             * @request POST:/api/users/{id}/override-password
+             * @secure
+             */
+            overridePassword: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}/override-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name ForgotPassword
+             * @summary Forgot Password
+             * @request POST:/api/users/forgot-password
+             * @secure
+             */
+            forgotPassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/forgot-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name SendMobilePhoneVerificationCode
+             * @summary Send Verification Code
+             * @request POST:/api/users/mobile-phone/send-code
+             * @secure
+             */
+            sendMobilePhoneVerificationCode: (params = {}) => this.request(Object.assign({ path: `/api/users/mobile-phone/send-code`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Users
+             * @name VerifyUserMobilePhone
+             * @summary Verify Mobile Phone
+             * @request PUT:/api/users/mobile-phone/verify-code
+             * @secure
+             */
+            verifyUserMobilePhone: (data, params = {}) => this.request(Object.assign({ path: `/api/users/mobile-phone/verify-code`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name GetMe
+             * @summary Get Me
+             * @request GET:/api/users/me
+             * @secure
+             */
+            getMe: (params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name UpdateMe
+             * @summary Update Me
+             * @request PUT:/api/users/me
+             * @secure
+             */
+            updateMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * @description Update the phone number If changed will send a verification code to the new number
+             *
+             * @tags UsersMe
+             * @name UpdateMyPhone
+             * @summary Update Phone
+             * @request PUT:/api/users/me/phone-number
+             * @secure
+             */
+            updateMyPhone: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me/phone-number`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name GetMyRelationships
+             * @summary Get My Relationships
+             * @request GET:/api/users/me/relationships
+             * @secure
+             */
+            getMyRelationships: (params = {}) => this.request(Object.assign({ path: `/api/users/me/relationships`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name GetMyRelationshipProspects
+             * @summary Get My Relationship Prospects
+             * @request GET:/api/users/me/relationships/prospects
+             * @secure
+             */
+            getMyRelationshipProspects: (params = {}) => this.request(Object.assign({ path: `/api/users/me/relationships/prospects`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name DeleteRelationshipProspect
+             * @summary Delete Relationship Prospect
+             * @request DELETE:/api/users/me/relationships/prospects/{id}
+             * @secure
+             */
+            deleteRelationshipProspect: (id, params = {}) => this.request(Object.assign({ path: `/api/users/me/relationships/prospects/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UsersMe
+             * @name DeleteMe
+             * @summary Delete Me
+             * @request POST:/api/users/me/delete
+             * @secure
+             */
+            deleteMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me/delete`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name Verify
+             * @summary Verify
+             * @request POST:/api/verifications/verify
+             * @secure
+             */
+            verify: (data, params = {}) => this.request(Object.assign({ path: `/api/verifications/verify`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name GetVerificationStatus
+             * @summary Get Status
+             * @request POST:/api/verifications/status
+             * @secure
+             */
+            getVerificationStatus: (data, params = {}) => this.request(Object.assign({ path: `/api/verifications/status`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name GetVerificationFrontEndMaterials
+             * @summary Get Front End Materials
+             * @request GET:/api/verifications/frontend-materials/{requestId}
+             * @secure
+             */
+            getVerificationFrontEndMaterials: (requestId, params = {}) => this.request(Object.assign({ path: `/api/verifications/frontend-materials/${requestId}`, method: "GET", secure: true, format: "json" }, params)),
+        };
+        this.accounts = {
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name GetAccounts
+             * @summary Get All
+             * @request GET:/accounts
+             * @secure
+             */
+            getAccounts: (params = {}) => this.request(Object.assign({ path: `/accounts`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name UpdateLoansByAccount
+             * @summary Update Loans
+             * @request PUT:/accounts/{id}/loan
+             * @secure
+             */
+            updateLoansByAccount: (id, data, params = {}) => this.request(Object.assign({ path: `/accounts/${id}/loan`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name GetLoansByAccount
+             * @summary Get Loans
+             * @request GET:/accounts/{id}/loan
+             * @secure
+             */
+            getLoansByAccount: (id, params = {}) => this.request(Object.assign({ path: `/accounts/${id}/loan`, method: "GET", secure: true, format: "json" }, params)),
+        };
+        this.refreshToken = {
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetTokenFromRefreshToken
+             * @summary Generate Token From Refresh Token
+             * @request POST:/refresh-token
+             * @secure
+             */
+            getTokenFromRefreshToken: (data, params = {}) => this.request(Object.assign({ path: `/refresh-token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+        };
+        this.token = {
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetToken
+             * @summary Get Token
+             * @request POST:/token
+             * @secure
+             */
+            getToken: (data, params = {}) => this.request(Object.assign({ path: `/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetTokenFromChallengeCode
+             * @summary Get Token From Challenge Code
+             * @request POST:/token/code
+             * @secure
+             */
+            getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetSsoToken
+             * @summary Get SSO Guid Token
+             * @request POST:/token/sso
+             * @secure
+             */
+            getSsoToken: (data, params = {}) => this.request(Object.assign({ path: `/token/sso`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+        };
+        this.oauth2 = {
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetSystemToken
+             * @summary Get System Token
+             * @request POST:/oauth2/token
+             * @secure
+             */
+            getSystemToken: (data, params = {}) => this.request(Object.assign({ path: `/oauth2/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+        };
+    }
+}
+exports.Api = Api;
+//# sourceMappingURL=index.js.map
