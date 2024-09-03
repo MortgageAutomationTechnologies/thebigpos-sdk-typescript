@@ -1,0 +1,1 @@
+# thebigpos-sdk-typescript
