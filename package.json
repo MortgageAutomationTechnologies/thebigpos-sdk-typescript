@@ -7,7 +7,8 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "mocha -r ts-node/register 'src/api_test.spec.ts' --exit",
-    "browserify": "tsc && browserify -p tinyify dist/index.js -s orcaloans > dist/orcaloans.min.js"
+    "browserify": "tsc && browserify -p tinyify dist/index.js -s orcaloans > dist/orcaloans.min.js",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "tinyify": "^4.0.0"
   },
   "devDependencies": {
+    "husky": "^9.1.5",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
