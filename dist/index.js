@@ -29,8 +29,12 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Api = exports.HttpClient = exports.ContentType = void 0;
+const axios_1 = __importDefault(require("axios"));
 var ContentType;
 (function (ContentType) {
     ContentType["Json"] = "application/json";
@@ -39,123 +43,64 @@ var ContentType;
     ContentType["Text"] = "text/plain";
 })(ContentType || (exports.ContentType = ContentType = {}));
 class HttpClient {
-    constructor(apiConfig = {}) {
-        this.baseUrl = "";
+    constructor(_a = {}) {
+        var { securityWorker, secure, format } = _a, axiosConfig = __rest(_a, ["securityWorker", "secure", "format"]);
         this.securityData = null;
-        this.abortControllers = new Map();
-        this.customFetch = (...fetchParams) => fetch(...fetchParams);
-        this.baseApiParams = {
-            credentials: "same-origin",
-            headers: {},
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
-        };
         this.setSecurityData = (data) => {
             this.securityData = data;
         };
-        this.contentFormatters = {
-            [ContentType.Json]: (input) => input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
-            [ContentType.Text]: (input) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
-            [ContentType.FormData]: (input) => (Array.from(input.keys()) || []).reduce((formData, key) => {
-                const property = input.get(key);
-                formData.append(key, property instanceof Blob
-                    ? property
-                    : typeof property === "object" && property !== null
-                        ? JSON.stringify(property)
-                        : `${property}`);
-                return formData;
-            }, new FormData()),
-            [ContentType.UrlEncoded]: (input) => this.toQueryString(input),
-        };
-        this.createAbortSignal = (cancelToken) => {
-            if (this.abortControllers.has(cancelToken)) {
-                const abortController = this.abortControllers.get(cancelToken);
-                if (abortController) {
-                    return abortController.signal;
-                }
-                return void 0;
-            }
-            const abortController = new AbortController();
-            this.abortControllers.set(cancelToken, abortController);
-            return abortController.signal;
-        };
-        this.abortRequest = (cancelToken) => {
-            const abortController = this.abortControllers.get(cancelToken);
-            if (abortController) {
-                abortController.abort();
-                this.abortControllers.delete(cancelToken);
-            }
-        };
         this.request = (_a) => __awaiter(this, void 0, void 0, function* () {
-            var { body, secure, path, type, query, format, baseUrl, cancelToken } = _a, params = __rest(_a, ["body", "secure", "path", "type", "query", "format", "baseUrl", "cancelToken"]);
-            const secureParams = ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
+            var { secure, path, type, query, format, body } = _a, params = __rest(_a, ["secure", "path", "type", "query", "format", "body"]);
+            const secureParams = ((typeof secure === "boolean" ? secure : this.secure) &&
                 this.securityWorker &&
                 (yield this.securityWorker(this.securityData))) ||
                 {};
             const requestParams = this.mergeRequestParams(params, secureParams);
-            const queryString = query && this.toQueryString(query);
-            const payloadFormatter = this.contentFormatters[type || ContentType.Json];
-            const responseFormat = format || requestParams.format;
-            return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type && type !== ContentType.FormData ? { "Content-Type": type } : {})), signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null, body: typeof body === "undefined" || body === null ? null : payloadFormatter(body) })).then((response) => __awaiter(this, void 0, void 0, function* () {
-                const r = response.clone();
-                r.data = null;
-                r.error = null;
-                const data = !responseFormat
-                    ? r
-                    : yield response[responseFormat]()
-                        .then((data) => {
-                        if (r.ok) {
-                            r.data = data;
-                        }
-                        else {
-                            r.error = data;
-                        }
-                        return r;
-                    })
-                        .catch((e) => {
-                        r.error = e;
-                        return r;
-                    });
-                if (cancelToken) {
-                    this.abortControllers.delete(cancelToken);
-                }
-                if (!response.ok)
-                    throw data;
-                return data;
-            }));
+            const responseFormat = format || this.format || undefined;
+            if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
+                body = this.createFormData(body);
+            }
+            if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
+                body = JSON.stringify(body);
+            }
+            return this.instance.request(Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type ? { "Content-Type": type } : {})), params: query, responseType: responseFormat, data: body, url: path }));
         });
-        Object.assign(this, apiConfig);
-    }
-    encodeQueryParam(key, value) {
-        const encodedKey = encodeURIComponent(key);
-        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
-    }
-    addQueryParam(query, key) {
-        return this.encodeQueryParam(key, query[key]);
-    }
-    addArrayQueryParam(query, key) {
-        const value = query[key];
-        return value.map((v) => this.encodeQueryParam(key, v)).join("&");
-    }
-    toQueryString(rawQuery) {
-        const query = rawQuery || {};
-        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
-        return keys
-            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-            .join("&");
-    }
-    addQueryParams(rawQuery) {
-        const queryString = this.toQueryString(rawQuery);
-        return queryString ? `?${queryString}` : "";
+        this.instance = axios_1.default.create(Object.assign(Object.assign({}, axiosConfig), { baseURL: axiosConfig.baseURL || "" }));
+        this.secure = secure;
+        this.format = format;
+        this.securityWorker = securityWorker;
     }
     mergeRequestParams(params1, params2) {
-        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.baseApiParams), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, (this.baseApiParams.headers || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
+        const method = params1.method || (params2 && params2.method);
+        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.instance.defaults), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, ((method && this.instance.defaults.headers[method.toLowerCase()]) || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
+    }
+    stringifyFormItem(formItem) {
+        if (typeof formItem === "object" && formItem !== null) {
+            return JSON.stringify(formItem);
+        }
+        else {
+            return `${formItem}`;
+        }
+    }
+    createFormData(input) {
+        if (input instanceof FormData) {
+            return input;
+        }
+        return Object.keys(input || {}).reduce((formData, key) => {
+            const property = input[key];
+            const propertyContent = property instanceof Array ? property : [property];
+            for (const formItem of propertyContent) {
+                const isFileType = formItem instanceof Blob || formItem instanceof File;
+                formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+            }
+            return formData;
+        }, new FormData());
     }
 }
 exports.HttpClient = HttpClient;
 /**
  * @title The Big POS API
- * @version v2.8.2
+ * @version v2.8.7
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -192,16 +137,6 @@ class Api extends HttpClient {
              * @secure
              */
             replaceAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Account
-             * @name UpdateAccount
-             * @summary Update
-             * @request PATCH:/api/account
-             * @secure
-             */
-            updateAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -476,22 +411,22 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Corporates
-             * @name ReplaceCorporateSiteConfiguration
-             * @summary Replace Site Configuration
-             * @request PUT:/api/corporates/{corporateId}/site-configurations
-             * @secure
-             */
-            replaceCorporateSiteConfiguration: (corporateId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Corporates
              * @name GetCorporateSiteConfiguration
              * @summary Get Site Configuration
              * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
              * @secure
              */
             getCorporateSiteConfiguration: (corporateId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Corporates
+             * @name ReplaceCorporateSiteConfiguration
+             * @summary Replace Site Configuration
+             * @request PUT:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            replaceCorporateSiteConfiguration: (corporateId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -561,7 +496,7 @@ class Api extends HttpClient {
              * @request GET:/api/document-buckets
              * @secure
              */
-            getDocumentBuckets: (params = {}) => this.request(Object.assign({ path: `/api/document-buckets`, method: "GET", secure: true, format: "json" }, params)),
+            getDocumentBuckets: (query, params = {}) => this.request(Object.assign({ path: `/api/document-buckets`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -742,26 +677,6 @@ class Api extends HttpClient {
              * @secure
              */
             searchFiles: (data, query, params = {}) => this.request(Object.assign({ path: `/api/files/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name GetFormBySiteConfigurationSlug
-             * @summary Get By Site Configuration Slug
-             * @request POST:/api/siteform
-             * @secure
-             */
-            getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/siteform`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name GetSiteForms
-             * @summary Get All Site Forms
-             * @request GET:/api/siteform
-             * @secure
-             */
-            getSiteForms: (params = {}) => this.request(Object.assign({ path: `/api/siteform`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1346,13 +1261,23 @@ class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanDocuments
+             * @tags LoanDocumentBuckets
              * @name GetLoanDocumentBuckets
-             * @summary Get Buckets
+             * @summary Get All
              * @request GET:/api/loans/{loanId}/documents/buckets
              * @secure
              */
             getLoanDocumentBuckets: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/buckets`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentBuckets
+             * @name CreateLoanDocumentBuckets
+             * @summary Create
+             * @request POST:/api/loans/{loanId}/documents/buckets
+             * @secure
+             */
+            createLoanDocumentBuckets: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/buckets`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1367,12 +1292,32 @@ class Api extends HttpClient {
              * No description
              *
              * @tags LoanDocuments
+             * @name DownloadLoanDocument
+             * @summary Download By ID
+             * @request GET:/api/loans/{loanId}/documents/{documentId}/download
+             * @secure
+             */
+            downloadLoanDocument: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}/download`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
              * @name CreateLoanDocument
              * @summary Create
              * @request POST:/api/loans/{loanId}/documents
              * @secure
              */
             createLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name RetryFailedLoanDocument
+             * @summary Retry
+             * @request POST:/api/loans/{loanId}/documents/{documentId}/retry
+             * @secure
+             */
+            retryFailedLoanDocument: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}/retry`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1516,6 +1461,16 @@ class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags Loans
+             * @name SearchLoans
+             * @summary Search
+             * @request POST:/api/loans/search
+             * @secure
+             */
+            searchLoans: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanTaskDocuments
              * @name CreateLoanTaskDocument
              * @summary Create
@@ -1523,6 +1478,16 @@ class Api extends HttpClient {
              * @secure
              */
             createLoanTaskDocument: (loanId, loanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskDocuments
+             * @name CreateLoanTaskDocumentBucket
+             * @summary Create Bucket
+             * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents/bucket
+             * @secure
+             */
+            createLoanTaskDocumentBucket: (loanId, loanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents/bucket`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1563,6 +1528,16 @@ class Api extends HttpClient {
              * @secure
              */
             createLoanTask: (loanId, taskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasks
+             * @name ImportLoanTask
+             * @summary Import
+             * @request POST:/api/loans/{loanID}/tasks/import
+             * @secure
+             */
+            importLoanTask: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/import`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1879,30 +1854,30 @@ class Api extends HttpClient {
              * @tags RequestQueue
              * @name GetRequestQueues
              * @summary Get All
-             * @request GET:/api/request-queue
+             * @request GET:/api/request-queues
              * @secure
              */
-            getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queue`, method: "GET", secure: true, format: "json" }, params)),
+            getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queues`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags RequestQueue
              * @name RunRequestQueue
              * @summary Run
-             * @request POST:/api/request-queue/{id}/run
+             * @request POST:/api/request-queues/{id}/run
              * @secure
              */
-            runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}/run`, method: "POST", query: query, secure: true }, params)),
+            runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}/run`, method: "POST", query: query, secure: true }, params)),
             /**
              * No description
              *
              * @tags RequestQueue
              * @name DeleteQueueRequest
              * @summary Delete
-             * @request DELETE:/api/request-queue/{id}
+             * @request DELETE:/api/request-queues/{id}
              * @secure
              */
-            deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}`, method: "DELETE", secure: true }, params)),
+            deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
@@ -1995,6 +1970,26 @@ class Api extends HttpClient {
              * @secure
              */
             getSamlMetadata: (ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteForms
+             * @name GetFormBySiteConfigurationSlug
+             * @summary Get By Site Configuration Slug
+             * @request POST:/api/site-forms
+             * @secure
+             */
+            getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteForms
+             * @name GetSiteForms
+             * @summary Get All Site Forms
+             * @request GET:/api/site-forms
+             * @secure
+             */
+            getSiteForms: (params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2125,6 +2120,16 @@ class Api extends HttpClient {
              * @secure
              */
             stopImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserImpersonation
+             * @name ForceImpersonation
+             * @summary Force Impersonation as Super Admin Impersonator
+             * @request POST:/api/users/impersonation/force
+             * @secure
+             */
+            forceImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/force`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -2435,6 +2440,16 @@ class Api extends HttpClient {
              * @secure
              */
             getVerificationFrontEndMaterials: (requestId, params = {}) => this.request(Object.assign({ path: `/api/verifications/frontend-materials/${requestId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Workflow
+             * @name GetWorkflow
+             * @summary Get Workflow
+             * @request POST:/api/workflow
+             * @secure
+             */
+            getWorkflow: (data, params = {}) => this.request(Object.assign({ path: `/api/workflow`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
         };
         this.accounts = {
             /**

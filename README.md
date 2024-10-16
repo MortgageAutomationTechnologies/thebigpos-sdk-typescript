@@ -4,18 +4,18 @@
 Using npm:
 
 ```bash
-$ npm install @mortgageautomationtechnologies/thebigpos
+$ npm install @matech/thebigpos-sdk-typescript
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add @mortgageautomationtechnologies/thebigpos
+$ yarn add @matech/thebigpos-sdk-typescript
 ```
 
 ## Quick Start
 ```js
-import TheBigPOS from "@mortgageautomationtechnologies/thebigpos";
+import TheBigPOS from "@matech/thebigpos-sdk-typescript";
 
 TheBigPOS.init();
 ```

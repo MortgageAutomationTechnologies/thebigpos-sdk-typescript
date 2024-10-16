@@ -1,3 +1,29 @@
+export interface ASOSettings {
+    enabled: boolean;
+    softPull: boolean;
+    triMerge: boolean;
+    closingCosts: boolean;
+    du: boolean;
+    lp: boolean;
+    iceIncomeAnalyzer: boolean;
+    iceCreditAnalyzer: boolean;
+    voa: boolean;
+    voi: boolean;
+    voie: boolean;
+    voe: boolean;
+    flood: boolean;
+    avm: boolean;
+    disclosures: boolean;
+    preApproval: boolean;
+    preQualification: boolean;
+    mi: boolean;
+    miRadiam: boolean;
+    miEssent: boolean;
+    miNational: boolean;
+    miEnact: boolean;
+    mimgic: boolean;
+    miArch: boolean;
+}
 export interface Account {
     /** @format uuid */
     id: string;
@@ -13,12 +39,15 @@ export interface Account {
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     loanMilestoneNotificationsEnabled: boolean;
+    asoSettings: ASOSettings;
 }
 export interface AccountUpdateRequest {
+    name: string;
     mfaPreference: string;
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     loanMilestoneNotificationsEnabled: boolean;
+    asoSettings: ASOSettings;
 }
 export interface ActionResponse {
     /** @format uuid */
@@ -33,6 +62,15 @@ export interface ActionResponse {
 export interface AddFormToSiteConfigurationRequest {
     /** @minLength 1 */
     slug: string;
+    userRole: string;
+    borrowerType: string;
+    showProgressBar: boolean;
+    showTile: boolean;
+    tileLocation: string;
+    tileText: string;
+    tileSubtitle: string;
+    icon: string;
+    entityTypes: string[];
 }
 export interface Address {
     /** @format uuid */
@@ -68,13 +106,11 @@ export interface AdminAccessGetForms {
     /** @format int32 */
     type: number;
     target: string;
-    borrowerType: BorrowerType;
     name: string;
     isDefault: boolean;
     description?: string | null;
     slug?: string | null;
     status: string;
-    showProgressBar: boolean;
 }
 export interface AdminAccessUser {
     /** @format date-time */
@@ -167,7 +203,6 @@ export interface Attachment {
     base64Data?: string | null;
 }
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
-export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 export interface BranchReduced {
     /** @format uuid */
     id: string;
@@ -273,6 +308,14 @@ export interface ConditionCommentResponse {
     createdBy: string;
     createdByName: string;
 }
+export interface Contact {
+    /** @format uuid */
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    name?: string | null;
+    email?: string | null;
+}
 export interface ContactRowData {
     companyName?: string | null;
     name?: string | null;
@@ -355,13 +398,8 @@ export interface CreateInviteRequest {
     route?: string | null;
     /** @format uuid */
     siteConfigurationID: string;
-    isExistingAccount: boolean;
-    completedLoanApplication: boolean;
-    userRole: string;
-    loanRole: string;
-    customData: any;
-    /** @format date-time */
-    createdAt: string;
+    userRole?: string | null;
+    customData?: any;
     sourceUrl?: string | null;
 }
 export interface CreateUserRelationRequest {
@@ -702,11 +740,11 @@ export interface FormRequest {
     target: string;
     authType: string;
     inviteUser: boolean;
-    borrowerType: BorrowerType;
     name: string;
     description?: string | null;
     slug?: string | null;
     status: string;
+    language?: string | null;
 }
 export interface FormSubmission {
     /** @format date-time */
@@ -878,13 +916,12 @@ export interface GetForm {
     type: number;
     target: string;
     authType: string;
-    borrowerType: BorrowerType;
     name: string;
     isDefault: boolean;
     description?: string | null;
     slug?: string | null;
     status: string;
-    showProgressBar: boolean;
+    language: string;
     /** @format uuid */
     id: string;
 }
@@ -918,8 +955,12 @@ export interface GetPricingForLoanOfficerResponse {
 }
 export interface GetReportRequest {
     fields: FusionFieldDisplay[];
-    filters: FusionReportFilter[];
-    loanIDs: string[];
+    filters?: FusionReportFilter[] | null;
+    loanIDs?: string[] | null;
+    /** @format int32 */
+    startIndex?: number | null;
+    /** @format int32 */
+    limit?: number | null;
 }
 export interface GetReportResponse {
     loanRecords: LoanRecord[];
@@ -947,6 +988,25 @@ export interface GetUserByEmailRequest {
      * @minLength 1
      */
     email: string;
+}
+export interface GetWorkflowRequest {
+    /** @minLength 1 */
+    formType: string;
+    borrowerType?: string | null;
+    userRole?: string | null;
+    language?: string | null;
+}
+export interface ImportUserLoanTaskRequest {
+    /**
+     * @format uuid
+     * @minLength 1
+     */
+    taskID: string;
+    /**
+     * @format uuid
+     * @minLength 1
+     */
+    userID: string;
 }
 export interface InviteResponse {
     firstName: string;
@@ -1057,7 +1117,6 @@ export interface ListingSearchCriteria {
 export interface Loan {
     loanID: string;
     loanNumber?: string | null;
-    borrowerLastName?: string | null;
     initialDisclosureProvidedDate?: string | null;
     closingDisclosureSentDate?: string | null;
     underwritingApprovalDate?: string | null;
@@ -1065,14 +1124,27 @@ export interface Loan {
     fundingOrderDate?: string | null;
     currentStatusDate?: string | null;
     loanChannel?: string | null;
-    totalLoanAmount?: string | null;
+    /** @format double */
+    totalLoanAmount?: number | null;
     currentLoanStatus?: string | null;
-    applicationDate?: string | null;
     currentMilestone?: string | null;
-    lastCompleted?: string | null;
+    lastCompletedMilestone?: string | null;
     startDate?: string | null;
+    isInSync: boolean;
+    /** @format date-time */
+    syncDate?: string | null;
     fileStarter?: string | null;
     isPOSLoan?: boolean | null;
+    referenceID: string;
+    /** @format int32 */
+    term?: number | null;
+    loanProgram?: string | null;
+    loanType?: string | null;
+    status?: string | null;
+    loanOfficer: LoanOfficer;
+    propertyAddress: Address;
+    borrowerContact: Contact;
+    coBorrowerContact: Contact;
 }
 export interface LoanComparisonResponse {
     loanID: string;
@@ -1128,10 +1200,11 @@ export interface LoanDocument {
     name: string;
     loan: Loan;
     user: User;
-    initialBucket: string;
-    losDocumentID: string;
+    initialBucket?: string | null;
+    losDocumentID?: string | null;
     losStatus: string;
-    contents: string;
+    contents?: string | null;
+    failoverDocumentPath?: string | null;
 }
 export interface LoanDraftSearchCriteria {
     isActive?: boolean | null;
@@ -1157,11 +1230,27 @@ export interface LoanOfficerSearchCriteria {
     /** @format uuid */
     brand?: string | null;
 }
+export interface LoanPaginatedResponse {
+    rows: Loan[];
+    pagination: PaginationResponse;
+    /** @format int64 */
+    count: number;
+}
 export interface LoanRecord {
     loanGuid: string;
     loanFields: Record<string, string>;
 }
-export type LoanTaskRole = "Borrowers" | "Borrower" | "CoBorrower";
+export interface LoanSearchCriteria {
+    searchText?: string | null;
+    /** @format uuid */
+    loanOfficerId?: string | null;
+    loanNumber?: string | null;
+    isClosed?: boolean | null;
+    loanPurpose?: string | null;
+    loanType?: string | null;
+    /** @format uuid */
+    siteConfigurationId?: string | null;
+}
 export interface LoanUser {
     /** @format uuid */
     id: string;
@@ -1347,14 +1436,6 @@ export interface NotificationTemplateVersionUpdateRequest {
     /** @minLength 1 */
     plainBody: string;
 }
-export interface Operation {
-    operationType: OperationType;
-    path?: string | null;
-    op?: string | null;
-    from?: string | null;
-    value?: any;
-}
-export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 export interface OverridePasswordRequest {
     /** @minLength 8 */
     password: string;
@@ -1791,6 +1872,8 @@ export interface SiteConfiguration {
     darkModeIconUrl?: string | null;
     darkModePrimaryColor?: string | null;
     darkModeSecondaryColor?: string | null;
+    calendarUrl?: string | null;
+    surveysUrl?: string | null;
     enabledServices: EnabledServices;
     companyName?: string | null;
     companyAddress?: string | null;
@@ -1808,6 +1891,194 @@ export interface SiteConfiguration {
     allowedLoginsWithoutMFA: number;
     modules: Module[];
     user: UserPublic;
+    asoSettings: ASOSettings;
+}
+export interface SiteConfigurationByUrl {
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    entityID: string;
+    /** @format int32 */
+    entityType: number;
+    /** @minLength 1 */
+    url: string;
+    name: string;
+    introduction?: string | null;
+    introductionTitle?: string | null;
+    /** @format int32 */
+    nmlsid: number;
+    address?: string | null;
+    address2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zip?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    tollFree?: string | null;
+    logoUrl?: string | null;
+    portalLogoUrl?: string | null;
+    mobileAppLogoUrl?: string | null;
+    iconUrl?: string | null;
+    bannerUrl?: string | null;
+    secondaryBannerUrl?: string | null;
+    profilePhotoUrl?: string | null;
+    primaryColor?: string | null;
+    secondaryColor?: string | null;
+    textColor?: string | null;
+    companyUrl?: string | null;
+    termsUrl?: string | null;
+    privacyPolicyUrl?: string | null;
+    facebookUrl?: string | null;
+    twitterUrl?: string | null;
+    instagramUrl?: string | null;
+    linkedInUrl?: string | null;
+    licenses: string[];
+    contactUsUrl?: string | null;
+    licenseInfoUrl?: string | null;
+    backgroundColor?: string | null;
+    headerAlignment?: string | null;
+    email?: string | null;
+    /** @format int32 */
+    landingPageType?: number | null;
+    confirmPassword?: boolean | null;
+    pageNotFoundUrl?: string | null;
+    footerDisclaimerText1?: string | null;
+    footerDisclaimerText2?: string | null;
+    locationImageUrl?: string | null;
+    eppsUserName?: string | null;
+    mobilePrequalIconUrl?: string | null;
+    fullAppIconUrl?: string | null;
+    ringCenralIconUrl?: string | null;
+    alexaIconUrl?: string | null;
+    mobileAppIconUrl?: string | null;
+    profilePhotoPlaceholderUrl?: string | null;
+    losUserID?: string | null;
+    iconColor?: string | null;
+    /** @format uuid */
+    byPhoneStaticIconID?: string | null;
+    /** @format uuid */
+    byPhoneAnimatedIconID?: string | null;
+    /** @format uuid */
+    shortAppStaticIconID?: string | null;
+    /** @format uuid */
+    shortAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    fullAppStaticIconID?: string | null;
+    /** @format uuid */
+    fullAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    rulesStaticIconID?: string | null;
+    /** @format uuid */
+    rulesAnimatedIconID?: string | null;
+    /** @format uuid */
+    myProfileStaticIconID?: string | null;
+    /** @format uuid */
+    myProfileAnimatedIconID?: string | null;
+    /** @format uuid */
+    accountSettingsStaticIconID?: string | null;
+    /** @format uuid */
+    accountSettingsAnimatedIconID?: string | null;
+    /** @format uuid */
+    brandStaticIconID?: string | null;
+    /** @format uuid */
+    brandAnimatedIconID?: string | null;
+    /** @format uuid */
+    branchesStaticIconID?: string | null;
+    /** @format uuid */
+    branchesAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanOfficersStaticIconID?: string | null;
+    /** @format uuid */
+    loanOfficersAnimatedIconID?: string | null;
+    /** @format uuid */
+    usersStaticIconID?: string | null;
+    /** @format uuid */
+    usersAnimatedIconID?: string | null;
+    counties: string[];
+    /** @format uuid */
+    pipelineStaticIconID?: string | null;
+    /** @format uuid */
+    pipelineAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsStaticIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsAnimatedIconID?: string | null;
+    /** @format uuid */
+    documentsStaticIconID?: string | null;
+    /** @format uuid */
+    documentsAnimatedIconID?: string | null;
+    /** @format uuid */
+    calculatorStaticIconID?: string | null;
+    /** @format uuid */
+    calculatorAnimatedIconID?: string | null;
+    /** @format uuid */
+    dashboardStaticIconID?: string | null;
+    /** @format uuid */
+    dashboardAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutAnimatedIconID?: string | null;
+    /** @format uuid */
+    signInStaticIconID?: string | null;
+    /** @format uuid */
+    signInAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutStaticIconID?: string | null;
+    backgroundImageUrl?: string | null;
+    disclosuresUrl?: string | null;
+    /** @format uuid */
+    addCoBorrowerStaticIconID?: string | null;
+    /** @format uuid */
+    addCoBorrowerAnimatedIconID?: string | null;
+    disclosuresSSOSiteID?: string | null;
+    loanChannel?: string | null;
+    loanFolder?: string | null;
+    loanTemplate?: string | null;
+    fromEmail?: string | null;
+    ccEmails?: string | null;
+    irsVerificationUrl?: string | null;
+    byPhoneTitle?: string | null;
+    byPhoneSubtitle?: string | null;
+    shortAppTitle?: string | null;
+    shortAppSubtitle?: string | null;
+    fullAppTitle?: string | null;
+    fullAppSubtitle?: string | null;
+    spanishPrequalTitle?: string | null;
+    spanishPrequalSubtitle?: string | null;
+    spanishFullAppTitle?: string | null;
+    spanishFullAppSubtitle?: string | null;
+    userTitle?: string | null;
+    darkModeLogoUrl?: string | null;
+    darkModePortalLogoUrl?: string | null;
+    darkModeIconUrl?: string | null;
+    darkModePrimaryColor?: string | null;
+    darkModeSecondaryColor?: string | null;
+    calendarUrl?: string | null;
+    surveysUrl?: string | null;
+    enabledServices: EnabledServices;
+    companyName?: string | null;
+    companyAddress?: string | null;
+    companyAddress2?: string | null;
+    companyCity?: string | null;
+    companyState?: string | null;
+    companyZip?: string | null;
+    companyPhone?: string | null;
+    companyFax?: string | null;
+    companyNMLSID?: string | null;
+    branchName?: string | null;
+    branchNMLSID?: string | null;
+    mfaPreference?: string | null;
+    /** @format int32 */
+    allowedLoginsWithoutMFA: number;
+    modules: Module[];
+    user: UserPublic;
+    asoSettings: ASOSettings;
+    workflows: Workflow[];
 }
 export interface SiteConfigurationForm {
     /** @format date-time */
@@ -1824,6 +2095,11 @@ export interface SiteConfigurationForm {
     formID: string;
     formType?: string | null;
     slug?: string | null;
+    userRole: string;
+    borrowerType: string;
+    tileLocation: string;
+    icon: string;
+    entityTypes: string[];
 }
 export interface SiteConfigurationPaginatedResponse {
     rows: SiteConfiguration[];
@@ -1845,10 +2121,336 @@ export interface SiteConfigurationReduced {
     /** @format date-time */
     deletedAt?: string | null;
 }
+export interface SiteConfigurationRequest {
+    /** @format uuid */
+    entityID: string;
+    /** @format int32 */
+    entityType: number;
+    url: string;
+    name: string;
+    introduction?: string | null;
+    introductionTitle?: string | null;
+    /** @format int32 */
+    nmlsid: number;
+    address?: string | null;
+    address2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zip?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    tollFree?: string | null;
+    logoUrl?: string | null;
+    portalLogoUrl?: string | null;
+    mobileAppLogoUrl?: string | null;
+    iconUrl?: string | null;
+    bannerUrl?: string | null;
+    secondaryBannerUrl?: string | null;
+    profilePhotoUrl?: string | null;
+    primaryColor?: string | null;
+    secondaryColor?: string | null;
+    textColor?: string | null;
+    companyUrl?: string | null;
+    termsUrl?: string | null;
+    privacyPolicyUrl?: string | null;
+    facebookUrl?: string | null;
+    twitterUrl?: string | null;
+    instagramUrl?: string | null;
+    linkedInUrl?: string | null;
+    licenses: string[];
+    contactUsUrl?: string | null;
+    licenseInfoUrl?: string | null;
+    backgroundColor?: string | null;
+    headerAlignment?: string | null;
+    email?: string | null;
+    /** @format int32 */
+    landingPageType?: number | null;
+    confirmPassword?: boolean | null;
+    pageNotFoundUrl?: string | null;
+    footerDisclaimerText1?: string | null;
+    footerDisclaimerText2?: string | null;
+    locationImageUrl?: string | null;
+    eppsUserName?: string | null;
+    mobilePrequalIconUrl?: string | null;
+    fullAppIconUrl?: string | null;
+    ringCenralIconUrl?: string | null;
+    alexaIconUrl?: string | null;
+    mobileAppIconUrl?: string | null;
+    profilePhotoPlaceholderUrl?: string | null;
+    losUserID?: string | null;
+    iconColor?: string | null;
+    /** @format uuid */
+    byPhoneStaticIconID?: string | null;
+    /** @format uuid */
+    byPhoneAnimatedIconID?: string | null;
+    /** @format uuid */
+    shortAppStaticIconID?: string | null;
+    /** @format uuid */
+    shortAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    fullAppStaticIconID?: string | null;
+    /** @format uuid */
+    fullAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    rulesStaticIconID?: string | null;
+    /** @format uuid */
+    rulesAnimatedIconID?: string | null;
+    /** @format uuid */
+    myProfileStaticIconID?: string | null;
+    /** @format uuid */
+    myProfileAnimatedIconID?: string | null;
+    /** @format uuid */
+    accountSettingsStaticIconID?: string | null;
+    /** @format uuid */
+    accountSettingsAnimatedIconID?: string | null;
+    /** @format uuid */
+    brandStaticIconID?: string | null;
+    /** @format uuid */
+    brandAnimatedIconID?: string | null;
+    /** @format uuid */
+    branchesStaticIconID?: string | null;
+    /** @format uuid */
+    branchesAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanOfficersStaticIconID?: string | null;
+    /** @format uuid */
+    loanOfficersAnimatedIconID?: string | null;
+    /** @format uuid */
+    usersStaticIconID?: string | null;
+    /** @format uuid */
+    usersAnimatedIconID?: string | null;
+    counties: string[];
+    /** @format uuid */
+    pipelineStaticIconID?: string | null;
+    /** @format uuid */
+    pipelineAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsStaticIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsAnimatedIconID?: string | null;
+    /** @format uuid */
+    documentsStaticIconID?: string | null;
+    /** @format uuid */
+    documentsAnimatedIconID?: string | null;
+    /** @format uuid */
+    calculatorStaticIconID?: string | null;
+    /** @format uuid */
+    calculatorAnimatedIconID?: string | null;
+    /** @format uuid */
+    dashboardStaticIconID?: string | null;
+    /** @format uuid */
+    dashboardAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutAnimatedIconID?: string | null;
+    /** @format uuid */
+    signInStaticIconID?: string | null;
+    /** @format uuid */
+    signInAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutStaticIconID?: string | null;
+    backgroundImageUrl?: string | null;
+    disclosuresUrl?: string | null;
+    /** @format uuid */
+    addCoBorrowerStaticIconID?: string | null;
+    /** @format uuid */
+    addCoBorrowerAnimatedIconID?: string | null;
+    disclosuresSSOSiteID?: string | null;
+    loanChannel?: string | null;
+    loanFolder?: string | null;
+    loanTemplate?: string | null;
+    fromEmail?: string | null;
+    ccEmails?: string | null;
+    irsVerificationUrl?: string | null;
+    byPhoneTitle?: string | null;
+    byPhoneSubtitle?: string | null;
+    shortAppTitle?: string | null;
+    shortAppSubtitle?: string | null;
+    fullAppTitle?: string | null;
+    fullAppSubtitle?: string | null;
+    spanishPrequalTitle?: string | null;
+    spanishPrequalSubtitle?: string | null;
+    spanishFullAppTitle?: string | null;
+    spanishFullAppSubtitle?: string | null;
+    darkModeLogoUrl?: string | null;
+    darkModePortalLogoUrl?: string | null;
+    darkModeIconUrl?: string | null;
+    darkModePrimaryColor?: string | null;
+    darkModeSecondaryColor?: string | null;
+    calendarUrl?: string | null;
+    surveysUrl?: string | null;
+    enabledServices: EnabledServices;
+    modules?: Module[] | null;
+    /** @format uuid */
+    userID?: string | null;
+}
 export interface SiteConfigurationSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
     entityType?: string | null;
+}
+export interface SiteConfigurationUpdateRequest {
+    /** @format uuid */
+    entityID: string;
+    /** @format int32 */
+    entityType: number;
+    url: string;
+    name: string;
+    introduction?: string | null;
+    introductionTitle?: string | null;
+    /** @format int32 */
+    nmlsid: number;
+    address?: string | null;
+    address2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zip?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    tollFree?: string | null;
+    logoUrl?: string | null;
+    portalLogoUrl?: string | null;
+    mobileAppLogoUrl?: string | null;
+    iconUrl?: string | null;
+    bannerUrl?: string | null;
+    secondaryBannerUrl?: string | null;
+    profilePhotoUrl?: string | null;
+    primaryColor?: string | null;
+    secondaryColor?: string | null;
+    textColor?: string | null;
+    companyUrl?: string | null;
+    termsUrl?: string | null;
+    privacyPolicyUrl?: string | null;
+    facebookUrl?: string | null;
+    twitterUrl?: string | null;
+    instagramUrl?: string | null;
+    linkedInUrl?: string | null;
+    licenses: string[];
+    contactUsUrl?: string | null;
+    licenseInfoUrl?: string | null;
+    backgroundColor?: string | null;
+    headerAlignment?: string | null;
+    email?: string | null;
+    /** @format int32 */
+    landingPageType?: number | null;
+    confirmPassword?: boolean | null;
+    pageNotFoundUrl?: string | null;
+    footerDisclaimerText1?: string | null;
+    footerDisclaimerText2?: string | null;
+    locationImageUrl?: string | null;
+    eppsUserName?: string | null;
+    mobilePrequalIconUrl?: string | null;
+    fullAppIconUrl?: string | null;
+    ringCenralIconUrl?: string | null;
+    alexaIconUrl?: string | null;
+    mobileAppIconUrl?: string | null;
+    profilePhotoPlaceholderUrl?: string | null;
+    losUserID?: string | null;
+    iconColor?: string | null;
+    /** @format uuid */
+    byPhoneStaticIconID?: string | null;
+    /** @format uuid */
+    byPhoneAnimatedIconID?: string | null;
+    /** @format uuid */
+    shortAppStaticIconID?: string | null;
+    /** @format uuid */
+    shortAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    fullAppStaticIconID?: string | null;
+    /** @format uuid */
+    fullAppAnimatedIconID?: string | null;
+    /** @format uuid */
+    rulesStaticIconID?: string | null;
+    /** @format uuid */
+    rulesAnimatedIconID?: string | null;
+    /** @format uuid */
+    myProfileStaticIconID?: string | null;
+    /** @format uuid */
+    myProfileAnimatedIconID?: string | null;
+    /** @format uuid */
+    accountSettingsStaticIconID?: string | null;
+    /** @format uuid */
+    accountSettingsAnimatedIconID?: string | null;
+    /** @format uuid */
+    brandStaticIconID?: string | null;
+    /** @format uuid */
+    brandAnimatedIconID?: string | null;
+    /** @format uuid */
+    branchesStaticIconID?: string | null;
+    /** @format uuid */
+    branchesAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanOfficersStaticIconID?: string | null;
+    /** @format uuid */
+    loanOfficersAnimatedIconID?: string | null;
+    /** @format uuid */
+    usersStaticIconID?: string | null;
+    /** @format uuid */
+    usersAnimatedIconID?: string | null;
+    counties: string[];
+    /** @format uuid */
+    pipelineStaticIconID?: string | null;
+    /** @format uuid */
+    pipelineAnimatedIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsStaticIconID?: string | null;
+    /** @format uuid */
+    loanApplicationsAnimatedIconID?: string | null;
+    /** @format uuid */
+    documentsStaticIconID?: string | null;
+    /** @format uuid */
+    documentsAnimatedIconID?: string | null;
+    /** @format uuid */
+    calculatorStaticIconID?: string | null;
+    /** @format uuid */
+    calculatorAnimatedIconID?: string | null;
+    /** @format uuid */
+    dashboardStaticIconID?: string | null;
+    /** @format uuid */
+    dashboardAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutAnimatedIconID?: string | null;
+    /** @format uuid */
+    signInStaticIconID?: string | null;
+    /** @format uuid */
+    signInAnimatedIconID?: string | null;
+    /** @format uuid */
+    signOutStaticIconID?: string | null;
+    backgroundImageUrl?: string | null;
+    disclosuresUrl?: string | null;
+    /** @format uuid */
+    addCoBorrowerStaticIconID?: string | null;
+    /** @format uuid */
+    addCoBorrowerAnimatedIconID?: string | null;
+    disclosuresSSOSiteID?: string | null;
+    loanChannel?: string | null;
+    loanFolder?: string | null;
+    loanTemplate?: string | null;
+    fromEmail?: string | null;
+    ccEmails?: string | null;
+    irsVerificationUrl?: string | null;
+    byPhoneTitle?: string | null;
+    byPhoneSubtitle?: string | null;
+    shortAppTitle?: string | null;
+    shortAppSubtitle?: string | null;
+    fullAppTitle?: string | null;
+    fullAppSubtitle?: string | null;
+    spanishPrequalTitle?: string | null;
+    spanishPrequalSubtitle?: string | null;
+    spanishFullAppTitle?: string | null;
+    spanishFullAppSubtitle?: string | null;
+    darkModeLogoUrl?: string | null;
+    darkModePortalLogoUrl?: string | null;
+    darkModeIconUrl?: string | null;
+    darkModePrimaryColor?: string | null;
+    darkModeSecondaryColor?: string | null;
+    calendarUrl?: string | null;
+    surveysUrl?: string | null;
+    enabledServices: EnabledServices;
+    modules?: Module[] | null;
+    /** @format uuid */
+    userID?: string | null;
+    /** @format uuid */
+    id: string;
 }
 export interface SocialSurveyRecord {
     /** @format date-time */
@@ -1886,9 +2488,9 @@ export interface Task {
     deletedAt?: string | null;
     name: string;
     description?: string | null;
-    type: TaskType;
+    type: string;
     losTarget?: string | null;
-    targetUserRole: LoanTaskRole;
+    targetUserRole?: string | null;
     /** @format int32 */
     daysDueFromApplication?: number | null;
     isGlobal: boolean;
@@ -1896,14 +2498,15 @@ export interface Task {
     id: string;
     user: User;
     isFromLegacySource: boolean;
+    usedInBusinessRule: boolean;
 }
 export interface TaskRequest {
     /** @minLength 1 */
     name: string;
     description?: string | null;
     losTarget?: string | null;
-    type: TaskType;
-    targetUserRole: LoanTaskRole;
+    type: string;
+    targetUserRole?: string | null;
     /**
      * @format int32
      * @min 0
@@ -1918,7 +2521,6 @@ export interface TaskSearchCriteria {
     isGlobal?: boolean | null;
     excludedIds?: string[] | null;
 }
-export type TaskType = "Document" | "Field" | "Signature" | "EDisclosure" | "EConsent" | "VerificationOfAssets" | "VerificationOfIncome" | "VerificationOfEmployment" | "VerificationOfCredit" | "Payment" | "VerificationOfIncomeAndEmployment" | "VerificationOfTaxes";
 export interface TestSendNotificationForLoanRequest {
     loanData: Record<string, string>;
     /** @format uuid */
@@ -1939,6 +2541,7 @@ export interface TokenChallengeRequest {
      * @minLength 1
      */
     siteConfigurationId: string;
+    isSupport: boolean;
 }
 export interface TokenRequest {
     /** @format email */
@@ -1947,6 +2550,7 @@ export interface TokenRequest {
     password: string;
     /** @format uuid */
     siteConfigurationId?: string | null;
+    isSupport: boolean;
 }
 export interface TokenResponse {
     token_type: string;
@@ -2130,7 +2734,7 @@ export interface UserLoanTaskRequest {
 }
 export interface UserLoanTaskUpdateRequest {
     status: string;
-    value: string;
+    value?: string | null;
 }
 export interface UserMobilePhoneVerificationRequest {
     /** @minLength 1 */
@@ -2210,15 +2814,16 @@ export interface UserSearchCriteria {
     roles?: string[] | null;
 }
 export interface VerificationRequest {
-    requestID: string;
+    requestID?: string | null;
     /** @minLength 1 */
     loanID: string;
+    /** @minItems 1 */
     operations: string[];
     /** @format int32 */
     _VerificationOperations?: number | null;
     /** @format int32 */
     verificationOperations: number;
-    newRequest: boolean;
+    newRequest?: boolean | null;
     /** @format uuid */
     loanTaskID?: string | null;
 }
@@ -2241,9 +2846,27 @@ export interface VerifyPasswordRequest {
     /** @format uuid */
     siteConfigurationId?: string | null;
 }
+export interface Workflow {
+    formType: string;
+    target: string;
+    authType: string;
+    name: string;
+    isDefault: boolean;
+    description: string;
+    slug: string;
+    status: string;
+    userRole: string;
+    borrowerType: string;
+    showProgressBar: boolean;
+    showTile: boolean;
+    tileLocation: string;
+    tileText: string;
+    tileSubtitle: string;
+    icon: string;
+}
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
 export type QueryParamsType = Record<string | number, any>;
-export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
-export interface FullRequestParams extends Omit<RequestInit, "body"> {
+export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
     /** set parameter to `true` for call `securityWorker` for this request */
     secure?: boolean;
     /** request path */
@@ -2253,26 +2876,16 @@ export interface FullRequestParams extends Omit<RequestInit, "body"> {
     /** query params */
     query?: QueryParamsType;
     /** format of response (i.e. response.json() -> format: "json") */
-    format?: ResponseFormat;
+    format?: ResponseType;
     /** request body */
     body?: unknown;
-    /** base url */
-    baseUrl?: string;
-    /** request cancellation token */
-    cancelToken?: CancelToken;
 }
 export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
-export interface ApiConfig<SecurityDataType = unknown> {
-    baseUrl?: string;
-    baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
-    securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
-    customFetch?: typeof fetch;
+export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+    securityWorker?: (securityData: SecurityDataType | null) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
+    secure?: boolean;
+    format?: ResponseType;
 }
-export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
-    data: D;
-    error: E;
-}
-type CancelToken = Symbol | string | number;
 export declare enum ContentType {
     Json = "application/json",
     FormData = "multipart/form-data",
@@ -2280,28 +2893,21 @@ export declare enum ContentType {
     Text = "text/plain"
 }
 export declare class HttpClient<SecurityDataType = unknown> {
-    baseUrl: string;
+    instance: AxiosInstance;
     private securityData;
     private securityWorker?;
-    private abortControllers;
-    private customFetch;
-    private baseApiParams;
-    constructor(apiConfig?: ApiConfig<SecurityDataType>);
+    private secure?;
+    private format?;
+    constructor({ securityWorker, secure, format, ...axiosConfig }?: ApiConfig<SecurityDataType>);
     setSecurityData: (data: SecurityDataType | null) => void;
-    protected encodeQueryParam(key: string, value: any): string;
-    protected addQueryParam(query: QueryParamsType, key: string): string;
-    protected addArrayQueryParam(query: QueryParamsType, key: string): any;
-    protected toQueryString(rawQuery?: QueryParamsType): string;
-    protected addQueryParams(rawQuery?: QueryParamsType): string;
-    private contentFormatters;
-    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams;
-    protected createAbortSignal: (cancelToken: CancelToken) => AbortSignal | undefined;
-    abortRequest: (cancelToken: CancelToken) => void;
-    request: <T = any, E = any>({ body, secure, path, type, query, format, baseUrl, cancelToken, ...params }: FullRequestParams) => Promise<HttpResponse<T, E>>;
+    protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig;
+    protected stringifyFormItem(formItem: unknown): string;
+    protected createFormData(input: Record<string, unknown>): FormData;
+    request: <T = any, _E = any>({ secure, path, type, query, format, body, ...params }: FullRequestParams) => Promise<AxiosResponse<T>>;
 }
 /**
  * @title The Big POS API
- * @version v2.8.2
+ * @version v2.8.7
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -2314,7 +2920,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request POST:/
      * @secure
      */
-    postRoot: (params?: RequestParams) => Promise<HttpResponse<void, any>>;
+    postRoot: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
     api: {
         /**
          * No description
@@ -2325,7 +2931,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/account
          * @secure
          */
-        getAccount: (params?: RequestParams) => Promise<HttpResponse<Account, ProblemDetails>>;
+        getAccount: (params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -2335,17 +2941,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/account
          * @secure
          */
-        replaceAccount: (data: AccountUpdateRequest, params?: RequestParams) => Promise<HttpResponse<Account, ProblemDetails>>;
-        /**
-         * No description
-         *
-         * @tags Account
-         * @name UpdateAccount
-         * @summary Update
-         * @request PATCH:/api/account
-         * @secure
-         */
-        updateAccount: (data: Operation[], params?: RequestParams) => Promise<HttpResponse<Account, ProblemDetails>>;
+        replaceAccount: (data: AccountUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -2355,7 +2951,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/account/site-configurations
          * @secure
          */
-        getSiteConfigurationByAccount: (params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getSiteConfigurationByAccount: (params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2365,7 +2961,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/account/site-configurations
          * @secure
          */
-        updateSiteConfigurationForAccount: (data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        updateSiteConfigurationForAccount: (data: SiteConfiguration, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2383,7 +2979,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<GetBranchPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2393,7 +2989,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/branches
          * @secure
          */
-        createBranch: (data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
+        createBranch: (data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -2410,7 +3006,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<GetBranchPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2420,7 +3016,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/branches/{branchId}
          * @secure
          */
-        getBranch: (branchId: string, params?: RequestParams) => Promise<HttpResponse<GetBranch, any>>;
+        getBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -2430,7 +3026,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/branches/{branchId}
          * @secure
          */
-        replaceBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
+        replaceBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -2440,7 +3036,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/branches/{branchId}
          * @secure
          */
-        deleteBranch: (branchId: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2450,7 +3046,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/branches/{branchId}/restore
          * @secure
          */
-        restoreBranch: (branchId: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        restoreBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2460,7 +3056,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/branches/{branchId}/site-configurations
          * @secure
          */
-        createBranchSiteConfiguration: (branchId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        createBranchSiteConfiguration: (branchId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2470,9 +3066,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/branches/{branchId}/site-configurations
          * @secure
          */
-        replaceBranchSiteConfiguration: (branchId: string, data: SiteConfiguration, query?: {
+        replaceBranchSiteConfiguration: (branchId: string, data: SiteConfigurationUpdateRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2482,7 +3078,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2492,7 +3088,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/branches/{branchId}/loan-officers
          * @secure
          */
-        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<HttpResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
         /**
          * No description
          *
@@ -2504,7 +3100,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getBusinessRules: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<BusinessRule[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BusinessRule[], any>>;
         /**
          * No description
          *
@@ -2514,7 +3110,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/business-rules
          * @secure
          */
-        createBusinessRule: (data: BusinessRuleRequest, params?: RequestParams) => Promise<HttpResponse<BusinessRule, UnprocessableEntityResponse>>;
+        createBusinessRule: (data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -2524,7 +3120,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/business-rules/{id}
          * @secure
          */
-        getBusinessRule: (id: string, params?: RequestParams) => Promise<HttpResponse<BusinessRule, any>>;
+        getBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -2534,7 +3130,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/business-rules/{id}
          * @secure
          */
-        replaceBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<HttpResponse<BusinessRule, UnprocessableEntityResponse>>;
+        replaceBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -2544,7 +3140,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/business-rules/{id}
          * @secure
          */
-        deleteBusinessRule: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2554,7 +3150,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/business-rules/{id}/restore
          * @secure
          */
-        restoreBusinessRule: (id: string, params?: RequestParams) => Promise<HttpResponse<BusinessRule, any>>;
+        restoreBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -2572,7 +3168,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<CorporateResponsePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<CorporateResponsePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2582,7 +3178,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/corporates
          * @secure
          */
-        createCorporate: (data: CorporateRequest, params?: RequestParams) => Promise<HttpResponse<CorporateResponse, UnprocessableEntityResponse>>;
+        createCorporate: (data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<CorporateResponse, any>>;
         /**
          * No description
          *
@@ -2599,7 +3195,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<CorporateResponsePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<CorporateResponsePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2609,7 +3205,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{id}
          * @secure
          */
-        getCorporate: (id: string, params?: RequestParams) => Promise<HttpResponse<CorporateResponse, any>>;
+        getCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<CorporateResponse, any>>;
         /**
          * No description
          *
@@ -2619,7 +3215,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/corporates/{id}
          * @secure
          */
-        replaceCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<HttpResponse<CorporateResponse, UnprocessableEntityResponse>>;
+        replaceCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<CorporateResponse, any>>;
         /**
          * No description
          *
@@ -2629,7 +3225,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/corporates/{id}
          * @secure
          */
-        deleteCorporate: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2639,7 +3235,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/corporates/{id}/restore
          * @secure
          */
-        restoreCorporate: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        restoreCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2649,19 +3245,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/corporates/{corporateId}/site-configurations
          * @secure
          */
-        createCorporateSiteConfiguration: (corporateId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
-        /**
-         * No description
-         *
-         * @tags Corporates
-         * @name ReplaceCorporateSiteConfiguration
-         * @summary Replace Site Configuration
-         * @request PUT:/api/corporates/{corporateId}/site-configurations
-         * @secure
-         */
-        replaceCorporateSiteConfiguration: (corporateId: string, data: SiteConfiguration, query?: {
-            applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        createCorporateSiteConfiguration: (corporateId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2671,7 +3255,19 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
+        /**
+         * No description
+         *
+         * @tags Corporates
+         * @name ReplaceCorporateSiteConfiguration
+         * @summary Replace Site Configuration
+         * @request PUT:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
+         * @secure
+         */
+        replaceCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, data: SiteConfigurationUpdateRequest, query?: {
+            applyToChildren?: boolean;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -2681,7 +3277,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{id}/branches
          * @secure
          */
-        getBranchesByCorporate: (id: string, params?: RequestParams) => Promise<HttpResponse<BranchReduced[], any>>;
+        getBranchesByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchReduced[], any>>;
         /**
          * No description
          *
@@ -2691,7 +3287,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{id}/loan-officers
          * @secure
          */
-        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<HttpResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
         /**
          * No description
          *
@@ -2710,7 +3306,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<DeviceResponsePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DeviceResponsePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2720,7 +3316,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/devices/{id}
          * @secure
          */
-        getDeviceById: (id: string, params?: RequestParams) => Promise<HttpResponse<DeviceResponse, any>>;
+        getDeviceById: (id: string, params?: RequestParams) => Promise<AxiosResponse<DeviceResponse, any>>;
         /**
          * No description
          *
@@ -2730,7 +3326,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/devices/{sn}/profile
          * @secure
          */
-        getDeviceBySerialNumber: (sn: string, params?: RequestParams) => Promise<HttpResponse<DeviceMDMResponse, any>>;
+        getDeviceBySerialNumber: (sn: string, params?: RequestParams) => Promise<AxiosResponse<DeviceMDMResponse, any>>;
         /**
          * No description
          *
@@ -2740,7 +3336,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/devices/{sn}/actions/{actionName}
          * @secure
          */
-        createActionBySerialNumber: (sn: string, actionName: string, params?: RequestParams) => Promise<HttpResponse<ActionResponse, any>>;
+        createActionBySerialNumber: (sn: string, actionName: string, params?: RequestParams) => Promise<AxiosResponse<ActionResponse, any>>;
         /**
          * No description
          *
@@ -2750,7 +3346,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/document-buckets
          * @secure
          */
-        getDocumentBuckets: (params?: RequestParams) => Promise<HttpResponse<string[], any>>;
+        getDocumentBuckets: (query?: {
+            /** @default false */
+            includeSystemBuckets?: boolean;
+        }, params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
         /**
          * No description
          *
@@ -2762,7 +3361,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getDocumentTemplates: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBaseResponse[], any>>;
         /**
          * No description
          *
@@ -2772,7 +3371,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/document-templates
          * @secure
          */
-        createDocumentTemplate: (data: CreateDocumentTemplateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>>;
+        createDocumentTemplate: (data: CreateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBaseResponse, any>>;
         /**
          * No description
          *
@@ -2787,7 +3386,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             showAll?: boolean;
             /** @default true */
             publishedOnly?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBaseResponse[], any>>;
         /**
          * No description
          *
@@ -2797,7 +3396,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/document-templates/{id}
          * @secure
          */
-        getDocumentTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateResponse, ProblemDetails>>;
+        getDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateResponse, any>>;
         /**
          * No description
          *
@@ -2807,7 +3406,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/document-templates/{id}
          * @secure
          */
-        replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>>;
+        replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBaseResponse, any>>;
         /**
          * No description
          *
@@ -2817,7 +3416,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/document-templates/{id}
          * @secure
          */
-        deleteDocumentTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        deleteDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2827,7 +3426,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/document-templates/{id}/restore
          * @secure
          */
-        restoreDocumentTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        restoreDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2837,7 +3436,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/document-templates/{documentId}/versions
          * @secure
          */
-        getDocumentTemplateVersions: (documentId: string, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse[], any>>;
+        getDocumentTemplateVersions: (documentId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersionResponse[], any>>;
         /**
          * No description
          *
@@ -2847,7 +3446,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/document-templates/{documentId}/versions
          * @secure
          */
-        createDocumentTemplateVersion: (documentId: string, data: DocumentTemplateVersionRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
+        createDocumentTemplateVersion: (documentId: string, data: DocumentTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersionResponse, any>>;
         /**
          * No description
          *
@@ -2857,7 +3456,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/document-templates/{documentId}/versions/{id}
          * @secure
          */
-        getDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
+        getDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersionResponse, any>>;
         /**
          * No description
          *
@@ -2867,7 +3466,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/document-templates/{documentId}/versions/{id}
          * @secure
          */
-        replaceDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
+        replaceDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersionResponse, any>>;
         /**
          * No description
          *
@@ -2877,7 +3476,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/document-templates/{documentId}/versions/{id}
          * @secure
          */
-        deleteDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
+        deleteDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersionResponse, any>>;
         /**
          * No description
          *
@@ -2896,7 +3495,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             sortDirection?: string;
             /** @default false */
             includeDeleted?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<FilePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2912,7 +3511,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             file?: File;
             isPublic?: boolean;
             bucket?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<File, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -2922,7 +3521,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/files/{id}
          * @secure
          */
-        getFileById: (id: string, params?: RequestParams) => Promise<HttpResponse<File, any>>;
+        getFileById: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -2932,7 +3531,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/files/{id}
          * @secure
          */
-        replaceFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<HttpResponse<string, UnprocessableEntityResponse>>;
+        replaceFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -2942,7 +3541,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/files/{id}
          * @secure
          */
-        deleteFile: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteFile: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -2959,27 +3558,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<FilePaginatedResponse, any>>;
-        /**
-         * No description
-         *
-         * @tags Forms
-         * @name GetFormBySiteConfigurationSlug
-         * @summary Get By Site Configuration Slug
-         * @request POST:/api/siteform
-         * @secure
-         */
-        getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params?: RequestParams) => Promise<HttpResponse<GetForm, any>>;
-        /**
-         * No description
-         *
-         * @tags Forms
-         * @name GetSiteForms
-         * @summary Get All Site Forms
-         * @request GET:/api/siteform
-         * @secure
-         */
-        getSiteForms: (params?: RequestParams) => Promise<HttpResponse<SiteConfigurationForm[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -2991,7 +3570,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getForms: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any>>;
         /**
          * No description
          *
@@ -3001,7 +3580,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms
          * @secure
          */
-        createForm: (data: FormRequest, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, UnprocessableEntityResponse>>;
+        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
         /**
          * No description
          *
@@ -3011,7 +3590,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{id}
          * @secure
          */
-        getForm: (id: string, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, any>>;
+        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
         /**
          * No description
          *
@@ -3021,7 +3600,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/forms/{id}
          * @secure
          */
-        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, UnprocessableEntityResponse>>;
+        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
         /**
          * No description
          *
@@ -3031,7 +3610,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/forms/{id}
          * @secure
          */
-        deleteForm: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3041,7 +3620,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms/{id}/restore
          * @secure
          */
-        restoreForm: (id: string, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, any>>;
+        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
         /**
          * No description
          *
@@ -3051,7 +3630,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        addFormToSiteConfiguration: (formId: string, siteConfigurationId: string, data: AddFormToSiteConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<SiteConfigurationForm, UnprocessableEntityResponse>>;
+        addFormToSiteConfiguration: (formId: string, siteConfigurationId: string, data: AddFormToSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
         /**
          * No description
          *
@@ -3061,7 +3640,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        removeFormFromSiteConfiguration: (formId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, any>>;
+        removeFormFromSiteConfiguration: (formId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
         /**
          * No description
          *
@@ -3071,7 +3650,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{formId}/site-configurations
          * @secure
          */
-        getSiteConfigurationsByForm: (formId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfigurationReduced[], UnprocessableEntityResponse>>;
+        getSiteConfigurationsByForm: (formId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationReduced[], any>>;
         /**
          * No description
          *
@@ -3085,7 +3664,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             /** @format binary */
             file?: File;
             name?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<FormSubmissionFileResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionFileResponse, any>>;
         /**
          * No description
          *
@@ -3095,7 +3674,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}
          * @secure
          */
-        deleteFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3112,7 +3691,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<FormSubmissionPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3124,7 +3703,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         createFormSubmission: (data: FormSubmissionRequest, query?: {
             formID?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<FormSubmission, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -3134,7 +3713,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/form-submissions/{id}
          * @secure
          */
-        getFormSubmission: (id: string, params?: RequestParams) => Promise<HttpResponse<FormSubmission, any>>;
+        getFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -3144,7 +3723,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/form-submissions/{id}
          * @secure
          */
-        replaceFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<HttpResponse<FormSubmission, any>>;
+        replaceFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -3154,7 +3733,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/form-submissions/{id}
          * @secure
          */
-        deleteFormSubmission: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3171,7 +3750,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<FormSubmissionPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3181,7 +3760,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{formId}/versions
          * @secure
          */
-        getFormVersions: (formId: string, params?: RequestParams) => Promise<HttpResponse<FormVersion[], any>>;
+        getFormVersions: (formId: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion[], any>>;
         /**
          * No description
          *
@@ -3191,7 +3770,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms/{formId}/versions
          * @secure
          */
-        createFormVersion: (formId: string, data: FormVersionRequest, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
+        createFormVersion: (formId: string, data: FormVersionRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -3201,7 +3780,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{formId}/versions/{id}
          * @secure
          */
-        getFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
+        getFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -3211,7 +3790,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/forms/{formId}/versions/{id}
          * @secure
          */
-        replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
+        replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -3221,7 +3800,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/forms/{formId}/versions/{id}
          * @secure
          */
-        deleteFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
+        deleteFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -3231,7 +3810,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/los/loan/application/{loanID}
          * @secure
          */
-        getLoan: (loanId: string, params?: RequestParams) => Promise<HttpResponse<Record<string, any>, any>>;
+        getLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Record<string, any>, any>>;
         /**
          * No description
          *
@@ -3241,7 +3820,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PATCH:/api/los/loan/application/{loanID}
          * @secure
          */
-        updateLoan: (loanId: string, data: any, params?: RequestParams) => Promise<HttpResponse<string, UnprocessableEntityResponse>>;
+        updateLoan: (loanId: string, data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -3251,7 +3830,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/reports
          * @secure
          */
-        getLoansReport: (data: GetReportRequest, params?: RequestParams) => Promise<HttpResponse<GetReportResponse, any>>;
+        getLoansReport: (data: GetReportRequest, params?: RequestParams) => Promise<AxiosResponse<GetReportResponse, any>>;
         /**
          * No description
          *
@@ -3261,7 +3840,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/application
          * @secure
          */
-        createLoan: (data: any, params?: RequestParams) => Promise<HttpResponse<string, UnprocessableEntityResponse>>;
+        createLoan: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -3271,7 +3850,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/tasks/documents
          * @secure
          */
-        uploadDocuments: (data: PostTaskDocumentsRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        uploadDocuments: (data: PostTaskDocumentsRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3281,7 +3860,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/econsent
          * @secure
          */
-        createEConsent: (data: PostEConsentRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        createEConsent: (data: PostEConsentRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3291,7 +3870,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/creditauth
          * @secure
          */
-        createCreditAuthorization: (data: PostCreditAuthorizationRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        createCreditAuthorization: (data: PostCreditAuthorizationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3304,7 +3883,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         getTaskDocumentsByLoan: (loanId: string, query?: {
             /** @default true */
             includeBase64?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<DocumentData[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentData[], any>>;
         /**
          * No description
          *
@@ -3317,7 +3896,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         getLoanDocumentContent: (loanId: string, documentId: string, query?: {
             /** @default "base64" */
             contentType?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3327,7 +3906,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/los/loan/recipients/{loanID}
          * @secure
          */
-        getLoanRecipients: (loanId: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        getLoanRecipients: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3337,7 +3916,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/los/loan/contacts/{loanID}
          * @secure
          */
-        getLoanContactInformation: (loanId: string, params?: RequestParams) => Promise<HttpResponse<Record<string, ContactRowData>, any>>;
+        getLoanContactInformation: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Record<string, ContactRowData>, any>>;
         /**
          * No description
          *
@@ -3347,7 +3926,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/los/loan/{loanID}/conditions/preliminary
          * @secure
          */
-        getPreliminaryConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<HttpResponse<PreliminaryConditionResponse[], any>>;
+        getPreliminaryConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<PreliminaryConditionResponse[], any>>;
         /**
          * No description
          *
@@ -3357,7 +3936,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/los/loan/{loanID}/conditions/underwriting
          * @secure
          */
-        getUnderwritingConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<HttpResponse<UnderwritingConditionResponse[], any>>;
+        getUnderwritingConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UnderwritingConditionResponse[], any>>;
         /**
          * No description
          *
@@ -3367,7 +3946,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/embeddedsigning/{envelopeId}/{userName}/{email}
          * @secure
          */
-        getLoanEmbeddedSigningLink: (envelopeId: string, userName: string, email: string, params?: RequestParams) => Promise<HttpResponse<string, any>>;
+        getLoanEmbeddedSigningLink: (envelopeId: string, userName: string, email: string, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -3378,7 +3957,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @deprecated
          * @secure
          */
-        createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<HttpResponse<DocumentDataRequest, any>>;
+        createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
         /**
          * No description
          *
@@ -3393,7 +3972,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             file?: File;
             /** @format int32 */
             weight?: number;
-        }, params?: RequestParams) => Promise<HttpResponse<ListingFile, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingFile, any>>;
         /**
          * No description
          *
@@ -3403,7 +3982,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PATCH:/api/listings/{listingId}/files
          * @secure
          */
-        updateListingFiles: (listingId: string, data: UpdateListingFileRequest[], params?: RequestParams) => Promise<HttpResponse<ListingFile, any>>;
+        updateListingFiles: (listingId: string, data: UpdateListingFileRequest[], params?: RequestParams) => Promise<AxiosResponse<ListingFile, any>>;
         /**
          * No description
          *
@@ -3413,7 +3992,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/listings/{listingId}/files/{id}
          * @secure
          */
-        removeListingFile: (listingId: string, id: string, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        removeListingFile: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3430,7 +4009,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             file?: File;
             /** @format int32 */
             weight?: number;
-        }, params?: RequestParams) => Promise<HttpResponse<ListingPhoto, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPhoto, any>>;
         /**
          * No description
          *
@@ -3440,7 +4019,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PATCH:/api/listings/{listingId}/photos
          * @secure
          */
-        updateListingPhotos: (listingId: string, data: UpdateListingPhotoRequest[], params?: RequestParams) => Promise<HttpResponse<ListingPhoto[], any>>;
+        updateListingPhotos: (listingId: string, data: UpdateListingPhotoRequest[], params?: RequestParams) => Promise<AxiosResponse<ListingPhoto[], any>>;
         /**
          * No description
          *
@@ -3450,7 +4029,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/listings/{listingId}/photos/{id}
          * @secure
          */
-        removeListingPhoto: (listingId: string, id: string, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        removeListingPhoto: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3467,7 +4046,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<ListingPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3477,7 +4056,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/listings
          * @secure
          */
-        createListing: (data: ListingRequest, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        createListing: (data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3487,7 +4066,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/listings/slug/{slug}
          * @secure
          */
-        getListingBySlug: (slug: string, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        getListingBySlug: (slug: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3497,7 +4076,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/listings/{id}
          * @secure
          */
-        getListing: (id: string, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        getListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3507,7 +4086,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/listings/{id}
          * @secure
          */
-        replaceListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        replaceListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3517,7 +4096,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/listings/{id}
          * @secure
          */
-        deleteListing: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3534,7 +4113,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<ListingPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3547,7 +4126,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         updateListingBackgroundImage: (id: string, data: {
             /** @format binary */
             file?: File;
-        }, params?: RequestParams) => Promise<HttpResponse<File, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -3557,7 +4136,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/listings/{id}/open-house-flyer
          * @secure
          */
-        getListingOpenHouseFlyer: (id: string, params?: RequestParams) => Promise<HttpResponse<File, any>>;
+        getListingOpenHouseFlyer: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -3567,7 +4146,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
          */
-        getLoanCalculator: (loanId: string, params?: RequestParams) => Promise<HttpResponse<RunLOCalculationResponse, any>>;
+        getLoanCalculator: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculationResponse, any>>;
         /**
          * No description
          *
@@ -3577,7 +4156,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
          */
-        runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params?: RequestParams) => Promise<HttpResponse<RunLOCalculationResponse, UnprocessableEntityResponse>>;
+        runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculationResponse, any>>;
         /**
          * No description
          *
@@ -3587,7 +4166,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanID}/loan-comparison
          * @secure
          */
-        getLoanComparisons: (loanId: string, params?: RequestParams) => Promise<HttpResponse<LoanComparisonResponse, any>>;
+        getLoanComparisons: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonResponse, any>>;
         /**
          * No description
          *
@@ -3597,7 +4176,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/loan-comparison/{index}
          * @secure
          */
-        createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params?: RequestParams) => Promise<HttpResponse<LoanComparisonScenario, UnprocessableEntityResponse>>;
+        createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonScenario, any>>;
         /**
          * No description
          *
@@ -3607,7 +4186,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/loans/{loanID}/loan-comparison/{index}
          * @secure
          */
-        deleteLoanComparison: (loanId: string, index: number, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteLoanComparison: (loanId: string, index: number, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3617,17 +4196,27 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/loan-comparison/pdf
          * @secure
          */
-        createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
-         * @tags LoanDocuments
+         * @tags LoanDocumentBuckets
          * @name GetLoanDocumentBuckets
-         * @summary Get Buckets
+         * @summary Get All
          * @request GET:/api/loans/{loanId}/documents/buckets
          * @secure
          */
-        getLoanDocumentBuckets: (loanId: string, params?: RequestParams) => Promise<HttpResponse<string[], any>>;
+        getLoanDocumentBuckets: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentBuckets
+         * @name CreateLoanDocumentBuckets
+         * @summary Create
+         * @request POST:/api/loans/{loanId}/documents/buckets
+         * @secure
+         */
+        createLoanDocumentBuckets: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
         /**
          * No description
          *
@@ -3640,7 +4229,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         getLoanDocument: (loanId: string, documentId: string, query?: {
             /** @default false */
             preview?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<LoanDocument, ProblemDetails>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
+         * @name DownloadLoanDocument
+         * @summary Download By ID
+         * @request GET:/api/loans/{loanId}/documents/{documentId}/download
+         * @secure
+         */
+        downloadLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
          * No description
          *
@@ -3655,7 +4254,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             /** @format binary */
             file?: File;
             bucket?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<LoanDocument, ProblemDetails | UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
+         * @name RetryFailedLoanDocument
+         * @summary Retry
+         * @request POST:/api/loans/{loanId}/documents/{documentId}/retry
+         * @secure
+         */
+        retryFailedLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
          * No description
          *
@@ -3665,7 +4274,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/drafts
          * @secure
          */
-        createLoanDraft: (data: CreateDraftRequest, params?: RequestParams) => Promise<HttpResponse<DraftResponse, any>>;
+        createLoanDraft: (data: CreateDraftRequest, params?: RequestParams) => Promise<AxiosResponse<DraftResponse, any>>;
         /**
          * No description
          *
@@ -3675,7 +4284,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/drafts
          * @secure
          */
-        getLoanDrafts: (params?: RequestParams) => Promise<HttpResponse<DraftContentResponse[], any>>;
+        getLoanDrafts: (params?: RequestParams) => Promise<AxiosResponse<DraftContentResponse[], any>>;
         /**
          * No description
          *
@@ -3692,7 +4301,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<DraftContentResponsePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DraftContentResponsePaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3702,7 +4311,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/loans/drafts/{draftId}
          * @secure
          */
-        replaceLoanDraft: (draftId: string, data: CreateDraftRequest, params?: RequestParams) => Promise<HttpResponse<DraftResponse, any>>;
+        replaceLoanDraft: (draftId: string, data: CreateDraftRequest, params?: RequestParams) => Promise<AxiosResponse<DraftResponse, any>>;
         /**
          * No description
          *
@@ -3712,7 +4321,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/drafts/{draftId}
          * @secure
          */
-        getLoanDraft: (draftId: string, params?: RequestParams) => Promise<HttpResponse<DraftContentResponse, any>>;
+        getLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<DraftContentResponse, any>>;
         /**
          * No description
          *
@@ -3722,7 +4331,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/loans/drafts/{draftId}
          * @secure
          */
-        deleteLoanDraft: (draftId: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3740,7 +4349,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<BranchUserPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3757,7 +4366,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<BranchUserPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3767,7 +4376,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loan-officers/{id}
          * @secure
          */
-        getLoanOfficer: (id: string, params?: RequestParams) => Promise<HttpResponse<BranchUser, any>>;
+        getLoanOfficer: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any>>;
         /**
          * No description
          *
@@ -3777,7 +4386,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loan-officers/applications
          * @secure
          */
-        getLoanOfficerLoans: (params?: RequestParams) => Promise<HttpResponse<GetApplicationsResponse, any>>;
+        getLoanOfficerLoans: (params?: RequestParams) => Promise<AxiosResponse<GetApplicationsResponse, any>>;
         /**
          * No description
          *
@@ -3787,7 +4396,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
          * @secure
          */
-        createLoanOfficerSiteConfiguration: (loanOfficerId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        createLoanOfficerSiteConfiguration: (loanOfficerId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -3797,7 +4406,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -3807,9 +4416,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        replaceLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
+        replaceLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -3819,7 +4428,24 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans
          * @secure
          */
-        getLoans: (params?: RequestParams) => Promise<HttpResponse<GetApplicationsResponse, any>>;
+        getLoans: (params?: RequestParams) => Promise<AxiosResponse<GetApplicationsResponse, any>>;
+        /**
+         * No description
+         *
+         * @tags Loans
+         * @name SearchLoans
+         * @summary Search
+         * @request POST:/api/loans/search
+         * @secure
+         */
+        searchLoans: (data: LoanSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -3834,7 +4460,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             /** @format binary */
             file?: File;
             bucket?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails | UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskDocuments
+         * @name CreateLoanTaskDocumentBucket
+         * @summary Create Bucket
+         * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents/bucket
+         * @secure
+         */
+        createLoanTaskDocumentBucket: (loanId: string, loanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
@@ -3844,7 +4480,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanID}/tasks
          * @secure
          */
-        getLoanTasks: (loanId: string, params?: RequestParams) => Promise<HttpResponse<UserLoanTask[], ProblemDetails>>;
+        getLoanTasks: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
          * No description
          *
@@ -3854,7 +4490,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanID}/tasks/{id}
          * @secure
          */
-        getLoanTask: (id: string, loanId: string, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
+        getLoanTask: (id: string, loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * @description Get the difference between the current loan tasks and the tasks generated by business rules
          *
@@ -3864,7 +4500,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanID}/tasks/diff
          * @secure
          */
-        getLoanTaskDifference: (loanId: string, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
+        getLoanTaskDifference: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
@@ -3874,7 +4510,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/tasks/{taskID}
          * @secure
          */
-        createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
+        createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTasks
+         * @name ImportLoanTask
+         * @summary Import
+         * @request POST:/api/loans/{loanID}/tasks/import
+         * @secure
+         */
+        importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
          * No description
          *
@@ -3884,7 +4530,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
          * @secure
          */
-        replaceLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
+        replaceLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
@@ -3894,7 +4540,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/loans/{loanID}/tasks/{userLoanTaskID}
          * @secure
          */
-        deleteLoanTask: (loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        deleteLoanTask: (loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3904,7 +4550,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
          * @secure
          */
-        sendOutstandingLoanTaskNotification: (loanId: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        sendOutstandingLoanTaskNotification: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3914,7 +4560,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanId}/users
          * @secure
          */
-        getLoanUsers: (loanId: string, params?: RequestParams) => Promise<HttpResponse<LoanUser[], any>>;
+        getLoanUsers: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser[], any>>;
         /**
          * No description
          *
@@ -3924,7 +4570,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/loans/{loanId}/users/{userId}
          * @secure
          */
-        getLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<HttpResponse<LoanUser, any>>;
+        getLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -3934,7 +4580,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanId}/users/{userId}
          * @secure
          */
-        addLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<HttpResponse<LoanUser, any>>;
+        addLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -3944,7 +4590,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/milestones
          * @secure
          */
-        getMilestones: (params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse[], any>>;
+        getMilestones: (params?: RequestParams) => Promise<AxiosResponse<MilestoneConfigurationResponse[], any>>;
         /**
          * No description
          *
@@ -3954,7 +4600,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/milestones
          * @secure
          */
-        createMilestone: (data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse, UnprocessableEntityResponse>>;
+        createMilestone: (data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfigurationResponse, any>>;
         /**
          * No description
          *
@@ -3964,7 +4610,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/milestones/{id}
          * @secure
          */
-        getMilestone: (id: string, params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse, Error>>;
+        getMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfigurationResponse, any>>;
         /**
          * No description
          *
@@ -3974,7 +4620,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/milestones/{id}
          * @secure
          */
-        replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse, Error | UnprocessableEntityResponse>>;
+        replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfigurationResponse, any>>;
         /**
          * No description
          *
@@ -3984,7 +4630,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/milestones/{id}
          * @secure
          */
-        deleteMilestone: (id: string, params?: RequestParams) => Promise<HttpResponse<void, Error>>;
+        deleteMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -3994,7 +4640,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notifications
          * @secure
          */
-        sendNotificationForLoan: (data: SendNotificationForLoanRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        sendNotificationForLoan: (data: SendNotificationForLoanRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4004,7 +4650,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notifications/test
          * @secure
          */
-        sendTestNotificationForLoan: (data: TestSendNotificationForLoanRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        sendTestNotificationForLoan: (data: TestSendNotificationForLoanRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4016,7 +4662,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getNotificationTemplates: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateBase[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateBase[], any>>;
         /**
          * No description
          *
@@ -4026,7 +4672,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notification-templates
          * @secure
          */
-        createNotificationTemplate: (data: NotificationTemplateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, UnprocessableEntityResponse>>;
+        createNotificationTemplate: (data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -4036,7 +4682,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/notification-templates/{id}
          * @secure
          */
-        getNotificationTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, any>>;
+        getNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -4046,7 +4692,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/notification-templates/{id}
          * @secure
          */
-        replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, UnprocessableEntityResponse>>;
+        replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -4056,7 +4702,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/notification-templates/{id}
          * @secure
          */
-        deleteNotificationTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4066,7 +4712,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notification-templates/{id}/restore
          * @secure
          */
-        restoreNotificationTemplate: (id: string, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, any>>;
+        restoreNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -4076,7 +4722,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/notification-templates/{notificationId}/versions
          * @secure
          */
-        getNotificationTemplateVersions: (notificationId: string, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion[], any>>;
+        getNotificationTemplateVersions: (notificationId: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion[], any>>;
         /**
          * No description
          *
@@ -4086,7 +4732,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notification-templates/{notificationId}/versions
          * @secure
          */
-        createNotificationTemplateVersion: (notificationId: string, data: NotificationTemplateVersionRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
+        createNotificationTemplateVersion: (notificationId: string, data: NotificationTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -4096,7 +4742,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
          */
-        getNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
+        getNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -4106,7 +4752,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
          */
-        replaceNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
+        replaceNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -4116,7 +4762,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
          */
-        deleteNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
+        deleteNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -4135,7 +4781,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<BranchUserPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -4152,7 +4798,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<BranchUserPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -4162,7 +4808,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/partners/{id}
          * @secure
          */
-        getPartner: (id: string, params?: RequestParams) => Promise<HttpResponse<BranchUser, any>>;
+        getPartner: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any>>;
         /**
          * No description
          *
@@ -4172,7 +4818,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/partners/{realtorId}/site-configurations
          * @secure
          */
-        createPartnerSiteConfiguration: (realtorId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        createPartnerSiteConfiguration: (realtorId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4182,7 +4828,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4192,9 +4838,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        replacePartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
+        replacePartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfigurationUpdateRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4204,40 +4850,40 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/pricing/calculator
          * @secure
          */
-        getPricingCalculation: (data: GetPricingCalculationRequest, params?: RequestParams) => Promise<HttpResponse<GetPricingForLoanOfficerResponse, UnprocessableEntityResponse>>;
+        getPricingCalculation: (data: GetPricingCalculationRequest, params?: RequestParams) => Promise<AxiosResponse<GetPricingForLoanOfficerResponse, any>>;
         /**
          * No description
          *
          * @tags RequestQueue
          * @name GetRequestQueues
          * @summary Get All
-         * @request GET:/api/request-queue
+         * @request GET:/api/request-queues
          * @secure
          */
-        getRequestQueues: (params?: RequestParams) => Promise<HttpResponse<RequestQueue[], any>>;
+        getRequestQueues: (params?: RequestParams) => Promise<AxiosResponse<RequestQueue[], any>>;
         /**
          * No description
          *
          * @tags RequestQueue
          * @name RunRequestQueue
          * @summary Run
-         * @request POST:/api/request-queue/{id}/run
+         * @request POST:/api/request-queues/{id}/run
          * @secure
          */
         runRequestQueue: (id: string, query?: {
             /** @default false */
             force?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
          * @tags RequestQueue
          * @name DeleteQueueRequest
          * @summary Delete
-         * @request DELETE:/api/request-queue/{id}
+         * @request DELETE:/api/request-queues/{id}
          * @secure
          */
-        deleteQueueRequest: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteQueueRequest: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4247,7 +4893,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/selfprovisioning/newcustomer
          * @secure
          */
-        createSelfProvisioningItem: (data: any, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        createSelfProvisioningItem: (data: any, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4257,7 +4903,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/site-configurations/{id}
          * @secure
          */
-        getSiteConfiguration: (id: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getSiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4268,7 +4914,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @deprecated
          * @secure
          */
-        searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any>>;
         /**
          * No description
          *
@@ -4280,7 +4926,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getSiteConfigurationByUrl: (query?: {
             url?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any>>;
         /**
          * No description
          *
@@ -4291,7 +4937,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @deprecated
          * @secure
          */
-        searchSiteConfigurationByLoanOfficerUser: (data: GetSiteConfigurationByLOUserIDRequest, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        searchSiteConfigurationByLoanOfficerUser: (data: GetSiteConfigurationByLOUserIDRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4301,7 +4947,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/site-configurations/louser/{loUserId}
          * @secure
          */
-        getSiteConfigurationByLoanOfficerUser: (loUserId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        getSiteConfigurationByLoanOfficerUser: (loUserId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -4318,7 +4964,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<SiteConfigurationPaginatedResponse, UnprocessableEntityResponse>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -4328,7 +4974,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/site-configurations/{id}/forms
          * @secure
          */
-        getFormsBySiteConfiguration: (id: string, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms[], any>>;
+        getFormsBySiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any>>;
         /**
          * No description
          *
@@ -4338,7 +4984,27 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
          * @secure
          */
-        getSamlMetadata: (ssoIntegration: string, params?: RequestParams) => Promise<HttpResponse<string, any>>;
+        getSamlMetadata: (ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        /**
+         * No description
+         *
+         * @tags SiteForms
+         * @name GetFormBySiteConfigurationSlug
+         * @summary Get By Site Configuration Slug
+         * @request POST:/api/site-forms
+         * @secure
+         */
+        getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any>>;
+        /**
+         * No description
+         *
+         * @tags SiteForms
+         * @name GetSiteForms
+         * @summary Get All Site Forms
+         * @request GET:/api/site-forms
+         * @secure
+         */
+        getSiteForms: (params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm[], any>>;
         /**
          * No description
          *
@@ -4351,7 +5017,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         getSurveysByUsers: (query?: {
             /** @format int32 */
             limit?: number;
-        }, params?: RequestParams) => Promise<HttpResponse<SocialSurveyRecord[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any>>;
         /**
          * No description
          *
@@ -4361,7 +5027,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/surveys
          * @secure
          */
-        getSurveysByUser: (data: SurveyEmailRequest, params?: RequestParams) => Promise<HttpResponse<SocialSurveyRecord[], UnprocessableEntityResponse>>;
+        getSurveysByUser: (data: SurveyEmailRequest, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any>>;
         /**
          * No description
          *
@@ -4378,7 +5044,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<Task, ProblemDetails>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -4388,7 +5054,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/tasks
          * @secure
          */
-        createTask: (data: TaskRequest, params?: RequestParams) => Promise<HttpResponse<Task, any>>;
+        createTask: (data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -4398,7 +5064,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/tasks/{id}
          * @secure
          */
-        getTask: (id: string, params?: RequestParams) => Promise<HttpResponse<Task, ProblemDetails>>;
+        getTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -4408,7 +5074,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/tasks/{id}
          * @secure
          */
-        replaceTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        replaceTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4418,7 +5084,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/tasks/{id}
          * @secure
          */
-        deleteTask: (id: string, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        deleteTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4435,7 +5101,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<Task[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<Task[], any>>;
         /**
          * No description
          *
@@ -4445,7 +5111,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation/request
          * @secure
          */
-        requestImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<HttpResponse<void, Error | UnprocessableEntityResponse>>;
+        requestImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4455,7 +5121,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation/allow
          * @secure
          */
-        allowImpersonation: (data: AllowImpersonationRequest, params?: RequestParams) => Promise<HttpResponse<void, Error | UnprocessableEntityResponse>>;
+        allowImpersonation: (data: AllowImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4465,7 +5131,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation/allow/{allowToken}
          * @secure
          */
-        allowImpersonationWithGuid: (allowToken: string, params?: RequestParams) => Promise<HttpResponse<void, Error | UnprocessableEntityResponse>>;
+        allowImpersonationWithGuid: (allowToken: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4475,7 +5141,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation
          * @secure
          */
-        beginImpersonation: (params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        beginImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4485,7 +5151,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/users/impersonation
          * @secure
          */
-        stopImpersonation: (params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        stopImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags UserImpersonation
+         * @name ForceImpersonation
+         * @summary Force Impersonation as Super Admin Impersonator
+         * @request POST:/api/users/impersonation/force
+         * @secure
+         */
+        forceImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4495,7 +5171,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation/extend
          * @secure
          */
-        extendImpersonation: (params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        extendImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4505,7 +5181,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/invites
          * @secure
          */
-        inviteUser: (data: CreateInviteRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        inviteUser: (data: CreateInviteRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4515,7 +5191,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/invites/{token}/verify
          * @secure
          */
-        verifyUserInvite: (token: string, params?: RequestParams) => Promise<HttpResponse<InviteResponse, UnprocessableEntityResponse>>;
+        verifyUserInvite: (token: string, params?: RequestParams) => Promise<AxiosResponse<InviteResponse, any>>;
         /**
          * No description
          *
@@ -4525,7 +5201,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/{userId}/relations
          * @secure
          */
-        createUserRelation: (userId: string, data: CreateUserRelationRequest, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        createUserRelation: (userId: string, data: CreateUserRelationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4535,7 +5211,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/{userId}/relations
          * @secure
          */
-        getUserRelations: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
+        getUserRelations: (userId: string, params?: RequestParams) => Promise<AxiosResponse<UserRelationResponse[], any>>;
         /**
          * No description
          *
@@ -4545,7 +5221,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/{userId}/relations/account
          * @secure
          */
-        getUserRelationsByAccount: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
+        getUserRelationsByAccount: (userId: string, params?: RequestParams) => Promise<AxiosResponse<UserRelationResponse[], any>>;
         /**
          * No description
          *
@@ -4555,7 +5231,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/users/{userId}/relations/{id}
          * @secure
          */
-        deleteUserRelation: (id: string, userId: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteUserRelation: (id: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4572,7 +5248,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<User[], any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<User[], any>>;
         /**
          * No description
          *
@@ -4582,7 +5258,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users
          * @secure
          */
-        createUser: (data: CreateUserRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, UnprocessableEntityResponse>>;
+        createUser: (data: CreateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -4599,7 +5275,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<HttpResponse<UserPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserPaginatedResponse, any>>;
         /**
          * No description
          *
@@ -4609,7 +5285,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/byemail
          * @secure
          */
-        getUserByEmail: (data: GetUserByEmailRequest, params?: RequestParams) => Promise<HttpResponse<AdminAccessUser, any>>;
+        getUserByEmail: (data: GetUserByEmailRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessUser, any>>;
         /**
          * No description
          *
@@ -4619,7 +5295,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/register
          * @secure
          */
-        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4629,7 +5305,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/users/{id}
          * @secure
          */
-        replaceUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, UnprocessableEntityResponse>>;
+        replaceUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -4642,7 +5318,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         deleteUser: (id: string, query?: {
             /** @default false */
             permanent?: boolean;
-        }, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4652,7 +5328,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/{id}/restore
          * @secure
          */
-        restoreUser: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        restoreUser: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4662,7 +5338,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/change-password
          * @secure
          */
-        changePassword: (data: ChangePasswordRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        changePassword: (data: ChangePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4672,7 +5348,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/verify-password
          * @secure
          */
-        verifyPassword: (data: VerifyPasswordRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        verifyPassword: (data: VerifyPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4682,7 +5358,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/{id}/override-password
          * @secure
          */
-        overridePassword: (id: string, data: OverridePasswordRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        overridePassword: (id: string, data: OverridePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4692,7 +5368,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/forgot-password
          * @secure
          */
-        forgotPassword: (data: SendForgotPasswordRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        forgotPassword: (data: SendForgotPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4702,7 +5378,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/mobile-phone/send-code
          * @secure
          */
-        sendMobilePhoneVerificationCode: (params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        sendMobilePhoneVerificationCode: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4712,7 +5388,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/users/mobile-phone/verify-code
          * @secure
          */
-        verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params?: RequestParams) => Promise<HttpResponse<void, UnprocessableEntityResponse>>;
+        verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4722,7 +5398,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/me
          * @secure
          */
-        getMe: (params?: RequestParams) => Promise<HttpResponse<DetailedUser, any>>;
+        getMe: (params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -4732,7 +5408,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/users/me
          * @secure
          */
-        replaceMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, any>>;
+        replaceMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * @description Update the phone number If changed will send a verification code to the new number
          *
@@ -4742,7 +5418,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/users/me/phone-number
          * @secure
          */
-        updateMyPhone: (data: UpdateMobilePhoneRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, any>>;
+        updateMyPhone: (data: UpdateMobilePhoneRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -4752,7 +5428,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/me/relationships
          * @secure
          */
-        getMyRelationships: (params?: RequestParams) => Promise<HttpResponse<UserRelationship[], any>>;
+        getMyRelationships: (params?: RequestParams) => Promise<AxiosResponse<UserRelationship[], any>>;
         /**
          * No description
          *
@@ -4762,7 +5438,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/me/relationships/prospects
          * @secure
          */
-        getMyRelationshipProspects: (params?: RequestParams) => Promise<HttpResponse<UserRelationshipProspect[], any>>;
+        getMyRelationshipProspects: (params?: RequestParams) => Promise<AxiosResponse<UserRelationshipProspect[], any>>;
         /**
          * No description
          *
@@ -4772,7 +5448,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/users/me/relationships/prospects/{id}
          * @secure
          */
-        deleteRelationshipProspect: (id: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteRelationshipProspect: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4782,7 +5458,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/me/delete
          * @secure
          */
-        deleteMe: (data: UserAccountDeletionRequest, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        deleteMe: (data: UserAccountDeletionRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4792,7 +5468,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/verifications/verify
          * @secure
          */
-        verify: (data: VerificationRequest, params?: RequestParams) => Promise<HttpResponse<VerificationResponse, UnprocessableEntityResponse>>;
+        verify: (data: VerificationRequest, params?: RequestParams) => Promise<AxiosResponse<VerificationResponse, any>>;
         /**
          * No description
          *
@@ -4802,7 +5478,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/verifications/status
          * @secure
          */
-        getVerificationStatus: (data: VerificationRequest, params?: RequestParams) => Promise<HttpResponse<VerificationResponse, UnprocessableEntityResponse>>;
+        getVerificationStatus: (data: VerificationRequest, params?: RequestParams) => Promise<AxiosResponse<VerificationResponse, any>>;
         /**
          * No description
          *
@@ -4812,7 +5488,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/verifications/frontend-materials/{requestId}
          * @secure
          */
-        getVerificationFrontEndMaterials: (requestId: string, params?: RequestParams) => Promise<HttpResponse<VerificationResponse, UnprocessableEntityResponse>>;
+        getVerificationFrontEndMaterials: (requestId: string, params?: RequestParams) => Promise<AxiosResponse<VerificationResponse, any>>;
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflow
+         * @summary Get Workflow
+         * @request POST:/api/workflow
+         * @secure
+         */
+        getWorkflow: (data: GetWorkflowRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any>>;
     };
     accounts: {
         /**
@@ -4824,7 +5510,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/accounts
          * @secure
          */
-        getAccounts: (params?: RequestParams) => Promise<HttpResponse<Account[], any>>;
+        getAccounts: (params?: RequestParams) => Promise<AxiosResponse<Account[], any>>;
         /**
          * No description
          *
@@ -4834,7 +5520,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/accounts/{id}/loan
          * @secure
          */
-        updateLoansByAccount: (id: string, data: Loan[], params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails | UnprocessableEntityResponse>>;
+        updateLoansByAccount: (id: string, data: Loan[], params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -4844,7 +5530,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/accounts/{id}/loan
          * @secure
          */
-        getLoansByAccount: (id: string, params?: RequestParams) => Promise<HttpResponse<Loan[], ProblemDetails>>;
+        getLoansByAccount: (id: string, params?: RequestParams) => Promise<AxiosResponse<Loan[], any>>;
     };
     refreshToken: {
         /**
@@ -4856,7 +5542,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/refresh-token
          * @secure
          */
-        getTokenFromRefreshToken: (data: RefreshTokenRequest, params?: RequestParams) => Promise<HttpResponse<TokenResponse, UnprocessableEntityResponse>>;
+        getTokenFromRefreshToken: (data: RefreshTokenRequest, params?: RequestParams) => Promise<AxiosResponse<TokenResponse, any>>;
     };
     token: {
         /**
@@ -4868,7 +5554,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/token
          * @secure
          */
-        getToken: (data: TokenRequest, params?: RequestParams) => Promise<HttpResponse<TokenResponse, UnprocessableEntityResponse>>;
+        getToken: (data: TokenRequest, params?: RequestParams) => Promise<AxiosResponse<TokenResponse, any>>;
         /**
          * No description
          *
@@ -4878,7 +5564,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/token/code
          * @secure
          */
-        getTokenFromChallengeCode: (data: TokenChallengeRequest, params?: RequestParams) => Promise<HttpResponse<TokenResponse, UnprocessableEntityResponse>>;
+        getTokenFromChallengeCode: (data: TokenChallengeRequest, params?: RequestParams) => Promise<AxiosResponse<TokenResponse, any>>;
         /**
          * No description
          *
@@ -4888,7 +5574,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/token/sso
          * @secure
          */
-        getSsoToken: (data: SSOTokenRequest, params?: RequestParams) => Promise<HttpResponse<SSOTokenResponse, UnprocessableEntityResponse>>;
+        getSsoToken: (data: SSOTokenRequest, params?: RequestParams) => Promise<AxiosResponse<SSOTokenResponse, any>>;
     };
     oauth2: {
         /**
@@ -4900,7 +5586,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/oauth2/token
          * @secure
          */
-        getSystemToken: (data: SystemTokenRequest, params?: RequestParams) => Promise<HttpResponse<TokenResponse, UnprocessableEntityResponse>>;
+        getSystemToken: (data: SystemTokenRequest, params?: RequestParams) => Promise<AxiosResponse<TokenResponse, any>>;
     };
 }
-export {};

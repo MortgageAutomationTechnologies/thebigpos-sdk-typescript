@@ -1,5 +1,5 @@
 {
-  "name": "@mortgageautomationtechnologies/thebigpos-sdk-typescript",
+  "name": "@matech/thebigpos-sdk",
   "version": "2.9.0-rc1",
   "description": "The Big POS Typescript SDK",
   "main": "dist/index.js",
