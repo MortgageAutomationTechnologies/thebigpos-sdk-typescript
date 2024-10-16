@@ -4,18 +4,18 @@
 Using npm:
 
 ```bash
-$ npm install @matech/thebigpos-sdk-typescript
+$ npm install @matech/thebigpos-sdk
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add @matech/thebigpos-sdk-typescript
+$ yarn add @matech/thebigpos-sdk
 ```
 
 ## Quick Start
 ```js
-import TheBigPOS from "@matech/thebigpos-sdk-typescript";
+import TheBigPOS from "@matech/thebigpos-sdk";
 
 TheBigPOS.init();
 ```
