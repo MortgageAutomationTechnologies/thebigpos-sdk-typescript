@@ -966,28 +966,6 @@ export interface InviteResponse {
     /** @format date-time */
     createdAt: string;
 }
-export interface LOSTask {
-    /** @format uuid */
-    id: string;
-    taskName: string;
-    taskLOSIdentifier?: string | null;
-    taskDescription?: string | null;
-    /** @format int32 */
-    taskType: number;
-    /** @format int32 */
-    taskStatus: number;
-    /** @format int32 */
-    taskCategory: number;
-    /** @format int32 */
-    targetUserRole: number;
-    fieldDataType: string;
-    eSignatureUrl: string;
-    thumbnailUrl: string;
-    /** @format uuid */
-    missionID?: string | null;
-    /** @format int32 */
-    daysDueFromApplication: number;
-}
 export interface Listing {
     /** @format date-time */
     createdAt: string;
@@ -2393,7 +2371,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Branches
          * @name GetBranches
-         * @summary Get Branches
+         * @summary Get All
          * @request GET:/api/branches
          * @secure
          */
@@ -2410,12 +2388,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Branches
-         * @name CreateBranches
-         * @summary Create Branches
+         * @name CreateBranch
+         * @summary Create
          * @request POST:/api/branches
          * @secure
          */
-        createBranches: (data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
+        createBranch: (data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
         /**
          * No description
          *
@@ -2438,7 +2416,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Branches
          * @name GetBranch
-         * @summary Get Branch
+         * @summary Get by ID
          * @request GET:/api/branches/{branchId}
          * @secure
          */
@@ -2447,18 +2425,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Branches
-         * @name UpdateBranch
-         * @summary Update Branch
+         * @name ReplaceBranch
+         * @summary Replace
          * @request PUT:/api/branches/{branchId}
          * @secure
          */
-        updateBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
+        replaceBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<HttpResponse<GetBranch, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags Branches
          * @name DeleteBranch
-         * @summary Delete Branch
+         * @summary Delete
          * @request DELETE:/api/branches/{branchId}
          * @secure
          */
@@ -2468,7 +2446,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Branches
          * @name RestoreBranch
-         * @summary Restore Branch
+         * @summary Restore
          * @request POST:/api/branches/{branchId}/restore
          * @secure
          */
@@ -2487,12 +2465,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Branches
-         * @name UpdateBranchSiteConfiguration
-         * @summary Update Branch Site Configuration
+         * @name ReplaceBranchSiteConfiguration
+         * @summary Replace Branch Site Configuration
          * @request PUT:/api/branches/{branchId}/site-configurations
          * @secure
          */
-        updateBranchSiteConfiguration: (branchId: string, data: SiteConfiguration, query?: {
+        replaceBranchSiteConfiguration: (branchId: string, data: SiteConfiguration, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
         /**
@@ -2551,12 +2529,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags BusinessRules
-         * @name UpdateBusinessRule
-         * @summary Update
+         * @name ReplaceBusinessRule
+         * @summary Replace
          * @request PUT:/api/business-rules/{id}
          * @secure
          */
-        updateBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<HttpResponse<BusinessRule, UnprocessableEntityResponse>>;
+        replaceBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<HttpResponse<BusinessRule, UnprocessableEntityResponse>>;
         /**
          * No description
          *
@@ -2582,7 +2560,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name GetCorporates
-         * @summary Get Corporates
+         * @summary Get All
          * @request GET:/api/corporates
          * @secure
          */
@@ -2600,7 +2578,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name CreateCorporate
-         * @summary Create Corporate
+         * @summary Create
          * @request POST:/api/corporates
          * @secure
          */
@@ -2627,7 +2605,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name GetCorporate
-         * @summary Get Corporate
+         * @summary Get by ID
          * @request GET:/api/corporates/{id}
          * @secure
          */
@@ -2636,18 +2614,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Corporates
-         * @name UpdateCorporate
-         * @summary Update Corporate
+         * @name ReplaceCorporate
+         * @summary Replace
          * @request PUT:/api/corporates/{id}
          * @secure
          */
-        updateCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<HttpResponse<CorporateResponse, UnprocessableEntityResponse>>;
+        replaceCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<HttpResponse<CorporateResponse, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags Corporates
          * @name DeleteCorporate
-         * @summary Delete Corporate
+         * @summary Delete
          * @request DELETE:/api/corporates/{id}
          * @secure
          */
@@ -2657,7 +2635,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name RestoreCorporate
-         * @summary Restore Corporate
+         * @summary Restore
          * @request POST:/api/corporates/{id}/restore
          * @secure
          */
@@ -2667,7 +2645,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name CreateCorporateSiteConfiguration
-         * @summary Create Corporate Site Configuration
+         * @summary Create Site Configuration
          * @request POST:/api/corporates/{corporateId}/site-configurations
          * @secure
          */
@@ -2676,12 +2654,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Corporates
-         * @name UpdateCorporateSiteConfiguration
-         * @summary Update Corporate Site Configuration
+         * @name ReplaceCorporateSiteConfiguration
+         * @summary Replace Site Configuration
          * @request PUT:/api/corporates/{corporateId}/site-configurations
          * @secure
          */
-        updateCorporateSiteConfiguration: (corporateId: string, data: SiteConfiguration, query?: {
+        replaceCorporateSiteConfiguration: (corporateId: string, data: SiteConfiguration, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
         /**
@@ -2689,7 +2667,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name GetCorporateSiteConfiguration
-         * @summary Get Corporate Site Configuration
+         * @summary Get Site Configuration
          * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
          * @secure
          */
@@ -2699,7 +2677,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name GetBranchesByCorporate
-         * @summary Get Branches By Corporate
+         * @summary Get Branches
          * @request GET:/api/corporates/{id}/branches
          * @secure
          */
@@ -2709,7 +2687,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Corporates
          * @name GetLoanOfficersByCorporate
-         * @summary Get Loan Officers By Corporate
+         * @summary Get Loan Officers
          * @request GET:/api/corporates/{id}/loan-officers
          * @secure
          */
@@ -2719,7 +2697,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Devices
          * @name GetDevices
-         * @summary Get Devices
+         * @summary Get All
          * @request GET:/api/devices
          * @secure
          */
@@ -2738,7 +2716,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Devices
          * @name GetDeviceById
-         * @summary Get Device by ID
+         * @summary Get by ID
          * @request GET:/api/devices/{id}
          * @secure
          */
@@ -2748,7 +2726,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Devices
          * @name GetDeviceBySerialNumber
-         * @summary Get Device by serial number
+         * @summary Get by Serial Number
          * @request GET:/api/devices/{sn}/profile
          * @secure
          */
@@ -2758,7 +2736,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Devices
          * @name CreateActionBySerialNumber
-         * @summary Create action by serial number
+         * @summary Create Action by Serial Number
          * @request POST:/api/devices/{sn}/actions/{actionName}
          * @secure
          */
@@ -2790,7 +2768,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags DocumentTemplates
          * @name CreateDocumentTemplate
-         * @summary Create Template
+         * @summary Create
          * @request POST:/api/document-templates
          * @secure
          */
@@ -2800,7 +2778,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags DocumentTemplates
          * @name GetCustomDocumentTemplates
-         * @summary Get Custom Templates
+         * @summary Get Custom
          * @request GET:/api/document-templates/{type}
          * @secure
          */
@@ -2824,18 +2802,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags DocumentTemplates
-         * @name UpdateDocumentTemplate
-         * @summary Update Template
+         * @name ReplaceDocumentTemplate
+         * @summary Replace
          * @request PUT:/api/document-templates/{id}
          * @secure
          */
-        updateDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>>;
+        replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags DocumentTemplates
          * @name DeleteDocumentTemplate
-         * @summary Delete Template
+         * @summary Delete
          * @request DELETE:/api/document-templates/{id}
          * @secure
          */
@@ -2845,7 +2823,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags DocumentTemplates
          * @name RestoreDocumentTemplate
-         * @summary Restore Template
+         * @summary Restore
          * @request POST:/api/document-templates/{id}/restore
          * @secure
          */
@@ -2884,12 +2862,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags DocumentTemplateVersions
-         * @name UpdateDocumentTemplateVersion
-         * @summary Update
+         * @name ReplaceDocumentTemplateVersion
+         * @summary Replace
          * @request PUT:/api/document-templates/{documentId}/versions/{id}
          * @secure
          */
-        updateDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
+        replaceDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<DocumentTemplateVersionResponse, any>>;
         /**
          * No description
          *
@@ -2905,7 +2883,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Files
          * @name GetAllFiles
-         * @summary Get All files
+         * @summary Get All
          * @request GET:/api/files
          * @secure
          */
@@ -2924,7 +2902,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Files
          * @name UploadFile
-         * @summary Upload file
+         * @summary Upload
          * @request POST:/api/files
          * @secure
          */
@@ -2940,7 +2918,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Files
          * @name GetFileById
-         * @summary Get File By ID
+         * @summary Get By ID
          * @request GET:/api/files/{id}
          * @secure
          */
@@ -2949,18 +2927,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Files
-         * @name UpdateFile
-         * @summary Update file
+         * @name ReplaceFile
+         * @summary Replace
          * @request PUT:/api/files/{id}
          * @secure
          */
-        updateFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<HttpResponse<string, UnprocessableEntityResponse>>;
+        replaceFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<HttpResponse<string, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags Files
          * @name DeleteFile
-         * @summary Delete file
+         * @summary Delete
          * @request DELETE:/api/files/{id}
          * @secure
          */
@@ -3038,12 +3016,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Forms
-         * @name UpdateForm
-         * @summary Update
+         * @name ReplaceForm
+         * @summary Replace
          * @request PUT:/api/forms/{id}
          * @secure
          */
-        updateForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, UnprocessableEntityResponse>>;
+        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<HttpResponse<AdminAccessGetForms, UnprocessableEntityResponse>>;
         /**
          * No description
          *
@@ -3099,7 +3077,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags FormSubmissionFiles
          * @name AddFormSubmissionFile
-         * @summary Add FormSubmission File
+         * @summary Add
          * @request POST:/api/form-submissions/{formSubmissionId}/files
          * @secure
          */
@@ -3113,7 +3091,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags FormSubmissionFiles
          * @name DeleteFormSubmissionFile
-         * @summary Delete FormSubmission File
+         * @summary Delete
          * @request DELETE:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}
          * @secure
          */
@@ -3161,12 +3139,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags FormSubmissions
-         * @name UpdateFormSubmission
-         * @summary Update
+         * @name ReplaceFormSubmission
+         * @summary Replace
          * @request PUT:/api/form-submissions/{id}
          * @secure
          */
-        updateFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<HttpResponse<FormSubmission, any>>;
+        replaceFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<HttpResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -3228,12 +3206,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags FormVersions
-         * @name UpdateFormVersion
-         * @summary Update
+         * @name ReplaceFormVersion
+         * @summary Replace
          * @request PUT:/api/forms/{formId}/versions/{id}
          * @secure
          */
-        updateFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
+        replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -3274,16 +3252,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         getLoansReport: (data: GetReportRequest, params?: RequestParams) => Promise<HttpResponse<GetReportResponse, any>>;
-        /**
-         * No description
-         *
-         * @tags LegacyLoan
-         * @name GetTaskTemplates
-         * @summary Get Task Templates
-         * @request GET:/api/los/loan/tasktemplate
-         * @secure
-         */
-        getTaskTemplates: (params?: RequestParams) => Promise<HttpResponse<LOSTask[], any>>;
         /**
          * No description
          *
@@ -3375,7 +3343,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LegacyLoan
          * @name GetPreliminaryConditionsForLoan
-         * @summary Get all preliminary conditions from a loan
+         * @summary Get Preliminary Conditions
          * @request GET:/api/los/loan/{loanID}/conditions/preliminary
          * @secure
          */
@@ -3385,7 +3353,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LegacyLoan
          * @name GetUnderwritingConditionsForLoan
-         * @summary Get all underwriting conditions from a loan
+         * @summary Get Underwriting Conditions
          * @request GET:/api/los/loan/{loanID}/conditions/underwriting
          * @secure
          */
@@ -3407,6 +3375,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name CreateLegacyLoanDocument
          * @summary Create Document
          * @request POST:/api/los/loan/generatedocument
+         * @deprecated
          * @secure
          */
         createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<HttpResponse<DocumentDataRequest, any>>;
@@ -3415,7 +3384,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingFiles
          * @name AddListingFile
-         * @summary Add Listing File
+         * @summary Add
          * @request POST:/api/listings/{listingId}/files
          * @secure
          */
@@ -3430,8 +3399,8 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingFiles
          * @name UpdateListingFiles
-         * @summary Update Listing Files
-         * @request PUT:/api/listings/{listingId}/files
+         * @summary Update
+         * @request PATCH:/api/listings/{listingId}/files
          * @secure
          */
         updateListingFiles: (listingId: string, data: UpdateListingFileRequest[], params?: RequestParams) => Promise<HttpResponse<ListingFile, any>>;
@@ -3440,7 +3409,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingFiles
          * @name RemoveListingFile
-         * @summary Remove Listing File
+         * @summary Remove
          * @request DELETE:/api/listings/{listingId}/files/{id}
          * @secure
          */
@@ -3450,7 +3419,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingPhotos
          * @name AddListingPhoto
-         * @summary Add Listing Photo
+         * @summary Add
          * @request POST:/api/listings/{listingId}/photos
          * @secure
          */
@@ -3467,8 +3436,8 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingPhotos
          * @name UpdateListingPhotos
-         * @summary Update Listing Photos
-         * @request PUT:/api/listings/{listingId}/photos
+         * @summary Update
+         * @request PATCH:/api/listings/{listingId}/photos
          * @secure
          */
         updateListingPhotos: (listingId: string, data: UpdateListingPhotoRequest[], params?: RequestParams) => Promise<HttpResponse<ListingPhoto[], any>>;
@@ -3477,7 +3446,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags ListingPhotos
          * @name RemoveListingPhoto
-         * @summary Remove Listing Photo
+         * @summary Remove
          * @request DELETE:/api/listings/{listingId}/photos/{id}
          * @secure
          */
@@ -3533,12 +3502,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Listings
-         * @name UpdateListing
-         * @summary Update
+         * @name ReplaceListing
+         * @summary Replace
          * @request PUT:/api/listings/{id}
          * @secure
          */
-        updateListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
+        replaceListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<HttpResponse<Listing, any>>;
         /**
          * No description
          *
@@ -3594,7 +3563,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanCalculators
          * @name GetLoanCalculator
-         * @summary Get Loan Calculator
+         * @summary Get
          * @request GET:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
          */
@@ -3604,7 +3573,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanCalculators
          * @name RunLoanCalculator
-         * @summary Run Loan Calculator
+         * @summary Run
          * @request POST:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
          */
@@ -3614,7 +3583,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanComparison
          * @name GetLoanComparisons
-         * @summary Get Loan Comparisons
+         * @summary Get All
          * @request GET:/api/loans/{loanID}/loan-comparison
          * @secure
          */
@@ -3624,7 +3593,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanComparison
          * @name CreateLoanComparison
-         * @summary Create Loan Comparison
+         * @summary Create
          * @request POST:/api/loans/{loanID}/loan-comparison/{index}
          * @secure
          */
@@ -3634,7 +3603,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanComparison
          * @name DeleteLoanComparison
-         * @summary Delete Loan Comparison
+         * @summary Delete
          * @request DELETE:/api/loans/{loanID}/loan-comparison/{index}
          * @secure
          */
@@ -3644,7 +3613,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanComparison
          * @name CreateLoanComparisonPdf
-         * @summary Create Loan Comparison PDF
+         * @summary Create PDF
          * @request POST:/api/loans/{loanID}/loan-comparison/pdf
          * @secure
          */
@@ -3692,7 +3661,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanDrafts
          * @name CreateLoanDraft
-         * @summary Create Loan Draft
+         * @summary Create
          * @request POST:/api/loans/drafts
          * @secure
          */
@@ -3702,7 +3671,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanDrafts
          * @name GetLoanDrafts
-         * @summary Get Loan Drafts
+         * @summary Get All
          * @request GET:/api/loans/drafts
          * @secure
          */
@@ -3712,7 +3681,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanDrafts
          * @name SearchLoanDrafts
-         * @summary Search Loan Drafts
+         * @summary Search
          * @request POST:/api/loans/drafts/search
          * @secure
          */
@@ -3728,12 +3697,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanDrafts
-         * @name UpdateLoanDraft
-         * @summary Update Loan Draft
+         * @name ReplaceLoanDraft
+         * @summary Replace
          * @request PUT:/api/loans/drafts/{draftId}
          * @secure
          */
-        updateLoanDraft: (draftId: string, data: CreateDraftRequest, params?: RequestParams) => Promise<HttpResponse<DraftResponse, any>>;
+        replaceLoanDraft: (draftId: string, data: CreateDraftRequest, params?: RequestParams) => Promise<HttpResponse<DraftResponse, any>>;
         /**
          * No description
          *
@@ -3749,7 +3718,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanDrafts
          * @name DeleteLoanDraft
-         * @summary Delete Loan Draft
+         * @summary Delete
          * @request DELETE:/api/loans/drafts/{draftId}
          * @secure
          */
@@ -3759,7 +3728,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanOfficers
          * @name GetLoanOfficers
-         * @summary Get Loan Officers
+         * @summary Get All
          * @request GET:/api/loan-officers
          * @secure
          */
@@ -3794,7 +3763,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanOfficers
          * @name GetLoanOfficer
-         * @summary Get Loan Officer
+         * @summary Get by ID
          * @request GET:/api/loan-officers/{id}
          * @secure
          */
@@ -3804,7 +3773,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanOfficers
          * @name GetLoanOfficerLoans
-         * @summary Get Loan Officer Loans
+         * @summary Get Loans
          * @request GET:/api/loan-officers/applications
          * @secure
          */
@@ -3814,7 +3783,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanOfficers
          * @name CreateLoanOfficerSiteConfiguration
-         * @summary Create Loan Officer Site Configuration
+         * @summary Create Site Configuration
          * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
          * @secure
          */
@@ -3824,7 +3793,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags LoanOfficers
          * @name GetLoanOfficerSiteConfiguration
-         * @summary Get Loan Officer Site Configuration
+         * @summary Get Site Configuration
          * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
          */
@@ -3833,12 +3802,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanOfficers
-         * @name UpdateLoanOfficerSiteConfiguration
-         * @summary Update Loan Officer Site Configuration
+         * @name ReplaceLoanOfficerSiteConfiguration
+         * @summary Replace Site Configuration
          * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        updateLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
+        replaceLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
         /**
@@ -3910,12 +3879,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanTasks
-         * @name UpdateLoanTask
-         * @summary Update
+         * @name ReplaceLoanTask
+         * @summary Replace
          * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
          * @secure
          */
-        updateLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
+        replaceLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<HttpResponse<UserLoanTask, ProblemDetails>>;
         /**
          * No description
          *
@@ -4000,12 +3969,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Milestones
-         * @name UpdateMilestone
-         * @summary Update
+         * @name ReplaceMilestone
+         * @summary Replace
          * @request PUT:/api/milestones/{id}
          * @secure
          */
-        updateMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse, Error | UnprocessableEntityResponse>>;
+        replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<HttpResponse<MilestoneConfigurationResponse, Error | UnprocessableEntityResponse>>;
         /**
          * No description
          *
@@ -4041,7 +4010,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags NotificationTemplates
          * @name GetNotificationTemplates
-         * @summary Get Templates
+         * @summary Get All
          * @request GET:/api/notification-templates
          * @secure
          */
@@ -4053,7 +4022,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags NotificationTemplates
          * @name CreateNotificationTemplate
-         * @summary Create Template
+         * @summary Create
          * @request POST:/api/notification-templates
          * @secure
          */
@@ -4063,7 +4032,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags NotificationTemplates
          * @name GetNotificationTemplate
-         * @summary Get Template
+         * @summary Get by ID
          * @request GET:/api/notification-templates/{id}
          * @secure
          */
@@ -4072,18 +4041,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags NotificationTemplates
-         * @name UpdateNotificationTemplate
-         * @summary Update Template
+         * @name ReplaceNotificationTemplate
+         * @summary Replace
          * @request PUT:/api/notification-templates/{id}
          * @secure
          */
-        updateNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, UnprocessableEntityResponse>>;
+        replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplate, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags NotificationTemplates
          * @name DeleteNotificationTemplate
-         * @summary Delete Template
+         * @summary Delete
          * @request DELETE:/api/notification-templates/{id}
          * @secure
          */
@@ -4093,7 +4062,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags NotificationTemplates
          * @name RestoreNotificationTemplate
-         * @summary Restore Template
+         * @summary Restore
          * @request POST:/api/notification-templates/{id}/restore
          * @secure
          */
@@ -4132,12 +4101,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags NotificationTemplateVersions
-         * @name UpdateNotificationTemplateVersion
-         * @summary Update
+         * @name ReplaceNotificationTemplateVersion
+         * @summary Replace
          * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
          */
-        updateNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
+        replaceNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<HttpResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -4153,7 +4122,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Partners
          * @name GetPartners
-         * @summary Get Partners
+         * @summary Get All
          * @request GET:/api/partners
          * @secure
          */
@@ -4188,42 +4157,42 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Partners
-         * @name GetRealtor
-         * @summary Get Realtor
+         * @name GetPartner
+         * @summary Get by ID
          * @request GET:/api/partners/{id}
          * @secure
          */
-        getRealtor: (id: string, params?: RequestParams) => Promise<HttpResponse<BranchUser, any>>;
+        getPartner: (id: string, params?: RequestParams) => Promise<HttpResponse<BranchUser, any>>;
         /**
          * No description
          *
          * @tags Partners
-         * @name CreateRealtorSiteConfiguration
-         * @summary Create Realtor Site Configuration
+         * @name CreatePartnerSiteConfiguration
+         * @summary Create Site Configuration
          * @request POST:/api/partners/{realtorId}/site-configurations
          * @secure
          */
-        createRealtorSiteConfiguration: (realtorId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
+        createPartnerSiteConfiguration: (realtorId: string, data: SiteConfiguration, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags Partners
-         * @name GetRealtorSiteConfiguration
-         * @summary Get Realtor Site Configuration
+         * @name GetPartnerSiteConfiguration
+         * @summary Get Site Configuration
          * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        getRealtorSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
+        getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
          * @tags Partners
-         * @name UpdateRealtorSiteConfiguration
-         * @summary Update Realtor Site Configuration
+         * @name ReplacePartnerSiteConfiguration
+         * @summary Replace Site Configuration
          * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        updateRealtorSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
+        replacePartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfiguration, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<HttpResponse<SiteConfiguration, UnprocessableEntityResponse>>;
         /**
@@ -4240,22 +4209,22 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags RequestQueue
-         * @name GetQueueRequests
-         * @summary Get Queue Requests
+         * @name GetRequestQueues
+         * @summary Get All
          * @request GET:/api/request-queue
          * @secure
          */
-        getQueueRequests: (params?: RequestParams) => Promise<HttpResponse<RequestQueue[], any>>;
+        getRequestQueues: (params?: RequestParams) => Promise<HttpResponse<RequestQueue[], any>>;
         /**
          * No description
          *
          * @tags RequestQueue
-         * @name RunQueueRequest
-         * @summary Run Queue Request
+         * @name RunRequestQueue
+         * @summary Run
          * @request POST:/api/request-queue/{id}/run
          * @secure
          */
-        runQueueRequest: (id: string, query?: {
+        runRequestQueue: (id: string, query?: {
             /** @default false */
             force?: boolean;
         }, params?: RequestParams) => Promise<HttpResponse<void, any>>;
@@ -4264,7 +4233,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags RequestQueue
          * @name DeleteQueueRequest
-         * @summary Delete Queue Request
+         * @summary Delete
          * @request DELETE:/api/request-queue/{id}
          * @secure
          */
@@ -4434,12 +4403,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Tasks
-         * @name UpdateTask
-         * @summary Update
+         * @name ReplaceTask
+         * @summary Replace
          * @request PUT:/api/tasks/{id}
          * @secure
          */
-        updateTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
+        replaceTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<HttpResponse<void, ProblemDetails>>;
         /**
          * No description
          *
@@ -4532,7 +4501,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UserInvites
          * @name InviteUser
-         * @summary Invite User
+         * @summary Invite
          * @request POST:/api/users/invites
          * @secure
          */
@@ -4542,7 +4511,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UserInvites
          * @name VerifyUserInvite
-         * @summary Verify User Invite
+         * @summary Verify
          * @request GET:/api/users/invites/{token}/verify
          * @secure
          */
@@ -4552,7 +4521,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UserRelations
          * @name CreateUserRelation
-         * @summary Create User Relation
+         * @summary Create
          * @request POST:/api/users/{userId}/relations
          * @secure
          */
@@ -4561,28 +4530,28 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags UserRelations
-         * @name GetUserRelation
-         * @summary Get User Relation
+         * @name GetUserRelations
+         * @summary Get All
          * @request GET:/api/users/{userId}/relations
          * @secure
          */
-        getUserRelation: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
+        getUserRelations: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
         /**
          * No description
          *
          * @tags UserRelations
-         * @name GetUserRelationByAccount
-         * @summary Get User Relation by Account
+         * @name GetUserRelationsByAccount
+         * @summary Get by Account
          * @request GET:/api/users/{userId}/relations/account
          * @secure
          */
-        getUserRelationByAccount: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
+        getUserRelationsByAccount: (userId: string, params?: RequestParams) => Promise<HttpResponse<UserRelationResponse[], any>>;
         /**
          * No description
          *
          * @tags UserRelations
          * @name DeleteUserRelation
-         * @summary Delete User Relation
+         * @summary Delete
          * @request DELETE:/api/users/{userId}/relations/{id}
          * @secure
          */
@@ -4592,7 +4561,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Users
          * @name GetUsers
-         * @summary Get Users
+         * @summary Get All
          * @request GET:/api/users
          * @secure
          */
@@ -4609,7 +4578,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Users
          * @name CreateUser
-         * @summary Create User
+         * @summary Create
          * @request POST:/api/users
          * @secure
          */
@@ -4655,18 +4624,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Users
-         * @name UpdateUser
-         * @summary Update User
+         * @name ReplaceUser
+         * @summary Update
          * @request PUT:/api/users/{id}
          * @secure
          */
-        updateUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, UnprocessableEntityResponse>>;
+        replaceUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, UnprocessableEntityResponse>>;
         /**
          * No description
          *
          * @tags Users
          * @name DeleteUser
-         * @summary Delete User
+         * @summary Delete
          * @request DELETE:/api/users/{id}
          * @secure
          */
@@ -4749,7 +4718,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UsersMe
          * @name GetMe
-         * @summary Get Me
+         * @summary Get
          * @request GET:/api/users/me
          * @secure
          */
@@ -4758,12 +4727,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags UsersMe
-         * @name UpdateMe
-         * @summary Update Me
+         * @name ReplaceMe
+         * @summary Replace
          * @request PUT:/api/users/me
          * @secure
          */
-        updateMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, any>>;
+        replaceMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<HttpResponse<DetailedUser, any>>;
         /**
          * @description Update the phone number If changed will send a verification code to the new number
          *
@@ -4779,7 +4748,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UsersMe
          * @name GetMyRelationships
-         * @summary Get My Relationships
+         * @summary Get Relationships
          * @request GET:/api/users/me/relationships
          * @secure
          */
@@ -4789,7 +4758,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UsersMe
          * @name GetMyRelationshipProspects
-         * @summary Get My Relationship Prospects
+         * @summary Get Relationship Prospects
          * @request GET:/api/users/me/relationships/prospects
          * @secure
          */
@@ -4809,7 +4778,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UsersMe
          * @name DeleteMe
-         * @summary Delete Me
+         * @summary Delete
          * @request POST:/api/users/me/delete
          * @secure
          */

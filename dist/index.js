@@ -227,7 +227,7 @@ class Api extends HttpClient {
              *
              * @tags Branches
              * @name GetBranches
-             * @summary Get Branches
+             * @summary Get All
              * @request GET:/api/branches
              * @secure
              */
@@ -236,12 +236,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Branches
-             * @name CreateBranches
-             * @summary Create Branches
+             * @name CreateBranch
+             * @summary Create
              * @request POST:/api/branches
              * @secure
              */
-            createBranches: (data, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createBranch: (data, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -257,7 +257,7 @@ class Api extends HttpClient {
              *
              * @tags Branches
              * @name GetBranch
-             * @summary Get Branch
+             * @summary Get by ID
              * @request GET:/api/branches/{branchId}
              * @secure
              */
@@ -266,18 +266,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Branches
-             * @name UpdateBranch
-             * @summary Update Branch
+             * @name ReplaceBranch
+             * @summary Replace
              * @request PUT:/api/branches/{branchId}
              * @secure
              */
-            updateBranch: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceBranch: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Branches
              * @name DeleteBranch
-             * @summary Delete Branch
+             * @summary Delete
              * @request DELETE:/api/branches/{branchId}
              * @secure
              */
@@ -287,7 +287,7 @@ class Api extends HttpClient {
              *
              * @tags Branches
              * @name RestoreBranch
-             * @summary Restore Branch
+             * @summary Restore
              * @request POST:/api/branches/{branchId}/restore
              * @secure
              */
@@ -306,12 +306,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Branches
-             * @name UpdateBranchSiteConfiguration
-             * @summary Update Branch Site Configuration
+             * @name ReplaceBranchSiteConfiguration
+             * @summary Replace Branch Site Configuration
              * @request PUT:/api/branches/{branchId}/site-configurations
              * @secure
              */
-            updateBranchSiteConfiguration: (branchId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceBranchSiteConfiguration: (branchId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -366,12 +366,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags BusinessRules
-             * @name UpdateBusinessRule
-             * @summary Update
+             * @name ReplaceBusinessRule
+             * @summary Replace
              * @request PUT:/api/business-rules/{id}
              * @secure
              */
-            updateBusinessRule: (id, data, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceBusinessRule: (id, data, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -397,7 +397,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name GetCorporates
-             * @summary Get Corporates
+             * @summary Get All
              * @request GET:/api/corporates
              * @secure
              */
@@ -407,7 +407,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name CreateCorporate
-             * @summary Create Corporate
+             * @summary Create
              * @request POST:/api/corporates
              * @secure
              */
@@ -427,7 +427,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name GetCorporate
-             * @summary Get Corporate
+             * @summary Get by ID
              * @request GET:/api/corporates/{id}
              * @secure
              */
@@ -436,18 +436,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Corporates
-             * @name UpdateCorporate
-             * @summary Update Corporate
+             * @name ReplaceCorporate
+             * @summary Replace
              * @request PUT:/api/corporates/{id}
              * @secure
              */
-            updateCorporate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceCorporate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Corporates
              * @name DeleteCorporate
-             * @summary Delete Corporate
+             * @summary Delete
              * @request DELETE:/api/corporates/{id}
              * @secure
              */
@@ -457,7 +457,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name RestoreCorporate
-             * @summary Restore Corporate
+             * @summary Restore
              * @request POST:/api/corporates/{id}/restore
              * @secure
              */
@@ -467,7 +467,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name CreateCorporateSiteConfiguration
-             * @summary Create Corporate Site Configuration
+             * @summary Create Site Configuration
              * @request POST:/api/corporates/{corporateId}/site-configurations
              * @secure
              */
@@ -476,18 +476,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Corporates
-             * @name UpdateCorporateSiteConfiguration
-             * @summary Update Corporate Site Configuration
+             * @name ReplaceCorporateSiteConfiguration
+             * @summary Replace Site Configuration
              * @request PUT:/api/corporates/{corporateId}/site-configurations
              * @secure
              */
-            updateCorporateSiteConfiguration: (corporateId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceCorporateSiteConfiguration: (corporateId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Corporates
              * @name GetCorporateSiteConfiguration
-             * @summary Get Corporate Site Configuration
+             * @summary Get Site Configuration
              * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
              * @secure
              */
@@ -497,7 +497,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name GetBranchesByCorporate
-             * @summary Get Branches By Corporate
+             * @summary Get Branches
              * @request GET:/api/corporates/{id}/branches
              * @secure
              */
@@ -507,7 +507,7 @@ class Api extends HttpClient {
              *
              * @tags Corporates
              * @name GetLoanOfficersByCorporate
-             * @summary Get Loan Officers By Corporate
+             * @summary Get Loan Officers
              * @request GET:/api/corporates/{id}/loan-officers
              * @secure
              */
@@ -517,7 +517,7 @@ class Api extends HttpClient {
              *
              * @tags Devices
              * @name GetDevices
-             * @summary Get Devices
+             * @summary Get All
              * @request GET:/api/devices
              * @secure
              */
@@ -527,7 +527,7 @@ class Api extends HttpClient {
              *
              * @tags Devices
              * @name GetDeviceById
-             * @summary Get Device by ID
+             * @summary Get by ID
              * @request GET:/api/devices/{id}
              * @secure
              */
@@ -537,7 +537,7 @@ class Api extends HttpClient {
              *
              * @tags Devices
              * @name GetDeviceBySerialNumber
-             * @summary Get Device by serial number
+             * @summary Get by Serial Number
              * @request GET:/api/devices/{sn}/profile
              * @secure
              */
@@ -547,7 +547,7 @@ class Api extends HttpClient {
              *
              * @tags Devices
              * @name CreateActionBySerialNumber
-             * @summary Create action by serial number
+             * @summary Create Action by Serial Number
              * @request POST:/api/devices/{sn}/actions/{actionName}
              * @secure
              */
@@ -577,7 +577,7 @@ class Api extends HttpClient {
              *
              * @tags DocumentTemplates
              * @name CreateDocumentTemplate
-             * @summary Create Template
+             * @summary Create
              * @request POST:/api/document-templates
              * @secure
              */
@@ -587,7 +587,7 @@ class Api extends HttpClient {
              *
              * @tags DocumentTemplates
              * @name GetCustomDocumentTemplates
-             * @summary Get Custom Templates
+             * @summary Get Custom
              * @request GET:/api/document-templates/{type}
              * @secure
              */
@@ -606,18 +606,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags DocumentTemplates
-             * @name UpdateDocumentTemplate
-             * @summary Update Template
+             * @name ReplaceDocumentTemplate
+             * @summary Replace
              * @request PUT:/api/document-templates/{id}
              * @secure
              */
-            updateDocumentTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceDocumentTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags DocumentTemplates
              * @name DeleteDocumentTemplate
-             * @summary Delete Template
+             * @summary Delete
              * @request DELETE:/api/document-templates/{id}
              * @secure
              */
@@ -627,7 +627,7 @@ class Api extends HttpClient {
              *
              * @tags DocumentTemplates
              * @name RestoreDocumentTemplate
-             * @summary Restore Template
+             * @summary Restore
              * @request POST:/api/document-templates/{id}/restore
              * @secure
              */
@@ -666,12 +666,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags DocumentTemplateVersions
-             * @name UpdateDocumentTemplateVersion
-             * @summary Update
+             * @name ReplaceDocumentTemplateVersion
+             * @summary Replace
              * @request PUT:/api/document-templates/{documentId}/versions/{id}
              * @secure
              */
-            updateDocumentTemplateVersion: (documentId, id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceDocumentTemplateVersion: (documentId, id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -687,7 +687,7 @@ class Api extends HttpClient {
              *
              * @tags Files
              * @name GetAllFiles
-             * @summary Get All files
+             * @summary Get All
              * @request GET:/api/files
              * @secure
              */
@@ -697,7 +697,7 @@ class Api extends HttpClient {
              *
              * @tags Files
              * @name UploadFile
-             * @summary Upload file
+             * @summary Upload
              * @request POST:/api/files
              * @secure
              */
@@ -707,7 +707,7 @@ class Api extends HttpClient {
              *
              * @tags Files
              * @name GetFileById
-             * @summary Get File By ID
+             * @summary Get By ID
              * @request GET:/api/files/{id}
              * @secure
              */
@@ -716,18 +716,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Files
-             * @name UpdateFile
-             * @summary Update file
+             * @name ReplaceFile
+             * @summary Replace
              * @request PUT:/api/files/{id}
              * @secure
              */
-            updateFile: (id, data, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceFile: (id, data, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Files
              * @name DeleteFile
-             * @summary Delete file
+             * @summary Delete
              * @request DELETE:/api/files/{id}
              * @secure
              */
@@ -796,12 +796,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Forms
-             * @name UpdateForm
-             * @summary Update
+             * @name ReplaceForm
+             * @summary Replace
              * @request PUT:/api/forms/{id}
              * @secure
              */
-            updateForm: (id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceForm: (id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -857,7 +857,7 @@ class Api extends HttpClient {
              *
              * @tags FormSubmissionFiles
              * @name AddFormSubmissionFile
-             * @summary Add FormSubmission File
+             * @summary Add
              * @request POST:/api/form-submissions/{formSubmissionId}/files
              * @secure
              */
@@ -867,7 +867,7 @@ class Api extends HttpClient {
              *
              * @tags FormSubmissionFiles
              * @name DeleteFormSubmissionFile
-             * @summary Delete FormSubmission File
+             * @summary Delete
              * @request DELETE:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}
              * @secure
              */
@@ -906,12 +906,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags FormSubmissions
-             * @name UpdateFormSubmission
-             * @summary Update
+             * @name ReplaceFormSubmission
+             * @summary Replace
              * @request PUT:/api/form-submissions/{id}
              * @secure
              */
-            updateFormSubmission: (id, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceFormSubmission: (id, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -966,12 +966,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags FormVersions
-             * @name UpdateFormVersion
-             * @summary Update
+             * @name ReplaceFormVersion
+             * @summary Replace
              * @request PUT:/api/forms/{formId}/versions/{id}
              * @secure
              */
-            updateFormVersion: (formId, id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceFormVersion: (formId, id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1012,16 +1012,6 @@ class Api extends HttpClient {
              * @secure
              */
             getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
-             * @name GetTaskTemplates
-             * @summary Get Task Templates
-             * @request GET:/api/los/loan/tasktemplate
-             * @secure
-             */
-            getTaskTemplates: (params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasktemplate`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1107,7 +1097,7 @@ class Api extends HttpClient {
              *
              * @tags LegacyLoan
              * @name GetPreliminaryConditionsForLoan
-             * @summary Get all preliminary conditions from a loan
+             * @summary Get Preliminary Conditions
              * @request GET:/api/los/loan/{loanID}/conditions/preliminary
              * @secure
              */
@@ -1117,7 +1107,7 @@ class Api extends HttpClient {
              *
              * @tags LegacyLoan
              * @name GetUnderwritingConditionsForLoan
-             * @summary Get all underwriting conditions from a loan
+             * @summary Get Underwriting Conditions
              * @request GET:/api/los/loan/{loanID}/conditions/underwriting
              * @secure
              */
@@ -1139,6 +1129,7 @@ class Api extends HttpClient {
              * @name CreateLegacyLoanDocument
              * @summary Create Document
              * @request POST:/api/los/loan/generatedocument
+             * @deprecated
              * @secure
              */
             createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -1147,7 +1138,7 @@ class Api extends HttpClient {
              *
              * @tags ListingFiles
              * @name AddListingFile
-             * @summary Add Listing File
+             * @summary Add
              * @request POST:/api/listings/{listingId}/files
              * @secure
              */
@@ -1157,17 +1148,17 @@ class Api extends HttpClient {
              *
              * @tags ListingFiles
              * @name UpdateListingFiles
-             * @summary Update Listing Files
-             * @request PUT:/api/listings/{listingId}/files
+             * @summary Update
+             * @request PATCH:/api/listings/{listingId}/files
              * @secure
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags ListingFiles
              * @name RemoveListingFile
-             * @summary Remove Listing File
+             * @summary Remove
              * @request DELETE:/api/listings/{listingId}/files/{id}
              * @secure
              */
@@ -1177,7 +1168,7 @@ class Api extends HttpClient {
              *
              * @tags ListingPhotos
              * @name AddListingPhoto
-             * @summary Add Listing Photo
+             * @summary Add
              * @request POST:/api/listings/{listingId}/photos
              * @secure
              */
@@ -1187,17 +1178,17 @@ class Api extends HttpClient {
              *
              * @tags ListingPhotos
              * @name UpdateListingPhotos
-             * @summary Update Listing Photos
-             * @request PUT:/api/listings/{listingId}/photos
+             * @summary Update
+             * @request PATCH:/api/listings/{listingId}/photos
              * @secure
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags ListingPhotos
              * @name RemoveListingPhoto
-             * @summary Remove Listing Photo
+             * @summary Remove
              * @request DELETE:/api/listings/{listingId}/photos/{id}
              * @secure
              */
@@ -1246,12 +1237,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Listings
-             * @name UpdateListing
-             * @summary Update
+             * @name ReplaceListing
+             * @summary Replace
              * @request PUT:/api/listings/{id}
              * @secure
              */
-            updateListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1297,7 +1288,7 @@ class Api extends HttpClient {
              *
              * @tags LoanCalculators
              * @name GetLoanCalculator
-             * @summary Get Loan Calculator
+             * @summary Get
              * @request GET:/api/loans/{loanID}/calculators/loan-calculator
              * @secure
              */
@@ -1307,7 +1298,7 @@ class Api extends HttpClient {
              *
              * @tags LoanCalculators
              * @name RunLoanCalculator
-             * @summary Run Loan Calculator
+             * @summary Run
              * @request POST:/api/loans/{loanID}/calculators/loan-calculator
              * @secure
              */
@@ -1317,7 +1308,7 @@ class Api extends HttpClient {
              *
              * @tags LoanComparison
              * @name GetLoanComparisons
-             * @summary Get Loan Comparisons
+             * @summary Get All
              * @request GET:/api/loans/{loanID}/loan-comparison
              * @secure
              */
@@ -1327,7 +1318,7 @@ class Api extends HttpClient {
              *
              * @tags LoanComparison
              * @name CreateLoanComparison
-             * @summary Create Loan Comparison
+             * @summary Create
              * @request POST:/api/loans/{loanID}/loan-comparison/{index}
              * @secure
              */
@@ -1337,7 +1328,7 @@ class Api extends HttpClient {
              *
              * @tags LoanComparison
              * @name DeleteLoanComparison
-             * @summary Delete Loan Comparison
+             * @summary Delete
              * @request DELETE:/api/loans/{loanID}/loan-comparison/{index}
              * @secure
              */
@@ -1347,7 +1338,7 @@ class Api extends HttpClient {
              *
              * @tags LoanComparison
              * @name CreateLoanComparisonPdf
-             * @summary Create Loan Comparison PDF
+             * @summary Create PDF
              * @request POST:/api/loans/{loanID}/loan-comparison/pdf
              * @secure
              */
@@ -1387,7 +1378,7 @@ class Api extends HttpClient {
              *
              * @tags LoanDrafts
              * @name CreateLoanDraft
-             * @summary Create Loan Draft
+             * @summary Create
              * @request POST:/api/loans/drafts
              * @secure
              */
@@ -1397,7 +1388,7 @@ class Api extends HttpClient {
              *
              * @tags LoanDrafts
              * @name GetLoanDrafts
-             * @summary Get Loan Drafts
+             * @summary Get All
              * @request GET:/api/loans/drafts
              * @secure
              */
@@ -1407,7 +1398,7 @@ class Api extends HttpClient {
              *
              * @tags LoanDrafts
              * @name SearchLoanDrafts
-             * @summary Search Loan Drafts
+             * @summary Search
              * @request POST:/api/loans/drafts/search
              * @secure
              */
@@ -1416,12 +1407,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags LoanDrafts
-             * @name UpdateLoanDraft
-             * @summary Update Loan Draft
+             * @name ReplaceLoanDraft
+             * @summary Replace
              * @request PUT:/api/loans/drafts/{draftId}
              * @secure
              */
-            updateLoanDraft: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceLoanDraft: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1437,7 +1428,7 @@ class Api extends HttpClient {
              *
              * @tags LoanDrafts
              * @name DeleteLoanDraft
-             * @summary Delete Loan Draft
+             * @summary Delete
              * @request DELETE:/api/loans/drafts/{draftId}
              * @secure
              */
@@ -1447,7 +1438,7 @@ class Api extends HttpClient {
              *
              * @tags LoanOfficers
              * @name GetLoanOfficers
-             * @summary Get Loan Officers
+             * @summary Get All
              * @request GET:/api/loan-officers
              * @secure
              */
@@ -1467,7 +1458,7 @@ class Api extends HttpClient {
              *
              * @tags LoanOfficers
              * @name GetLoanOfficer
-             * @summary Get Loan Officer
+             * @summary Get by ID
              * @request GET:/api/loan-officers/{id}
              * @secure
              */
@@ -1477,7 +1468,7 @@ class Api extends HttpClient {
              *
              * @tags LoanOfficers
              * @name GetLoanOfficerLoans
-             * @summary Get Loan Officer Loans
+             * @summary Get Loans
              * @request GET:/api/loan-officers/applications
              * @secure
              */
@@ -1487,7 +1478,7 @@ class Api extends HttpClient {
              *
              * @tags LoanOfficers
              * @name CreateLoanOfficerSiteConfiguration
-             * @summary Create Loan Officer Site Configuration
+             * @summary Create Site Configuration
              * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
              * @secure
              */
@@ -1497,7 +1488,7 @@ class Api extends HttpClient {
              *
              * @tags LoanOfficers
              * @name GetLoanOfficerSiteConfiguration
-             * @summary Get Loan Officer Site Configuration
+             * @summary Get Site Configuration
              * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
              * @secure
              */
@@ -1506,12 +1497,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags LoanOfficers
-             * @name UpdateLoanOfficerSiteConfiguration
-             * @summary Update Loan Officer Site Configuration
+             * @name ReplaceLoanOfficerSiteConfiguration
+             * @summary Replace Site Configuration
              * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
              * @secure
              */
-            updateLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1576,12 +1567,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags LoanTasks
-             * @name UpdateLoanTask
-             * @summary Update
+             * @name ReplaceLoanTask
+             * @summary Replace
              * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
              * @secure
              */
-            updateLoanTask: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceLoanTask: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1666,12 +1657,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Milestones
-             * @name UpdateMilestone
-             * @summary Update
+             * @name ReplaceMilestone
+             * @summary Replace
              * @request PUT:/api/milestones/{id}
              * @secure
              */
-            updateMilestone: (id, data, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceMilestone: (id, data, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1707,7 +1698,7 @@ class Api extends HttpClient {
              *
              * @tags NotificationTemplates
              * @name GetNotificationTemplates
-             * @summary Get Templates
+             * @summary Get All
              * @request GET:/api/notification-templates
              * @secure
              */
@@ -1717,7 +1708,7 @@ class Api extends HttpClient {
              *
              * @tags NotificationTemplates
              * @name CreateNotificationTemplate
-             * @summary Create Template
+             * @summary Create
              * @request POST:/api/notification-templates
              * @secure
              */
@@ -1727,7 +1718,7 @@ class Api extends HttpClient {
              *
              * @tags NotificationTemplates
              * @name GetNotificationTemplate
-             * @summary Get Template
+             * @summary Get by ID
              * @request GET:/api/notification-templates/{id}
              * @secure
              */
@@ -1736,18 +1727,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags NotificationTemplates
-             * @name UpdateNotificationTemplate
-             * @summary Update Template
+             * @name ReplaceNotificationTemplate
+             * @summary Replace
              * @request PUT:/api/notification-templates/{id}
              * @secure
              */
-            updateNotificationTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceNotificationTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags NotificationTemplates
              * @name DeleteNotificationTemplate
-             * @summary Delete Template
+             * @summary Delete
              * @request DELETE:/api/notification-templates/{id}
              * @secure
              */
@@ -1757,7 +1748,7 @@ class Api extends HttpClient {
              *
              * @tags NotificationTemplates
              * @name RestoreNotificationTemplate
-             * @summary Restore Template
+             * @summary Restore
              * @request POST:/api/notification-templates/{id}/restore
              * @secure
              */
@@ -1796,12 +1787,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags NotificationTemplateVersions
-             * @name UpdateNotificationTemplateVersion
-             * @summary Update
+             * @name ReplaceNotificationTemplateVersion
+             * @summary Replace
              * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
              * @secure
              */
-            updateNotificationTemplateVersion: (notificationId, id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceNotificationTemplateVersion: (notificationId, id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1817,7 +1808,7 @@ class Api extends HttpClient {
              *
              * @tags Partners
              * @name GetPartners
-             * @summary Get Partners
+             * @summary Get All
              * @request GET:/api/partners
              * @secure
              */
@@ -1836,42 +1827,42 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Partners
-             * @name GetRealtor
-             * @summary Get Realtor
+             * @name GetPartner
+             * @summary Get by ID
              * @request GET:/api/partners/{id}
              * @secure
              */
-            getRealtor: (id, params = {}) => this.request(Object.assign({ path: `/api/partners/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            getPartner: (id, params = {}) => this.request(Object.assign({ path: `/api/partners/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Partners
-             * @name CreateRealtorSiteConfiguration
-             * @summary Create Realtor Site Configuration
+             * @name CreatePartnerSiteConfiguration
+             * @summary Create Site Configuration
              * @request POST:/api/partners/{realtorId}/site-configurations
              * @secure
              */
-            createRealtorSiteConfiguration: (realtorId, data, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createPartnerSiteConfiguration: (realtorId, data, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Partners
-             * @name GetRealtorSiteConfiguration
-             * @summary Get Realtor Site Configuration
+             * @name GetPartnerSiteConfiguration
+             * @summary Get Site Configuration
              * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
              * @secure
              */
-            getRealtorSiteConfiguration: (realtorId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            getPartnerSiteConfiguration: (realtorId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Partners
-             * @name UpdateRealtorSiteConfiguration
-             * @summary Update Realtor Site Configuration
+             * @name ReplacePartnerSiteConfiguration
+             * @summary Replace Site Configuration
              * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
              * @secure
              */
-            updateRealtorSiteConfiguration: (realtorId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replacePartnerSiteConfiguration: (realtorId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1886,28 +1877,28 @@ class Api extends HttpClient {
              * No description
              *
              * @tags RequestQueue
-             * @name GetQueueRequests
-             * @summary Get Queue Requests
+             * @name GetRequestQueues
+             * @summary Get All
              * @request GET:/api/request-queue
              * @secure
              */
-            getQueueRequests: (params = {}) => this.request(Object.assign({ path: `/api/request-queue`, method: "GET", secure: true, format: "json" }, params)),
+            getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queue`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags RequestQueue
-             * @name RunQueueRequest
-             * @summary Run Queue Request
+             * @name RunRequestQueue
+             * @summary Run
              * @request POST:/api/request-queue/{id}/run
              * @secure
              */
-            runQueueRequest: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}/run`, method: "POST", query: query, secure: true }, params)),
+            runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queue/${id}/run`, method: "POST", query: query, secure: true }, params)),
             /**
              * No description
              *
              * @tags RequestQueue
              * @name DeleteQueueRequest
-             * @summary Delete Queue Request
+             * @summary Delete
              * @request DELETE:/api/request-queue/{id}
              * @secure
              */
@@ -2058,12 +2049,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Tasks
-             * @name UpdateTask
-             * @summary Update
+             * @name ReplaceTask
+             * @summary Replace
              * @request PUT:/api/tasks/{id}
              * @secure
              */
-            updateTask: (id, data, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            replaceTask: (id, data, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -2149,7 +2140,7 @@ class Api extends HttpClient {
              *
              * @tags UserInvites
              * @name InviteUser
-             * @summary Invite User
+             * @summary Invite
              * @request POST:/api/users/invites
              * @secure
              */
@@ -2159,7 +2150,7 @@ class Api extends HttpClient {
              *
              * @tags UserInvites
              * @name VerifyUserInvite
-             * @summary Verify User Invite
+             * @summary Verify
              * @request GET:/api/users/invites/{token}/verify
              * @secure
              */
@@ -2169,7 +2160,7 @@ class Api extends HttpClient {
              *
              * @tags UserRelations
              * @name CreateUserRelation
-             * @summary Create User Relation
+             * @summary Create
              * @request POST:/api/users/{userId}/relations
              * @secure
              */
@@ -2178,28 +2169,28 @@ class Api extends HttpClient {
              * No description
              *
              * @tags UserRelations
-             * @name GetUserRelation
-             * @summary Get User Relation
+             * @name GetUserRelations
+             * @summary Get All
              * @request GET:/api/users/{userId}/relations
              * @secure
              */
-            getUserRelation: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "GET", secure: true, format: "json" }, params)),
+            getUserRelations: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserRelations
-             * @name GetUserRelationByAccount
-             * @summary Get User Relation by Account
+             * @name GetUserRelationsByAccount
+             * @summary Get by Account
              * @request GET:/api/users/{userId}/relations/account
              * @secure
              */
-            getUserRelationByAccount: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/account`, method: "GET", secure: true, format: "json" }, params)),
+            getUserRelationsByAccount: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/account`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserRelations
              * @name DeleteUserRelation
-             * @summary Delete User Relation
+             * @summary Delete
              * @request DELETE:/api/users/{userId}/relations/{id}
              * @secure
              */
@@ -2209,7 +2200,7 @@ class Api extends HttpClient {
              *
              * @tags Users
              * @name GetUsers
-             * @summary Get Users
+             * @summary Get All
              * @request GET:/api/users
              * @secure
              */
@@ -2219,7 +2210,7 @@ class Api extends HttpClient {
              *
              * @tags Users
              * @name CreateUser
-             * @summary Create User
+             * @summary Create
              * @request POST:/api/users
              * @secure
              */
@@ -2258,18 +2249,18 @@ class Api extends HttpClient {
              * No description
              *
              * @tags Users
-             * @name UpdateUser
-             * @summary Update User
+             * @name ReplaceUser
+             * @summary Update
              * @request PUT:/api/users/{id}
              * @secure
              */
-            updateUser: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceUser: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Users
              * @name DeleteUser
-             * @summary Delete User
+             * @summary Delete
              * @request DELETE:/api/users/{id}
              * @secure
              */
@@ -2349,7 +2340,7 @@ class Api extends HttpClient {
              *
              * @tags UsersMe
              * @name GetMe
-             * @summary Get Me
+             * @summary Get
              * @request GET:/api/users/me
              * @secure
              */
@@ -2358,12 +2349,12 @@ class Api extends HttpClient {
              * No description
              *
              * @tags UsersMe
-             * @name UpdateMe
-             * @summary Update Me
+             * @name ReplaceMe
+             * @summary Replace
              * @request PUT:/api/users/me
              * @secure
              */
-            updateMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * @description Update the phone number If changed will send a verification code to the new number
              *
@@ -2379,7 +2370,7 @@ class Api extends HttpClient {
              *
              * @tags UsersMe
              * @name GetMyRelationships
-             * @summary Get My Relationships
+             * @summary Get Relationships
              * @request GET:/api/users/me/relationships
              * @secure
              */
@@ -2389,7 +2380,7 @@ class Api extends HttpClient {
              *
              * @tags UsersMe
              * @name GetMyRelationshipProspects
-             * @summary Get My Relationship Prospects
+             * @summary Get Relationship Prospects
              * @request GET:/api/users/me/relationships/prospects
              * @secure
              */
@@ -2409,7 +2400,7 @@ class Api extends HttpClient {
              *
              * @tags UsersMe
              * @name DeleteMe
-             * @summary Delete Me
+             * @summary Delete
              * @request POST:/api/users/me/delete
              * @secure
              */
