@@ -1,4 +1,3 @@
-"use strict";
 /* eslint-disable */
 /* tslint:disable */
 /*
@@ -29,20 +28,15 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Api = exports.HttpClient = exports.ContentType = void 0;
-const axios_1 = __importDefault(require("axios"));
-var ContentType;
+import axios from "axios";
+export var ContentType;
 (function (ContentType) {
     ContentType["Json"] = "application/json";
     ContentType["FormData"] = "multipart/form-data";
     ContentType["UrlEncoded"] = "application/x-www-form-urlencoded";
     ContentType["Text"] = "text/plain";
-})(ContentType || (exports.ContentType = ContentType = {}));
-class HttpClient {
+})(ContentType || (ContentType = {}));
+export class HttpClient {
     constructor(_a = {}) {
         var { securityWorker, secure, format } = _a, axiosConfig = __rest(_a, ["securityWorker", "secure", "format"]);
         this.securityData = null;
@@ -65,7 +59,7 @@ class HttpClient {
             }
             return this.instance.request(Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type ? { "Content-Type": type } : {})), params: query, responseType: responseFormat, data: body, url: path }));
         });
-        this.instance = axios_1.default.create(Object.assign(Object.assign({}, axiosConfig), { baseURL: axiosConfig.baseURL || "" }));
+        this.instance = axios.create(Object.assign(Object.assign({}, axiosConfig), { baseURL: axiosConfig.baseURL || "" }));
         this.secure = secure;
         this.format = format;
         this.securityWorker = securityWorker;
@@ -97,14 +91,13 @@ class HttpClient {
         }, new FormData());
     }
 }
-exports.HttpClient = HttpClient;
 /**
  * @title The Big POS API
  * @version v2.8.7
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
-class Api extends HttpClient {
+export class Api extends HttpClient {
     constructor() {
         super(...arguments);
         /**
@@ -2541,5 +2534,4 @@ class Api extends HttpClient {
         };
     }
 }
-exports.Api = Api;
 //# sourceMappingURL=index.js.map
