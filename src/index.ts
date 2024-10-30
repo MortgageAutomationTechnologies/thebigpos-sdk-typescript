@@ -63,6 +63,19 @@ export interface AccountUpdateRequest {
   asoSettings: ASOSettings;
 }
 
+export interface AccountUpdateRequestJsonPatchDocument {
+  operations?: AccountUpdateRequestOperation[] | null;
+  contractResolver: IContractResolver;
+}
+
+export interface AccountUpdateRequestOperation {
+  operationType: OperationType;
+  path?: string | null;
+  op?: string | null;
+  from?: string | null;
+  value?: any;
+}
+
 export interface ActionResponse {
   /** @format uuid */
   id: string;
@@ -75,17 +88,17 @@ export interface ActionResponse {
 }
 
 export interface AddFormToSiteConfigurationRequest {
-  /** @minLength 1 */
-  slug: string;
-  userRole: string;
-  borrowerType: string;
+  slug?: string | null;
+  formType?: string | null;
+  userRole?: string | null;
+  borrowerType?: string | null;
   showProgressBar: boolean;
   showTile: boolean;
-  tileLocation: string;
-  tileText: string;
-  tileSubtitle: string;
-  icon: string;
-  entityTypes: string[];
+  tileLocation?: string | null;
+  tileText?: string | null;
+  tileSubtitle?: string | null;
+  icon?: string | null;
+  entityTypes?: string[] | null;
 }
 
 export interface Address {
@@ -129,6 +142,9 @@ export interface AdminAccessGetForms {
   description?: string | null;
   slug?: string | null;
   status: string;
+  language?: string | null;
+  borrowerType: BorrowerType;
+  showProgressBar: boolean;
 }
 
 export interface AdminAccessUser {
@@ -226,6 +242,8 @@ export interface Attachment {
 }
 
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
+
+export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 
 export interface BranchReduced {
   /** @format uuid */
@@ -421,11 +439,6 @@ export interface CreateDocumentTemplateRequest {
   type: string;
   description?: string | null;
   status: string;
-}
-
-export interface CreateDraftRequest {
-  applicationPayload: any;
-  customData?: any;
 }
 
 export interface CreateInviteRequest {
@@ -704,6 +717,11 @@ export interface DraftContentResponsePaginatedResponse {
   count: number;
 }
 
+export interface DraftRequest {
+  applicationPayload: any;
+  customData?: any;
+}
+
 export interface DraftResponse {
   /** @format uuid */
   id: string;
@@ -829,6 +847,8 @@ export interface FormRequest {
   slug?: string | null;
   status: string;
   language?: string | null;
+  borrowerType: BorrowerType;
+  showProgressBar: boolean;
 }
 
 export interface FormSubmission {
@@ -1015,12 +1035,14 @@ export interface GetForm {
   type: number;
   target: string;
   authType: string;
+  inviteUser: boolean;
   name: string;
-  isDefault: boolean;
   description?: string | null;
   slug?: string | null;
   status: string;
-  language: string;
+  language?: string | null;
+  borrowerType: BorrowerType;
+  showProgressBar: boolean;
   /** @format uuid */
   id: string;
 }
@@ -1105,6 +1127,8 @@ export interface GetWorkflowRequest {
   language?: string | null;
 }
 
+export type IContractResolver = object;
+
 export interface ImportUserLoanTaskRequest {
   /**
    * @format uuid
@@ -1136,6 +1160,9 @@ export interface InviteResponse {
   /** @format date-time */
   createdAt: string;
 }
+
+/** Array of operations to perform */
+export type JsonPatchDocument = Operation[];
 
 export interface Listing {
   /** @format date-time */
@@ -1234,11 +1261,17 @@ export interface ListingSearchCriteria {
 export interface Loan {
   loanID: string;
   loanNumber?: string | null;
+  /** @format date-time */
   initialDisclosureProvidedDate?: string | null;
+  /** @format date-time */
   closingDisclosureSentDate?: string | null;
+  /** @format date-time */
   underwritingApprovalDate?: string | null;
+  /** @format date-time */
   closingDate?: string | null;
+  /** @format date-time */
   fundingOrderDate?: string | null;
+  /** @format date-time */
   currentStatusDate?: string | null;
   loanChannel?: string | null;
   /** @format double */
@@ -1246,6 +1279,7 @@ export interface Loan {
   currentLoanStatus?: string | null;
   currentMilestone?: string | null;
   lastCompletedMilestone?: string | null;
+  /** @format date-time */
   startDate?: string | null;
   isInSync: boolean;
   /** @format date-time */
@@ -1262,6 +1296,8 @@ export interface Loan {
   propertyAddress: Address;
   borrowerContact: Contact;
   coBorrowerContact: Contact;
+  isLocked: boolean;
+  source?: string | null;
 }
 
 export interface LoanComparisonResponse {
@@ -1577,6 +1613,14 @@ export interface NotificationTemplateVersionUpdateRequest {
   plainBody: string;
 }
 
+export interface Operation {
+  op?: string;
+  value?: object | null;
+  path?: string;
+}
+
+export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
+
 export interface OverridePasswordRequest {
   /** @minLength 8 */
   password: string;
@@ -1594,21 +1638,6 @@ export interface PartnerSearchCriteria {
   isActive?: boolean | null;
   brands?: string[] | null;
   roles?: UserRole[] | null;
-}
-
-export interface PostCreditAuthorizationRequest {
-  /** @minLength 1 */
-  loanID: string;
-  /** @format uuid */
-  accountId?: string | null;
-}
-
-export interface PostEConsentRequest {
-  /** @minLength 1 */
-  loanID: string;
-  /** @format uuid */
-  siteConfigurationID: string;
-  clientIP?: string | null;
 }
 
 export interface PostLoanComparisonPdfRequest {
@@ -1730,7 +1759,6 @@ export interface RegisterUserRequest {
    * @minLength 1
    */
   siteConfigurationId: string;
-  sendNotification: boolean;
   /** @format uuid */
   inviteCode?: string | null;
 }
@@ -2457,169 +2485,9 @@ export interface SiteConfigurationSearchCriteria {
   entityType?: string | null;
 }
 
-export interface SiteConfigurationUpdateRequest {
-  /** @format uuid */
-  entityID: string;
-  /** @format int32 */
-  entityType: number;
-  url: string;
-  name: string;
-  introduction?: string | null;
-  introductionTitle?: string | null;
-  /** @format int32 */
-  nmlsid: number;
-  address?: string | null;
-  address2?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zip?: string | null;
-  phone?: string | null;
-  fax?: string | null;
-  tollFree?: string | null;
-  logoUrl?: string | null;
-  portalLogoUrl?: string | null;
-  mobileAppLogoUrl?: string | null;
-  iconUrl?: string | null;
-  bannerUrl?: string | null;
-  secondaryBannerUrl?: string | null;
-  profilePhotoUrl?: string | null;
-  primaryColor?: string | null;
-  secondaryColor?: string | null;
-  textColor?: string | null;
-  companyUrl?: string | null;
-  termsUrl?: string | null;
-  privacyPolicyUrl?: string | null;
-  facebookUrl?: string | null;
-  twitterUrl?: string | null;
-  instagramUrl?: string | null;
-  linkedInUrl?: string | null;
-  licenses: string[];
-  contactUsUrl?: string | null;
-  licenseInfoUrl?: string | null;
-  backgroundColor?: string | null;
-  headerAlignment?: string | null;
-  email?: string | null;
-  /** @format int32 */
-  landingPageType?: number | null;
-  confirmPassword?: boolean | null;
-  pageNotFoundUrl?: string | null;
-  footerDisclaimerText1?: string | null;
-  footerDisclaimerText2?: string | null;
-  locationImageUrl?: string | null;
-  eppsUserName?: string | null;
-  mobilePrequalIconUrl?: string | null;
-  fullAppIconUrl?: string | null;
-  ringCenralIconUrl?: string | null;
-  alexaIconUrl?: string | null;
-  mobileAppIconUrl?: string | null;
-  profilePhotoPlaceholderUrl?: string | null;
-  losUserID?: string | null;
-  iconColor?: string | null;
-  /** @format uuid */
-  byPhoneStaticIconID?: string | null;
-  /** @format uuid */
-  byPhoneAnimatedIconID?: string | null;
-  /** @format uuid */
-  shortAppStaticIconID?: string | null;
-  /** @format uuid */
-  shortAppAnimatedIconID?: string | null;
-  /** @format uuid */
-  fullAppStaticIconID?: string | null;
-  /** @format uuid */
-  fullAppAnimatedIconID?: string | null;
-  /** @format uuid */
-  rulesStaticIconID?: string | null;
-  /** @format uuid */
-  rulesAnimatedIconID?: string | null;
-  /** @format uuid */
-  myProfileStaticIconID?: string | null;
-  /** @format uuid */
-  myProfileAnimatedIconID?: string | null;
-  /** @format uuid */
-  accountSettingsStaticIconID?: string | null;
-  /** @format uuid */
-  accountSettingsAnimatedIconID?: string | null;
-  /** @format uuid */
-  brandStaticIconID?: string | null;
-  /** @format uuid */
-  brandAnimatedIconID?: string | null;
-  /** @format uuid */
-  branchesStaticIconID?: string | null;
-  /** @format uuid */
-  branchesAnimatedIconID?: string | null;
-  /** @format uuid */
-  loanOfficersStaticIconID?: string | null;
-  /** @format uuid */
-  loanOfficersAnimatedIconID?: string | null;
-  /** @format uuid */
-  usersStaticIconID?: string | null;
-  /** @format uuid */
-  usersAnimatedIconID?: string | null;
-  counties: string[];
-  /** @format uuid */
-  pipelineStaticIconID?: string | null;
-  /** @format uuid */
-  pipelineAnimatedIconID?: string | null;
-  /** @format uuid */
-  loanApplicationsStaticIconID?: string | null;
-  /** @format uuid */
-  loanApplicationsAnimatedIconID?: string | null;
-  /** @format uuid */
-  documentsStaticIconID?: string | null;
-  /** @format uuid */
-  documentsAnimatedIconID?: string | null;
-  /** @format uuid */
-  calculatorStaticIconID?: string | null;
-  /** @format uuid */
-  calculatorAnimatedIconID?: string | null;
-  /** @format uuid */
-  dashboardStaticIconID?: string | null;
-  /** @format uuid */
-  dashboardAnimatedIconID?: string | null;
-  /** @format uuid */
-  signOutAnimatedIconID?: string | null;
-  /** @format uuid */
-  signInStaticIconID?: string | null;
-  /** @format uuid */
-  signInAnimatedIconID?: string | null;
-  /** @format uuid */
-  signOutStaticIconID?: string | null;
-  backgroundImageUrl?: string | null;
-  disclosuresUrl?: string | null;
-  /** @format uuid */
-  addCoBorrowerStaticIconID?: string | null;
-  /** @format uuid */
-  addCoBorrowerAnimatedIconID?: string | null;
-  disclosuresSSOSiteID?: string | null;
-  loanChannel?: string | null;
-  loanFolder?: string | null;
-  loanTemplate?: string | null;
-  fromEmail?: string | null;
-  ccEmails?: string | null;
-  irsVerificationUrl?: string | null;
-  byPhoneTitle?: string | null;
-  byPhoneSubtitle?: string | null;
-  shortAppTitle?: string | null;
-  shortAppSubtitle?: string | null;
-  fullAppTitle?: string | null;
-  fullAppSubtitle?: string | null;
-  spanishPrequalTitle?: string | null;
-  spanishPrequalSubtitle?: string | null;
-  spanishFullAppTitle?: string | null;
-  spanishFullAppSubtitle?: string | null;
-  darkModeLogoUrl?: string | null;
-  darkModePortalLogoUrl?: string | null;
-  darkModeIconUrl?: string | null;
-  darkModePrimaryColor?: string | null;
-  darkModeSecondaryColor?: string | null;
-  calendarUrl?: string | null;
-  surveysUrl?: string | null;
-  enabledServices: EnabledServices;
-  modules?: Module[] | null;
-  /** @format uuid */
-  userID?: string | null;
-  /** @format uuid */
-  id: string;
+export interface SiteConfigurationWithInheritedResponse {
+  siteConfiguration: SiteConfiguration;
+  inheritedSiteConfiguration: SiteConfiguration;
 }
 
 export interface SocialSurveyRecord {
@@ -2684,7 +2552,6 @@ export interface TaskRequest {
   /**
    * @format int32
    * @min 0
-   * @exclusiveMin true
    */
   daysDueFromApplication?: number | null;
   isGlobal: boolean;
@@ -2922,12 +2789,15 @@ export interface UserLoanTask {
 
 export interface UserLoanTaskRequest {
   value?: string | null;
-  /** @format uuid */
+  /**
+   * @format uuid
+   * @minLength 1
+   */
   userID: string;
 }
 
 export interface UserLoanTaskUpdateRequest {
-  status: string;
+  status?: string | null;
   value?: string | null;
 }
 
@@ -3028,8 +2898,7 @@ export interface UserSearchCriteria {
 
 export interface VerificationRequest {
   requestID?: string | null;
-  /** @minLength 1 */
-  loanID: string;
+  loanID?: string | null;
   /** @minItems 1 */
   operations: string[];
   /** @format int32 */
@@ -3081,12 +2950,10 @@ export interface Workflow {
   icon: string;
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
-import axios from "axios";
-
 export type QueryParamsType = Record<string | number, any>;
+export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams extends Omit<RequestInit, "body"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -3096,20 +2963,30 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
   /** query params */
   query?: QueryParamsType;
   /** format of response (i.e. response.json() -> format: "json") */
-  format?: ResponseType;
+  format?: ResponseFormat;
   /** request body */
   body?: unknown;
+  /** base url */
+  baseUrl?: string;
+  /** request cancellation token */
+  cancelToken?: CancelToken;
 }
 
 export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
-  securityWorker?: (
-    securityData: SecurityDataType | null,
-  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
-  secure?: boolean;
-  format?: ResponseType;
+export interface ApiConfig<SecurityDataType = unknown> {
+  baseUrl?: string;
+  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
+  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
+  customFetch?: typeof fetch;
 }
+
+export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
+  data: D;
+  error: E;
+}
+
+type CancelToken = Symbol | string | number;
 
 export enum ContentType {
   Json = "application/json",
@@ -3119,105 +2996,173 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public instance: AxiosInstance;
+  public baseUrl: string = "";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
-  private secure?: boolean;
-  private format?: ResponseType;
+  private abortControllers = new Map<CancelToken, AbortController>();
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
-    this.secure = secure;
-    this.format = format;
-    this.securityWorker = securityWorker;
+  private baseApiParams: RequestParams = {
+    credentials: "same-origin",
+    headers: {},
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  };
+
+  constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+    Object.assign(this, apiConfig);
   }
 
   public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
-    const method = params1.method || (params2 && params2.method);
+  protected encodeQueryParam(key: string, value: any) {
+    const encodedKey = encodeURIComponent(key);
+    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+  }
 
+  protected addQueryParam(query: QueryParamsType, key: string) {
+    return this.encodeQueryParam(key, query[key]);
+  }
+
+  protected addArrayQueryParam(query: QueryParamsType, key: string) {
+    const value = query[key];
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+  }
+
+  protected toQueryString(rawQuery?: QueryParamsType): string {
+    const query = rawQuery || {};
+    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+    return keys
+      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+      .join("&");
+  }
+
+  protected addQueryParams(rawQuery?: QueryParamsType): string {
+    const queryString = this.toQueryString(rawQuery);
+    return queryString ? `?${queryString}` : "";
+  }
+
+  private contentFormatters: Record<ContentType, (input: any) => any> = {
+    [ContentType.Json]: (input: any) =>
+      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+    [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
+    [ContentType.FormData]: (input: any) =>
+      Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
+        formData.append(
+          key,
+          property instanceof Blob
+            ? property
+            : typeof property === "object" && property !== null
+              ? JSON.stringify(property)
+              : `${property}`,
+        );
+        return formData;
+      }, new FormData()),
+    [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
+  };
+
+  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
     return {
-      ...this.instance.defaults,
+      ...this.baseApiParams,
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...(this.baseApiParams.headers || {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
     };
   }
 
-  protected stringifyFormItem(formItem: unknown) {
-    if (typeof formItem === "object" && formItem !== null) {
-      return JSON.stringify(formItem);
-    } else {
-      return `${formItem}`;
-    }
-  }
-
-  protected createFormData(input: Record<string, unknown>): FormData {
-    if (input instanceof FormData) {
-      return input;
-    }
-    return Object.keys(input || {}).reduce((formData, key) => {
-      const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
-
-      for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+    if (this.abortControllers.has(cancelToken)) {
+      const abortController = this.abortControllers.get(cancelToken);
+      if (abortController) {
+        return abortController.signal;
       }
+      return void 0;
+    }
 
-      return formData;
-    }, new FormData());
-  }
+    const abortController = new AbortController();
+    this.abortControllers.set(cancelToken, abortController);
+    return abortController.signal;
+  };
 
-  public request = async <T = any, _E = any>({
+  public abortRequest = (cancelToken: CancelToken) => {
+    const abortController = this.abortControllers.get(cancelToken);
+
+    if (abortController) {
+      abortController.abort();
+      this.abortControllers.delete(cancelToken);
+    }
+  };
+
+  public request = async <T = any, E = any>({
+    body,
     secure,
     path,
     type,
     query,
     format,
-    body,
+    baseUrl,
+    cancelToken,
     ...params
-  }: FullRequestParams): Promise<AxiosResponse<T>> => {
+  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
-      ((typeof secure === "boolean" ? secure : this.secure) &&
+      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
       {};
     const requestParams = this.mergeRequestParams(params, secureParams);
-    const responseFormat = format || this.format || undefined;
+    const queryString = query && this.toQueryString(query);
+    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+    const responseFormat = format || requestParams.format;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
-      body = this.createFormData(body as Record<string, unknown>);
-    }
-
-    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
-      body = JSON.stringify(body);
-    }
-
-    return this.instance.request({
+    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type ? { "Content-Type": type } : {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
       },
-      params: query,
-      responseType: responseFormat,
-      data: body,
-      url: path,
+      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
+      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
+      const r = response.clone() as HttpResponse<T, E>;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
+
+      const data = !responseFormat
+        ? r
+        : await response[responseFormat]()
+            .then((data) => {
+              if (r.ok) {
+                r.data = data;
+              } else {
+                r.error = data;
+              }
+              return r;
+            })
+            .catch((e) => {
+              r.error = e;
+              return r;
+            });
+
+      if (cancelToken) {
+        this.abortControllers.delete(cancelToken);
+      }
+
+      if (!response.ok) throw data;
+      return data;
     });
   };
 }
 
 /**
  * @title The Big POS API
- * @version v2.8.7
+ * @version v2.10.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -3270,6 +3215,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<Account, ProblemDetails>({
         path: `/api/account`,
         method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Account
+     * @name UpdateAccount
+     * @summary Update
+     * @request PATCH:/api/account
+     * @secure
+     */
+    updateAccount: (data: JsonPatchDocument, params: RequestParams = {}) =>
+      this.request<Account, ProblemDetails>({
+        path: `/api/account`,
+        method: "PATCH",
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -3493,26 +3458,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Branches
-     * @name ReplaceBranchSiteConfiguration
-     * @summary Replace Branch Site Configuration
-     * @request PUT:/api/branches/{branchId}/site-configurations
+     * @name GetBranchSiteConfiguration
+     * @summary Get Branch Site Configuration
+     * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
      * @secure
      */
-    replaceBranchSiteConfiguration: (
-      branchId: string,
-      data: SiteConfigurationUpdateRequest,
-      query?: {
-        applyToChildren?: boolean;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
-        path: `/api/branches/${branchId}/site-configurations`,
-        method: "PUT",
-        query: query,
-        body: data,
+    getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationWithInheritedResponse, any>({
+        path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
+        method: "GET",
         secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -3521,16 +3476,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Branches
-     * @name GetBranchSiteConfiguration
-     * @summary Get Branch Site Configuration
-     * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
+     * @name ReplaceBranchSiteConfiguration
+     * @summary Replace Branch Site Configuration
+     * @request PUT:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
      * @secure
      */
-    getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, any>({
+    replaceBranchSiteConfiguration: (
+      branchId: string,
+      siteConfigurationId: string,
+      data: SiteConfigurationRequest,
+      query?: {
+        applyToChildren?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<SiteConfiguration, UnprocessableEntityResponse>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
-        method: "GET",
+        method: "PUT",
+        query: query,
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -3858,7 +3824,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, any>({
+      this.request<SiteConfigurationWithInheritedResponse, any>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -3878,7 +3844,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     replaceCorporateSiteConfiguration: (
       corporateId: string,
       siteConfigurationId: string,
-      data: SiteConfigurationUpdateRequest,
+      data: SiteConfigurationRequest,
       query?: {
         applyToChildren?: boolean;
       },
@@ -4899,12 +4865,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LegacyLoan
-     * @name GetLoan
+     * @name GetLoanData
      * @summary Get By ID
      * @request GET:/api/los/loan/application/{loanID}
      * @secure
      */
-    getLoan: (loanId: string, params: RequestParams = {}) =>
+    getLoanData: (loanId: string, params: RequestParams = {}) =>
       this.request<Record<string, any>, any>({
         path: `/api/los/loan/application/${loanId}`,
         method: "GET",
@@ -4922,7 +4888,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/los/loan/application/{loanID}
      * @secure
      */
-    updateLoan: (loanId: string, data: any, params: RequestParams = {}) =>
+    updateLoan: (loanId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntityResponse>({
         path: `/api/los/loan/application/${loanId}`,
         method: "PATCH",
@@ -4985,44 +4951,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     uploadDocuments: (data: PostTaskDocumentsRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntityResponse>({
         path: `/api/los/loan/tasks/documents`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LegacyLoan
-     * @name CreateEConsent
-     * @summary Create EConsent
-     * @request POST:/api/los/loan/econsent
-     * @secure
-     */
-    createEConsent: (data: PostEConsentRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
-        path: `/api/los/loan/econsent`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LegacyLoan
-     * @name CreateCreditAuthorization
-     * @summary Create Credit Authorization
-     * @request POST:/api/los/loan/creditauth
-     * @secure
-     */
-    createCreditAuthorization: (data: PostCreditAuthorizationRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
-        path: `/api/los/loan/creditauth`,
         method: "POST",
         body: data,
         secure: true,
@@ -5230,7 +5158,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/listings/{listingId}/files
      * @secure
      */
-    updateListingFiles: (listingId: string, data: UpdateListingFileRequest[], params: RequestParams = {}) =>
+    updateListingFiles: (listingId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<ListingFile, any>({
         path: `/api/listings/${listingId}/files`,
         method: "PATCH",
@@ -5299,7 +5227,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/listings/{listingId}/photos
      * @secure
      */
-    updateListingPhotos: (listingId: string, data: UpdateListingPhotoRequest[], params: RequestParams = {}) =>
+    updateListingPhotos: (listingId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<ListingPhoto[], any>({
         path: `/api/listings/${listingId}/photos`,
         method: "PATCH",
@@ -5778,7 +5706,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/loans/drafts
      * @secure
      */
-    createLoanDraft: (data: CreateDraftRequest, params: RequestParams = {}) =>
+    createLoanDraft: (data: DraftRequest, params: RequestParams = {}) =>
       this.request<DraftResponse, any>({
         path: `/api/loans/drafts`,
         method: "POST",
@@ -5848,7 +5776,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/api/loans/drafts/{draftId}
      * @secure
      */
-    replaceLoanDraft: (draftId: string, data: CreateDraftRequest, params: RequestParams = {}) =>
+    replaceLoanDraft: (draftId: string, data: DraftRequest, params: RequestParams = {}) =>
       this.request<DraftResponse, any>({
         path: `/api/loans/drafts/${draftId}`,
         method: "PUT",
@@ -6026,7 +5954,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, any>({
+      this.request<SiteConfigurationWithInheritedResponse, any>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -6085,6 +6013,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Loans
+     * @name GetLoan
+     * @summary Gey By ID
+     * @request GET:/api/loans/{loanID}
+     * @secure
+     */
+    getLoan: (loanId: string, params: RequestParams = {}) =>
+      this.request<Loan, ProblemDetails>({
+        path: `/api/loans/${loanId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
      * @name SearchLoans
      * @summary Search
      * @request POST:/api/loans/search
@@ -6109,6 +6055,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
+     * @name ImportLoanFromLos
+     * @summary importFromLOS
+     * @request POST:/api/loans/import-from-los/{loanId}
+     * @secure
+     */
+    importLoanFromLos: (loanId: string, params: RequestParams = {}) =>
+      this.request<Loan, any>({
+        path: `/api/loans/import-from-los/${loanId}`,
+        method: "POST",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -6830,7 +6794,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, any>({
+      this.request<SiteConfigurationWithInheritedResponse, any>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -6850,7 +6814,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     replacePartnerSiteConfiguration: (
       realtorId: string,
       siteConfigurationId: string,
-      data: SiteConfigurationUpdateRequest,
+      data: SiteConfigurationRequest,
       query?: {
         applyToChildren?: boolean;
       },
@@ -7523,9 +7487,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags UserRelations
+     * @name GetUserRelations
+     * @summary Get All
+     * @request GET:/api/users/{userID}/relations
+     * @secure
+     */
+    getUserRelations: (userId: string, params: RequestParams = {}) =>
+      this.request<UserRelationResponse[], any>({
+        path: `/api/users/${userId}/relations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserRelations
      * @name CreateUserRelation
      * @summary Create
-     * @request POST:/api/users/{userId}/relations
+     * @request POST:/api/users/{userID}/relations
      * @secure
      */
     createUserRelation: (userId: string, data: CreateUserRelationRequest, params: RequestParams = {}) =>
@@ -7542,32 +7524,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags UserRelations
-     * @name GetUserRelations
-     * @summary Get All
-     * @request GET:/api/users/{userId}/relations
+     * @name GetUserRelation
+     * @summary Get by ID
+     * @request GET:/api/users/{userID}/relations/{id}
      * @secure
      */
-    getUserRelations: (userId: string, params: RequestParams = {}) =>
-      this.request<UserRelationResponse[], any>({
-        path: `/api/users/${userId}/relations`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags UserRelations
-     * @name GetUserRelationsByAccount
-     * @summary Get by Account
-     * @request GET:/api/users/{userId}/relations/account
-     * @secure
-     */
-    getUserRelationsByAccount: (userId: string, params: RequestParams = {}) =>
-      this.request<UserRelationResponse[], any>({
-        path: `/api/users/${userId}/relations/account`,
+    getUserRelation: (userId: string, id: string, params: RequestParams = {}) =>
+      this.request<UserRelationResponse, any>({
+        path: `/api/users/${userId}/relations/${id}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -7580,10 +7544,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags UserRelations
      * @name DeleteUserRelation
      * @summary Delete
-     * @request DELETE:/api/users/{userId}/relations/{id}
+     * @request DELETE:/api/users/{userID}/relations/{id}
      * @secure
      */
-    deleteUserRelation: (id: string, userId: string, params: RequestParams = {}) =>
+    deleteUserRelation: (userId: string, id: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/users/${userId}/relations/${id}`,
         method: "DELETE",

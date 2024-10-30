@@ -28,7 +28,6 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import axios from "axios";
 export var ContentType;
 (function (ContentType) {
     ContentType["Json"] = "application/json";
@@ -37,63 +36,122 @@ export var ContentType;
     ContentType["Text"] = "text/plain";
 })(ContentType || (ContentType = {}));
 export class HttpClient {
-    constructor(_a = {}) {
-        var { securityWorker, secure, format } = _a, axiosConfig = __rest(_a, ["securityWorker", "secure", "format"]);
+    constructor(apiConfig = {}) {
+        this.baseUrl = "";
         this.securityData = null;
+        this.abortControllers = new Map();
+        this.customFetch = (...fetchParams) => fetch(...fetchParams);
+        this.baseApiParams = {
+            credentials: "same-origin",
+            headers: {},
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        };
         this.setSecurityData = (data) => {
             this.securityData = data;
         };
+        this.contentFormatters = {
+            [ContentType.Json]: (input) => input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+            [ContentType.Text]: (input) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
+            [ContentType.FormData]: (input) => Object.keys(input || {}).reduce((formData, key) => {
+                const property = input[key];
+                formData.append(key, property instanceof Blob
+                    ? property
+                    : typeof property === "object" && property !== null
+                        ? JSON.stringify(property)
+                        : `${property}`);
+                return formData;
+            }, new FormData()),
+            [ContentType.UrlEncoded]: (input) => this.toQueryString(input),
+        };
+        this.createAbortSignal = (cancelToken) => {
+            if (this.abortControllers.has(cancelToken)) {
+                const abortController = this.abortControllers.get(cancelToken);
+                if (abortController) {
+                    return abortController.signal;
+                }
+                return void 0;
+            }
+            const abortController = new AbortController();
+            this.abortControllers.set(cancelToken, abortController);
+            return abortController.signal;
+        };
+        this.abortRequest = (cancelToken) => {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                abortController.abort();
+                this.abortControllers.delete(cancelToken);
+            }
+        };
         this.request = (_a) => __awaiter(this, void 0, void 0, function* () {
-            var { secure, path, type, query, format, body } = _a, params = __rest(_a, ["secure", "path", "type", "query", "format", "body"]);
-            const secureParams = ((typeof secure === "boolean" ? secure : this.secure) &&
+            var { body, secure, path, type, query, format, baseUrl, cancelToken } = _a, params = __rest(_a, ["body", "secure", "path", "type", "query", "format", "baseUrl", "cancelToken"]);
+            const secureParams = ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
                 this.securityWorker &&
                 (yield this.securityWorker(this.securityData))) ||
                 {};
             const requestParams = this.mergeRequestParams(params, secureParams);
-            const responseFormat = format || this.format || undefined;
-            if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
-                body = this.createFormData(body);
-            }
-            if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
-                body = JSON.stringify(body);
-            }
-            return this.instance.request(Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type ? { "Content-Type": type } : {})), params: query, responseType: responseFormat, data: body, url: path }));
+            const queryString = query && this.toQueryString(query);
+            const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+            const responseFormat = format || requestParams.format;
+            return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type && type !== ContentType.FormData ? { "Content-Type": type } : {})), signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null, body: typeof body === "undefined" || body === null ? null : payloadFormatter(body) })).then((response) => __awaiter(this, void 0, void 0, function* () {
+                const r = response.clone();
+                r.data = null;
+                r.error = null;
+                const data = !responseFormat
+                    ? r
+                    : yield response[responseFormat]()
+                        .then((data) => {
+                        if (r.ok) {
+                            r.data = data;
+                        }
+                        else {
+                            r.error = data;
+                        }
+                        return r;
+                    })
+                        .catch((e) => {
+                        r.error = e;
+                        return r;
+                    });
+                if (cancelToken) {
+                    this.abortControllers.delete(cancelToken);
+                }
+                if (!response.ok)
+                    throw data;
+                return data;
+            }));
         });
-        this.instance = axios.create(Object.assign(Object.assign({}, axiosConfig), { baseURL: axiosConfig.baseURL || "" }));
-        this.secure = secure;
-        this.format = format;
-        this.securityWorker = securityWorker;
+        Object.assign(this, apiConfig);
+    }
+    encodeQueryParam(key, value) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+    addQueryParam(query, key) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+    addArrayQueryParam(query, key) {
+        const value = query[key];
+        return value.map((v) => this.encodeQueryParam(key, v)).join("&");
+    }
+    toQueryString(rawQuery) {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+    addQueryParams(rawQuery) {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
     }
     mergeRequestParams(params1, params2) {
-        const method = params1.method || (params2 && params2.method);
-        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.instance.defaults), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, ((method && this.instance.defaults.headers[method.toLowerCase()]) || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
-    }
-    stringifyFormItem(formItem) {
-        if (typeof formItem === "object" && formItem !== null) {
-            return JSON.stringify(formItem);
-        }
-        else {
-            return `${formItem}`;
-        }
-    }
-    createFormData(input) {
-        if (input instanceof FormData) {
-            return input;
-        }
-        return Object.keys(input || {}).reduce((formData, key) => {
-            const property = input[key];
-            const propertyContent = property instanceof Array ? property : [property];
-            for (const formItem of propertyContent) {
-                const isFileType = formItem instanceof Blob || formItem instanceof File;
-                formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
-            }
-            return formData;
-        }, new FormData());
+        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.baseApiParams), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, (this.baseApiParams.headers || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
     }
 }
 /**
  * @title The Big POS API
- * @version v2.8.7
+ * @version v2.10.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -130,6 +188,16 @@ export class Api extends HttpClient {
              * @secure
              */
             replaceAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Account
+             * @name UpdateAccount
+             * @summary Update
+             * @request PATCH:/api/account
+             * @secure
+             */
+            updateAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -234,22 +302,22 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Branches
-             * @name ReplaceBranchSiteConfiguration
-             * @summary Replace Branch Site Configuration
-             * @request PUT:/api/branches/{branchId}/site-configurations
-             * @secure
-             */
-            replaceBranchSiteConfiguration: (branchId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Branches
              * @name GetBranchSiteConfiguration
              * @summary Get Branch Site Configuration
              * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
              * @secure
              */
             getBranchSiteConfiguration: (branchId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Branches
+             * @name ReplaceBranchSiteConfiguration
+             * @summary Replace Branch Site Configuration
+             * @request PUT:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            replaceBranchSiteConfiguration: (branchId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -894,12 +962,12 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name GetLoan
+             * @name GetLoanData
              * @summary Get By ID
              * @request GET:/api/los/loan/application/{loanID}
              * @secure
              */
-            getLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
+            getLoanData: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -940,26 +1008,6 @@ export class Api extends HttpClient {
              * @secure
              */
             uploadDocuments: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
-             * @name CreateEConsent
-             * @summary Create EConsent
-             * @request POST:/api/los/loan/econsent
-             * @secure
-             */
-            createEConsent: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/econsent`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
-             * @name CreateCreditAuthorization
-             * @summary Create Credit Authorization
-             * @request POST:/api/los/loan/creditauth
-             * @secure
-             */
-            createCreditAuthorization: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/creditauth`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -1455,12 +1503,32 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Loans
+             * @name GetLoan
+             * @summary Gey By ID
+             * @request GET:/api/loans/{loanID}
+             * @secure
+             */
+            getLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
              * @name SearchLoans
              * @summary Search
              * @request POST:/api/loans/search
              * @secure
              */
             searchLoans: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name ImportLoanFromLos
+             * @summary importFromLOS
+             * @request POST:/api/loans/import-from-los/{loanId}
+             * @secure
+             */
+            importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/import-from-los/${loanId}`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2157,19 +2225,9 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags UserRelations
-             * @name CreateUserRelation
-             * @summary Create
-             * @request POST:/api/users/{userId}/relations
-             * @secure
-             */
-            createUserRelation: (userId, data, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
-            /**
-             * No description
-             *
-             * @tags UserRelations
              * @name GetUserRelations
              * @summary Get All
-             * @request GET:/api/users/{userId}/relations
+             * @request GET:/api/users/{userID}/relations
              * @secure
              */
             getUserRelations: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "GET", secure: true, format: "json" }, params)),
@@ -2177,22 +2235,32 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags UserRelations
-             * @name GetUserRelationsByAccount
-             * @summary Get by Account
-             * @request GET:/api/users/{userId}/relations/account
+             * @name CreateUserRelation
+             * @summary Create
+             * @request POST:/api/users/{userID}/relations
              * @secure
              */
-            getUserRelationsByAccount: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/account`, method: "GET", secure: true, format: "json" }, params)),
+            createUserRelation: (userId, data, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags UserRelations
+             * @name GetUserRelation
+             * @summary Get by ID
+             * @request GET:/api/users/{userID}/relations/{id}
+             * @secure
+             */
+            getUserRelation: (userId, id, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserRelations
              * @name DeleteUserRelation
              * @summary Delete
-             * @request DELETE:/api/users/{userId}/relations/{id}
+             * @request DELETE:/api/users/{userID}/relations/{id}
              * @secure
              */
-            deleteUserRelation: (id, userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/${id}`, method: "DELETE", secure: true }, params)),
+            deleteUserRelation: (userId, id, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/${id}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
