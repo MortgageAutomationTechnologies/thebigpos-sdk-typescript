@@ -464,12 +464,22 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Devices
-             * @name GetDeviceById
+             * @name GetDevice
              * @summary Get by ID
              * @request GET:/api/devices/{id}
              * @secure
              */
-            getDeviceById: (id, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            getDevice: (id, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Devices
+             * @name UpdateDevice
+             * @summary Update
+             * @request PUT:/api/devices/{id}
+             * @secure
+             */
+            updateDevice: (id, data, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -484,12 +494,12 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Devices
-             * @name CreateActionBySerialNumber
+             * @name CreateDeviceActionBySerialNumber
              * @summary Create Action by Serial Number
              * @request POST:/api/devices/{sn}/actions/{actionName}
              * @secure
              */
-            createActionBySerialNumber: (sn, actionName, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/actions/${actionName}`, method: "POST", secure: true, format: "json" }, params)),
+            createDeviceActionBySerialNumber: (sn, actionName, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/actions/${actionName}`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
