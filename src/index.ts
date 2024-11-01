@@ -565,6 +565,12 @@ export interface DeviceMDMResponse {
   actions?: DeviceActionResponse[] | null;
 }
 
+export interface DeviceRequest {
+  apps: any;
+  name?: string | null;
+  comments?: string | null;
+}
+
 export interface DeviceResponse {
   /** @format uuid */
   id: string;
@@ -575,9 +581,9 @@ export interface DeviceResponse {
   /** @format uuid */
   createdBy: string;
   /** @format uuid */
-  updatedBy: string;
+  updatedBy?: string | null;
   /** @format uuid */
-  managedBy: string;
+  managedBy?: string | null;
   name?: string | null;
   type?: string | null;
   status?: string | null;
@@ -3856,16 +3862,36 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Devices
-     * @name GetDeviceById
+     * @name GetDevice
      * @summary Get by ID
      * @request GET:/api/devices/{id}
      * @secure
      */
-    getDeviceById: (id: string, params: RequestParams = {}) =>
+    getDevice: (id: string, params: RequestParams = {}) =>
       this.request<DeviceResponse, any>({
         path: `/api/devices/${id}`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Devices
+     * @name UpdateDevice
+     * @summary Update
+     * @request PUT:/api/devices/{id}
+     * @secure
+     */
+    updateDevice: (id: string, data: DeviceRequest, params: RequestParams = {}) =>
+      this.request<DeviceResponse, any>({
+        path: `/api/devices/${id}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -3892,12 +3918,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Devices
-     * @name CreateActionBySerialNumber
+     * @name CreateDeviceActionBySerialNumber
      * @summary Create Action by Serial Number
      * @request POST:/api/devices/{sn}/actions/{actionName}
      * @secure
      */
-    createActionBySerialNumber: (sn: string, actionName: string, params: RequestParams = {}) =>
+    createDeviceActionBySerialNumber: (sn: string, actionName: string, params: RequestParams = {}) =>
       this.request<ActionResponse, any>({
         path: `/api/devices/${sn}/actions/${actionName}`,
         method: "POST",
