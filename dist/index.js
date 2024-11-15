@@ -28,7 +28,6 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import axios from "axios";
 export var ContentType;
 (function (ContentType) {
     ContentType["Json"] = "application/json";
@@ -37,63 +36,122 @@ export var ContentType;
     ContentType["Text"] = "text/plain";
 })(ContentType || (ContentType = {}));
 export class HttpClient {
-    constructor(_a = {}) {
-        var { securityWorker, secure, format } = _a, axiosConfig = __rest(_a, ["securityWorker", "secure", "format"]);
+    constructor(apiConfig = {}) {
+        this.baseUrl = "";
         this.securityData = null;
+        this.abortControllers = new Map();
+        this.customFetch = (...fetchParams) => fetch(...fetchParams);
+        this.baseApiParams = {
+            credentials: "same-origin",
+            headers: {},
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        };
         this.setSecurityData = (data) => {
             this.securityData = data;
         };
+        this.contentFormatters = {
+            [ContentType.Json]: (input) => input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+            [ContentType.Text]: (input) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
+            [ContentType.FormData]: (input) => Object.keys(input || {}).reduce((formData, key) => {
+                const property = input[key];
+                formData.append(key, property instanceof Blob
+                    ? property
+                    : typeof property === "object" && property !== null
+                        ? JSON.stringify(property)
+                        : `${property}`);
+                return formData;
+            }, new FormData()),
+            [ContentType.UrlEncoded]: (input) => this.toQueryString(input),
+        };
+        this.createAbortSignal = (cancelToken) => {
+            if (this.abortControllers.has(cancelToken)) {
+                const abortController = this.abortControllers.get(cancelToken);
+                if (abortController) {
+                    return abortController.signal;
+                }
+                return void 0;
+            }
+            const abortController = new AbortController();
+            this.abortControllers.set(cancelToken, abortController);
+            return abortController.signal;
+        };
+        this.abortRequest = (cancelToken) => {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                abortController.abort();
+                this.abortControllers.delete(cancelToken);
+            }
+        };
         this.request = (_a) => __awaiter(this, void 0, void 0, function* () {
-            var { secure, path, type, query, format, body } = _a, params = __rest(_a, ["secure", "path", "type", "query", "format", "body"]);
-            const secureParams = ((typeof secure === "boolean" ? secure : this.secure) &&
+            var { body, secure, path, type, query, format, baseUrl, cancelToken } = _a, params = __rest(_a, ["body", "secure", "path", "type", "query", "format", "baseUrl", "cancelToken"]);
+            const secureParams = ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
                 this.securityWorker &&
                 (yield this.securityWorker(this.securityData))) ||
                 {};
             const requestParams = this.mergeRequestParams(params, secureParams);
-            const responseFormat = format || this.format || undefined;
-            if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
-                body = this.createFormData(body);
-            }
-            if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
-                body = JSON.stringify(body);
-            }
-            return this.instance.request(Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type ? { "Content-Type": type } : {})), params: query, responseType: responseFormat, data: body, url: path }));
+            const queryString = query && this.toQueryString(query);
+            const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+            const responseFormat = format || requestParams.format;
+            return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, Object.assign(Object.assign({}, requestParams), { headers: Object.assign(Object.assign({}, (requestParams.headers || {})), (type && type !== ContentType.FormData ? { "Content-Type": type } : {})), signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null, body: typeof body === "undefined" || body === null ? null : payloadFormatter(body) })).then((response) => __awaiter(this, void 0, void 0, function* () {
+                const r = response.clone();
+                r.data = null;
+                r.error = null;
+                const data = !responseFormat
+                    ? r
+                    : yield response[responseFormat]()
+                        .then((data) => {
+                        if (r.ok) {
+                            r.data = data;
+                        }
+                        else {
+                            r.error = data;
+                        }
+                        return r;
+                    })
+                        .catch((e) => {
+                        r.error = e;
+                        return r;
+                    });
+                if (cancelToken) {
+                    this.abortControllers.delete(cancelToken);
+                }
+                if (!response.ok)
+                    throw data;
+                return data;
+            }));
         });
-        this.instance = axios.create(Object.assign(Object.assign({}, axiosConfig), { baseURL: axiosConfig.baseURL || "" }));
-        this.secure = secure;
-        this.format = format;
-        this.securityWorker = securityWorker;
+        Object.assign(this, apiConfig);
+    }
+    encodeQueryParam(key, value) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+    addQueryParam(query, key) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+    addArrayQueryParam(query, key) {
+        const value = query[key];
+        return value.map((v) => this.encodeQueryParam(key, v)).join("&");
+    }
+    toQueryString(rawQuery) {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+    addQueryParams(rawQuery) {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
     }
     mergeRequestParams(params1, params2) {
-        const method = params1.method || (params2 && params2.method);
-        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.instance.defaults), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, ((method && this.instance.defaults.headers[method.toLowerCase()]) || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
-    }
-    stringifyFormItem(formItem) {
-        if (typeof formItem === "object" && formItem !== null) {
-            return JSON.stringify(formItem);
-        }
-        else {
-            return `${formItem}`;
-        }
-    }
-    createFormData(input) {
-        if (input instanceof FormData) {
-            return input;
-        }
-        return Object.keys(input || {}).reduce((formData, key) => {
-            const property = input[key];
-            const propertyContent = property instanceof Array ? property : [property];
-            for (const formItem of propertyContent) {
-                const isFileType = formItem instanceof Blob || formItem instanceof File;
-                formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
-            }
-            return formData;
-        }, new FormData());
+        return Object.assign(Object.assign(Object.assign(Object.assign({}, this.baseApiParams), params1), (params2 || {})), { headers: Object.assign(Object.assign(Object.assign({}, (this.baseApiParams.headers || {})), (params1.headers || {})), ((params2 && params2.headers) || {})) });
     }
 }
 /**
  * @title The Big POS API
- * @version v2.10.0
+ * @version v2.11.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -160,6 +218,86 @@ export class Api extends HttpClient {
              * @secure
              */
             updateSiteConfigurationForAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account/site-configurations`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name GetAccounts
+             * @summary Get All
+             * @request GET:/api/accounts
+             * @secure
+             */
+            getAccounts: (params = {}) => this.request(Object.assign({ path: `/api/accounts`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name UpdateLoansByAccount
+             * @summary Update Loans
+             * @request PUT:/api/accounts/{id}/loan
+             * @secure
+             */
+            updateLoansByAccount: (id, data, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}/loan`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name GetLoansByAccount
+             * @summary Get Loans
+             * @request GET:/api/accounts/{id}/loan
+             * @secure
+             */
+            getLoansByAccount: (id, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}/loan`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetTokenFromRefreshToken
+             * @summary Generate Token From Refresh Token
+             * @request POST:/api/refresh-token
+             * @secure
+             */
+            getTokenFromRefreshToken: (data, params = {}) => this.request(Object.assign({ path: `/api/refresh-token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetToken
+             * @summary Get Token
+             * @request POST:/api/token
+             * @secure
+             */
+            getToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetTokenFromChallengeCode
+             * @summary Get Token From Challenge Code
+             * @request POST:/api/token/code
+             * @secure
+             */
+            getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/api/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetSystemToken
+             * @summary Get System Token
+             * @request POST:/api/oauth2/token
+             * @secure
+             */
+            getSystemToken: (data, params = {}) => this.request(Object.assign({ path: `/api/oauth2/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name GetSsoToken
+             * @summary Get SSO Guid Token
+             * @request POST:/api/token/sso
+             * @secure
+             */
+            getSsoToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token/sso`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -954,16 +1092,6 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name UploadDocuments
-             * @summary Upload Documents
-             * @request POST:/api/los/loan/tasks/documents
-             * @secure
-             */
-            uploadDocuments: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
              * @name GetTaskDocumentsByLoan
              * @summary Get Documents
              * @request GET:/api/los/loan/tasks/documents/{loanID}
@@ -1456,7 +1584,7 @@ export class Api extends HttpClient {
              *
              * @tags Loans
              * @name GetLoan
-             * @summary Gey By ID
+             * @summary Get By ID
              * @request GET:/api/loans/{loanID}
              * @secure
              */
@@ -1476,7 +1604,7 @@ export class Api extends HttpClient {
              *
              * @tags Loans
              * @name ImportLoanFromLos
-             * @summary importFromLOS
+             * @summary Import from LOS
              * @request POST:/api/loans/import-from-los/{loanId}
              * @secure
              */
@@ -2463,94 +2591,6 @@ export class Api extends HttpClient {
              * @secure
              */
             getWorkflow: (data, params = {}) => this.request(Object.assign({ path: `/api/workflow`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-        };
-        this.accounts = {
-            /**
-             * No description
-             *
-             * @tags Accounts
-             * @name GetAccounts
-             * @summary Get All
-             * @request GET:/accounts
-             * @secure
-             */
-            getAccounts: (params = {}) => this.request(Object.assign({ path: `/accounts`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Accounts
-             * @name UpdateLoansByAccount
-             * @summary Update Loans
-             * @request PUT:/accounts/{id}/loan
-             * @secure
-             */
-            updateLoansByAccount: (id, data, params = {}) => this.request(Object.assign({ path: `/accounts/${id}/loan`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
-            /**
-             * No description
-             *
-             * @tags Accounts
-             * @name GetLoansByAccount
-             * @summary Get Loans
-             * @request GET:/accounts/{id}/loan
-             * @secure
-             */
-            getLoansByAccount: (id, params = {}) => this.request(Object.assign({ path: `/accounts/${id}/loan`, method: "GET", secure: true, format: "json" }, params)),
-        };
-        this.refreshToken = {
-            /**
-             * No description
-             *
-             * @tags Authentication
-             * @name GetTokenFromRefreshToken
-             * @summary Generate Token From Refresh Token
-             * @request POST:/refresh-token
-             * @secure
-             */
-            getTokenFromRefreshToken: (data, params = {}) => this.request(Object.assign({ path: `/refresh-token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-        };
-        this.token = {
-            /**
-             * No description
-             *
-             * @tags Authentication
-             * @name GetToken
-             * @summary Get Token
-             * @request POST:/token
-             * @secure
-             */
-            getToken: (data, params = {}) => this.request(Object.assign({ path: `/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Authentication
-             * @name GetTokenFromChallengeCode
-             * @summary Get Token From Challenge Code
-             * @request POST:/token/code
-             * @secure
-             */
-            getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Authentication
-             * @name GetSsoToken
-             * @summary Get SSO Guid Token
-             * @request POST:/token/sso
-             * @secure
-             */
-            getSsoToken: (data, params = {}) => this.request(Object.assign({ path: `/token/sso`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-        };
-        this.oauth2 = {
-            /**
-             * No description
-             *
-             * @tags Authentication
-             * @name GetSystemToken
-             * @summary Get System Token
-             * @request POST:/oauth2/token
-             * @secure
-             */
-            getSystemToken: (data, params = {}) => this.request(Object.assign({ path: `/oauth2/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
         };
     }
 }
