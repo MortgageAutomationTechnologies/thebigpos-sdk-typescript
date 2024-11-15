@@ -42,15 +42,13 @@ export interface Account {
   name: string;
   fusionCustomerID: string;
   mfaPreference: string;
-  losLockoutFieldID?: string | null;
-  eConsentBucket?: string | null;
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
   updatedAt?: string | null;
   /** @format int32 */
   allowedLoginsWithoutMFA: number;
-  loanMilestoneNotificationsEnabled: boolean;
+  losSettings: LOSSettings;
   asoSettings: ASOSettings;
 }
 
@@ -59,7 +57,7 @@ export interface AccountUpdateRequest {
   mfaPreference: string;
   /** @format int32 */
   allowedLoginsWithoutMFA: number;
-  loanMilestoneNotificationsEnabled: boolean;
+  losSettings: LOSSettingsUpdateRequest;
   asoSettings: ASOSettings;
 }
 
@@ -346,6 +344,19 @@ export interface CommentUserInformationResponse {
   entityType: string;
   entityName?: string | null;
   entityUri?: string | null;
+}
+
+export interface Company {
+  name?: string | null;
+  siteUrl?: string | null;
+  address?: string | null;
+  address2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zip?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  nmlsid?: string | null;
 }
 
 export interface ConditionCommentResponse {
@@ -795,6 +806,62 @@ export interface Error {
   message: string;
 }
 
+export interface ExtendedLoanResponse {
+  loanID: string;
+  loanNumber?: string | null;
+  /** @format date-time */
+  initialDisclosureProvidedDate?: string | null;
+  /** @format date-time */
+  closingDisclosureSentDate?: string | null;
+  /** @format date-time */
+  underwritingApprovalDate?: string | null;
+  /** @format date-time */
+  closingDate?: string | null;
+  /** @format date-time */
+  fundingOrderDate?: string | null;
+  /** @format date-time */
+  currentStatusDate?: string | null;
+  loanChannel?: string | null;
+  /** @format double */
+  totalLoanAmount?: number | null;
+  currentLoanStatus?: string | null;
+  currentMilestone?: string | null;
+  lastCompletedMilestone?: string | null;
+  /** @format date-time */
+  startDate?: string | null;
+  isInSync: boolean;
+  /** @format date-time */
+  syncDate?: string | null;
+  fileStarter?: string | null;
+  isPOSLoan?: boolean | null;
+  referenceID: string;
+  /** @format int32 */
+  term?: number | null;
+  loanProgram?: string | null;
+  loanType?: string | null;
+  status?: string | null;
+  loanOfficer: LoanOfficer;
+  propertyAddress: Address;
+  borrowerContact: Contact;
+  coBorrowerContact: Contact;
+  loanLogs: LoanLogResponse[];
+  isLocked: boolean;
+  source?: string | null;
+  buyerAgentContact: Contact;
+  sellerAgentContact: Contact;
+  escrowAgentContact: Contact;
+  titleInsuranceAgentContact: Contact;
+  settlementAgentContact: Contact;
+  loanProcessorContact: Contact;
+}
+
+export interface ExtendedLoanResponsePaginatedResponse {
+  rows: ExtendedLoanResponse[];
+  pagination: PaginationResponse;
+  /** @format int64 */
+  count: number;
+}
+
 export interface File {
   /** @format uuid */
   id: string;
@@ -1170,6 +1237,18 @@ export interface InviteResponse {
 /** Array of operations to perform */
 export type JsonPatchDocument = Operation[];
 
+export interface LOSSettings {
+  loanClosingDateFieldID: string;
+  customEConsentBucketTitle?: string | null;
+  loanMilestoneNotificationsEnabled: boolean;
+}
+
+export interface LOSSettingsUpdateRequest {
+  loanClosingDateFieldID: string;
+  customEConsentBucketTitle?: string | null;
+  loanMilestoneNotificationsEnabled: boolean;
+}
+
 export interface Listing {
   /** @format date-time */
   createdAt: string;
@@ -1302,6 +1381,7 @@ export interface Loan {
   propertyAddress: Address;
   borrowerContact: Contact;
   coBorrowerContact: Contact;
+  loanLogs: LoanLogResponse[];
   isLocked: boolean;
   source?: string | null;
 }
@@ -1376,6 +1456,15 @@ export interface LoanDraftSearchCriteria {
   loanOfficerId?: string | null;
 }
 
+export interface LoanLogResponse {
+  /** @format uuid */
+  id: string;
+  level: string;
+  message: string;
+  /** @format date-time */
+  createdAt: string;
+}
+
 export interface LoanOfficer {
   /** @format uuid */
   id: string;
@@ -1395,13 +1484,6 @@ export interface LoanOfficerSearchCriteria {
   branch?: string | null;
   /** @format uuid */
   brand?: string | null;
-}
-
-export interface LoanPaginatedResponse {
-  rows: Loan[];
-  pagination: PaginationResponse;
-  /** @format int64 */
-  count: number;
 }
 
 export interface LoanRecord {
@@ -1654,12 +1736,6 @@ export interface PostLoanComparisonPdfRequest {
   siteConfigurationID: string;
 }
 
-export interface PostTaskDocumentsRequest {
-  /** @minLength 1 */
-  loanGuid: string;
-  documents: DocumentDataRequest[];
-}
-
 export interface PreliminaryConditionResponse {
   /** @format uuid */
   id: string;
@@ -1799,70 +1875,72 @@ export interface RunLOCalculationRequest {
   loanAmount: string;
   /** @minLength 1 */
   propertyValue: string;
-  propertyType: string;
-  zipCode: string;
-  county: string;
+  propertyType?: string | null;
+  zipCode?: string | null;
+  county?: string | null;
   /** @minLength 1 */
   loanPurpose: string;
-  propertyOccupancy: string;
-  escrow: string;
+  propertyOccupancy?: string | null;
+  escrow?: string | null;
   /** @minLength 1 */
   loanTerm1: string;
   /** @minLength 1 */
   loanTerm2: string;
-  creditScore: string;
-  taxes: string;
-  insurance: string;
-  rate: string;
+  creditScore?: string | null;
+  taxes?: string | null;
+  insurance?: string | null;
+  rate?: string | null;
   /** @minLength 1 */
   loanType: string;
-  flood: string;
-  hoa: string;
-  miFactor: string;
-  downpaymentAmount: string;
+  flood?: string | null;
+  hoa?: string | null;
+  miFactor?: string | null;
+  downpaymentAmount?: string | null;
   /** @minLength 1 */
   lienType: string;
+  preApprovalNotes?: string | null;
 }
 
 export interface RunLOCalculationResponse {
   loanID: string;
-  loanAmount: string;
-  totalMortgageAmount: string;
-  propertyValue: string;
-  propertyType: string;
-  loanType: string;
-  zipCode: string;
-  county: string;
-  loanPurpose: string;
-  propertyOccupancy: string;
-  escrow: string;
-  loanTerm1: string;
-  loanTerm2: string;
-  creditScore: string;
-  taxes: string;
-  insurance: string;
-  borrowerIncome: string;
-  loanProgram: string;
-  rate: string;
-  monthlyPayment: string;
-  principleAndInterestPITIField: string;
-  dtiFront: string;
-  dtiBack: string;
-  ltvFront: string;
-  ltvBack: string;
-  totalCashtoClose: string;
-  apr: string;
-  flood: string;
-  hoa: string;
-  miFactor: string;
-  mi: string;
-  totalAssets: string;
+  loanAmount?: string | null;
+  totalMortgageAmount?: string | null;
+  propertyValue?: string | null;
+  propertyType?: string | null;
+  loanType?: string | null;
+  zipCode?: string | null;
+  county?: string | null;
+  loanPurpose?: string | null;
+  propertyOccupancy?: string | null;
+  escrow?: string | null;
+  loanTerm1?: string | null;
+  loanTerm2?: string | null;
+  creditScore?: string | null;
+  taxes?: string | null;
+  insurance?: string | null;
+  borrowerIncome?: string | null;
+  loanProgram?: string | null;
+  rate?: string | null;
+  monthlyPayment?: string | null;
+  principleAndInterestPITIField?: string | null;
+  dtiFront?: string | null;
+  dtiBack?: string | null;
+  ltvFront?: string | null;
+  ltvBack?: string | null;
+  totalCashtoClose?: string | null;
+  apr?: string | null;
+  flood?: string | null;
+  hoa?: string | null;
+  miFactor?: string | null;
+  mi?: string | null;
+  totalAssets?: string | null;
   loanLocked: boolean;
   canGeneratePreQual: boolean;
   canGeneratePreApproval: boolean;
-  downPaymentAmount: string;
-  downPaymentPercent: string;
-  lienType: string;
+  preApprovalNotes?: string | null;
+  downPaymentAmount?: string | null;
+  downPaymentPercent?: string | null;
+  lienType?: string | null;
 }
 
 export interface SSOTokenRequest {
@@ -1921,7 +1999,11 @@ export interface SiteConfiguration {
   name: string;
   introduction?: string | null;
   introductionTitle?: string | null;
-  /** @format int32 */
+  /**
+   * @format int64
+   * @min 1000
+   * @max 999999999999
+   */
   nmlsid: number;
   address?: string | null;
   address2?: string | null;
@@ -2071,7 +2153,9 @@ export interface SiteConfiguration {
   calendarUrl?: string | null;
   surveysUrl?: string | null;
   enabledServices: EnabledServices;
+  company: Company;
   companyName?: string | null;
+  companySiteUrl?: string | null;
   companyAddress?: string | null;
   companyAddress2?: string | null;
   companyCity?: string | null;
@@ -2108,7 +2192,11 @@ export interface SiteConfigurationByUrl {
   name: string;
   introduction?: string | null;
   introductionTitle?: string | null;
-  /** @format int32 */
+  /**
+   * @format int64
+   * @min 1000
+   * @max 999999999999
+   */
   nmlsid: number;
   address?: string | null;
   address2?: string | null;
@@ -2258,7 +2346,9 @@ export interface SiteConfigurationByUrl {
   calendarUrl?: string | null;
   surveysUrl?: string | null;
   enabledServices: EnabledServices;
+  company: Company;
   companyName?: string | null;
+  companySiteUrl?: string | null;
   companyAddress?: string | null;
   companyAddress2?: string | null;
   companyCity?: string | null;
@@ -2312,7 +2402,7 @@ export interface SiteConfigurationReduced {
   id: string;
   url?: string | null;
   name: string;
-  /** @format int32 */
+  /** @format int64 */
   nmlsid: number;
   email?: string | null;
   companyName?: string | null;
@@ -2331,7 +2421,7 @@ export interface SiteConfigurationRequest {
   name: string;
   introduction?: string | null;
   introductionTitle?: string | null;
-  /** @format int32 */
+  /** @format int64 */
   nmlsid: number;
   address?: string | null;
   address2?: string | null;
@@ -2956,12 +3046,10 @@ export interface Workflow {
   icon: string;
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
-import axios from "axios";
-
 export type QueryParamsType = Record<string | number, any>;
+export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams extends Omit<RequestInit, "body"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -2971,20 +3059,30 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
   /** query params */
   query?: QueryParamsType;
   /** format of response (i.e. response.json() -> format: "json") */
-  format?: ResponseType;
+  format?: ResponseFormat;
   /** request body */
   body?: unknown;
+  /** base url */
+  baseUrl?: string;
+  /** request cancellation token */
+  cancelToken?: CancelToken;
 }
 
 export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
-  securityWorker?: (
-    securityData: SecurityDataType | null,
-  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
-  secure?: boolean;
-  format?: ResponseType;
+export interface ApiConfig<SecurityDataType = unknown> {
+  baseUrl?: string;
+  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
+  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
+  customFetch?: typeof fetch;
 }
+
+export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
+  data: D;
+  error: E;
+}
+
+type CancelToken = Symbol | string | number;
 
 export enum ContentType {
   Json = "application/json",
@@ -2994,105 +3092,173 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public instance: AxiosInstance;
+  public baseUrl: string = "";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
-  private secure?: boolean;
-  private format?: ResponseType;
+  private abortControllers = new Map<CancelToken, AbortController>();
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
-    this.secure = secure;
-    this.format = format;
-    this.securityWorker = securityWorker;
+  private baseApiParams: RequestParams = {
+    credentials: "same-origin",
+    headers: {},
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  };
+
+  constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+    Object.assign(this, apiConfig);
   }
 
   public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
-    const method = params1.method || (params2 && params2.method);
+  protected encodeQueryParam(key: string, value: any) {
+    const encodedKey = encodeURIComponent(key);
+    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+  }
 
+  protected addQueryParam(query: QueryParamsType, key: string) {
+    return this.encodeQueryParam(key, query[key]);
+  }
+
+  protected addArrayQueryParam(query: QueryParamsType, key: string) {
+    const value = query[key];
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+  }
+
+  protected toQueryString(rawQuery?: QueryParamsType): string {
+    const query = rawQuery || {};
+    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+    return keys
+      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+      .join("&");
+  }
+
+  protected addQueryParams(rawQuery?: QueryParamsType): string {
+    const queryString = this.toQueryString(rawQuery);
+    return queryString ? `?${queryString}` : "";
+  }
+
+  private contentFormatters: Record<ContentType, (input: any) => any> = {
+    [ContentType.Json]: (input: any) =>
+      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+    [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
+    [ContentType.FormData]: (input: any) =>
+      Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
+        formData.append(
+          key,
+          property instanceof Blob
+            ? property
+            : typeof property === "object" && property !== null
+              ? JSON.stringify(property)
+              : `${property}`,
+        );
+        return formData;
+      }, new FormData()),
+    [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
+  };
+
+  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
     return {
-      ...this.instance.defaults,
+      ...this.baseApiParams,
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...(this.baseApiParams.headers || {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
     };
   }
 
-  protected stringifyFormItem(formItem: unknown) {
-    if (typeof formItem === "object" && formItem !== null) {
-      return JSON.stringify(formItem);
-    } else {
-      return `${formItem}`;
-    }
-  }
-
-  protected createFormData(input: Record<string, unknown>): FormData {
-    if (input instanceof FormData) {
-      return input;
-    }
-    return Object.keys(input || {}).reduce((formData, key) => {
-      const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
-
-      for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+    if (this.abortControllers.has(cancelToken)) {
+      const abortController = this.abortControllers.get(cancelToken);
+      if (abortController) {
+        return abortController.signal;
       }
+      return void 0;
+    }
 
-      return formData;
-    }, new FormData());
-  }
+    const abortController = new AbortController();
+    this.abortControllers.set(cancelToken, abortController);
+    return abortController.signal;
+  };
 
-  public request = async <T = any, _E = any>({
+  public abortRequest = (cancelToken: CancelToken) => {
+    const abortController = this.abortControllers.get(cancelToken);
+
+    if (abortController) {
+      abortController.abort();
+      this.abortControllers.delete(cancelToken);
+    }
+  };
+
+  public request = async <T = any, E = any>({
+    body,
     secure,
     path,
     type,
     query,
     format,
-    body,
+    baseUrl,
+    cancelToken,
     ...params
-  }: FullRequestParams): Promise<AxiosResponse<T>> => {
+  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
-      ((typeof secure === "boolean" ? secure : this.secure) &&
+      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
       {};
     const requestParams = this.mergeRequestParams(params, secureParams);
-    const responseFormat = format || this.format || undefined;
+    const queryString = query && this.toQueryString(query);
+    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+    const responseFormat = format || requestParams.format;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
-      body = this.createFormData(body as Record<string, unknown>);
-    }
-
-    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
-      body = JSON.stringify(body);
-    }
-
-    return this.instance.request({
+    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type ? { "Content-Type": type } : {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
       },
-      params: query,
-      responseType: responseFormat,
-      data: body,
-      url: path,
+      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
+      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
+      const r = response.clone() as HttpResponse<T, E>;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
+
+      const data = !responseFormat
+        ? r
+        : await response[responseFormat]()
+            .then((data) => {
+              if (r.ok) {
+                r.data = data;
+              } else {
+                r.error = data;
+              }
+              return r;
+            })
+            .catch((e) => {
+              r.error = e;
+              return r;
+            });
+
+      if (cancelToken) {
+        this.abortControllers.delete(cancelToken);
+      }
+
+      if (!response.ok) throw data;
+      return data;
     });
   };
 }
 
 /**
  * @title The Big POS API
- * @version v2.10.0
+ * @version v2.11.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -3203,6 +3369,161 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<SiteConfiguration, UnprocessableEntityResponse>({
         path: `/api/account/site-configurations`,
         method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Accounts
+     * @name GetAccounts
+     * @summary Get All
+     * @request GET:/api/accounts
+     * @secure
+     */
+    getAccounts: (params: RequestParams = {}) =>
+      this.request<Account[], any>({
+        path: `/api/accounts`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Accounts
+     * @name UpdateLoansByAccount
+     * @summary Update Loans
+     * @request PUT:/api/accounts/{id}/loan
+     * @secure
+     */
+    updateLoansByAccount: (id: string, data: Loan[], params: RequestParams = {}) =>
+      this.request<void, ProblemDetails | UnprocessableEntityResponse>({
+        path: `/api/accounts/${id}/loan`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Accounts
+     * @name GetLoansByAccount
+     * @summary Get Loans
+     * @request GET:/api/accounts/{id}/loan
+     * @secure
+     */
+    getLoansByAccount: (id: string, params: RequestParams = {}) =>
+      this.request<Loan[], ProblemDetails>({
+        path: `/api/accounts/${id}/loan`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetTokenFromRefreshToken
+     * @summary Generate Token From Refresh Token
+     * @request POST:/api/refresh-token
+     * @secure
+     */
+    getTokenFromRefreshToken: (data: RefreshTokenRequest, params: RequestParams = {}) =>
+      this.request<TokenResponse, UnprocessableEntityResponse>({
+        path: `/api/refresh-token`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetToken
+     * @summary Get Token
+     * @request POST:/api/token
+     * @secure
+     */
+    getToken: (data: TokenRequest, params: RequestParams = {}) =>
+      this.request<TokenResponse, UnprocessableEntityResponse>({
+        path: `/api/token`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetTokenFromChallengeCode
+     * @summary Get Token From Challenge Code
+     * @request POST:/api/token/code
+     * @secure
+     */
+    getTokenFromChallengeCode: (data: TokenChallengeRequest, params: RequestParams = {}) =>
+      this.request<TokenResponse, UnprocessableEntityResponse>({
+        path: `/api/token/code`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetSystemToken
+     * @summary Get System Token
+     * @request POST:/api/oauth2/token
+     * @secure
+     */
+    getSystemToken: (data: SystemTokenRequest, params: RequestParams = {}) =>
+      this.request<TokenResponse, UnprocessableEntityResponse>({
+        path: `/api/oauth2/token`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetSsoToken
+     * @summary Get SSO Guid Token
+     * @request POST:/api/token/sso
+     * @secure
+     */
+    getSsoToken: (data: SSOTokenRequest, params: RequestParams = {}) =>
+      this.request<SSOTokenResponse, UnprocessableEntityResponse>({
+        path: `/api/token/sso`,
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -4893,25 +5214,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LegacyLoan
-     * @name UploadDocuments
-     * @summary Upload Documents
-     * @request POST:/api/los/loan/tasks/documents
-     * @secure
-     */
-    uploadDocuments: (data: PostTaskDocumentsRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
-        path: `/api/los/loan/tasks/documents`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LegacyLoan
      * @name GetTaskDocumentsByLoan
      * @summary Get Documents
      * @request GET:/api/los/loan/tasks/documents/{loanID}
@@ -5592,7 +5894,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     downloadLoanDocument: (loanId: string, documentId: string, params: RequestParams = {}) =>
-      this.request<LoanDocument, ProblemDetails>({
+      this.request<string, ProblemDetails>({
         path: `/api/loans/${loanId}/documents/${documentId}/download`,
         method: "GET",
         secure: true,
@@ -5964,7 +6266,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Loans
      * @name GetLoan
-     * @summary Gey By ID
+     * @summary Get By ID
      * @request GET:/api/loans/{loanID}
      * @secure
      */
@@ -5998,7 +6300,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<LoanPaginatedResponse, any>({
+      this.request<ExtendedLoanResponsePaginatedResponse, any>({
         path: `/api/loans/search`,
         method: "POST",
         query: query,
@@ -6014,7 +6316,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Loans
      * @name ImportLoanFromLos
-     * @summary importFromLOS
+     * @summary Import from LOS
      * @request POST:/api/loans/import-from-los/{loanId}
      * @secure
      */
@@ -7999,165 +8301,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getWorkflow: (data: GetWorkflowRequest, params: RequestParams = {}) =>
       this.request<GetForm, any>({
         path: `/api/workflow`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-  };
-  accounts = {
-    /**
-     * No description
-     *
-     * @tags Accounts
-     * @name GetAccounts
-     * @summary Get All
-     * @request GET:/accounts
-     * @secure
-     */
-    getAccounts: (params: RequestParams = {}) =>
-      this.request<Account[], any>({
-        path: `/accounts`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Accounts
-     * @name UpdateLoansByAccount
-     * @summary Update Loans
-     * @request PUT:/accounts/{id}/loan
-     * @secure
-     */
-    updateLoansByAccount: (id: string, data: Loan[], params: RequestParams = {}) =>
-      this.request<void, ProblemDetails | UnprocessableEntityResponse>({
-        path: `/accounts/${id}/loan`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Accounts
-     * @name GetLoansByAccount
-     * @summary Get Loans
-     * @request GET:/accounts/{id}/loan
-     * @secure
-     */
-    getLoansByAccount: (id: string, params: RequestParams = {}) =>
-      this.request<Loan[], ProblemDetails>({
-        path: `/accounts/${id}/loan`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-  };
-  refreshToken = {
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name GetTokenFromRefreshToken
-     * @summary Generate Token From Refresh Token
-     * @request POST:/refresh-token
-     * @secure
-     */
-    getTokenFromRefreshToken: (data: RefreshTokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
-        path: `/refresh-token`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-  };
-  token = {
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name GetToken
-     * @summary Get Token
-     * @request POST:/token
-     * @secure
-     */
-    getToken: (data: TokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
-        path: `/token`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name GetTokenFromChallengeCode
-     * @summary Get Token From Challenge Code
-     * @request POST:/token/code
-     * @secure
-     */
-    getTokenFromChallengeCode: (data: TokenChallengeRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
-        path: `/token/code`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name GetSsoToken
-     * @summary Get SSO Guid Token
-     * @request POST:/token/sso
-     * @secure
-     */
-    getSsoToken: (data: SSOTokenRequest, params: RequestParams = {}) =>
-      this.request<SSOTokenResponse, UnprocessableEntityResponse>({
-        path: `/token/sso`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-  };
-  oauth2 = {
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name GetSystemToken
-     * @summary Get System Token
-     * @request POST:/oauth2/token
-     * @secure
-     */
-    getSystemToken: (data: SystemTokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
-        path: `/oauth2/token`,
         method: "POST",
         body: data,
         secure: true,
