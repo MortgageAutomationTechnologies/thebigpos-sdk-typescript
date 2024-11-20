@@ -235,8 +235,8 @@ export interface ApplicationRowData {
 }
 
 export interface Attachment {
-  fileName?: string | null;
-  base64Data?: string | null;
+  fileName: string;
+  base64Data: string;
 }
 
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
@@ -891,6 +891,15 @@ export interface FileRequest {
 export interface FileSearchCriteria {
   searchText?: string | null;
   isPublic?: boolean | null;
+}
+
+export interface FileWithBytes {
+  name: string;
+  /** @format byte */
+  data: string;
+  fileName: string;
+  mimeType?: string | null;
+  extension?: string | null;
 }
 
 export type FilterType =
@@ -4822,6 +4831,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags FormSubmissionFiles
+     * @name DownloadFormSubmissionFile
+     * @summary Download by Id
+     * @request GET:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}/download
+     * @secure
+     */
+    downloadFormSubmissionFile: (
+      formSubmissionFileId: string,
+      formSubmissionId: string,
+      query?: {
+        /** @format uuid */
+        siteConfigurationId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<FileWithBytes, any>({
+        path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}/download`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags FormSubmissions
      * @name GetFormSubmissions
      * @summary Get All
@@ -5610,6 +5646,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.FormData,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Listings
+     * @name DeleteListingBackgroundImage
+     * @summary Delete Background Image
+     * @request DELETE:/api/listings/{id}/background-image
+     * @secure
+     */
+    deleteListingBackgroundImage: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/listings/${id}/background-image`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
 
