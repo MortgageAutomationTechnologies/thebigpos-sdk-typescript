@@ -721,9 +721,16 @@ export interface DocumentTemplateVersionUpdateRequest {
 }
 
 export interface DraftContentResponse {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
   /** @format uuid */
   id: string;
   customData: any;
+  user: UserBaseResponse;
   applicationPayload: any;
 }
 
@@ -740,9 +747,16 @@ export interface DraftRequest {
 }
 
 export interface DraftResponse {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
   /** @format uuid */
   id: string;
   customData: any;
+  user: UserBaseResponse;
 }
 
 export interface EConsentInformation {
@@ -770,7 +784,6 @@ export interface EnabledServices {
   rates?: boolean | null;
   socialSurvey?: boolean | null;
   borrowerTasks?: boolean | null;
-  borrowerMissions?: boolean | null;
   docusign?: boolean | null;
   emailNotifications?: boolean | null;
   textNotifications?: boolean | null;
@@ -1460,6 +1473,7 @@ export interface LoanDocument {
 }
 
 export interface LoanDraftSearchCriteria {
+  searchText?: string | null;
   isActive?: boolean | null;
   /** @format uuid */
   loanOfficerId?: string | null;
@@ -2867,6 +2881,15 @@ export interface UserAccountDeletionRequest {
   feedback: string;
 }
 
+export interface UserBaseResponse {
+  /** @format uuid */
+  id: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export interface UserLoan {
   loanID: string;
   customLoanData: CustomLoanData;
@@ -3191,7 +3214,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.11.0
+ * @version v2.12.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -6234,6 +6257,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/loans`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
+     * @name GetLoansByAccountSetting
+     * @summary Get Loans by Account Setting
+     * @request POST:/api/loans/temp-pipeline
+     * @secure
+     */
+    getLoansByAccountSetting: (
+      data: LoanSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExtendedLoanResponsePaginatedResponse, any>({
+        path: `/api/loans/temp-pipeline`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
