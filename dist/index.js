@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.11.0
+ * @version v2.12.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1541,6 +1541,16 @@ export class Api extends HttpClient {
              * @secure
              */
             getLoans: (params = {}) => this.request(Object.assign({ path: `/api/loans`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name GetLoansByAccountSetting
+             * @summary Get Loans by Account Setting
+             * @request POST:/api/loans/temp-pipeline
+             * @secure
+             */
+            getLoansByAccountSetting: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/temp-pipeline`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
