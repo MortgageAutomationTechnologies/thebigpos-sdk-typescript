@@ -1724,6 +1724,13 @@ export interface NotificationTemplateVersionUpdateRequest {
   plainBody: string;
 }
 
+export interface ObjectPaginatedResponse {
+  rows: any[];
+  pagination: PaginationResponse;
+  /** @format int64 */
+  count: number;
+}
+
 export interface Operation {
   op?: string;
   value?: object | null;
@@ -6282,7 +6289,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ExtendedLoanResponsePaginatedResponse, any>({
+      this.request<ObjectPaginatedResponse, any>({
         path: `/api/loans/temp-pipeline`,
         method: "POST",
         query: query,
