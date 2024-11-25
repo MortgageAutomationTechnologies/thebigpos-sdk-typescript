@@ -1571,6 +1571,12 @@ export interface NotificationTemplateVersionUpdateRequest {
     /** @minLength 1 */
     plainBody: string;
 }
+export interface ObjectPaginatedResponse {
+    rows: any[];
+    pagination: PaginationResponse;
+    /** @format int64 */
+    count: number;
+}
 export interface Operation {
     op?: string;
     value?: object | null;
@@ -4523,7 +4529,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<ExtendedLoanResponsePaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ObjectPaginatedResponse, any>>;
         /**
          * No description
          *
