@@ -39,25 +39,6 @@ export interface Account {
     losSettings: LOSSettings;
     asoSettings: ASOSettings;
 }
-export interface AccountUpdateRequest {
-    name: string;
-    mfaPreference: string;
-    /** @format int32 */
-    allowedLoginsWithoutMFA: number;
-    losSettings: LOSSettingsUpdateRequest;
-    asoSettings: ASOSettings;
-}
-export interface AccountUpdateRequestJsonPatchDocument {
-    operations?: AccountUpdateRequestOperation[] | null;
-    contractResolver: IContractResolver;
-}
-export interface AccountUpdateRequestOperation {
-    operationType: OperationType;
-    path?: string | null;
-    op?: string | null;
-    from?: string | null;
-    value?: any;
-}
 export interface ActionResponse {
     /** @format uuid */
     id: string;
@@ -150,6 +131,12 @@ export interface AdminAccessUser {
     /** @format uuid */
     accountID?: string | null;
     loans: UserLoan[];
+}
+export interface AdminUser {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
 }
 export interface AllowImpersonationRequest {
     /**
@@ -322,6 +309,13 @@ export interface Company {
     fax?: string | null;
     nmlsid?: string | null;
 }
+export interface CompanyAddress {
+    address: string;
+    address2?: string | null;
+    city: string;
+    state: string;
+    zip: string;
+}
 export interface ConditionCommentResponse {
     commentId: string;
     comments: string;
@@ -340,6 +334,11 @@ export interface Contact {
     lastName?: string | null;
     name?: string | null;
     email?: string | null;
+}
+export interface ContactInfo {
+    phone: string;
+    tollFreePhone?: string | null;
+    fax?: string | null;
 }
 export interface ContactRowData {
     companyName?: string | null;
@@ -384,6 +383,23 @@ export interface CorporateSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
 }
+export interface CreateAccountRequest {
+    /** @minLength 1 */
+    name: string;
+    /** @minLength 1 */
+    domain: string;
+    eConsentBucket?: string | null;
+    ignoreCoBorrowerRelationship: boolean;
+    user: AdminUser;
+    companyAddress: CompanyAddress;
+    contactInfo: ContactInfo;
+    theme: Theme;
+    /**
+     * @format int64
+     * @min 0
+     */
+    nlmsid: number;
+}
 export interface CreateBranchRequest {
     /**
      * @minLength 1
@@ -404,6 +420,7 @@ export interface CreateDocumentTemplateRequest {
     name: string;
     type: string;
     description?: string | null;
+    destinationBucket?: string | null;
     status: string;
 }
 export interface CreateInviteRequest {
@@ -592,6 +609,8 @@ export interface DocumentTemplateBaseResponse {
     isDefault: boolean;
     type: string;
     description?: string | null;
+    destinationBucket?: string | null;
+    isDestinationBucketConfigurable: boolean;
     status: string;
 }
 export interface DocumentTemplateResponse {
@@ -609,10 +628,12 @@ export interface DocumentTemplateResponse {
     isDefault: boolean;
     type: string;
     description?: string | null;
+    destinationBucket?: string | null;
+    isDestinationBucketConfigurable: boolean;
     status: string;
-    versions: DocumentTemplateVersionBaseRequest[];
+    versions: DocumentTemplateVersionBaseResponse[];
 }
-export interface DocumentTemplateVersionBaseRequest {
+export interface DocumentTemplateVersionBaseResponse {
     /** @format date-time */
     createdAt: string;
     /** @format date-time */
@@ -1105,7 +1126,6 @@ export interface GetWorkflowRequest {
     userRole?: string | null;
     language?: string | null;
 }
-export type IContractResolver = object;
 export interface ImportUserLoanTaskRequest {
     /**
      * @format uuid
@@ -1571,18 +1591,11 @@ export interface NotificationTemplateVersionUpdateRequest {
     /** @minLength 1 */
     plainBody: string;
 }
-export interface ObjectPaginatedResponse {
-    rows: any[];
-    pagination: PaginationResponse;
-    /** @format int64 */
-    count: number;
-}
 export interface Operation {
     op?: string;
     value?: object | null;
     path?: string;
 }
-export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 export interface OverridePasswordRequest {
     /** @minLength 8 */
     password: string;
@@ -2481,6 +2494,8 @@ export interface Task {
     user: User;
     isFromLegacySource: boolean;
     usedInBusinessRule: boolean;
+    hasAutocompleteAfterResponse: boolean;
+    hasAutoPropagationOnAdd: boolean;
 }
 export interface TaskRequest {
     /** @minLength 1 */
@@ -2495,6 +2510,8 @@ export interface TaskRequest {
      */
     daysDueFromApplication?: number | null;
     isGlobal: boolean;
+    hasAutocompleteAfterResponse: boolean;
+    hasAutoPropagationOnAdd: boolean;
 }
 export interface TaskSearchCriteria {
     searchText?: string | null;
@@ -2509,6 +2526,14 @@ export interface TestSendNotificationForLoanRequest {
     toAddress?: string | null;
     templateName?: string | null;
     attachments: Attachment[];
+}
+export interface Theme {
+    logoURL: string;
+    primaryColor: string;
+    secondaryColor: string;
+    backgroundColor?: string | null;
+    textColor?: string | null;
+    iconColor?: string | null;
 }
 export interface TokenChallengeRequest {
     /** @format email */
@@ -2588,6 +2613,14 @@ export interface UnprocessableEntityResponse {
     message: string;
     errors: UnprocessableEntityError[];
 }
+export interface UpdateAccountRequest {
+    name: string;
+    mfaPreference: string;
+    /** @format int32 */
+    allowedLoginsWithoutMFA: number;
+    losSettings: LOSSettingsUpdateRequest;
+    asoSettings: ASOSettings;
+}
 export interface UpdateDocumentTemplateRequest {
     /** @minLength 1 */
     htmlBody: string;
@@ -2597,6 +2630,7 @@ export interface UpdateDocumentTemplateRequest {
      */
     name: string;
     description?: string | null;
+    destinationBucket?: string | null;
     status: string;
 }
 export interface UpdateListingFileRequest {
@@ -2917,38 +2951,28 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags Account
-         * @name GetAccount
+         * @name GetMyAccount
          * @summary Get
          * @request GET:/api/account
          * @secure
          */
-        getAccount: (params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
+        getMyAccount: (params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
          * @tags Account
-         * @name ReplaceAccount
+         * @name ReplaceMyAccount
          * @summary Replace
          * @request PUT:/api/account
          * @secure
          */
-        replaceAccount: (data: AccountUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
-        /**
-         * No description
-         *
-         * @tags Account
-         * @name UpdateAccount
-         * @summary Update
-         * @request PATCH:/api/account
-         * @secure
-         */
-        updateAccount: (data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
+        replaceMyAccount: (data: UpdateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
          * @tags Account
          * @name GetSiteConfigurationByAccount
-         * @summary Get Site Configuration By Account
+         * @summary Get Site Configuration
          * @request GET:/api/account/site-configurations
          * @secure
          */
@@ -2958,7 +2982,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags Account
          * @name UpdateSiteConfigurationForAccount
-         * @summary Update Site Configuration For Account
+         * @summary Update Site Configuration
          * @request PUT:/api/account/site-configurations
          * @secure
          */
@@ -2973,6 +2997,39 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         getAccounts: (params?: RequestParams) => Promise<AxiosResponse<Account[], any>>;
+        /**
+         * No description
+         *
+         * @tags Accounts
+         * @name CreateAccount
+         * @summary Create
+         * @request POST:/api/accounts
+         * @secure
+         */
+        createAccount: (data: CreateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
+        /**
+         * No description
+         *
+         * @tags Accounts
+         * @name GetAccount
+         * @summary Get by ID
+         * @request GET:/api/accounts/{id}
+         * @secure
+         */
+        getAccount: (id: string, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
+        /**
+         * No description
+         *
+         * @tags Accounts
+         * @name DeleteAccount
+         * @summary Delete
+         * @request DELETE:/api/accounts/{id}
+         * @secure
+         */
+        deleteAccount: (id: string, query?: {
+            /** @default false */
+            hardDelete?: boolean;
+        }, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -4529,7 +4586,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<ObjectPaginatedResponse, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
         /**
          * No description
          *
