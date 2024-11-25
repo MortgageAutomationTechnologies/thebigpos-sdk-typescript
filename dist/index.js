@@ -114,38 +114,28 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Account
-             * @name GetAccount
+             * @name GetMyAccount
              * @summary Get
              * @request GET:/api/account
              * @secure
              */
-            getAccount: (params = {}) => this.request(Object.assign({ path: `/api/account`, method: "GET", secure: true, format: "json" }, params)),
+            getMyAccount: (params = {}) => this.request(Object.assign({ path: `/api/account`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Account
-             * @name ReplaceAccount
+             * @name ReplaceMyAccount
              * @summary Replace
              * @request PUT:/api/account
              * @secure
              */
-            replaceAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Account
-             * @name UpdateAccount
-             * @summary Update
-             * @request PATCH:/api/account
-             * @secure
-             */
-            updateAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceMyAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags Account
              * @name GetSiteConfigurationByAccount
-             * @summary Get Site Configuration By Account
+             * @summary Get Site Configuration
              * @request GET:/api/account/site-configurations
              * @secure
              */
@@ -155,7 +145,7 @@ export class Api extends HttpClient {
              *
              * @tags Account
              * @name UpdateSiteConfigurationForAccount
-             * @summary Update Site Configuration For Account
+             * @summary Update Site Configuration
              * @request PUT:/api/account/site-configurations
              * @secure
              */
@@ -170,6 +160,36 @@ export class Api extends HttpClient {
              * @secure
              */
             getAccounts: (params = {}) => this.request(Object.assign({ path: `/api/accounts`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name CreateAccount
+             * @summary Create
+             * @request POST:/api/accounts
+             * @secure
+             */
+            createAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/accounts`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name GetAccount
+             * @summary Get by ID
+             * @request GET:/api/accounts/{id}
+             * @secure
+             */
+            getAccount: (id, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Accounts
+             * @name DeleteAccount
+             * @summary Delete
+             * @request DELETE:/api/accounts/{id}
+             * @secure
+             */
+            deleteAccount: (id, query, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}`, method: "DELETE", query: query, secure: true, format: "json" }, params)),
             /**
              * No description
              *
