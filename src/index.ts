@@ -52,7 +52,7 @@ export interface Account {
   asoSettings: ASOSettings;
 }
 
-export interface ActionResponse {
+export interface Action {
   /** @format uuid */
   id: string;
   name: string;
@@ -145,7 +145,7 @@ export interface AdminAccessUser {
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
   loanIDs: string[];
-  drafts: DraftResponse[];
+  drafts: Draft[];
   /** @format uuid */
   accountID?: string | null;
   loans: UserLoan[];
@@ -212,11 +212,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent: LoanContactResponse;
-  sellerAgent: LoanContactResponse;
-  settlementAgent: LoanContactResponse;
-  escrowAgent: LoanContactResponse;
-  titleInsuranceAgent: LoanContactResponse;
+  buyerAgent: LoanContact;
+  sellerAgent: LoanContact;
+  settlementAgent: LoanContact;
+  escrowAgent: LoanContact;
+  titleInsuranceAgent: LoanContact;
 }
 
 export interface Attachment {
@@ -265,7 +265,7 @@ export interface BranchUser {
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
   loanIDs: string[];
-  drafts: DraftResponse[];
+  drafts: Draft[];
   /** @format uuid */
   branchID: string;
   branchName: string;
@@ -275,9 +275,9 @@ export interface BranchUser {
   siteConfigurations: SiteConfigurationReduced[];
 }
 
-export interface BranchUserPaginatedResponse {
+export interface BranchUserPaginated {
   rows: BranchUser[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -324,7 +324,7 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
-export interface CommentUserInformationResponse {
+export interface CommentUserInformation {
   entityId: string;
   entityType: string;
   entityName?: string | null;
@@ -352,12 +352,12 @@ export interface CompanyAddress {
   zip: string;
 }
 
-export interface ConditionCommentResponse {
+export interface ConditionComment {
   commentId: string;
   comments: string;
   /** @format int32 */
   forRoleId: number;
-  forRole: CommentUserInformationResponse;
+  forRole: CommentUserInformation;
   /** @format date-time */
   dateCreated: string;
   createdBy: string;
@@ -392,15 +392,7 @@ export interface ContactRowData {
   email?: string | null;
 }
 
-export interface CorporateRequest {
-  /**
-   * @minLength 1
-   * @maxLength 250
-   */
-  name: string;
-}
-
-export interface CorporateResponse {
+export interface Corporate {
   /** @format date-time */
   createdAt?: string | null;
   /** @format date-time */
@@ -415,11 +407,19 @@ export interface CorporateResponse {
   siteConfigurations: SiteConfigurationReduced[];
 }
 
-export interface CorporateResponsePaginatedResponse {
-  rows: CorporateResponse[];
-  pagination: PaginationResponse;
+export interface CorporatePaginated {
+  rows: Corporate[];
+  pagination: Pagination;
   /** @format int64 */
   count: number;
+}
+
+export interface CorporateRequest {
+  /**
+   * @minLength 1
+   * @maxLength 250
+   */
+  name: string;
 }
 
 export interface CorporateSearchCriteria {
@@ -553,10 +553,29 @@ export interface DetailedUser {
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
   loanIDs: string[];
-  drafts: DraftResponse[];
+  drafts: Draft[];
 }
 
-export interface DeviceActionResponse {
+export interface Device {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  accountID: string;
+  serialNumber: string;
+  apps: any;
+  /** @format uuid */
+  createdBy: string;
+  /** @format uuid */
+  updatedBy?: string | null;
+  /** @format uuid */
+  managedBy?: string | null;
+  name?: string | null;
+  type?: string | null;
+  status?: string | null;
+  comments?: string | null;
+}
+
+export interface DeviceAction {
   is_enabled: boolean;
   localized_name?: string | null;
   name?: string | null;
@@ -568,7 +587,7 @@ export interface DeviceActionResponse {
   status_description?: string | null;
 }
 
-export interface DeviceMDMResponse {
+export interface DeviceMDM {
   managed_status?: string | null;
   device_id?: string | null;
   is_supervised: boolean;
@@ -590,40 +609,21 @@ export interface DeviceMDMResponse {
   platform_type_id?: string | null;
   device_capacity?: string | null;
   imei: string[];
-  user: MdmUserResponse;
-  actions?: DeviceActionResponse[] | null;
+  user: MdmUser;
+  actions?: DeviceAction[] | null;
+}
+
+export interface DevicePaginated {
+  rows: Device[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface DeviceRequest {
   apps: any;
   name?: string | null;
   comments?: string | null;
-}
-
-export interface DeviceResponse {
-  /** @format uuid */
-  id: string;
-  /** @format uuid */
-  accountID: string;
-  serialNumber: string;
-  apps: any;
-  /** @format uuid */
-  createdBy: string;
-  /** @format uuid */
-  updatedBy?: string | null;
-  /** @format uuid */
-  managedBy?: string | null;
-  name?: string | null;
-  type?: string | null;
-  status?: string | null;
-  comments?: string | null;
-}
-
-export interface DeviceResponsePaginatedResponse {
-  rows: DeviceResponse[];
-  pagination: PaginationResponse;
-  /** @format int64 */
-  count: number;
 }
 
 export interface DocumentData {
@@ -653,7 +653,28 @@ export interface DocumentDataRequest {
   systemGenerated: boolean;
 }
 
-export interface DocumentTemplateBaseResponse {
+export interface DocumentTemplate {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  htmlBody: string;
+  name: string;
+  multipleCustomTemplates: boolean;
+  isDefault: boolean;
+  type: string;
+  description?: string | null;
+  destinationBucket?: string | null;
+  isDestinationBucketConfigurable: boolean;
+  status: string;
+  versions: DocumentTemplateVersionBase[];
+}
+
+export interface DocumentTemplateBase {
   /** @format date-time */
   createdAt?: string | null;
   /** @format date-time */
@@ -673,28 +694,24 @@ export interface DocumentTemplateBaseResponse {
   status: string;
 }
 
-export interface DocumentTemplateResponse {
+export interface DocumentTemplateVersion {
   /** @format date-time */
-  createdAt?: string | null;
+  createdAt: string;
   /** @format date-time */
   updatedAt?: string | null;
   /** @format date-time */
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  htmlBody: string;
+  /** @format int32 */
+  version: number;
   name: string;
-  multipleCustomTemplates: boolean;
-  isDefault: boolean;
-  type: string;
-  description?: string | null;
-  destinationBucket?: string | null;
-  isDestinationBucketConfigurable: boolean;
-  status: string;
-  versions: DocumentTemplateVersionBaseResponse[];
+  isActive: boolean;
+  htmlBody: string;
+  documentTemplate: DocumentTemplateBase;
 }
 
-export interface DocumentTemplateVersionBaseResponse {
+export interface DocumentTemplateVersionBase {
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -717,23 +734,6 @@ export interface DocumentTemplateVersionRequest {
   htmlBody: string;
 }
 
-export interface DocumentTemplateVersionResponse {
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt?: string | null;
-  /** @format date-time */
-  deletedAt?: string | null;
-  /** @format uuid */
-  id: string;
-  /** @format int32 */
-  version: number;
-  name: string;
-  isActive: boolean;
-  htmlBody: string;
-  documentTemplate: DocumentTemplateBaseResponse;
-}
-
 export interface DocumentTemplateVersionUpdateRequest {
   /** @maxLength 255 */
   name: string;
@@ -742,7 +742,7 @@ export interface DocumentTemplateVersionUpdateRequest {
   htmlBody: string;
 }
 
-export interface DraftContentResponse {
+export interface Draft {
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -752,13 +752,26 @@ export interface DraftContentResponse {
   /** @format uuid */
   id: string;
   customData: any;
-  user: UserBaseResponse;
+  user: UserBase;
+}
+
+export interface DraftContent {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  customData: any;
+  user: UserBase;
   applicationPayload: any;
 }
 
-export interface DraftContentResponsePaginatedResponse {
-  rows: DraftContentResponse[];
-  pagination: PaginationResponse;
+export interface DraftContentPaginated {
+  rows: DraftContent[];
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -766,19 +779,6 @@ export interface DraftContentResponsePaginatedResponse {
 export interface DraftRequest {
   applicationPayload: any;
   customData?: any;
-}
-
-export interface DraftResponse {
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt?: string | null;
-  /** @format date-time */
-  deletedAt?: string | null;
-  /** @format uuid */
-  id: string;
-  customData: any;
-  user: UserBaseResponse;
 }
 
 export interface EConsentInformation {
@@ -841,7 +841,7 @@ export interface Error {
   message: string;
 }
 
-export interface ExtendedLoanResponse {
+export interface ExtendedLoan {
   loanID: string;
   loanNumber?: string | null;
   /** @format date-time */
@@ -879,7 +879,7 @@ export interface ExtendedLoanResponse {
   propertyAddress: Address;
   borrowerContact: Contact;
   coBorrowerContact: Contact;
-  loanLogs: LoanLogResponse[];
+  loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
   buyerAgentContact: Contact;
@@ -890,9 +890,9 @@ export interface ExtendedLoanResponse {
   loanProcessorContact: Contact;
 }
 
-export interface ExtendedLoanResponsePaginatedResponse {
-  rows: ExtendedLoanResponse[];
-  pagination: PaginationResponse;
+export interface ExtendedLoanPaginated {
+  rows: ExtendedLoan[];
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -908,9 +908,9 @@ export interface File {
   url: string;
 }
 
-export interface FilePaginatedResponse {
+export interface FilePaginated {
   rows: File[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -1004,18 +1004,18 @@ export interface FormSubmission {
   /** @format uuid */
   listingID?: string | null;
   listing: Listing;
-  files: FormSubmissionFileResponse[];
+  files: FormSubmissionFile[];
 }
 
-export interface FormSubmissionFileResponse {
+export interface FormSubmissionFile {
   /** @format uuid */
   id: string;
   file: File;
 }
 
-export interface FormSubmissionPaginatedResponse {
+export interface FormSubmissionPaginated {
   rows: FormSubmission[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -1116,7 +1116,7 @@ export interface GenerateDocumentRequest {
   preview: boolean;
 }
 
-export interface GetApplicationsResponse {
+export interface GetApplications {
   applications: ApplicationRowData[];
 }
 
@@ -1139,9 +1139,9 @@ export interface GetBranch {
   siteConfigurations: SiteConfigurationReduced[];
 }
 
-export interface GetBranchPaginatedResponse {
+export interface GetBranchPaginated {
   rows: GetBranch[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -1190,8 +1190,13 @@ export interface GetPricingCalculationRequest {
   siteConfigurationId: string;
 }
 
-export interface GetPricingForLoanOfficerResponse {
+export interface GetPricingForLoanOfficer {
   rates: PricingRates[];
+}
+
+export interface GetReport {
+  loanRecords: LoanRecord[];
+  invalidFieldIDs: string[];
 }
 
 export interface GetReportRequest {
@@ -1202,11 +1207,6 @@ export interface GetReportRequest {
   startIndex?: number | null;
   /** @format int32 */
   limit?: number | null;
-}
-
-export interface GetReportResponse {
-  loanRecords: LoanRecord[];
-  invalidFieldIDs: string[];
 }
 
 export interface GetSiteConfigurationByLOUserIDRequest {
@@ -1257,7 +1257,7 @@ export interface ImportUserLoanTaskRequest {
   userID: string;
 }
 
-export interface InviteResponse {
+export interface Invite {
   firstName: string;
   lastName: string;
   emailAddress: string;
@@ -1335,9 +1335,9 @@ export interface ListingFile {
   weight: number;
 }
 
-export interface ListingPaginatedResponse {
+export interface ListingPaginated {
   rows: Listing[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -1423,12 +1423,12 @@ export interface Loan {
   propertyAddress: Address;
   borrowerContact: Contact;
   coBorrowerContact: Contact;
-  loanLogs: LoanLogResponse[];
+  loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
 }
 
-export interface LoanComparisonResponse {
+export interface LoanComparison {
   loanID: string;
   scenarios: LoanComparisonScenario[];
   loanLocked: boolean;
@@ -1466,7 +1466,7 @@ export interface LoanComparisonScenario {
   fundingFee?: string | null;
 }
 
-export interface LoanContactResponse {
+export interface LoanContact {
   name?: string | null;
   email?: string | null;
   phone?: string | null;
@@ -1494,12 +1494,11 @@ export interface LoanDocument {
 
 export interface LoanDraftSearchCriteria {
   searchText?: string | null;
-  isActive?: boolean | null;
   /** @format uuid */
   loanOfficerId?: string | null;
 }
 
-export interface LoanLogResponse {
+export interface LoanLog {
   /** @format uuid */
   id: string;
   level: string;
@@ -1559,30 +1558,13 @@ export interface LoanUser {
   createdAt: string;
 }
 
-export interface MdmUserResponse {
+export interface MdmUser {
   user_email?: string | null;
   user_id?: string | null;
   user_name?: string | null;
 }
 
-export interface MilestoneConfigurationRequest {
-  /** @minLength 1 */
-  name: string;
-  description?: string | null;
-  /** @minLength 1 */
-  fieldID: string;
-  /**
-   * @format int32
-   * @min -1000
-   * @max 1000
-   */
-  weight?: number | null;
-  /** @minLength 1 */
-  loanType: string;
-  notificationsEnabled: boolean;
-}
-
-export interface MilestoneConfigurationResponse {
+export interface MilestoneConfiguration {
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -1598,6 +1580,23 @@ export interface MilestoneConfigurationResponse {
   weight: number;
   /** @format uuid */
   accountID: string;
+  loanType: string;
+  notificationsEnabled: boolean;
+}
+
+export interface MilestoneConfigurationRequest {
+  /** @minLength 1 */
+  name: string;
+  description?: string | null;
+  /** @minLength 1 */
+  fieldID: string;
+  /**
+   * @format int32
+   * @min -1000
+   * @max 1000
+   */
+  weight?: number | null;
+  /** @minLength 1 */
   loanType: string;
   notificationsEnabled: boolean;
 }
@@ -1619,6 +1618,33 @@ export interface ModuleParameterValue {
   parameterType: string;
   value?: any;
   isInherited: boolean;
+}
+
+export interface NotificationLog {
+  /** @format uuid */
+  id: string;
+  type: NotificationType;
+  to: string;
+  cc?: string | null;
+  subject?: string | null;
+  message: string;
+  notificationTemplate: NotificationTemplate;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface NotificationLogPaginated {
+  rows: NotificationLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface NotificationLogSearchCriteria {
+  searchText?: string | null;
+  type: NotificationType;
+  to?: string[] | null;
+  cc?: string[] | null;
 }
 
 export interface NotificationTemplate {
@@ -1744,6 +1770,8 @@ export interface NotificationTemplateVersionUpdateRequest {
   plainBody: string;
 }
 
+export type NotificationType = "Email" | "Text" | "PushNotification";
+
 export interface Operation {
   op?: string;
   value?: object | null;
@@ -1755,7 +1783,7 @@ export interface OverridePasswordRequest {
   password: string;
 }
 
-export interface PaginationResponse {
+export interface Pagination {
   /** @format int32 */
   pageNumber: number;
   /** @format int32 */
@@ -1777,7 +1805,7 @@ export interface PostLoanComparisonPdfRequest {
   siteConfigurationID: string;
 }
 
-export interface PreliminaryConditionResponse {
+export interface PreliminaryCondition {
   /** @format uuid */
   id: string;
   conditionType: string;
@@ -1796,27 +1824,27 @@ export interface PreliminaryConditionResponse {
   requestedFrom?: string | null;
   /** @format date-time */
   createdDate?: string | null;
-  createdBy: CommentUserInformationResponse;
+  createdBy: CommentUserInformation;
   isRequested: boolean;
   /** @format date-time */
   requestedDate?: string | null;
-  requestedBy: CommentUserInformationResponse;
+  requestedBy: CommentUserInformation;
   isReceived: boolean;
   /** @format date-time */
   receivedDate?: string | null;
-  receivedBy: CommentUserInformationResponse;
+  receivedBy: CommentUserInformation;
   priorTo?: string | null;
   category?: string | null;
   isFulfilled: boolean;
   /** @format date-time */
   fulfilledDate?: string | null;
-  fulfilledBy: CommentUserInformationResponse;
-  comments: ConditionCommentResponse[];
+  fulfilledBy: CommentUserInformation;
+  comments: ConditionComment[];
   uwAccess?: string | null;
   isRerequested: boolean;
   /** @format date-time */
   rerequestedDate?: string | null;
-  rerequestedBy: CommentUserInformationResponse;
+  rerequestedBy: CommentUserInformation;
 }
 
 export interface PricingRates {
@@ -1909,40 +1937,7 @@ export interface RequestQueue {
   status?: string | null;
 }
 
-export interface RunLOCalculationRequest {
-  /** @minLength 1 */
-  loanID: string;
-  /** @minLength 1 */
-  loanAmount: string;
-  /** @minLength 1 */
-  propertyValue: string;
-  propertyType?: string | null;
-  zipCode?: string | null;
-  county?: string | null;
-  /** @minLength 1 */
-  loanPurpose: string;
-  propertyOccupancy?: string | null;
-  escrow?: string | null;
-  /** @minLength 1 */
-  loanTerm1: string;
-  /** @minLength 1 */
-  loanTerm2: string;
-  creditScore?: string | null;
-  taxes?: string | null;
-  insurance?: string | null;
-  rate?: string | null;
-  /** @minLength 1 */
-  loanType: string;
-  flood?: string | null;
-  hoa?: string | null;
-  miFactor?: string | null;
-  downpaymentAmount?: string | null;
-  /** @minLength 1 */
-  lienType: string;
-  preApprovalNotes?: string | null;
-}
-
-export interface RunLOCalculationResponse {
+export interface RunLOCalculation {
   loanID: string;
   loanAmount?: string | null;
   totalMortgageAmount?: string | null;
@@ -1984,6 +1979,45 @@ export interface RunLOCalculationResponse {
   lienType?: string | null;
 }
 
+export interface RunLOCalculationRequest {
+  /** @minLength 1 */
+  loanID: string;
+  /** @minLength 1 */
+  loanAmount: string;
+  /** @minLength 1 */
+  propertyValue: string;
+  propertyType?: string | null;
+  zipCode?: string | null;
+  county?: string | null;
+  /** @minLength 1 */
+  loanPurpose: string;
+  propertyOccupancy?: string | null;
+  escrow?: string | null;
+  /** @minLength 1 */
+  loanTerm1: string;
+  /** @minLength 1 */
+  loanTerm2: string;
+  creditScore?: string | null;
+  taxes?: string | null;
+  insurance?: string | null;
+  rate?: string | null;
+  /** @minLength 1 */
+  loanType: string;
+  flood?: string | null;
+  hoa?: string | null;
+  miFactor?: string | null;
+  downpaymentAmount?: string | null;
+  /** @minLength 1 */
+  lienType: string;
+  preApprovalNotes?: string | null;
+}
+
+export interface SSOToken {
+  /** @format uuid */
+  ssoTokenForSignIn: string;
+  ssoRedirectUriForSignIn: string;
+}
+
 export interface SSOTokenRequest {
   /**
    * @format email
@@ -1992,12 +2026,6 @@ export interface SSOTokenRequest {
   email: string;
   /** @minLength 1 */
   redirectUri: string;
-}
-
-export interface SSOTokenResponse {
-  /** @format uuid */
-  ssoTokenForSignIn: string;
-  ssoRedirectUriForSignIn: string;
 }
 
 export interface SendForgotPasswordRequest {
@@ -2431,9 +2459,9 @@ export interface SiteConfigurationForm {
   entityTypes: string[];
 }
 
-export interface SiteConfigurationPaginatedResponse {
+export interface SiteConfigurationPaginated {
   rows: SiteConfiguration[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -2622,7 +2650,7 @@ export interface SiteConfigurationSearchCriteria {
   entityType?: string | null;
 }
 
-export interface SiteConfigurationWithInheritedResponse {
+export interface SiteConfigurationWithInherited {
   siteConfiguration: SiteConfiguration;
   inheritedSiteConfiguration: SiteConfiguration;
 }
@@ -2677,7 +2705,7 @@ export interface Task {
   user: User;
   isFromLegacySource: boolean;
   usedInBusinessRule: boolean;
-  hasAutocompleteAfterResponse: boolean;
+  willAutocompleteAfterResponse: boolean;
   hasAutoPropagationOnAdd: boolean;
 }
 
@@ -2694,7 +2722,7 @@ export interface TaskRequest {
    */
   daysDueFromApplication?: number | null;
   isGlobal: boolean;
-  hasAutocompleteAfterResponse: boolean;
+  willAutocompleteAfterResponse: boolean;
   hasAutoPropagationOnAdd: boolean;
 }
 
@@ -2723,6 +2751,15 @@ export interface Theme {
   iconColor?: string | null;
 }
 
+export interface Token {
+  token_type: string;
+  /** @format int32 */
+  expires_in: number;
+  access_token: string;
+  refresh_token: string;
+  scope: string;
+}
+
 export interface TokenChallengeRequest {
   /** @format email */
   username: string;
@@ -2748,16 +2785,7 @@ export interface TokenRequest {
   isSupport: boolean;
 }
 
-export interface TokenResponse {
-  token_type: string;
-  /** @format int32 */
-  expires_in: number;
-  access_token: string;
-  refresh_token: string;
-  scope: string;
-}
-
-export interface UnderwritingConditionResponse {
+export interface UnderwritingCondition {
   /** @format uuid */
   id: string;
   conditionType: string;
@@ -2776,35 +2804,35 @@ export interface UnderwritingConditionResponse {
   requestedFrom?: string | null;
   /** @format date-time */
   createdDate?: string | null;
-  createdBy: CommentUserInformationResponse;
+  createdBy: CommentUserInformation;
   isRequested: boolean;
   /** @format date-time */
   requestedDate?: string | null;
-  requestedBy: CommentUserInformationResponse;
+  requestedBy: CommentUserInformation;
   isReceived: boolean;
   /** @format date-time */
   receivedDate?: string | null;
-  receivedBy: CommentUserInformationResponse;
+  receivedBy: CommentUserInformation;
   priorTo?: string | null;
   category?: string | null;
   isFulfilled: boolean;
   /** @format date-time */
   fulfilledDate?: string | null;
-  fulfilledBy: CommentUserInformationResponse;
-  comments: ConditionCommentResponse[];
+  fulfilledBy: CommentUserInformation;
+  comments: ConditionComment[];
   allowToClear: boolean;
   printExternally: boolean;
   printInternally: boolean;
 }
 
+export interface UnprocessableEntity {
+  message: string;
+  errors: UnprocessableEntityError[];
+}
+
 export interface UnprocessableEntityError {
   error: string;
   property: string;
-}
-
-export interface UnprocessableEntityResponse {
-  message: string;
-  errors: UnprocessableEntityError[];
 }
 
 export interface UpdateAccountRequest {
@@ -2922,7 +2950,7 @@ export interface UserAccountDeletionRequest {
   feedback: string;
 }
 
-export interface UserBaseResponse {
+export interface UserBase {
   /** @format uuid */
   id: string;
   role: string;
@@ -2975,9 +3003,9 @@ export interface UserMobilePhoneVerificationRequest {
   code: string;
 }
 
-export interface UserPaginatedResponse {
+export interface UserPaginated {
   rows: User[];
-  pagination: PaginationResponse;
+  pagination: Pagination;
   /** @format int64 */
   count: number;
 }
@@ -2993,7 +3021,7 @@ export interface UserPublic {
   title?: string | null;
 }
 
-export interface UserRelationResponse {
+export interface UserRelation {
   /**
    * @format uuid
    * @minLength 1
@@ -3065,6 +3093,13 @@ export interface UserSearchCriteria {
   roles?: string[] | null;
 }
 
+export interface Verification {
+  requestId: string;
+  message?: string | null;
+  status?: string | null;
+  ssoUrls?: Record<string, string>;
+}
+
 export interface VerificationRequest {
   requestID?: string | null;
   loanID?: string | null;
@@ -3077,13 +3112,6 @@ export interface VerificationRequest {
   newRequest?: boolean | null;
   /** @format uuid */
   loanTaskID?: string | null;
-}
-
-export interface VerificationResponse {
-  requestId: string;
-  message?: string | null;
-  status?: string | null;
-  ssoUrls?: Record<string, string>;
 }
 
 export interface VerifyPasswordRequest {
@@ -3343,7 +3371,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     updateSiteConfigurationForAccount: (data: SiteConfiguration, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/account/site-configurations`,
         method: "PUT",
         body: data,
@@ -3445,7 +3473,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     updateLoansByAccount: (id: string, data: Loan[], params: RequestParams = {}) =>
-      this.request<void, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<void, ProblemDetails | UnprocessableEntity>({
         path: `/api/accounts/${id}/loan`,
         method: "PUT",
         body: data,
@@ -3482,7 +3510,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getTokenFromRefreshToken: (data: RefreshTokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
+      this.request<Token, UnprocessableEntity>({
         path: `/api/refresh-token`,
         method: "POST",
         body: data,
@@ -3502,7 +3530,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getToken: (data: TokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
+      this.request<Token, UnprocessableEntity>({
         path: `/api/token`,
         method: "POST",
         body: data,
@@ -3522,7 +3550,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getTokenFromChallengeCode: (data: TokenChallengeRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
+      this.request<Token, UnprocessableEntity>({
         path: `/api/token/code`,
         method: "POST",
         body: data,
@@ -3542,7 +3570,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getSystemToken: (data: SystemTokenRequest, params: RequestParams = {}) =>
-      this.request<TokenResponse, UnprocessableEntityResponse>({
+      this.request<Token, UnprocessableEntity>({
         path: `/api/oauth2/token`,
         method: "POST",
         body: data,
@@ -3562,7 +3590,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getSsoToken: (data: SSOTokenRequest, params: RequestParams = {}) =>
-      this.request<SSOTokenResponse, UnprocessableEntityResponse>({
+      this.request<SSOToken, UnprocessableEntity>({
         path: `/api/token/sso`,
         method: "POST",
         body: data,
@@ -3593,7 +3621,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetBranchPaginatedResponse, any>({
+      this.request<GetBranchPaginated, any>({
         path: `/api/branches`,
         method: "GET",
         query: query,
@@ -3612,7 +3640,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createBranch: (data: CreateBranchRequest, params: RequestParams = {}) =>
-      this.request<GetBranch, UnprocessableEntityResponse>({
+      this.request<GetBranch, UnprocessableEntity>({
         path: `/api/branches`,
         method: "POST",
         body: data,
@@ -3643,7 +3671,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetBranchPaginatedResponse, any>({
+      this.request<GetBranchPaginated, any>({
         path: `/api/branches/search`,
         method: "POST",
         query: query,
@@ -3682,7 +3710,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceBranch: (branchId: string, data: CreateBranchRequest, params: RequestParams = {}) =>
-      this.request<GetBranch, UnprocessableEntityResponse>({
+      this.request<GetBranch, UnprocessableEntity>({
         path: `/api/branches/${branchId}`,
         method: "PUT",
         body: data,
@@ -3736,7 +3764,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createBranchSiteConfiguration: (branchId: string, data: SiteConfigurationRequest, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/branches/${branchId}/site-configurations`,
         method: "POST",
         body: data,
@@ -3756,7 +3784,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationWithInheritedResponse, any>({
+      this.request<SiteConfigurationWithInherited, any>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -3782,7 +3810,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
         method: "PUT",
         query: query,
@@ -3845,7 +3873,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createBusinessRule: (data: BusinessRuleRequest, params: RequestParams = {}) =>
-      this.request<BusinessRule, UnprocessableEntityResponse>({
+      this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules`,
         method: "POST",
         body: data,
@@ -3883,7 +3911,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceBusinessRule: (id: string, data: BusinessRuleRequest, params: RequestParams = {}) =>
-      this.request<BusinessRule, UnprocessableEntityResponse>({
+      this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules/${id}`,
         method: "PUT",
         body: data,
@@ -3949,7 +3977,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<CorporateResponsePaginatedResponse, any>({
+      this.request<CorporatePaginated, any>({
         path: `/api/corporates`,
         method: "GET",
         query: query,
@@ -3968,7 +3996,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createCorporate: (data: CorporateRequest, params: RequestParams = {}) =>
-      this.request<CorporateResponse, UnprocessableEntityResponse>({
+      this.request<Corporate, UnprocessableEntity>({
         path: `/api/corporates`,
         method: "POST",
         body: data,
@@ -3999,7 +4027,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<CorporateResponsePaginatedResponse, any>({
+      this.request<CorporatePaginated, any>({
         path: `/api/corporates/search`,
         method: "POST",
         query: query,
@@ -4020,7 +4048,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getCorporate: (id: string, params: RequestParams = {}) =>
-      this.request<CorporateResponse, any>({
+      this.request<Corporate, any>({
         path: `/api/corporates/${id}`,
         method: "GET",
         secure: true,
@@ -4038,7 +4066,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceCorporate: (id: string, data: CorporateRequest, params: RequestParams = {}) =>
-      this.request<CorporateResponse, UnprocessableEntityResponse>({
+      this.request<Corporate, UnprocessableEntity>({
         path: `/api/corporates/${id}`,
         method: "PUT",
         body: data,
@@ -4096,7 +4124,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: SiteConfigurationRequest,
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/corporates/${corporateId}/site-configurations`,
         method: "POST",
         body: data,
@@ -4116,7 +4144,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationWithInheritedResponse, any>({
+      this.request<SiteConfigurationWithInherited, any>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -4142,7 +4170,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
         method: "PUT",
         query: query,
@@ -4211,7 +4239,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<DeviceResponsePaginatedResponse, any>({
+      this.request<DevicePaginated, any>({
         path: `/api/devices`,
         method: "GET",
         query: query,
@@ -4230,7 +4258,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getDevice: (id: string, params: RequestParams = {}) =>
-      this.request<DeviceResponse, any>({
+      this.request<Device, any>({
         path: `/api/devices/${id}`,
         method: "GET",
         secure: true,
@@ -4248,7 +4276,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     updateDevice: (id: string, data: DeviceRequest, params: RequestParams = {}) =>
-      this.request<DeviceResponse, any>({
+      this.request<Device, any>({
         path: `/api/devices/${id}`,
         method: "PUT",
         body: data,
@@ -4268,7 +4296,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getDeviceBySerialNumber: (sn: string, params: RequestParams = {}) =>
-      this.request<DeviceMDMResponse, any>({
+      this.request<DeviceMDM, any>({
         path: `/api/devices/${sn}/profile`,
         method: "GET",
         secure: true,
@@ -4286,7 +4314,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createDeviceActionBySerialNumber: (sn: string, actionName: string, params: RequestParams = {}) =>
-      this.request<ActionResponse, any>({
+      this.request<Action, any>({
         path: `/api/devices/${sn}/actions/${actionName}`,
         method: "POST",
         secure: true,
@@ -4334,7 +4362,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<DocumentTemplateBaseResponse[], any>({
+      this.request<DocumentTemplateBase[], any>({
         path: `/api/document-templates`,
         method: "GET",
         query: query,
@@ -4353,7 +4381,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createDocumentTemplate: (data: CreateDocumentTemplateRequest, params: RequestParams = {}) =>
-      this.request<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates`,
         method: "POST",
         body: data,
@@ -4382,7 +4410,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<DocumentTemplateBaseResponse[], any>({
+      this.request<DocumentTemplateBase[], any>({
         path: `/api/document-templates/${type}`,
         method: "GET",
         query: query,
@@ -4401,7 +4429,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getDocumentTemplate: (id: string, params: RequestParams = {}) =>
-      this.request<DocumentTemplateResponse, ProblemDetails>({
+      this.request<DocumentTemplate, ProblemDetails>({
         path: `/api/document-templates/${id}`,
         method: "GET",
         secure: true,
@@ -4419,7 +4447,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params: RequestParams = {}) =>
-      this.request<DocumentTemplateBaseResponse, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates/${id}`,
         method: "PUT",
         body: data,
@@ -4473,7 +4501,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getDocumentTemplateVersions: (documentId: string, params: RequestParams = {}) =>
-      this.request<DocumentTemplateVersionResponse[], any>({
+      this.request<DocumentTemplateVersion[], any>({
         path: `/api/document-templates/${documentId}/versions`,
         method: "GET",
         secure: true,
@@ -4495,7 +4523,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: DocumentTemplateVersionRequest,
       params: RequestParams = {},
     ) =>
-      this.request<DocumentTemplateVersionResponse, any>({
+      this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions`,
         method: "POST",
         body: data,
@@ -4515,7 +4543,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getDocumentTemplateVersion: (documentId: string, id: string, params: RequestParams = {}) =>
-      this.request<DocumentTemplateVersionResponse, any>({
+      this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
         method: "GET",
         secure: true,
@@ -4538,7 +4566,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: DocumentTemplateVersionUpdateRequest,
       params: RequestParams = {},
     ) =>
-      this.request<DocumentTemplateVersionResponse, any>({
+      this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
         method: "PUT",
         body: data,
@@ -4558,7 +4586,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     deleteDocumentTemplateVersion: (documentId: string, id: string, params: RequestParams = {}) =>
-      this.request<DocumentTemplateVersionResponse, any>({
+      this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
         method: "DELETE",
         secure: true,
@@ -4588,7 +4616,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<FilePaginatedResponse, any>({
+      this.request<FilePaginated, any>({
         path: `/api/files`,
         method: "GET",
         query: query,
@@ -4616,7 +4644,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<File, UnprocessableEntityResponse>({
+      this.request<File, UnprocessableEntity>({
         path: `/api/files`,
         method: "POST",
         body: data,
@@ -4654,7 +4682,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceFile: (id: string, data: FileRequest, params: RequestParams = {}) =>
-      this.request<string, UnprocessableEntityResponse>({
+      this.request<string, UnprocessableEntity>({
         path: `/api/files/${id}`,
         method: "PUT",
         body: data,
@@ -4702,7 +4730,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<FilePaginatedResponse, any>({
+      this.request<FilePaginated, any>({
         path: `/api/files/search`,
         method: "POST",
         query: query,
@@ -4747,7 +4775,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createForm: (data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntityResponse>({
+      this.request<AdminAccessGetForms, UnprocessableEntity>({
         path: `/api/forms`,
         method: "POST",
         body: data,
@@ -4785,7 +4813,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceForm: (id: string, data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntityResponse>({
+      this.request<AdminAccessGetForms, UnprocessableEntity>({
         path: `/api/forms/${id}`,
         method: "PUT",
         body: data,
@@ -4845,7 +4873,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: AddFormToSiteConfigurationRequest,
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfigurationForm, UnprocessableEntityResponse>({
+      this.request<SiteConfigurationForm, UnprocessableEntity>({
         path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`,
         method: "POST",
         body: data,
@@ -4883,7 +4911,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getSiteConfigurationsByForm: (formId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationReduced[], UnprocessableEntityResponse>({
+      this.request<SiteConfigurationReduced[], UnprocessableEntity>({
         path: `/api/forms/${formId}/site-configurations`,
         method: "GET",
         secure: true,
@@ -4909,7 +4937,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<FormSubmissionFileResponse, any>({
+      this.request<FormSubmissionFile, any>({
         path: `/api/form-submissions/${formSubmissionId}/files`,
         method: "POST",
         body: data,
@@ -4983,7 +5011,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<FormSubmissionPaginatedResponse, any>({
+      this.request<FormSubmissionPaginated, any>({
         path: `/api/form-submissions`,
         method: "GET",
         query: query,
@@ -5095,7 +5123,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<FormSubmissionPaginatedResponse, any>({
+      this.request<FormSubmissionPaginated, any>({
         path: `/api/form-submissions/search`,
         method: "POST",
         query: query,
@@ -5228,7 +5256,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     updateLoan: (loanId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
-      this.request<string, UnprocessableEntityResponse>({
+      this.request<string, UnprocessableEntity>({
         path: `/api/los/loan/application/${loanId}`,
         method: "PATCH",
         body: data,
@@ -5248,7 +5276,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoansReport: (data: GetReportRequest, params: RequestParams = {}) =>
-      this.request<GetReportResponse, any>({
+      this.request<GetReport, any>({
         path: `/api/los/loan/reports`,
         method: "POST",
         body: data,
@@ -5268,7 +5296,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createLoan: (data: any, params: RequestParams = {}) =>
-      this.request<string, UnprocessableEntityResponse>({
+      this.request<string, UnprocessableEntity>({
         path: `/api/los/loan/application`,
         method: "POST",
         body: data,
@@ -5375,7 +5403,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getPreliminaryConditionsForLoan: (loanId: string, params: RequestParams = {}) =>
-      this.request<PreliminaryConditionResponse[], any>({
+      this.request<PreliminaryCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/preliminary`,
         method: "GET",
         secure: true,
@@ -5393,7 +5421,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getUnderwritingConditionsForLoan: (loanId: string, params: RequestParams = {}) =>
-      this.request<UnderwritingConditionResponse[], any>({
+      this.request<UnderwritingCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/underwriting`,
         method: "GET",
         secure: true,
@@ -5596,7 +5624,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ListingPaginatedResponse, any>({
+      this.request<ListingPaginated, any>({
         path: `/api/listings`,
         method: "GET",
         query: query,
@@ -5719,7 +5747,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ListingPaginatedResponse, any>({
+      this.request<ListingPaginated, any>({
         path: `/api/listings/search`,
         method: "POST",
         query: query,
@@ -5802,7 +5830,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanCalculator: (loanId: string, params: RequestParams = {}) =>
-      this.request<RunLOCalculationResponse, any>({
+      this.request<RunLOCalculation, any>({
         path: `/api/loans/${loanId}/calculators/loan-calculator`,
         method: "GET",
         secure: true,
@@ -5820,7 +5848,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params: RequestParams = {}) =>
-      this.request<RunLOCalculationResponse, UnprocessableEntityResponse>({
+      this.request<RunLOCalculation, UnprocessableEntity>({
         path: `/api/loans/${loanId}/calculators/loan-calculator`,
         method: "POST",
         body: data,
@@ -5840,7 +5868,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanComparisons: (loanId: string, params: RequestParams = {}) =>
-      this.request<LoanComparisonResponse, any>({
+      this.request<LoanComparison, any>({
         path: `/api/loans/${loanId}/loan-comparison`,
         method: "GET",
         secure: true,
@@ -5858,7 +5886,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params: RequestParams = {}) =>
-      this.request<LoanComparisonScenario, UnprocessableEntityResponse>({
+      this.request<LoanComparisonScenario, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/${index}`,
         method: "POST",
         body: data,
@@ -5895,7 +5923,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/pdf`,
         method: "POST",
         body: data,
@@ -6006,7 +6034,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<LoanDocument, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<LoanDocument, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/documents`,
         method: "POST",
         body: data,
@@ -6026,7 +6054,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     retryFailedLoanDocument: (loanId: string, documentId: string, params: RequestParams = {}) =>
-      this.request<LoanDocument, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<LoanDocument, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/documents/${documentId}/retry`,
         method: "POST",
         secure: true,
@@ -6044,7 +6072,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createLoanDraft: (data: DraftRequest, params: RequestParams = {}) =>
-      this.request<DraftResponse, any>({
+      this.request<Draft, any>({
         path: `/api/loans/drafts`,
         method: "POST",
         body: data,
@@ -6064,62 +6092,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanDrafts: (params: RequestParams = {}) =>
-      this.request<DraftContentResponse[], any>({
+      this.request<DraftContent[], any>({
         path: `/api/loans/drafts`,
         method: "GET",
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LoanDrafts
-     * @name SearchLoanDrafts
-     * @summary Search
-     * @request POST:/api/loans/drafts/search
-     * @secure
-     */
-    searchLoanDrafts: (
-      data: LoanDraftSearchCriteria,
-      query?: {
-        /** @format int32 */
-        pageSize?: number;
-        /** @format int32 */
-        pageNumber?: number;
-        sortBy?: string;
-        sortDirection?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<DraftContentResponsePaginatedResponse, any>({
-        path: `/api/loans/drafts/search`,
-        method: "POST",
-        query: query,
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LoanDrafts
-     * @name ReplaceLoanDraft
-     * @summary Replace
-     * @request PUT:/api/loans/drafts/{draftId}
-     * @secure
-     */
-    replaceLoanDraft: (draftId: string, data: DraftRequest, params: RequestParams = {}) =>
-      this.request<DraftResponse, any>({
-        path: `/api/loans/drafts/${draftId}`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -6134,10 +6110,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanDraft: (draftId: string, params: RequestParams = {}) =>
-      this.request<DraftContentResponse, any>({
+      this.request<DraftContent, any>({
         path: `/api/loans/drafts/${draftId}`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDrafts
+     * @name ReplaceLoanDraft
+     * @summary Replace
+     * @request PUT:/api/loans/drafts/{draftId}
+     * @secure
+     */
+    replaceLoanDraft: (draftId: string, data: DraftRequest, params: RequestParams = {}) =>
+      this.request<Draft, any>({
+        path: `/api/loans/drafts/${draftId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -6162,6 +6158,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanDrafts
+     * @name SearchLoanDrafts
+     * @summary Search
+     * @request POST:/api/loans/drafts/search
+     * @secure
+     */
+    searchLoanDrafts: (
+      data: LoanDraftSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DraftContentPaginated, any>({
+        path: `/api/loans/drafts/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanOfficers
      * @name GetLoanOfficers
      * @summary Get All
@@ -6180,7 +6208,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<BranchUserPaginatedResponse, any>({
+      this.request<BranchUserPaginated, any>({
         path: `/api/loan-officers`,
         method: "GET",
         query: query,
@@ -6210,7 +6238,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<BranchUserPaginatedResponse, any>({
+      this.request<BranchUserPaginated, any>({
         path: `/api/loan-officers/search`,
         method: "POST",
         query: query,
@@ -6249,7 +6277,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanOfficerLoans: (params: RequestParams = {}) =>
-      this.request<GetApplicationsResponse, any>({
+      this.request<GetApplications, any>({
         path: `/api/loan-officers/applications`,
         method: "GET",
         secure: true,
@@ -6271,7 +6299,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: SiteConfigurationRequest,
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations`,
         method: "POST",
         body: data,
@@ -6291,7 +6319,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationWithInheritedResponse, any>({
+      this.request<SiteConfigurationWithInherited, any>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -6317,7 +6345,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
         method: "PUT",
         query: query,
@@ -6338,7 +6366,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoans: (params: RequestParams = {}) =>
-      this.request<GetApplicationsResponse, any>({
+      this.request<GetApplications, any>({
         path: `/api/loans`,
         method: "GET",
         secure: true,
@@ -6417,7 +6445,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ExtendedLoanResponsePaginatedResponse, any>({
+      this.request<ExtendedLoanPaginated, any>({
         path: `/api/loans/search`,
         method: "POST",
         query: query,
@@ -6466,7 +6494,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserLoanTask, ProblemDetails | UnprocessableEntityResponse>({
+      this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents`,
         method: "POST",
         body: data,
@@ -6486,7 +6514,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createLoanTaskDocumentBucket: (loanId: string, loanTaskId: string, params: RequestParams = {}) =>
-      this.request<UserLoanTask, UnprocessableEntityResponse>({
+      this.request<UserLoanTask, UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents/bucket`,
         method: "POST",
         secure: true,
@@ -6711,7 +6739,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getMilestones: (params: RequestParams = {}) =>
-      this.request<MilestoneConfigurationResponse[], any>({
+      this.request<MilestoneConfiguration[], any>({
         path: `/api/milestones`,
         method: "GET",
         secure: true,
@@ -6729,7 +6757,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createMilestone: (data: MilestoneConfigurationRequest, params: RequestParams = {}) =>
-      this.request<MilestoneConfigurationResponse, UnprocessableEntityResponse>({
+      this.request<MilestoneConfiguration, UnprocessableEntity>({
         path: `/api/milestones`,
         method: "POST",
         body: data,
@@ -6749,7 +6777,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getMilestone: (id: string, params: RequestParams = {}) =>
-      this.request<MilestoneConfigurationResponse, Error>({
+      this.request<MilestoneConfiguration, Error>({
         path: `/api/milestones/${id}`,
         method: "GET",
         secure: true,
@@ -6767,7 +6795,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params: RequestParams = {}) =>
-      this.request<MilestoneConfigurationResponse, Error | UnprocessableEntityResponse>({
+      this.request<MilestoneConfiguration, Error | UnprocessableEntity>({
         path: `/api/milestones/${id}`,
         method: "PUT",
         body: data,
@@ -6797,6 +6825,67 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags NotificationLogs
+     * @name GetNotificationLogs
+     * @summary Get All
+     * @request GET:/api/notifications/logs
+     * @secure
+     */
+    getNotificationLogs: (
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationLog[], any>({
+        path: `/api/notifications/logs`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags NotificationLogs
+     * @name SearchNotificationLog
+     * @summary Search
+     * @request POST:/api/notifications/logs/search
+     * @secure
+     */
+    searchNotificationLog: (
+      data: NotificationLogSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationLogPaginated, any>({
+        path: `/api/notifications/logs/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Notifications
      * @name SendNotificationForLoan
      * @summary Send Notification for Loan
@@ -6804,7 +6893,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     sendNotificationForLoan: (data: SendNotificationForLoanRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/notifications`,
         method: "POST",
         body: data,
@@ -6823,7 +6912,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     sendTestNotificationForLoan: (data: TestSendNotificationForLoanRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/notifications/test`,
         method: "POST",
         body: data,
@@ -6866,7 +6955,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createNotificationTemplate: (data: NotificationTemplateRequest, params: RequestParams = {}) =>
-      this.request<NotificationTemplate, UnprocessableEntityResponse>({
+      this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates`,
         method: "POST",
         body: data,
@@ -6904,7 +6993,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params: RequestParams = {}) =>
-      this.request<NotificationTemplate, UnprocessableEntityResponse>({
+      this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates/${id}`,
         method: "PUT",
         body: data,
@@ -7074,7 +7163,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<BranchUserPaginatedResponse, any>({
+      this.request<BranchUserPaginated, any>({
         path: `/api/partners`,
         method: "GET",
         query: query,
@@ -7104,7 +7193,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<BranchUserPaginatedResponse, any>({
+      this.request<BranchUserPaginated, any>({
         path: `/api/partners/search`,
         method: "POST",
         query: query,
@@ -7143,7 +7232,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createPartnerSiteConfiguration: (realtorId: string, data: SiteConfigurationRequest, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/partners/${realtorId}/site-configurations`,
         method: "POST",
         body: data,
@@ -7163,7 +7252,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationWithInheritedResponse, any>({
+      this.request<SiteConfigurationWithInherited, any>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
         secure: true,
@@ -7189,7 +7278,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
         method: "PUT",
         query: query,
@@ -7210,7 +7299,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getPricingCalculation: (data: GetPricingCalculationRequest, params: RequestParams = {}) =>
-      this.request<GetPricingForLoanOfficerResponse, UnprocessableEntityResponse>({
+      this.request<GetPricingForLoanOfficer, UnprocessableEntity>({
         path: `/api/pricing/calculator`,
         method: "POST",
         body: data,
@@ -7328,7 +7417,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params: RequestParams = {}) =>
-      this.request<SiteConfigurationByUrl, UnprocessableEntityResponse>({
+      this.request<SiteConfigurationByUrl, UnprocessableEntity>({
         path: `/api/site-configurations/url`,
         method: "POST",
         body: data,
@@ -7353,7 +7442,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfigurationByUrl, UnprocessableEntityResponse>({
+      this.request<SiteConfigurationByUrl, UnprocessableEntity>({
         path: `/api/site-configurations`,
         method: "GET",
         query: query,
@@ -7376,7 +7465,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: GetSiteConfigurationByLOUserIDRequest,
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/site-configurations/louser`,
         method: "POST",
         body: data,
@@ -7396,7 +7485,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getSiteConfigurationByLoanOfficerUser: (loUserId: string, params: RequestParams = {}) =>
-      this.request<SiteConfiguration, UnprocessableEntityResponse>({
+      this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/site-configurations/louser/${loUserId}`,
         method: "GET",
         secure: true,
@@ -7425,7 +7514,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<SiteConfigurationPaginatedResponse, UnprocessableEntityResponse>({
+      this.request<SiteConfigurationPaginated, UnprocessableEntity>({
         path: `/api/site-configurations/search`,
         method: "POST",
         query: query,
@@ -7545,7 +7634,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getSurveysByUser: (data: SurveyEmailRequest, params: RequestParams = {}) =>
-      this.request<SocialSurveyRecord[], UnprocessableEntityResponse>({
+      this.request<SocialSurveyRecord[], UnprocessableEntity>({
         path: `/api/surveys`,
         method: "POST",
         body: data,
@@ -7700,7 +7789,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     requestImpersonation: (data: RequestImpersonationRequest, params: RequestParams = {}) =>
-      this.request<void, Error | UnprocessableEntityResponse>({
+      this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/request`,
         method: "POST",
         body: data,
@@ -7719,7 +7808,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     allowImpersonation: (data: AllowImpersonationRequest, params: RequestParams = {}) =>
-      this.request<void, Error | UnprocessableEntityResponse>({
+      this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow`,
         method: "POST",
         body: data,
@@ -7738,7 +7827,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     allowImpersonationWithGuid: (allowToken: string, params: RequestParams = {}) =>
-      this.request<void, Error | UnprocessableEntityResponse>({
+      this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow/${allowToken}`,
         method: "POST",
         secure: true,
@@ -7755,7 +7844,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     beginImpersonation: (params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/impersonation`,
         method: "POST",
         secure: true,
@@ -7772,7 +7861,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     stopImpersonation: (params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/impersonation`,
         method: "DELETE",
         secure: true,
@@ -7789,7 +7878,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     forceImpersonation: (data: RequestImpersonationRequest, params: RequestParams = {}) =>
-      this.request<void, Error | UnprocessableEntityResponse>({
+      this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/force`,
         method: "POST",
         body: data,
@@ -7808,7 +7897,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     extendImpersonation: (params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/impersonation/extend`,
         method: "POST",
         secure: true,
@@ -7825,7 +7914,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     inviteUser: (data: CreateInviteRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/invites`,
         method: "POST",
         body: data,
@@ -7844,7 +7933,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     verifyUserInvite: (token: string, params: RequestParams = {}) =>
-      this.request<InviteResponse, UnprocessableEntityResponse>({
+      this.request<Invite, UnprocessableEntity>({
         path: `/api/users/invites/${token}/verify`,
         method: "GET",
         secure: true,
@@ -7862,7 +7951,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getUserRelations: (userId: string, params: RequestParams = {}) =>
-      this.request<UserRelationResponse[], any>({
+      this.request<UserRelation[], any>({
         path: `/api/users/${userId}/relations`,
         method: "GET",
         secure: true,
@@ -7899,7 +7988,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getUserRelation: (userId: string, id: string, params: RequestParams = {}) =>
-      this.request<UserRelationResponse, any>({
+      this.request<UserRelation, any>({
         path: `/api/users/${userId}/relations/${id}`,
         method: "GET",
         secure: true,
@@ -7963,7 +8052,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createUser: (data: CreateUserRequest, params: RequestParams = {}) =>
-      this.request<DetailedUser, UnprocessableEntityResponse>({
+      this.request<DetailedUser, UnprocessableEntity>({
         path: `/api/users`,
         method: "POST",
         body: data,
@@ -7994,7 +8083,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserPaginatedResponse, any>({
+      this.request<UserPaginated, any>({
         path: `/api/users/search`,
         method: "POST",
         query: query,
@@ -8035,7 +8124,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     signUp: (data: RegisterUserRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/register`,
         method: "POST",
         body: data,
@@ -8054,7 +8143,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceUser: (id: string, data: UpdateUserRequest, params: RequestParams = {}) =>
-      this.request<DetailedUser, UnprocessableEntityResponse>({
+      this.request<DetailedUser, UnprocessableEntity>({
         path: `/api/users/${id}`,
         method: "PUT",
         body: data,
@@ -8116,7 +8205,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     changePassword: (data: ChangePasswordRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/change-password`,
         method: "POST",
         body: data,
@@ -8135,7 +8224,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     verifyPassword: (data: VerifyPasswordRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/verify-password`,
         method: "POST",
         body: data,
@@ -8154,7 +8243,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     overridePassword: (id: string, data: OverridePasswordRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/${id}/override-password`,
         method: "POST",
         body: data,
@@ -8173,7 +8262,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     forgotPassword: (data: SendForgotPasswordRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/forgot-password`,
         method: "POST",
         body: data,
@@ -8192,7 +8281,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     sendMobilePhoneVerificationCode: (params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/mobile-phone/send-code`,
         method: "POST",
         secure: true,
@@ -8209,7 +8298,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntityResponse>({
+      this.request<void, UnprocessableEntity>({
         path: `/api/users/mobile-phone/verify-code`,
         method: "PUT",
         body: data,
@@ -8358,7 +8447,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     verify: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<VerificationResponse, UnprocessableEntityResponse>({
+      this.request<Verification, UnprocessableEntity>({
         path: `/api/verifications/verify`,
         method: "POST",
         body: data,
@@ -8378,7 +8467,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getVerificationStatus: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<VerificationResponse, UnprocessableEntityResponse>({
+      this.request<Verification, UnprocessableEntity>({
         path: `/api/verifications/status`,
         method: "POST",
         body: data,
@@ -8398,7 +8487,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getVerificationFrontEndMaterials: (requestId: string, params: RequestParams = {}) =>
-      this.request<VerificationResponse, UnprocessableEntityResponse>({
+      this.request<Verification, UnprocessableEntity>({
         path: `/api/verifications/frontend-materials/${requestId}`,
         method: "GET",
         secure: true,
