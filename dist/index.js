@@ -1445,12 +1445,12 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanDrafts
-             * @name SearchLoanDrafts
-             * @summary Search
-             * @request POST:/api/loans/drafts/search
+             * @name GetLoanDraft
+             * @summary Get by ID
+             * @request GET:/api/loans/drafts/{draftId}
              * @secure
              */
-            searchLoanDrafts: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            getLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1465,22 +1465,22 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanDrafts
-             * @name GetLoanDraft
-             * @summary Get by ID
-             * @request GET:/api/loans/drafts/{draftId}
-             * @secure
-             */
-            getLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanDrafts
              * @name DeleteLoanDraft
              * @summary Delete
              * @request DELETE:/api/loans/drafts/{draftId}
              * @secure
              */
             deleteLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name SearchLoanDrafts
+             * @summary Search
+             * @request POST:/api/loans/drafts/search
+             * @secure
+             */
+            searchLoanDrafts: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1781,6 +1781,26 @@ export class Api extends HttpClient {
              * @secure
              */
             deleteMilestone: (id, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationLogs
+             * @name GetNotificationLogs
+             * @summary Get All
+             * @request GET:/api/notifications/logs
+             * @secure
+             */
+            getNotificationLogs: (query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationLogs
+             * @name SearchNotificationLog
+             * @summary Search
+             * @request POST:/api/notifications/logs/search
+             * @secure
+             */
+            searchNotificationLog: (data, query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
