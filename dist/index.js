@@ -1554,6 +1554,46 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanQueue
+             * @name SearchLoanQueue
+             * @summary Search
+             * @request POST:/api/loans/queue/search
+             * @secure
+             */
+            searchLoanQueue: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name GetLoanQueueData
+             * @summary Get Data
+             * @request GET:/api/loans/queue/{loanQueueId}/data
+             * @secure
+             */
+            getLoanQueueData: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name UpdateLoanQueueData
+             * @summary Update Data
+             * @request PUT:/api/loans/queue/{loanQueueId}/data
+             * @secure
+             */
+            updateLoanQueueData: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name RetryLoanQueue
+             * @summary Retry
+             * @request POST:/api/loans/queue/{loanQueueId}/retry
+             * @secure
+             */
+            retryLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/retry`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags Loans
              * @name GetLoans
              * @summary Get Loans

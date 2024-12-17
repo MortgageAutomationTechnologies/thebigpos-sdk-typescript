@@ -255,7 +255,7 @@ export interface BranchUserPaginated {
 }
 export interface BusinessRule {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -688,6 +688,8 @@ export interface Draft {
     id: string;
     customData: any;
     user: UserBase;
+    loanOfficer: UserBase;
+    siteConfiguration: SiteConfigurationReduced;
 }
 export interface DraftContent {
     /** @format date-time */
@@ -700,6 +702,8 @@ export interface DraftContent {
     id: string;
     customData: any;
     user: UserBase;
+    loanOfficer: UserBase;
+    siteConfiguration: SiteConfigurationReduced;
     applicationPayload: any;
 }
 export interface DraftContentPaginated {
@@ -711,6 +715,8 @@ export interface DraftContentPaginated {
 export interface DraftRequest {
     applicationPayload: any;
     customData?: any;
+    /** @format uuid */
+    loanOfficerID?: string | null;
 }
 export interface EConsentInformation {
     status: string;
@@ -1168,6 +1174,7 @@ export interface LOSSettingsUpdateRequest {
     customEConsentBucketTitle?: string | null;
     loanMilestoneNotificationsEnabled: boolean;
 }
+export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently";
 export interface Listing {
     /** @format date-time */
     createdAt: string;
@@ -1362,6 +1369,9 @@ export interface LoanDraftSearchCriteria {
     searchText?: string | null;
     /** @format uuid */
     loanOfficerId?: string | null;
+    /** @format uuid */
+    siteConfigurationId?: string | null;
+    isUnassigned?: boolean | null;
 }
 export interface LoanLog {
     /** @format uuid */
@@ -1382,6 +1392,15 @@ export interface LoanOfficer {
     profilePhotoUrl: string;
     siteConfiguration: SiteConfiguration;
 }
+export interface LoanOfficerPublic {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string | null;
+    /** @format uuid */
+    corporateID?: string | null;
+    siteConfigurationIDs: string[];
+}
 export interface LoanOfficerSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
@@ -1390,6 +1409,40 @@ export interface LoanOfficerSearchCriteria {
     /** @format uuid */
     brand?: string | null;
 }
+export interface LoanQueue {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    loanID?: string | null;
+    type: string;
+    reason: string;
+    status: string;
+    details?: string | null;
+    user: UserPublic;
+    loanOfficer: LoanOfficerPublic;
+    siteConfiguration: SiteConfigurationReduced;
+}
+export interface LoanQueuePaginated {
+    rows: LoanQueue[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
+export interface LoanQueueSearchCriteria {
+    searchText?: string | null;
+    loanID?: string | null;
+    isActive?: boolean | null;
+    type: LoanQueueType;
+    status: LOSStatus;
+    reason: LoanQueueReason;
+}
+export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "Document";
 export interface LoanRecord {
     loanGuid: string;
     loanFields: Record<string, string>;
@@ -1701,15 +1754,6 @@ export interface ProblemDetails {
     detail?: string | null;
     instance?: string | null;
     [key: string]: any;
-}
-export interface PublicLoanOfficer {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string | null;
-    /** @format uuid */
-    corporateID?: string | null;
-    siteConfigurationIDs: string[];
 }
 export interface RefreshTokenRequest {
     /** @minLength 1 */
@@ -3250,7 +3294,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/branches/{branchId}/loan-officers
          * @secure
          */
-        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any>>;
         /**
          * No description
          *
@@ -3449,7 +3493,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{id}/loan-officers
          * @secure
          */
-        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any>>;
         /**
          * No description
          *
@@ -4584,6 +4628,53 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         replaceLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name SearchLoanQueue
+         * @summary Search
+         * @request POST:/api/loans/queue/search
+         * @secure
+         */
+        searchLoanQueue: (data: LoanQueueSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanQueuePaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name GetLoanQueueData
+         * @summary Get Data
+         * @request GET:/api/loans/queue/{loanQueueId}/data
+         * @secure
+         */
+        getLoanQueueData: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name UpdateLoanQueueData
+         * @summary Update Data
+         * @request PUT:/api/loans/queue/{loanQueueId}/data
+         * @secure
+         */
+        updateLoanQueueData: (loanQueueId: string, data: any, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name RetryLoanQueue
+         * @summary Retry
+         * @request POST:/api/loans/queue/{loanQueueId}/retry
+         * @secure
+         */
+        retryLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
