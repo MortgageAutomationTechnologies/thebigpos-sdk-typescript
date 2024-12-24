@@ -312,7 +312,7 @@ export interface BusinessRuleRequest {
    */
   name: string;
   description?: string | null;
-  tasks: TaskRequest[];
+  tasks: TaskUpdateRequest[];
   filter: BusinessRuleCondition[];
   applyToAllBorrowerPairs: boolean;
 }
@@ -2709,6 +2709,13 @@ export interface Task {
   hasAutoPropagationOnAdd: boolean;
 }
 
+export interface TaskPaginated {
+  rows: Task[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface TaskRequest {
   /** @minLength 1 */
   name: string;
@@ -2731,6 +2738,25 @@ export interface TaskSearchCriteria {
   isBusinessRule?: boolean | null;
   isGlobal?: boolean | null;
   excludedIds?: string[] | null;
+}
+
+export interface TaskUpdateRequest {
+  /** @minLength 1 */
+  name: string;
+  description?: string | null;
+  losTarget?: string | null;
+  type: string;
+  targetUserRole?: string | null;
+  /**
+   * @format int32
+   * @min 0
+   */
+  daysDueFromApplication?: number | null;
+  isGlobal: boolean;
+  willAutocompleteAfterResponse: boolean;
+  hasAutoPropagationOnAdd: boolean;
+  /** @format uuid */
+  id: string;
 }
 
 export interface TestSendNotificationForLoanRequest {
@@ -3283,7 +3309,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.12.0
+ * @version v2.12.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -6568,7 +6594,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanTaskDifference: (loanId: string, params: RequestParams = {}) =>
-      this.request<UserLoanTask, ProblemDetails>({
+      this.request<UserLoanTask[], ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/diff`,
         method: "GET",
         secure: true,
@@ -7768,7 +7794,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<Task[], any>({
+      this.request<TaskPaginated, any>({
         path: `/api/tasks/search`,
         method: "POST",
         query: query,
