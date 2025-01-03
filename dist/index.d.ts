@@ -84,6 +84,30 @@ export interface AddressRequest {
     /** @minLength 1 */
     postalCode: string;
 }
+export interface AdminAccessGetForm {
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    formJSON: any;
+    /** @format int32 */
+    type: number;
+    target: string;
+    authType: string;
+    name: string;
+    isDefault: boolean;
+    description?: string | null;
+    slug?: string | null;
+    status: string;
+    language?: string | null;
+    showProgressBar: boolean;
+    borrowerType?: BorrowerType | null;
+    versions: FormVersion[];
+}
 export interface AdminAccessGetForms {
     /** @format date-time */
     createdAt?: string | null;
@@ -128,6 +152,7 @@ export interface AdminAccessUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
     /** @format uuid */
     accountID?: string | null;
     loans: UserLoan[];
@@ -239,6 +264,7 @@ export interface BranchUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
     /** @format uuid */
     branchID: string;
     branchName: string;
@@ -503,6 +529,7 @@ export interface DetailedUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
 }
 export interface Device {
     /** @format uuid */
@@ -1437,12 +1464,30 @@ export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 export interface LoanQueueSearchCriteria {
     searchText?: string | null;
     loanID?: string | null;
-    isActive?: boolean | null;
     type?: LoanQueueType | null;
     status?: LOSStatus | null;
     reason?: LoanQueueReason | null;
 }
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "Document";
+export interface LoanQueueWithData {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    loanID?: string | null;
+    type: string;
+    reason: string;
+    status: string;
+    details?: string | null;
+    user: UserPublic;
+    loanOfficer: LoanOfficerPublic;
+    siteConfiguration: SiteConfigurationReduced;
+    data: any;
+}
 export interface LoanRecord {
     loanGuid: string;
     loanFields: Record<string, string>;
@@ -1632,6 +1677,7 @@ export interface NotificationTemplateVersionRequest {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
+    textBody: string;
 }
 export interface NotificationTemplateVersionUpdateRequest {
     /**
@@ -1644,6 +1690,8 @@ export interface NotificationTemplateVersionUpdateRequest {
     htmlBody: string;
     /** @minLength 1 */
     plainBody: string;
+    /** @minLength 1 */
+    textBody: string;
 }
 export interface Operation {
     op?: string;
@@ -2728,6 +2776,9 @@ export interface UpdateListingPhotoRequest {
     /** @format int32 */
     weight: number;
 }
+export interface UpdateLoanQueueRequest {
+    data: any;
+}
 export interface UpdateMeRequest {
     phone?: string | null;
     /**
@@ -2743,6 +2794,7 @@ export interface UpdateMeRequest {
     title?: string | null;
     forcePasswordReset: boolean;
     mfaEnabled: boolean;
+    notificationSettings: UserNotificationSettingsUpdateRequest;
 }
 export interface UpdateMobilePhoneRequest {
     phone: string;
@@ -2836,6 +2888,14 @@ export interface UserLoanTaskUpdateRequest {
 export interface UserMobilePhoneVerificationRequest {
     /** @minLength 1 */
     code: string;
+}
+export interface UserNotificationSettings {
+    emailEnabled: boolean;
+    textEnabled?: boolean | null;
+}
+export interface UserNotificationSettingsUpdateRequest {
+    emailEnabled: boolean;
+    textEnabled?: boolean | null;
 }
 export interface UserPaginated {
     rows: User[];
@@ -3799,7 +3859,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms
          * @secure
          */
-        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3809,7 +3869,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{id}
          * @secure
          */
-        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3819,7 +3879,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/forms/{id}
          * @secure
          */
-        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3839,7 +3899,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms/{id}/restore
          * @secure
          */
-        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -4652,22 +4712,22 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanQueue
-         * @name GetLoanQueueData
-         * @summary Get Data
-         * @request GET:/api/loans/queue/{loanQueueId}/data
+         * @name GetLoanQueue
+         * @summary Get Loan Queue Record
+         * @request GET:/api/loans/queue/{loanQueueId}
          * @secure
          */
-        getLoanQueueData: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
+        getLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
         /**
          * No description
          *
          * @tags LoanQueue
-         * @name UpdateLoanQueueData
-         * @summary Update Data
-         * @request PUT:/api/loans/queue/{loanQueueId}/data
+         * @name ReplaceLoanQueue
+         * @summary Replace Loan Queue Record
+         * @request PUT:/api/loans/queue/{loanQueueId}
          * @secure
          */
-        updateLoanQueueData: (loanQueueId: string, data: any, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params?: RequestParams) => Promise<AxiosResponse<LoanQueueWithData, any>>;
         /**
          * No description
          *
@@ -5070,7 +5130,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getPartners: (query?: {
             showAll?: boolean;
-            /** @default 4 */
+            /** @default "Realtor" */
             role?: "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
             /** @format int32 */
             pageSize?: number;

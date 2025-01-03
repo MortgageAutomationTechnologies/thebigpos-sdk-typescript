@@ -1565,22 +1565,22 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanQueue
-             * @name GetLoanQueueData
-             * @summary Get Data
-             * @request GET:/api/loans/queue/{loanQueueId}/data
+             * @name GetLoanQueue
+             * @summary Get Loan Queue Record
+             * @request GET:/api/loans/queue/{loanQueueId}
              * @secure
              */
-            getLoanQueueData: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "GET", secure: true, format: "json" }, params)),
+            getLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanQueue
-             * @name UpdateLoanQueueData
-             * @summary Update Data
-             * @request PUT:/api/loans/queue/{loanQueueId}/data
+             * @name ReplaceLoanQueue
+             * @summary Replace Loan Queue Record
+             * @request PUT:/api/loans/queue/{loanQueueId}
              * @secure
              */
-            updateLoanQueueData: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            replaceLoanQueue: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
