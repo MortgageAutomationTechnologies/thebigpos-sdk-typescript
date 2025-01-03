@@ -101,6 +101,31 @@ export interface AddressRequest {
   postalCode: string;
 }
 
+export interface AdminAccessGetForm {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  formJSON: any;
+  /** @format int32 */
+  type: number;
+  target: string;
+  authType: string;
+  name: string;
+  isDefault: boolean;
+  description?: string | null;
+  slug?: string | null;
+  status: string;
+  language?: string | null;
+  showProgressBar: boolean;
+  borrowerType?: BorrowerType | null;
+  versions: FormVersion[];
+}
+
 export interface AdminAccessGetForms {
   /** @format date-time */
   createdAt?: string | null;
@@ -146,6 +171,7 @@ export interface AdminAccessUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
   /** @format uuid */
   accountID?: string | null;
   loans: UserLoan[];
@@ -266,6 +292,7 @@ export interface BranchUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
   /** @format uuid */
   branchID: string;
   branchName: string;
@@ -554,6 +581,7 @@ export interface DetailedUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
 }
 
 export interface Device {
@@ -1593,13 +1621,32 @@ export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 export interface LoanQueueSearchCriteria {
   searchText?: string | null;
   loanID?: string | null;
-  isActive?: boolean | null;
   type?: LoanQueueType | null;
   status?: LOSStatus | null;
   reason?: LoanQueueReason | null;
 }
 
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "Document";
+
+export interface LoanQueueWithData {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  loanID?: string | null;
+  type: string;
+  reason: string;
+  status: string;
+  details?: string | null;
+  user: UserPublic;
+  loanOfficer: LoanOfficerPublic;
+  siteConfiguration: SiteConfigurationReduced;
+  data: any;
+}
 
 export interface LoanRecord {
   loanGuid: string;
@@ -1803,6 +1850,7 @@ export interface NotificationTemplateVersionRequest {
   isActive: boolean;
   htmlBody: string;
   plainBody: string;
+  textBody: string;
 }
 
 export interface NotificationTemplateVersionUpdateRequest {
@@ -1816,6 +1864,8 @@ export interface NotificationTemplateVersionUpdateRequest {
   htmlBody: string;
   /** @minLength 1 */
   plainBody: string;
+  /** @minLength 1 */
+  textBody: string;
 }
 
 export interface Operation {
@@ -2947,6 +2997,10 @@ export interface UpdateListingPhotoRequest {
   weight: number;
 }
 
+export interface UpdateLoanQueueRequest {
+  data: any;
+}
+
 export interface UpdateMeRequest {
   phone?: string | null;
   /**
@@ -2962,6 +3016,7 @@ export interface UpdateMeRequest {
   title?: string | null;
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
+  notificationSettings: UserNotificationSettingsUpdateRequest;
 }
 
 export interface UpdateMobilePhoneRequest {
@@ -3065,6 +3120,16 @@ export interface UserLoanTaskUpdateRequest {
 export interface UserMobilePhoneVerificationRequest {
   /** @minLength 1 */
   code: string;
+}
+
+export interface UserNotificationSettings {
+  emailEnabled: boolean;
+  textEnabled?: boolean | null;
+}
+
+export interface UserNotificationSettingsUpdateRequest {
+  emailEnabled: boolean;
+  textEnabled?: boolean | null;
 }
 
 export interface UserPaginated {
@@ -4839,7 +4904,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createForm: (data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntity>({
+      this.request<AdminAccessGetForm, UnprocessableEntity>({
         path: `/api/forms`,
         method: "POST",
         body: data,
@@ -4859,7 +4924,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
+      this.request<AdminAccessGetForm, any>({
         path: `/api/forms/${id}`,
         method: "GET",
         secure: true,
@@ -4877,7 +4942,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceForm: (id: string, data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntity>({
+      this.request<AdminAccessGetForm, UnprocessableEntity>({
         path: `/api/forms/${id}`,
         method: "PUT",
         body: data,
@@ -4914,7 +4979,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     restoreForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
+      this.request<AdminAccessGetForm, any>({
         path: `/api/forms/${id}/restore`,
         method: "POST",
         secure: true,
@@ -6456,14 +6521,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanQueue
-     * @name GetLoanQueueData
-     * @summary Get Data
-     * @request GET:/api/loans/queue/{loanQueueId}/data
+     * @name GetLoanQueue
+     * @summary Get Loan Queue Record
+     * @request GET:/api/loans/queue/{loanQueueId}
      * @secure
      */
-    getLoanQueueData: (loanQueueId: string, params: RequestParams = {}) =>
+    getLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
       this.request<any, any>({
-        path: `/api/loans/queue/${loanQueueId}/data`,
+        path: `/api/loans/queue/${loanQueueId}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -6474,18 +6539,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanQueue
-     * @name UpdateLoanQueueData
-     * @summary Update Data
-     * @request PUT:/api/loans/queue/{loanQueueId}/data
+     * @name ReplaceLoanQueue
+     * @summary Replace Loan Queue Record
+     * @request PUT:/api/loans/queue/{loanQueueId}
      * @secure
      */
-    updateLoanQueueData: (loanQueueId: string, data: any, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/loans/queue/${loanQueueId}/data`,
+    replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params: RequestParams = {}) =>
+      this.request<LoanQueueWithData, any>({
+        path: `/api/loans/queue/${loanQueueId}`,
         method: "PUT",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -7242,7 +7308,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getPartners: (
       query?: {
         showAll?: boolean;
-        /** @default 4 */
+        /** @default "Realtor" */
         role?:
           | "Borrower"
           | "LoanOfficer"
