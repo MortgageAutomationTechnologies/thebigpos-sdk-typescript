@@ -1644,6 +1644,56 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanTaskComments
+             * @name SearchLoanTaskComments
+             * @summary Search
+             * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments/search
+             * @secure
+             */
+            searchLoanTaskComments: (loanId, taskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name GetLoanTaskComment
+             * @summary Get by ID
+             * @request GET:/api/loans/{loanId}/tasks/{taskId}/comments/{id}
+             * @secure
+             */
+            getLoanTaskComment: (id, loanId, taskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name CreateLoanTaskComment
+             * @summary Create
+             * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments
+             * @secure
+             */
+            createLoanTaskComment: (loanId, taskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name ReplaceLoanTaskComment
+             * @summary Replace
+             * @request PUT:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+             * @secure
+             */
+            replaceLoanTaskComment: (loanId, taskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name DeleteLoanTaskComment
+             * @summary Delete
+             * @request DELETE:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+             * @secure
+             */
+            deleteLoanTaskComment: (loanId, taskId, commentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags LoanTaskDocuments
              * @name CreateLoanTaskDocument
              * @summary Create
@@ -2054,16 +2104,6 @@ export class Api extends HttpClient {
              * @secure
              */
             deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}`, method: "DELETE", secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags SelfProvisioning
-             * @name CreateSelfProvisioningItem
-             * @summary Create
-             * @request POST:/api/selfprovisioning/newcustomer
-             * @secure
-             */
-            createSelfProvisioningItem: (data, params = {}) => this.request(Object.assign({ path: `/api/selfprovisioning/newcustomer`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *

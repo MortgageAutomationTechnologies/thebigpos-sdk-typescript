@@ -17,7 +17,7 @@ export interface ASOSettings {
     preApproval: boolean;
     preQualification: boolean;
     mi: boolean;
-    miRadiam: boolean;
+    miRadian: boolean;
     miEssent: boolean;
     miNational: boolean;
     miEnact: boolean;
@@ -1468,7 +1468,7 @@ export interface LoanQueueSearchCriteria {
     status?: LOSStatus | null;
     reason?: LoanQueueReason | null;
 }
-export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "Document";
+export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 export interface LoanQueueWithData {
     /** @format date-time */
     createdAt: string;
@@ -2590,6 +2590,28 @@ export interface Task {
     usedInBusinessRule: boolean;
     willAutocompleteAfterResponse: boolean;
     hasAutoPropagationOnAdd: boolean;
+    /** @format int32 */
+    commentsCount: number;
+}
+export interface TaskComment {
+    /** @format uuid */
+    id: string;
+    comment: string;
+    createdBy: UserBase;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface TaskCommentPaginated {
+    rows: TaskComment[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface TaskCommentRequest {
+    comment: string;
+}
+export interface TaskCommentSearchCriteria {
+    searchText?: string | null;
 }
 export interface TaskPaginated {
     rows: Task[];
@@ -2872,6 +2894,8 @@ export interface UserLoanTask {
     createdBy: User;
     submittedBy?: User | null;
     completedBy?: User | null;
+    /** @format int32 */
+    commentsCount: number;
 }
 export interface UserLoanTaskRequest {
     value?: string | null;
@@ -4805,6 +4829,63 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanTaskComments
+         * @name SearchLoanTaskComments
+         * @summary Search
+         * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments/search
+         * @secure
+         */
+        searchLoanTaskComments: (loanId: string, taskId: string, data: TaskCommentSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<TaskCommentPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name GetLoanTaskComment
+         * @summary Get by ID
+         * @request GET:/api/loans/{loanId}/tasks/{taskId}/comments/{id}
+         * @secure
+         */
+        getLoanTaskComment: (id: string, loanId: string, taskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name CreateLoanTaskComment
+         * @summary Create
+         * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments
+         * @secure
+         */
+        createLoanTaskComment: (loanId: string, taskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name ReplaceLoanTaskComment
+         * @summary Replace
+         * @request PUT:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+         * @secure
+         */
+        replaceLoanTaskComment: (loanId: string, taskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name DeleteLoanTaskComment
+         * @summary Delete
+         * @request DELETE:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+         * @secure
+         */
+        deleteLoanTaskComment: (loanId: string, taskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
          * @tags LoanTaskDocuments
          * @name CreateLoanTaskDocument
          * @summary Create
@@ -5244,16 +5325,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         deleteQueueRequest: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
-        /**
-         * No description
-         *
-         * @tags SelfProvisioning
-         * @name CreateSelfProvisioningItem
-         * @summary Create
-         * @request POST:/api/selfprovisioning/newcustomer
-         * @secure
-         */
-        createSelfProvisioningItem: (data: any, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
