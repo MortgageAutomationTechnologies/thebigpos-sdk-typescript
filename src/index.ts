@@ -808,11 +808,14 @@ export interface DraftContentPaginated {
   count: number;
 }
 
+export interface DraftLoanOfficerReassignRequest {
+  /** @format uuid */
+  loanOfficerID: string;
+}
+
 export interface DraftRequest {
   applicationPayload: any;
   customData?: any;
-  /** @format uuid */
-  loanOfficerID?: string | null;
 }
 
 export interface EConsentInformation {
@@ -2060,6 +2063,7 @@ export interface RunLOCalculation {
   canGeneratePreQual: boolean;
   canGeneratePreApproval: boolean;
   preApprovalNotes?: string | null;
+  additionalPreApprovalNotes?: string | null;
   downPaymentAmount?: string | null;
   downPaymentPercent?: string | null;
   lienType?: string | null;
@@ -2096,6 +2100,7 @@ export interface RunLOCalculationRequest {
   /** @minLength 1 */
   lienType: string;
   preApprovalNotes?: string | null;
+  additionalPreApprovalNotes?: string | null;
 }
 
 export interface SSOToken {
@@ -3152,7 +3157,8 @@ export interface UserMobilePhoneVerificationRequest {
 
 export interface UserNotificationSettings {
   emailEnabled: boolean;
-  textEnabled?: boolean | null;
+  textEnabled: boolean;
+  textOptIn?: boolean | null;
 }
 
 export interface UserNotificationSettingsUpdateRequest {
@@ -6337,6 +6343,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/loans/drafts/search`,
         method: "POST",
         query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDrafts
+     * @name ReassignLoanOfficer
+     * @summary Reassign Loan officer
+     * @request PUT:/api/loans/drafts/{draftId}/reassign
+     * @secure
+     */
+    reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params: RequestParams = {}) =>
+      this.request<Draft, any>({
+        path: `/api/loans/drafts/${draftId}/reassign`,
+        method: "PUT",
         body: data,
         secure: true,
         type: ContentType.Json,
