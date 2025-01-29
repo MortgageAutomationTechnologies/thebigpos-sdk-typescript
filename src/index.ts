@@ -28,7 +28,7 @@ export interface ASOSettings {
   preApproval: boolean;
   preQualification: boolean;
   mi: boolean;
-  miRadiam: boolean;
+  miRadian: boolean;
   miEssent: boolean;
   miNational: boolean;
   miEnact: boolean;
@@ -101,6 +101,31 @@ export interface AddressRequest {
   postalCode: string;
 }
 
+export interface AdminAccessGetForm {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  formJSON: any;
+  /** @format int32 */
+  type: number;
+  target: string;
+  authType: string;
+  name: string;
+  isDefault: boolean;
+  description?: string | null;
+  slug?: string | null;
+  status: string;
+  language?: string | null;
+  showProgressBar: boolean;
+  borrowerType?: BorrowerType | null;
+  versions: FormVersion[];
+}
+
 export interface AdminAccessGetForms {
   /** @format date-time */
   createdAt?: string | null;
@@ -167,6 +192,8 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
+  buyerAgent?: LoanContact | null;
+  titleInsuranceAgent?: LoanContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -212,11 +239,9 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent?: LoanContact | null;
   sellerAgent?: LoanContact | null;
   settlementAgent?: LoanContact | null;
   escrowAgent?: LoanContact | null;
-  titleInsuranceAgent?: LoanContact | null;
 }
 
 export interface Attachment {
@@ -780,11 +805,14 @@ export interface DraftContentPaginated {
   count: number;
 }
 
+export interface DraftLoanOfficerReassignRequest {
+  /** @format uuid */
+  loanOfficerID: string;
+}
+
 export interface DraftRequest {
   applicationPayload: any;
   customData?: any;
-  /** @format uuid */
-  loanOfficerID?: string | null;
 }
 
 export interface EConsentInformation {
@@ -1593,13 +1621,32 @@ export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 export interface LoanQueueSearchCriteria {
   searchText?: string | null;
   loanID?: string | null;
-  isActive?: boolean | null;
   type?: LoanQueueType | null;
   status?: LOSStatus | null;
   reason?: LoanQueueReason | null;
 }
 
-export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "Document";
+export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
+
+export interface LoanQueueWithData {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  loanID?: string | null;
+  type: string;
+  reason: string;
+  status: string;
+  details?: string | null;
+  user: UserPublic;
+  loanOfficer: LoanOfficerPublic;
+  siteConfiguration: SiteConfigurationReduced;
+  data: any;
+}
 
 export interface LoanRecord {
   loanGuid: string;
@@ -2037,6 +2084,7 @@ export interface RunLOCalculation {
   canGeneratePreQual: boolean;
   canGeneratePreApproval: boolean;
   preApprovalNotes?: string | null;
+  additionalPreApprovalNotes?: string | null;
   downPaymentAmount?: string | null;
   downPaymentPercent?: string | null;
   lienType?: string | null;
@@ -2073,6 +2121,7 @@ export interface RunLOCalculationRequest {
   /** @minLength 1 */
   lienType: string;
   preApprovalNotes?: string | null;
+  additionalPreApprovalNotes?: string | null;
 }
 
 export interface SSOToken {
@@ -2772,6 +2821,30 @@ export interface Task {
   hasAutoPropagationOnAdd: boolean;
 }
 
+export interface TaskComment {
+  /** @format uuid */
+  id: string;
+  comment: string;
+  createdBy: UserBase;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface TaskCommentPaginated {
+  rows: TaskComment[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface TaskCommentRequest {
+  comment: string;
+}
+
+export interface TaskCommentSearchCriteria {
+  searchText?: string | null;
+}
+
 export interface TaskPaginated {
   rows: Task[];
   pagination: Pagination;
@@ -2972,6 +3045,10 @@ export interface UpdateListingPhotoRequest {
   weight: number;
 }
 
+export interface UpdateLoanQueueRequest {
+  data: any;
+}
+
 export interface UpdateMeRequest {
   phone?: string | null;
   /**
@@ -3071,6 +3148,8 @@ export interface UserLoanTask {
   createdBy: User;
   submittedBy?: User | null;
   completedBy?: User | null;
+  /** @format int32 */
+  commentsCount: number;
 }
 
 export interface UserLoanTaskRequest {
@@ -4864,7 +4943,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createForm: (data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntity>({
+      this.request<AdminAccessGetForm, UnprocessableEntity>({
         path: `/api/forms`,
         method: "POST",
         body: data,
@@ -4884,7 +4963,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
+      this.request<AdminAccessGetForm, any>({
         path: `/api/forms/${id}`,
         method: "GET",
         secure: true,
@@ -4902,7 +4981,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceForm: (id: string, data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, UnprocessableEntity>({
+      this.request<AdminAccessGetForm, UnprocessableEntity>({
         path: `/api/forms/${id}`,
         method: "PUT",
         body: data,
@@ -4939,7 +5018,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     restoreForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
+      this.request<AdminAccessGetForm, any>({
         path: `/api/forms/${id}/restore`,
         method: "POST",
         secure: true,
@@ -6279,6 +6358,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanDrafts
+     * @name ReassignLoanOfficer
+     * @summary Reassign Loan officer
+     * @request PUT:/api/loans/drafts/{draftId}/reassign
+     * @secure
+     */
+    reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params: RequestParams = {}) =>
+      this.request<Draft, any>({
+        path: `/api/loans/drafts/${draftId}/reassign`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanOfficers
      * @name GetLoanOfficers
      * @summary Get All
@@ -6481,14 +6580,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanQueue
-     * @name GetLoanQueueData
-     * @summary Get Data
-     * @request GET:/api/loans/queue/{loanQueueId}/data
+     * @name GetLoanQueue
+     * @summary Get Loan Queue Record
+     * @request GET:/api/loans/queue/{loanQueueId}
      * @secure
      */
-    getLoanQueueData: (loanQueueId: string, params: RequestParams = {}) =>
+    getLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
       this.request<any, any>({
-        path: `/api/loans/queue/${loanQueueId}/data`,
+        path: `/api/loans/queue/${loanQueueId}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -6499,18 +6598,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanQueue
-     * @name UpdateLoanQueueData
-     * @summary Update Data
-     * @request PUT:/api/loans/queue/{loanQueueId}/data
+     * @name ReplaceLoanQueue
+     * @summary Replace Loan Queue Record
+     * @request PUT:/api/loans/queue/{loanQueueId}
      * @secure
      */
-    updateLoanQueueData: (loanQueueId: string, data: any, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/loans/queue/${loanQueueId}/data`,
+    replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params: RequestParams = {}) =>
+      this.request<LoanQueueWithData, any>({
+        path: `/api/loans/queue/${loanQueueId}`,
         method: "PUT",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -6646,6 +6746,126 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         secure: true,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanTaskComments
+     * @name SearchLoanTaskComments
+     * @summary Search
+     * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
+     * @secure
+     */
+    searchLoanTaskComments: (
+      loanId: string,
+      userLoanTaskId: string,
+      data: TaskCommentSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TaskCommentPaginated, ProblemDetails>({
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanTaskComments
+     * @name GetLoanTaskComment
+     * @summary Get by ID
+     * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
+     * @secure
+     */
+    getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params: RequestParams = {}) =>
+      this.request<TaskComment, ProblemDetails>({
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanTaskComments
+     * @name CreateLoanTaskComment
+     * @summary Create
+     * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
+     * @secure
+     */
+    createLoanTaskComment: (
+      loanId: string,
+      userLoanTaskId: string,
+      data: TaskCommentRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<TaskComment, ProblemDetails>({
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanTaskComments
+     * @name ReplaceLoanTaskComment
+     * @summary Replace
+     * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+     * @secure
+     */
+    replaceLoanTaskComment: (
+      loanId: string,
+      userLoanTaskId: string,
+      commentId: string,
+      data: TaskCommentRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<TaskComment, ProblemDetails>({
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanTaskComments
+     * @name DeleteLoanTaskComment
+     * @summary Delete
+     * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+     * @secure
+     */
+    deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params: RequestParams = {}) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
 
@@ -7328,7 +7548,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getPartners: (
       query?: {
         showAll?: boolean;
-        /** @default 4 */
+        /** @default "Realtor" */
         role?:
           | "Borrower"
           | "LoanOfficer"
@@ -7555,25 +7775,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/request-queues/${id}`,
         method: "DELETE",
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags SelfProvisioning
-     * @name CreateSelfProvisioningItem
-     * @summary Create
-     * @request POST:/api/selfprovisioning/newcustomer
-     * @secure
-     */
-    createSelfProvisioningItem: (data: any, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/selfprovisioning/newcustomer`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         ...params,
       }),
 

@@ -1484,6 +1484,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDrafts
+             * @name ReassignLoanOfficer
+             * @summary Reassign Loan officer
+             * @request PUT:/api/loans/drafts/{draftId}/reassign
+             * @secure
+             */
+            reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -1565,22 +1575,22 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanQueue
-             * @name GetLoanQueueData
-             * @summary Get Data
-             * @request GET:/api/loans/queue/{loanQueueId}/data
+             * @name GetLoanQueue
+             * @summary Get Loan Queue Record
+             * @request GET:/api/loans/queue/{loanQueueId}
              * @secure
              */
-            getLoanQueueData: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "GET", secure: true, format: "json" }, params)),
+            getLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanQueue
-             * @name UpdateLoanQueueData
-             * @summary Update Data
-             * @request PUT:/api/loans/queue/{loanQueueId}/data
+             * @name ReplaceLoanQueue
+             * @summary Replace Loan Queue Record
+             * @request PUT:/api/loans/queue/{loanQueueId}
              * @secure
              */
-            updateLoanQueueData: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/data`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            replaceLoanQueue: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1641,6 +1651,56 @@ export class Api extends HttpClient {
              * @secure
              */
             importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/import-from-los/${loanId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name SearchLoanTaskComments
+             * @summary Search
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
+             * @secure
+             */
+            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name GetLoanTaskComment
+             * @summary Get by ID
+             * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
+             * @secure
+             */
+            getLoanTaskComment: (id, loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name CreateLoanTaskComment
+             * @summary Create
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
+             * @secure
+             */
+            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name ReplaceLoanTaskComment
+             * @summary Replace
+             * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+             * @secure
+             */
+            replaceLoanTaskComment: (loanId, userLoanTaskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name DeleteLoanTaskComment
+             * @summary Delete
+             * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+             * @secure
+             */
+            deleteLoanTaskComment: (loanId, userLoanTaskId, commentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
@@ -2074,16 +2134,6 @@ export class Api extends HttpClient {
              * @secure
              */
             deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}`, method: "DELETE", secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags SelfProvisioning
-             * @name CreateSelfProvisioningItem
-             * @summary Create
-             * @request POST:/api/selfprovisioning/newcustomer
-             * @secure
-             */
-            createSelfProvisioningItem: (data, params = {}) => this.request(Object.assign({ path: `/api/selfprovisioning/newcustomer`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
