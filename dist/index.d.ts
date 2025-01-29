@@ -2769,7 +2769,7 @@ export interface UpdateAccountRequest {
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettingsUpdateRequest;
     asoSettings?: ASOSettings | null;
-    settings?: AccountSettingsRequest | null;
+    settings: AccountSettingsRequest;
 }
 export interface UpdateDocumentTemplateRequest {
     /** @minLength 1 */
