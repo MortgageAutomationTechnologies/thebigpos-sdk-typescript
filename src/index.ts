@@ -50,6 +50,15 @@ export interface Account {
   allowedLoginsWithoutMFA: number;
   losSettings: LOSSettings;
   asoSettings?: ASOSettings | null;
+  settings?: AccountSettings | null;
+}
+
+export interface AccountSettings {
+  isSmsEnabled: boolean;
+}
+
+export interface AccountSettingsRequest {
+  isSmsEnabled: boolean;
 }
 
 export interface Action {
@@ -845,7 +854,6 @@ export interface EnabledServices {
   borrowerTasks?: boolean | null;
   docusign?: boolean | null;
   emailNotifications?: boolean | null;
-  textNotifications?: boolean | null;
   voc?: boolean | null;
   spanishPrequal?: boolean | null;
   spanishFullApp?: boolean | null;
@@ -2799,8 +2807,6 @@ export interface Task {
   usedInBusinessRule: boolean;
   willAutocompleteAfterResponse: boolean;
   hasAutoPropagationOnAdd: boolean;
-  /** @format int32 */
-  commentsCount: number;
 }
 
 export interface TaskComment {
@@ -2987,6 +2993,7 @@ export interface UpdateAccountRequest {
   allowedLoginsWithoutMFA: number;
   losSettings: LOSSettingsUpdateRequest;
   asoSettings?: ASOSettings | null;
+  settings?: AccountSettingsRequest | null;
 }
 
 export interface UpdateDocumentTemplateRequest {
@@ -3163,7 +3170,8 @@ export interface UserNotificationSettings {
 
 export interface UserNotificationSettingsUpdateRequest {
   emailEnabled: boolean;
-  textEnabled?: boolean | null;
+  textEnabled: boolean;
+  textOptIn?: boolean | null;
 }
 
 export interface UserPaginated {
@@ -6750,12 +6758,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags LoanTaskComments
      * @name SearchLoanTaskComments
      * @summary Search
-     * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments/search
+     * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
      * @secure
      */
     searchLoanTaskComments: (
       loanId: string,
-      taskId: string,
+      userLoanTaskId: string,
       data: TaskCommentSearchCriteria,
       query?: {
         /** @format int32 */
@@ -6768,7 +6776,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<TaskCommentPaginated, ProblemDetails>({
-        path: `/api/loans/${loanId}/tasks/${taskId}/comments/search`,
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`,
         method: "POST",
         query: query,
         body: data,
@@ -6784,12 +6792,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags LoanTaskComments
      * @name GetLoanTaskComment
      * @summary Get by ID
-     * @request GET:/api/loans/{loanId}/tasks/{taskId}/comments/{id}
+     * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
      * @secure
      */
-    getLoanTaskComment: (id: string, loanId: string, taskId: string, params: RequestParams = {}) =>
+    getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params: RequestParams = {}) =>
       this.request<TaskComment, ProblemDetails>({
-        path: `/api/loans/${loanId}/tasks/${taskId}/comments/${id}`,
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -6802,12 +6810,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags LoanTaskComments
      * @name CreateLoanTaskComment
      * @summary Create
-     * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments
+     * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
      * @secure
      */
-    createLoanTaskComment: (loanId: string, taskId: string, data: TaskCommentRequest, params: RequestParams = {}) =>
+    createLoanTaskComment: (
+      loanId: string,
+      userLoanTaskId: string,
+      data: TaskCommentRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<TaskComment, ProblemDetails>({
-        path: `/api/loans/${loanId}/tasks/${taskId}/comments`,
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`,
         method: "POST",
         body: data,
         secure: true,
@@ -6822,18 +6835,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags LoanTaskComments
      * @name ReplaceLoanTaskComment
      * @summary Replace
-     * @request PUT:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+     * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
      * @secure
      */
     replaceLoanTaskComment: (
       loanId: string,
-      taskId: string,
+      userLoanTaskId: string,
       commentId: string,
       data: TaskCommentRequest,
       params: RequestParams = {},
     ) =>
       this.request<TaskComment, ProblemDetails>({
-        path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`,
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
         method: "PUT",
         body: data,
         secure: true,
@@ -6848,12 +6861,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags LoanTaskComments
      * @name DeleteLoanTaskComment
      * @summary Delete
-     * @request DELETE:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+     * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
      * @secure
      */
-    deleteLoanTaskComment: (loanId: string, taskId: string, commentId: string, params: RequestParams = {}) =>
+    deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
-        path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`,
+        path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
         method: "DELETE",
         secure: true,
         ...params,

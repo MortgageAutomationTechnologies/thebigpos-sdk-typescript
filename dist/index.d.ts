@@ -38,6 +38,13 @@ export interface Account {
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettings;
     asoSettings?: ASOSettings | null;
+    settings?: AccountSettings | null;
+}
+export interface AccountSettings {
+    isSmsEnabled: boolean;
+}
+export interface AccountSettingsRequest {
+    isSmsEnabled: boolean;
 }
 export interface Action {
     /** @format uuid */
@@ -739,11 +746,13 @@ export interface DraftContentPaginated {
     /** @format int64 */
     count: number;
 }
+export interface DraftLoanOfficerReassignRequest {
+    /** @format uuid */
+    loanOfficerID: string;
+}
 export interface DraftRequest {
     applicationPayload: any;
     customData?: any;
-    /** @format uuid */
-    loanOfficerID?: string | null;
 }
 export interface EConsentInformation {
     status: string;
@@ -771,7 +780,6 @@ export interface EnabledServices {
     borrowerTasks?: boolean | null;
     docusign?: boolean | null;
     emailNotifications?: boolean | null;
-    textNotifications?: boolean | null;
     voc?: boolean | null;
     spanishPrequal?: boolean | null;
     spanishFullApp?: boolean | null;
@@ -1873,6 +1881,7 @@ export interface RunLOCalculation {
     canGeneratePreQual: boolean;
     canGeneratePreApproval: boolean;
     preApprovalNotes?: string | null;
+    additionalPreApprovalNotes?: string | null;
     downPaymentAmount?: string | null;
     downPaymentPercent?: string | null;
     lienType?: string | null;
@@ -1908,6 +1917,7 @@ export interface RunLOCalculationRequest {
     /** @minLength 1 */
     lienType: string;
     preApprovalNotes?: string | null;
+    additionalPreApprovalNotes?: string | null;
 }
 export interface SSOToken {
     /** @format uuid */
@@ -2590,8 +2600,6 @@ export interface Task {
     usedInBusinessRule: boolean;
     willAutocompleteAfterResponse: boolean;
     hasAutoPropagationOnAdd: boolean;
-    /** @format int32 */
-    commentsCount: number;
 }
 export interface TaskComment {
     /** @format uuid */
@@ -2761,6 +2769,7 @@ export interface UpdateAccountRequest {
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettingsUpdateRequest;
     asoSettings?: ASOSettings | null;
+    settings?: AccountSettingsRequest | null;
 }
 export interface UpdateDocumentTemplateRequest {
     /** @minLength 1 */
@@ -2915,11 +2924,13 @@ export interface UserMobilePhoneVerificationRequest {
 }
 export interface UserNotificationSettings {
     emailEnabled: boolean;
-    textEnabled?: boolean | null;
+    textEnabled: boolean;
+    textOptIn?: boolean | null;
 }
 export interface UserNotificationSettingsUpdateRequest {
     emailEnabled: boolean;
-    textEnabled?: boolean | null;
+    textEnabled: boolean;
+    textOptIn?: boolean | null;
 }
 export interface UserPaginated {
     rows: User[];
@@ -4631,6 +4642,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanDrafts
+         * @name ReassignLoanOfficer
+         * @summary Reassign Loan officer
+         * @request PUT:/api/loans/drafts/{draftId}/reassign
+         * @secure
+         */
+        reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
+        /**
+         * No description
+         *
          * @tags LoanOfficers
          * @name GetLoanOfficers
          * @summary Get All
@@ -4832,10 +4853,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @tags LoanTaskComments
          * @name SearchLoanTaskComments
          * @summary Search
-         * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments/search
+         * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
          * @secure
          */
-        searchLoanTaskComments: (loanId: string, taskId: string, data: TaskCommentSearchCriteria, query?: {
+        searchLoanTaskComments: (loanId: string, userLoanTaskId: string, data: TaskCommentSearchCriteria, query?: {
             /** @format int32 */
             pageSize?: number;
             /** @format int32 */
@@ -4849,40 +4870,40 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @tags LoanTaskComments
          * @name GetLoanTaskComment
          * @summary Get by ID
-         * @request GET:/api/loans/{loanId}/tasks/{taskId}/comments/{id}
+         * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
          * @secure
          */
-        getLoanTaskComment: (id: string, loanId: string, taskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
          * @tags LoanTaskComments
          * @name CreateLoanTaskComment
          * @summary Create
-         * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments
+         * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
          * @secure
          */
-        createLoanTaskComment: (loanId: string, taskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        createLoanTaskComment: (loanId: string, userLoanTaskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
          * @tags LoanTaskComments
          * @name ReplaceLoanTaskComment
          * @summary Replace
-         * @request PUT:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+         * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
          * @secure
          */
-        replaceLoanTaskComment: (loanId: string, taskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        replaceLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
          * @tags LoanTaskComments
          * @name DeleteLoanTaskComment
          * @summary Delete
-         * @request DELETE:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+         * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
          * @secure
          */
-        deleteLoanTaskComment: (loanId: string, taskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *

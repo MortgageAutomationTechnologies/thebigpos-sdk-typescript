@@ -1484,6 +1484,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDrafts
+             * @name ReassignLoanOfficer
+             * @summary Reassign Loan officer
+             * @request PUT:/api/loans/drafts/{draftId}/reassign
+             * @secure
+             */
+            reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -1647,50 +1657,50 @@ export class Api extends HttpClient {
              * @tags LoanTaskComments
              * @name SearchLoanTaskComments
              * @summary Search
-             * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments/search
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
              * @secure
              */
-            searchLoanTaskComments: (loanId, taskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanTaskComments
              * @name GetLoanTaskComment
              * @summary Get by ID
-             * @request GET:/api/loans/{loanId}/tasks/{taskId}/comments/{id}
+             * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
              * @secure
              */
-            getLoanTaskComment: (id, loanId, taskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            getLoanTaskComment: (id, loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanTaskComments
              * @name CreateLoanTaskComment
              * @summary Create
-             * @request POST:/api/loans/{loanId}/tasks/{taskId}/comments
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
              * @secure
              */
-            createLoanTaskComment: (loanId, taskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanTaskComments
              * @name ReplaceLoanTaskComment
              * @summary Replace
-             * @request PUT:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+             * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
              * @secure
              */
-            replaceLoanTaskComment: (loanId, taskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceLoanTaskComment: (loanId, userLoanTaskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags LoanTaskComments
              * @name DeleteLoanTaskComment
              * @summary Delete
-             * @request DELETE:/api/loans/{loanId}/tasks/{taskId}/comments/{commentId}
+             * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
              * @secure
              */
-            deleteLoanTaskComment: (loanId, taskId, commentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}/comments/${commentId}`, method: "DELETE", secure: true }, params)),
+            deleteLoanTaskComment: (loanId, userLoanTaskId, commentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
