@@ -2145,6 +2145,7 @@ export interface SiteConfiguration {
     modules: Module[];
     user?: UserPublic | null;
     asoSettings?: ASOSettings | null;
+    accountSettings: AccountSettings;
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
@@ -2337,6 +2338,7 @@ export interface SiteConfigurationByUrl {
     modules: Module[];
     user?: UserPublic | null;
     asoSettings?: ASOSettings | null;
+    accountSettings: AccountSettings;
     workflows: Workflow[];
 }
 export interface SiteConfigurationForm {

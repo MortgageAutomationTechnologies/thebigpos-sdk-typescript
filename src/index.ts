@@ -2341,6 +2341,7 @@ export interface SiteConfiguration {
   modules: Module[];
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
+  accountSettings: AccountSettings;
 }
 
 export interface SiteConfigurationByUrl {
@@ -2534,6 +2535,7 @@ export interface SiteConfigurationByUrl {
   modules: Module[];
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
+  accountSettings: AccountSettings;
   workflows: Workflow[];
 }
 
