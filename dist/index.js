@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.12.1
+ * @version v2.13.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1484,6 +1484,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDrafts
+             * @name ReassignLoanOfficer
+             * @summary Reassign Loan officer
+             * @request PUT:/api/loans/drafts/{draftId}/reassign
+             * @secure
+             */
+            reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -1554,6 +1564,46 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanQueue
+             * @name SearchLoanQueue
+             * @summary Search
+             * @request POST:/api/loans/queue/search
+             * @secure
+             */
+            searchLoanQueue: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name GetLoanQueue
+             * @summary Get Loan Queue Record
+             * @request GET:/api/loans/queue/{loanQueueId}
+             * @secure
+             */
+            getLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name ReplaceLoanQueue
+             * @summary Replace Loan Queue Record
+             * @request PUT:/api/loans/queue/{loanQueueId}
+             * @secure
+             */
+            replaceLoanQueue: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
+             * @name RetryLoanQueue
+             * @summary Retry
+             * @request POST:/api/loans/queue/{loanQueueId}/retry
+             * @secure
+             */
+            retryLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/retry`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags Loans
              * @name GetLoans
              * @summary Get Loans
@@ -1601,6 +1651,56 @@ export class Api extends HttpClient {
              * @secure
              */
             importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/import-from-los/${loanId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name SearchLoanTaskComments
+             * @summary Search
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
+             * @secure
+             */
+            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name GetLoanTaskComment
+             * @summary Get by ID
+             * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
+             * @secure
+             */
+            getLoanTaskComment: (id, loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name CreateLoanTaskComment
+             * @summary Create
+             * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
+             * @secure
+             */
+            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name ReplaceLoanTaskComment
+             * @summary Replace
+             * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+             * @secure
+             */
+            replaceLoanTaskComment: (loanId, userLoanTaskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskComments
+             * @name DeleteLoanTaskComment
+             * @summary Delete
+             * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+             * @secure
+             */
+            deleteLoanTaskComment: (loanId, userLoanTaskId, commentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
@@ -2008,6 +2108,7 @@ export class Api extends HttpClient {
              * @name GetRequestQueues
              * @summary Get All
              * @request GET:/api/request-queues
+             * @deprecated
              * @secure
              */
             getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queues`, method: "GET", secure: true, format: "json" }, params)),
@@ -2018,6 +2119,7 @@ export class Api extends HttpClient {
              * @name RunRequestQueue
              * @summary Run
              * @request POST:/api/request-queues/{id}/run
+             * @deprecated
              * @secure
              */
             runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}/run`, method: "POST", query: query, secure: true }, params)),
@@ -2028,19 +2130,10 @@ export class Api extends HttpClient {
              * @name DeleteQueueRequest
              * @summary Delete
              * @request DELETE:/api/request-queues/{id}
+             * @deprecated
              * @secure
              */
             deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}`, method: "DELETE", secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags SelfProvisioning
-             * @name CreateSelfProvisioningItem
-             * @summary Create
-             * @request POST:/api/selfprovisioning/newcustomer
-             * @secure
-             */
-            createSelfProvisioningItem: (data, params = {}) => this.request(Object.assign({ path: `/api/selfprovisioning/newcustomer`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *

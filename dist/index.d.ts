@@ -17,7 +17,7 @@ export interface ASOSettings {
     preApproval: boolean;
     preQualification: boolean;
     mi: boolean;
-    miRadiam: boolean;
+    miRadian: boolean;
     miEssent: boolean;
     miNational: boolean;
     miEnact: boolean;
@@ -37,7 +37,7 @@ export interface Account {
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettings;
-    asoSettings: ASOSettings;
+    asoSettings?: ASOSettings | null;
 }
 export interface Action {
     /** @format uuid */
@@ -84,6 +84,30 @@ export interface AddressRequest {
     /** @minLength 1 */
     postalCode: string;
 }
+export interface AdminAccessGetForm {
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    formJSON: any;
+    /** @format int32 */
+    type: number;
+    target: string;
+    authType: string;
+    name: string;
+    isDefault: boolean;
+    description?: string | null;
+    slug?: string | null;
+    status: string;
+    language?: string | null;
+    showProgressBar: boolean;
+    borrowerType?: BorrowerType | null;
+    versions: FormVersion[];
+}
 export interface AdminAccessGetForms {
     /** @format date-time */
     createdAt?: string | null;
@@ -102,7 +126,7 @@ export interface AdminAccessGetForms {
     slug?: string | null;
     status: string;
     language?: string | null;
-    borrowerType: BorrowerType;
+    borrowerType?: BorrowerType | null;
     showProgressBar: boolean;
 }
 export interface AdminAccessUser {
@@ -146,6 +170,8 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
+    buyerAgent?: LoanContact | null;
+    titleInsuranceAgent?: LoanContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -191,11 +217,9 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
-    buyerAgent: LoanContact;
-    sellerAgent: LoanContact;
-    settlementAgent: LoanContact;
-    escrowAgent: LoanContact;
-    titleInsuranceAgent: LoanContact;
+    sellerAgent?: LoanContact | null;
+    settlementAgent?: LoanContact | null;
+    escrowAgent?: LoanContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -255,7 +279,7 @@ export interface BranchUserPaginated {
 }
 export interface BusinessRule {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -431,7 +455,7 @@ export interface CreateInviteRequest {
     /** @format email */
     emailAddress: string;
     phoneNumber: string;
-    relationship: BorrowerRelationship;
+    relationship: "NotApplicable" | "Spouse" | "NonSpouse";
     loanID: string;
     route?: string | null;
     /** @format uuid */
@@ -478,7 +502,7 @@ export interface CreateUserRequest {
     userRole: string;
 }
 export interface CustomLoanData {
-    eConsentInformation: EConsentInformation;
+    eConsentInformation?: EConsentInformation | null;
 }
 export interface DetailedUser {
     /** @format date-time */
@@ -555,7 +579,7 @@ export interface DeviceMDM {
     platform_type_id?: string | null;
     device_capacity?: string | null;
     imei: string[];
-    user: MdmUser;
+    user?: MdmUser | null;
     actions?: DeviceAction[] | null;
 }
 export interface DevicePaginated {
@@ -688,6 +712,8 @@ export interface Draft {
     id: string;
     customData: any;
     user: UserBase;
+    loanOfficer: UserBase;
+    siteConfiguration: SiteConfigurationReduced;
 }
 export interface DraftContent {
     /** @format date-time */
@@ -700,6 +726,8 @@ export interface DraftContent {
     id: string;
     customData: any;
     user: UserBase;
+    loanOfficer: UserBase;
+    siteConfiguration: SiteConfigurationReduced;
     applicationPayload: any;
 }
 export interface DraftContentPaginated {
@@ -707,6 +735,10 @@ export interface DraftContentPaginated {
     pagination: Pagination;
     /** @format int64 */
     count: number;
+}
+export interface DraftLoanOfficerReassignRequest {
+    /** @format uuid */
+    loanOfficerID: string;
 }
 export interface DraftRequest {
     applicationPayload: any;
@@ -803,19 +835,19 @@ export interface ExtendedLoan {
     loanProgram?: string | null;
     loanType?: string | null;
     status?: string | null;
-    loanOfficer: LoanOfficer;
-    propertyAddress: Address;
-    borrowerContact: Contact;
-    coBorrowerContact: Contact;
+    loanOfficer?: LoanOfficer | null;
+    propertyAddress?: Address | null;
+    borrowerContact?: Contact | null;
+    coBorrowerContact?: Contact | null;
     loanLogs: LoanLog[];
     isLocked: boolean;
     source?: string | null;
-    buyerAgentContact: Contact;
-    sellerAgentContact: Contact;
-    escrowAgentContact: Contact;
-    titleInsuranceAgentContact: Contact;
-    settlementAgentContact: Contact;
-    loanProcessorContact: Contact;
+    buyerAgentContact?: Contact | null;
+    sellerAgentContact?: Contact | null;
+    escrowAgentContact?: Contact | null;
+    titleInsuranceAgentContact?: Contact | null;
+    settlementAgentContact?: Contact | null;
+    loanProcessorContact?: Contact | null;
 }
 export interface ExtendedLoanPaginated {
     rows: ExtendedLoan[];
@@ -829,8 +861,8 @@ export interface File {
     fileName: string;
     name: string;
     s3FilePath: string;
-    user: User;
-    account: Account;
+    user?: User | null;
+    account?: Account | null;
     url: string;
 }
 export interface FilePaginated {
@@ -871,7 +903,7 @@ export interface FormRequest {
     slug?: string | null;
     status: string;
     language?: string | null;
-    borrowerType: BorrowerType;
+    borrowerType?: BorrowerType | null;
     showProgressBar: boolean;
 }
 export interface FormSubmission {
@@ -896,10 +928,10 @@ export interface FormSubmission {
     loanOfficerEmail?: string | null;
     /** @format uuid */
     loanOfficerID?: string | null;
-    loanOfficer: User;
+    loanOfficer?: User | null;
     /** @format uuid */
     branchID?: string | null;
-    branch: GetBranch;
+    branch?: GetBranch | null;
     status: string;
     subjectPropertyAddressStreet?: string | null;
     subjectPropertyAddressCity?: string | null;
@@ -909,7 +941,7 @@ export interface FormSubmission {
     data?: any;
     /** @format uuid */
     listingID?: string | null;
-    listing: Listing;
+    listing?: Listing | null;
     files: FormSubmissionFile[];
 }
 export interface FormSubmissionFile {
@@ -992,7 +1024,7 @@ export interface FusionFieldDisplay {
     fieldValue: string;
 }
 export interface FusionReportFilter {
-    filterType: FilterType;
+    filterType: "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
     targetField: string;
     targetValue: string;
 }
@@ -1050,7 +1082,7 @@ export interface GetForm {
     slug?: string | null;
     status: string;
     language?: string | null;
-    borrowerType: BorrowerType;
+    borrowerType?: BorrowerType | null;
     showProgressBar: boolean;
     /** @format uuid */
     id: string;
@@ -1168,6 +1200,7 @@ export interface LOSSettingsUpdateRequest {
     customEConsentBucketTitle?: string | null;
     loanMilestoneNotificationsEnabled: boolean;
 }
+export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently";
 export interface Listing {
     /** @format date-time */
     createdAt: string;
@@ -1179,7 +1212,7 @@ export interface Listing {
     id: string;
     description?: string | null;
     mlsNumber?: string | null;
-    address: Address;
+    address?: Address | null;
     /** @format int32 */
     salePrice?: number | null;
     /** @format date-time */
@@ -1189,7 +1222,7 @@ export interface Listing {
     zillowURL?: string | null;
     photos: ListingPhoto[];
     files: ListingFile[];
-    backgroundImage: File;
+    backgroundImage?: File | null;
     /** @format date-time */
     openHouseDate?: string | null;
     /** @format double */
@@ -1199,7 +1232,7 @@ export interface Listing {
     isActive: boolean;
     slug: string;
     url?: string | null;
-    loanOfficer: LoanOfficer;
+    loanOfficer?: LoanOfficer | null;
     siteConfiguration: SiteConfiguration;
 }
 export interface ListingFile {
@@ -1290,10 +1323,10 @@ export interface Loan {
     loanProgram?: string | null;
     loanType?: string | null;
     status?: string | null;
-    loanOfficer: LoanOfficer;
-    propertyAddress: Address;
-    borrowerContact: Contact;
-    coBorrowerContact: Contact;
+    loanOfficer?: LoanOfficer | null;
+    propertyAddress?: Address | null;
+    borrowerContact?: Contact | null;
+    coBorrowerContact?: Contact | null;
     loanLogs: LoanLog[];
     isLocked: boolean;
     source?: string | null;
@@ -1351,7 +1384,7 @@ export interface LoanDocument {
     id: string;
     name: string;
     loan: Loan;
-    user: User;
+    user?: User | null;
     initialBucket?: string | null;
     losDocumentID?: string | null;
     losStatus: string;
@@ -1362,6 +1395,9 @@ export interface LoanDraftSearchCriteria {
     searchText?: string | null;
     /** @format uuid */
     loanOfficerId?: string | null;
+    /** @format uuid */
+    siteConfigurationId?: string | null;
+    isUnassigned?: boolean | null;
 }
 export interface LoanLog {
     /** @format uuid */
@@ -1382,6 +1418,15 @@ export interface LoanOfficer {
     profilePhotoUrl: string;
     siteConfiguration: SiteConfiguration;
 }
+export interface LoanOfficerPublic {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string | null;
+    /** @format uuid */
+    corporateID?: string | null;
+    siteConfigurationIDs: string[];
+}
 export interface LoanOfficerSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
@@ -1389,6 +1434,58 @@ export interface LoanOfficerSearchCriteria {
     branch?: string | null;
     /** @format uuid */
     brand?: string | null;
+}
+export interface LoanQueue {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    loanID?: string | null;
+    type: string;
+    reason: string;
+    status: string;
+    details?: string | null;
+    user: UserPublic;
+    loanOfficer: LoanOfficerPublic;
+    siteConfiguration: SiteConfigurationReduced;
+}
+export interface LoanQueuePaginated {
+    rows: LoanQueue[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
+export interface LoanQueueSearchCriteria {
+    searchText?: string | null;
+    loanID?: string | null;
+    type?: LoanQueueType | null;
+    status?: LOSStatus | null;
+    reason?: LoanQueueReason | null;
+}
+export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
+export interface LoanQueueWithData {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    loanID?: string | null;
+    type: string;
+    reason: string;
+    status: string;
+    details?: string | null;
+    user: UserPublic;
+    loanOfficer: LoanOfficerPublic;
+    siteConfiguration: SiteConfigurationReduced;
+    data: any;
 }
 export interface LoanRecord {
     loanGuid: string;
@@ -1477,12 +1574,12 @@ export interface ModuleParameterValue {
 export interface NotificationLog {
     /** @format uuid */
     id: string;
-    type: NotificationType;
+    type: "Email" | "Text" | "PushNotification";
     to: string;
     cc?: string | null;
     subject?: string | null;
     message: string;
-    notificationTemplate: NotificationTemplate;
+    notificationTemplate?: NotificationTemplate | null;
     /** @format date-time */
     createdAt: string;
 }
@@ -1494,7 +1591,7 @@ export interface NotificationLogPaginated {
 }
 export interface NotificationLogSearchCriteria {
     searchText?: string | null;
-    type: NotificationType;
+    type?: NotificationType | null;
     to?: string[] | null;
     cc?: string[] | null;
 }
@@ -1662,27 +1759,27 @@ export interface PreliminaryCondition {
     requestedFrom?: string | null;
     /** @format date-time */
     createdDate?: string | null;
-    createdBy: CommentUserInformation;
+    createdBy?: CommentUserInformation | null;
     isRequested: boolean;
     /** @format date-time */
     requestedDate?: string | null;
-    requestedBy: CommentUserInformation;
+    requestedBy?: CommentUserInformation | null;
     isReceived: boolean;
     /** @format date-time */
     receivedDate?: string | null;
-    receivedBy: CommentUserInformation;
+    receivedBy?: CommentUserInformation | null;
     priorTo?: string | null;
     category?: string | null;
     isFulfilled: boolean;
     /** @format date-time */
     fulfilledDate?: string | null;
-    fulfilledBy: CommentUserInformation;
+    fulfilledBy?: CommentUserInformation | null;
     comments: ConditionComment[];
     uwAccess?: string | null;
     isRerequested: boolean;
     /** @format date-time */
     rerequestedDate?: string | null;
-    rerequestedBy: CommentUserInformation;
+    rerequestedBy?: CommentUserInformation | null;
 }
 export interface PricingRates {
     rate: string;
@@ -1701,15 +1798,6 @@ export interface ProblemDetails {
     detail?: string | null;
     instance?: string | null;
     [key: string]: any;
-}
-export interface PublicLoanOfficer {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string | null;
-    /** @format uuid */
-    corporateID?: string | null;
-    siteConfigurationIDs: string[];
 }
 export interface RefreshTokenRequest {
     /** @minLength 1 */
@@ -1804,6 +1892,7 @@ export interface RunLOCalculation {
     canGeneratePreQual: boolean;
     canGeneratePreApproval: boolean;
     preApprovalNotes?: string | null;
+    additionalPreApprovalNotes?: string | null;
     downPaymentAmount?: string | null;
     downPaymentPercent?: string | null;
     lienType?: string | null;
@@ -1839,6 +1928,7 @@ export interface RunLOCalculationRequest {
     /** @minLength 1 */
     lienType: string;
     preApprovalNotes?: string | null;
+    additionalPreApprovalNotes?: string | null;
 }
 export interface SSOToken {
     /** @format uuid */
@@ -2063,8 +2153,8 @@ export interface SiteConfiguration {
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     modules: Module[];
-    user: UserPublic;
-    asoSettings: ASOSettings;
+    user?: UserPublic | null;
+    asoSettings?: ASOSettings | null;
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
@@ -2255,8 +2345,8 @@ export interface SiteConfigurationByUrl {
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     modules: Module[];
-    user: UserPublic;
-    asoSettings: ASOSettings;
+    user?: UserPublic | null;
+    asoSettings?: ASOSettings | null;
     workflows: Workflow[];
 }
 export interface SiteConfigurationForm {
@@ -2469,7 +2559,7 @@ export interface SiteConfigurationSearchCriteria {
 }
 export interface SiteConfigurationWithInherited {
     siteConfiguration: SiteConfiguration;
-    inheritedSiteConfiguration: SiteConfiguration;
+    inheritedSiteConfiguration?: SiteConfiguration | null;
 }
 export interface SocialSurveyRecord {
     /** @format date-time */
@@ -2515,11 +2605,31 @@ export interface Task {
     isGlobal: boolean;
     /** @format uuid */
     id: string;
-    user: User;
+    user?: User | null;
     isFromLegacySource: boolean;
     usedInBusinessRule: boolean;
     willAutocompleteAfterResponse: boolean;
     hasAutoPropagationOnAdd: boolean;
+}
+export interface TaskComment {
+    /** @format uuid */
+    id: string;
+    comment: string;
+    createdBy: UserBase;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface TaskCommentPaginated {
+    rows: TaskComment[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface TaskCommentRequest {
+    comment: string;
+}
+export interface TaskCommentSearchCriteria {
+    searchText?: string | null;
 }
 export interface TaskPaginated {
     rows: Task[];
@@ -2633,21 +2743,21 @@ export interface UnderwritingCondition {
     requestedFrom?: string | null;
     /** @format date-time */
     createdDate?: string | null;
-    createdBy: CommentUserInformation;
+    createdBy?: CommentUserInformation | null;
     isRequested: boolean;
     /** @format date-time */
     requestedDate?: string | null;
-    requestedBy: CommentUserInformation;
+    requestedBy?: CommentUserInformation | null;
     isReceived: boolean;
     /** @format date-time */
     receivedDate?: string | null;
-    receivedBy: CommentUserInformation;
+    receivedBy?: CommentUserInformation | null;
     priorTo?: string | null;
     category?: string | null;
     isFulfilled: boolean;
     /** @format date-time */
     fulfilledDate?: string | null;
-    fulfilledBy: CommentUserInformation;
+    fulfilledBy?: CommentUserInformation | null;
     comments: ConditionComment[];
     allowToClear: boolean;
     printExternally: boolean;
@@ -2667,7 +2777,7 @@ export interface UpdateAccountRequest {
     /** @format int32 */
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettingsUpdateRequest;
-    asoSettings: ASOSettings;
+    asoSettings?: ASOSettings | null;
 }
 export interface UpdateDocumentTemplateRequest {
     /** @minLength 1 */
@@ -2704,6 +2814,9 @@ export interface UpdateListingPhotoRequest {
     description?: string | null;
     /** @format int32 */
     weight: number;
+}
+export interface UpdateLoanQueueRequest {
+    data: any;
 }
 export interface UpdateMeRequest {
     phone?: string | null;
@@ -2777,7 +2890,7 @@ export interface UserBase {
 }
 export interface UserLoan {
     loanID: string;
-    customLoanData: CustomLoanData;
+    customLoanData?: CustomLoanData | null;
 }
 export interface UserLoanTask {
     /** @format uuid */
@@ -2795,8 +2908,10 @@ export interface UserLoanTask {
     /** @format date-time */
     createdAt: string;
     createdBy: User;
-    submittedBy: User;
-    completedBy: User;
+    submittedBy?: User | null;
+    completedBy?: User | null;
+    /** @format int32 */
+    commentsCount: number;
 }
 export interface UserLoanTaskRequest {
     value?: string | null;
@@ -2980,7 +3095,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.12.1
+ * @version v2.13.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -3274,7 +3389,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/branches/{branchId}/loan-officers
          * @secure
          */
-        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any>>;
         /**
          * No description
          *
@@ -3473,7 +3588,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/corporates/{id}/loan-officers
          * @secure
          */
-        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<PublicLoanOfficer, any>>;
+        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any>>;
         /**
          * No description
          *
@@ -3776,7 +3891,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms
          * @secure
          */
-        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3786,7 +3901,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/forms/{id}
          * @secure
          */
-        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3796,7 +3911,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/forms/{id}
          * @secure
          */
-        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -3816,7 +3931,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms/{id}/restore
          * @secure
          */
-        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
+        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForm, any>>;
         /**
          * No description
          *
@@ -4524,6 +4639,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanDrafts
+         * @name ReassignLoanOfficer
+         * @summary Reassign Loan officer
+         * @request PUT:/api/loans/drafts/{draftId}/reassign
+         * @secure
+         */
+        reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
+        /**
+         * No description
+         *
          * @tags LoanOfficers
          * @name GetLoanOfficers
          * @summary Get All
@@ -4611,6 +4736,53 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanQueue
+         * @name SearchLoanQueue
+         * @summary Search
+         * @request POST:/api/loans/queue/search
+         * @secure
+         */
+        searchLoanQueue: (data: LoanQueueSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanQueuePaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name GetLoanQueue
+         * @summary Get Loan Queue Record
+         * @request GET:/api/loans/queue/{loanQueueId}
+         * @secure
+         */
+        getLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name ReplaceLoanQueue
+         * @summary Replace Loan Queue Record
+         * @request PUT:/api/loans/queue/{loanQueueId}
+         * @secure
+         */
+        replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params?: RequestParams) => Promise<AxiosResponse<LoanQueueWithData, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name RetryLoanQueue
+         * @summary Retry
+         * @request POST:/api/loans/queue/{loanQueueId}/retry
+         * @secure
+         */
+        retryLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
          * @tags Loans
          * @name GetLoans
          * @summary Get Loans
@@ -4672,6 +4844,63 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         importLoanFromLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name SearchLoanTaskComments
+         * @summary Search
+         * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
+         * @secure
+         */
+        searchLoanTaskComments: (loanId: string, userLoanTaskId: string, data: TaskCommentSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<TaskCommentPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name GetLoanTaskComment
+         * @summary Get by ID
+         * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
+         * @secure
+         */
+        getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name CreateLoanTaskComment
+         * @summary Create
+         * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
+         * @secure
+         */
+        createLoanTaskComment: (loanId: string, userLoanTaskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name ReplaceLoanTaskComment
+         * @summary Replace
+         * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+         * @secure
+         */
+        replaceLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTaskComments
+         * @name DeleteLoanTaskComment
+         * @summary Delete
+         * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
+         * @secure
+         */
+        deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5034,7 +5263,8 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         getPartners: (query?: {
             showAll?: boolean;
-            role?: UserRole;
+            /** @default "Realtor" */
+            role?: "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
             /** @format int32 */
             pageSize?: number;
             /** @format int32 */
@@ -5118,6 +5348,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name GetRequestQueues
          * @summary Get All
          * @request GET:/api/request-queues
+         * @deprecated
          * @secure
          */
         getRequestQueues: (params?: RequestParams) => Promise<AxiosResponse<RequestQueue[], any>>;
@@ -5128,6 +5359,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name RunRequestQueue
          * @summary Run
          * @request POST:/api/request-queues/{id}/run
+         * @deprecated
          * @secure
          */
         runRequestQueue: (id: string, query?: {
@@ -5141,19 +5373,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name DeleteQueueRequest
          * @summary Delete
          * @request DELETE:/api/request-queues/{id}
+         * @deprecated
          * @secure
          */
         deleteQueueRequest: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
-        /**
-         * No description
-         *
-         * @tags SelfProvisioning
-         * @name CreateSelfProvisioningItem
-         * @summary Create
-         * @request POST:/api/selfprovisioning/newcustomer
-         * @secure
-         */
-        createSelfProvisioningItem: (data: any, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
