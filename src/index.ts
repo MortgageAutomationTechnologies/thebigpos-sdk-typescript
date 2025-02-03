@@ -50,15 +50,17 @@ export interface Account {
   allowedLoginsWithoutMFA: number;
   losSettings: LOSSettings;
   asoSettings?: ASOSettings | null;
-  settings?: AccountSettings | null;
+  settings: AccountSettings;
 }
 
 export interface AccountSettings {
   isSmsEnabled: boolean;
+  smsNumber?: string | null;
 }
 
 export interface AccountSettingsRequest {
   isSmsEnabled: boolean;
+  smsNumber?: string | null;
 }
 
 export interface Action {
@@ -479,6 +481,7 @@ export interface CreateAccountRequest {
    * @min 0
    */
   nlmsid: number;
+  settings: AccountSettingsRequest;
 }
 
 export interface CreateBranchRequest {
