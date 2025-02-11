@@ -170,8 +170,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    buyerAgent?: LoanContact | null;
-    titleInsuranceAgent?: LoanContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -217,9 +215,11 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
+    buyerAgent?: LoanContact | null;
     sellerAgent?: LoanContact | null;
     settlementAgent?: LoanContact | null;
     escrowAgent?: LoanContact | null;
+    titleInsuranceAgent?: LoanContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -802,6 +802,8 @@ export interface Error {
     message: string;
 }
 export interface ExtendedLoan {
+    /** @format uuid */
+    id: string;
     loanID: string;
     loanNumber?: string | null;
     /** @format date-time */
@@ -1290,6 +1292,8 @@ export interface ListingSearchCriteria {
     partnerIds?: string[] | null;
 }
 export interface Loan {
+    /** @format uuid */
+    id: string;
     loanID: string;
     loanNumber?: string | null;
     /** @format date-time */
@@ -1444,11 +1448,12 @@ export interface LoanQueue {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    loanID?: string | null;
+    loan?: Loan | null;
     type: string;
     reason: string;
     status: string;
     details?: string | null;
+    jobID?: string | null;
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
@@ -1477,11 +1482,12 @@ export interface LoanQueueWithData {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    loanID?: string | null;
+    loan?: Loan | null;
     type: string;
     reason: string;
     status: string;
     details?: string | null;
+    jobID?: string | null;
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
@@ -4770,6 +4776,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params?: RequestParams) => Promise<AxiosResponse<LoanQueueWithData, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
+         * @name DeleteLoanQueue
+         * @summary Delete Loan Queue Item
+         * @request DELETE:/api/loans/queue/{loanQueueId}
+         * @secure
+         */
+        deleteLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *

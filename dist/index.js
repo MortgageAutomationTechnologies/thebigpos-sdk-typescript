@@ -1595,6 +1595,16 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanQueue
+             * @name DeleteLoanQueue
+             * @summary Delete Loan Queue Item
+             * @request DELETE:/api/loans/queue/{loanQueueId}
+             * @secure
+             */
+            deleteLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
              * @name RetryLoanQueue
              * @summary Retry
              * @request POST:/api/loans/queue/{loanQueueId}/retry

@@ -192,8 +192,6 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
-  buyerAgent?: LoanContact | null;
-  titleInsuranceAgent?: LoanContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -239,9 +237,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
+  buyerAgent?: LoanContact | null;
   sellerAgent?: LoanContact | null;
   settlementAgent?: LoanContact | null;
   escrowAgent?: LoanContact | null;
+  titleInsuranceAgent?: LoanContact | null;
 }
 
 export interface Attachment {
@@ -876,6 +876,8 @@ export interface Error {
 }
 
 export interface ExtendedLoan {
+  /** @format uuid */
+  id: string;
   loanID: string;
   loanNumber?: string | null;
   /** @format date-time */
@@ -1435,6 +1437,8 @@ export interface ListingSearchCriteria {
 }
 
 export interface Loan {
+  /** @format uuid */
+  id: string;
   loanID: string;
   loanNumber?: string | null;
   /** @format date-time */
@@ -1599,11 +1603,12 @@ export interface LoanQueue {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  loanID?: string | null;
+  loan?: Loan | null;
   type: string;
   reason: string;
   status: string;
   details?: string | null;
+  jobID?: string | null;
   user: UserPublic;
   loanOfficer: LoanOfficerPublic;
   siteConfiguration: SiteConfigurationReduced;
@@ -1637,11 +1642,12 @@ export interface LoanQueueWithData {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  loanID?: string | null;
+  loan?: Loan | null;
   type: string;
   reason: string;
   status: string;
   details?: string | null;
+  jobID?: string | null;
   user: UserPublic;
   loanOfficer: LoanOfficerPublic;
   siteConfiguration: SiteConfigurationReduced;
@@ -6586,7 +6592,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
-      this.request<any, any>({
+      this.request<any, ProblemDetails>({
         path: `/api/loans/queue/${loanQueueId}`,
         method: "GET",
         secure: true,
@@ -6604,7 +6610,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params: RequestParams = {}) =>
-      this.request<LoanQueueWithData, any>({
+      this.request<LoanQueueWithData, ProblemDetails>({
         path: `/api/loans/queue/${loanQueueId}`,
         method: "PUT",
         body: data,
@@ -6618,13 +6624,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanQueue
+     * @name DeleteLoanQueue
+     * @summary Delete Loan Queue Item
+     * @request DELETE:/api/loans/queue/{loanQueueId}
+     * @secure
+     */
+    deleteLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/queue/${loanQueueId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanQueue
      * @name RetryLoanQueue
      * @summary Retry
      * @request POST:/api/loans/queue/{loanQueueId}/retry
      * @secure
      */
     retryLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, ProblemDetails>({
         path: `/api/loans/queue/${loanQueueId}/retry`,
         method: "POST",
         secure: true,
