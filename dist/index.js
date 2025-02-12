@@ -1894,26 +1894,6 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags NotificationLogs
-             * @name GetNotificationLogs
-             * @summary Get All
-             * @request GET:/api/notifications/logs
-             * @secure
-             */
-            getNotificationLogs: (query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags NotificationLogs
-             * @name SearchNotificationLog
-             * @summary Search
-             * @request POST:/api/notifications/logs/search
-             * @secure
-             */
-            searchNotificationLog: (data, query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
              * @tags Notifications
              * @name SendNotificationForLoan
              * @summary Send Notification for Loan

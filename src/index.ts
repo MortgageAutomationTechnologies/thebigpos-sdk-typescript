@@ -50,6 +50,17 @@ export interface Account {
   allowedLoginsWithoutMFA: number;
   losSettings: LOSSettings;
   asoSettings?: ASOSettings | null;
+  settings: AccountSettings;
+}
+
+export interface AccountSettings {
+  isSmsEnabled: boolean;
+  smsNumber?: string | null;
+}
+
+export interface AccountSettingsRequest {
+  isSmsEnabled: boolean;
+  smsNumber?: string | null;
 }
 
 export interface Action {
@@ -171,6 +182,7 @@ export interface AdminAccessUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
   /** @format uuid */
   accountID?: string | null;
   loans: UserLoan[];
@@ -291,6 +303,7 @@ export interface BranchUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
   /** @format uuid */
   branchID: string;
   branchName: string;
@@ -468,6 +481,7 @@ export interface CreateAccountRequest {
    * @min 0
    */
   nlmsid: number;
+  settings: AccountSettingsRequest;
 }
 
 export interface CreateBranchRequest {
@@ -579,6 +593,7 @@ export interface DetailedUser {
   canImpersonate: boolean;
   loanIDs: string[];
   drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
 }
 
 export interface Device {
@@ -842,7 +857,6 @@ export interface EnabledServices {
   borrowerTasks?: boolean | null;
   docusign?: boolean | null;
   emailNotifications?: boolean | null;
-  textNotifications?: boolean | null;
   voc?: boolean | null;
   spanishPrequal?: boolean | null;
   spanishFullApp?: boolean | null;
@@ -1746,33 +1760,6 @@ export interface ModuleParameterValue {
   isInherited: boolean;
 }
 
-export interface NotificationLog {
-  /** @format uuid */
-  id: string;
-  type: "Email" | "Text" | "PushNotification";
-  to: string;
-  cc?: string | null;
-  subject?: string | null;
-  message: string;
-  notificationTemplate?: NotificationTemplate | null;
-  /** @format date-time */
-  createdAt: string;
-}
-
-export interface NotificationLogPaginated {
-  rows: NotificationLog[];
-  pagination: Pagination;
-  /** @format int64 */
-  count: number;
-}
-
-export interface NotificationLogSearchCriteria {
-  searchText?: string | null;
-  type?: NotificationType | null;
-  to?: string[] | null;
-  cc?: string[] | null;
-}
-
 export interface NotificationTemplate {
   /** @format date-time */
   createdAt?: string | null;
@@ -1855,6 +1842,7 @@ export interface NotificationTemplateVersion {
   isActive: boolean;
   htmlBody: string;
   plainBody: string;
+  textBody: string;
   notificationTemplate: NotificationTemplate;
 }
 
@@ -1873,6 +1861,7 @@ export interface NotificationTemplateVersionBase {
   isActive: boolean;
   htmlBody: string;
   plainBody: string;
+  textBody: string;
 }
 
 export interface NotificationTemplateVersionRequest {
@@ -1881,6 +1870,7 @@ export interface NotificationTemplateVersionRequest {
   isActive: boolean;
   htmlBody: string;
   plainBody: string;
+  textBody: string;
 }
 
 export interface NotificationTemplateVersionUpdateRequest {
@@ -1894,9 +1884,9 @@ export interface NotificationTemplateVersionUpdateRequest {
   htmlBody: string;
   /** @minLength 1 */
   plainBody: string;
+  /** @minLength 1 */
+  textBody: string;
 }
-
-export type NotificationType = "Email" | "Text" | "PushNotification";
 
 export interface Operation {
   op?: string;
@@ -2165,6 +2155,7 @@ export interface SendNotificationForLoanRequest {
   siteConfigurationId?: string | null;
   /** @minLength 1 */
   email: string;
+  phone?: string | null;
   attachments: Attachment[];
 }
 
@@ -2359,6 +2350,7 @@ export interface SiteConfiguration {
   modules: Module[];
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
+  accountSettings: AccountSettings;
 }
 
 export interface SiteConfigurationByUrl {
@@ -2552,6 +2544,7 @@ export interface SiteConfigurationByUrl {
   modules: Module[];
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
+  accountSettings: AccountSettings;
   workflows: Workflow[];
 }
 
@@ -2906,6 +2899,7 @@ export interface TestSendNotificationForLoanRequest {
   /** @format uuid */
   siteConfigurationId: string;
   toAddress?: string | null;
+  toPhoneNumber?: string | null;
   templateName?: string | null;
   attachments: Attachment[];
 }
@@ -3010,6 +3004,7 @@ export interface UpdateAccountRequest {
   allowedLoginsWithoutMFA: number;
   losSettings: LOSSettingsUpdateRequest;
   asoSettings?: ASOSettings | null;
+  settings: AccountSettingsRequest;
 }
 
 export interface UpdateDocumentTemplateRequest {
@@ -3070,6 +3065,7 @@ export interface UpdateMeRequest {
   title?: string | null;
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
+  notificationSettings: UserNotificationSettingsUpdateRequest;
 }
 
 export interface UpdateMobilePhoneRequest {
@@ -3175,6 +3171,18 @@ export interface UserLoanTaskUpdateRequest {
 export interface UserMobilePhoneVerificationRequest {
   /** @minLength 1 */
   code: string;
+}
+
+export interface UserNotificationSettings {
+  emailEnabled: boolean;
+  textEnabled: boolean;
+  textOptIn?: boolean | null;
+}
+
+export interface UserNotificationSettingsUpdateRequest {
+  emailEnabled: boolean;
+  textEnabled: boolean;
+  textOptIn?: boolean | null;
 }
 
 export interface UserPaginated {
@@ -7237,67 +7245,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/milestones/${id}`,
         method: "DELETE",
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags NotificationLogs
-     * @name GetNotificationLogs
-     * @summary Get All
-     * @request GET:/api/notifications/logs
-     * @secure
-     */
-    getNotificationLogs: (
-      query?: {
-        /** @format int32 */
-        pageSize?: number;
-        /** @format int32 */
-        pageNumber?: number;
-        sortBy?: string;
-        sortDirection?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<NotificationLog[], any>({
-        path: `/api/notifications/logs`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags NotificationLogs
-     * @name SearchNotificationLog
-     * @summary Search
-     * @request POST:/api/notifications/logs/search
-     * @secure
-     */
-    searchNotificationLog: (
-      data: NotificationLogSearchCriteria,
-      query?: {
-        /** @format int32 */
-        pageSize?: number;
-        /** @format int32 */
-        pageNumber?: number;
-        sortBy?: string;
-        sortDirection?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<NotificationLogPaginated, any>({
-        path: `/api/notifications/logs/search`,
-        method: "POST",
-        query: query,
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
         ...params,
       }),
 
