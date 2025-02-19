@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.13.0
+ * @version v2.14.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1595,6 +1595,16 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanQueue
+             * @name DeleteLoanQueue
+             * @summary Delete Loan Queue Item
+             * @request DELETE:/api/loans/queue/{loanQueueId}
+             * @secure
+             */
+            deleteLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanQueue
              * @name RetryLoanQueue
              * @summary Retry
              * @request POST:/api/loans/queue/{loanQueueId}/retry
@@ -1881,26 +1891,6 @@ export class Api extends HttpClient {
              * @secure
              */
             deleteMilestone: (id, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "DELETE", secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags NotificationLogs
-             * @name GetNotificationLogs
-             * @summary Get All
-             * @request GET:/api/notifications/logs
-             * @secure
-             */
-            getNotificationLogs: (query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags NotificationLogs
-             * @name SearchNotificationLog
-             * @summary Search
-             * @request POST:/api/notifications/logs/search
-             * @secure
-             */
-            searchNotificationLog: (data, query, params = {}) => this.request(Object.assign({ path: `/api/notifications/logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *

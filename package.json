@@ -1,6 +1,6 @@
 {
   "name": "@matech/thebigpos-sdk",
-  "version": "2.13.0",
+  "version": "2.14.0-rc6",
   "description": "The Big POS Typescript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
