@@ -237,6 +237,18 @@ export interface Attachment {
 }
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
+export interface BranchBase {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    name: string;
+    type: string;
+}
 export interface BranchReduced {
     /** @format uuid */
     id: string;
@@ -400,6 +412,17 @@ export interface Corporate {
     /** @uniqueItems true */
     branchIDs: string[];
     siteConfigurations: SiteConfigurationReduced[];
+}
+export interface CorporateBase {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    name: string;
 }
 export interface CorporatePaginated {
     rows: Corporate[];
@@ -1503,7 +1526,7 @@ export interface LoanQueueWithData {
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
-    data: any;
+    data?: any;
 }
 export interface LoanRecord {
     loanGuid: string;
@@ -2371,12 +2394,6 @@ export interface SiteConfigurationForm {
     icon: string;
     entityTypes: string[];
 }
-export interface SiteConfigurationPaginated {
-    rows: SiteConfiguration[];
-    pagination: Pagination;
-    /** @format int64 */
-    count: number;
-}
 export interface SiteConfigurationReduced {
     /** @format uuid */
     id: string;
@@ -2557,6 +2574,37 @@ export interface SiteConfigurationSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
     entityType?: string | null;
+    /** @format uuid */
+    branch?: string | null;
+    /** @format uuid */
+    brand?: string | null;
+    role?: UserRole | null;
+    branchType?: string | null;
+}
+export interface SiteConfigurationWithBranchBrandLOInformation {
+    /** @format uuid */
+    id: string;
+    url?: string | null;
+    name: string;
+    /** @format int64 */
+    nmlsid: number;
+    email?: string | null;
+    companyName?: string | null;
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    branch?: BranchBase | null;
+    corporate?: CorporateBase | null;
+    loanOfficer?: User | null;
+    realtor?: User | null;
+    branchName?: string | null;
+}
+export interface SiteConfigurationWithBranchBrandLOInformationPaginated {
+    rows: SiteConfigurationWithBranchBrandLOInformation[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
 }
 export interface SiteConfigurationWithInherited {
     siteConfiguration: SiteConfiguration;
@@ -3109,7 +3157,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.13.0
+ * @version v2.14.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5437,7 +5485,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationPaginated, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithBranchBrandLOInformationPaginated, any>>;
         /**
          * No description
          *
