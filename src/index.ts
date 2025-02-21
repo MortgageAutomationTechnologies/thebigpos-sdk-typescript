@@ -3326,27 +3326,6 @@ export interface UserSearchCriteria {
   roles?: string[] | null;
 }
 
-export interface Verification {
-  requestId: string;
-  message?: string | null;
-  status?: string | null;
-  ssoUrls?: Record<string, string>;
-}
-
-export interface VerificationRequest {
-  requestID?: string | null;
-  loanID?: string | null;
-  /** @minItems 1 */
-  operations: string[];
-  /** @format int32 */
-  _VerificationOperations?: number | null;
-  /** @format int32 */
-  verificationOperations: number;
-  newRequest?: boolean | null;
-  /** @format uuid */
-  loanTaskID?: string | null;
-}
-
 export interface VerifyPasswordRequest {
   /**
    * @format email
@@ -7155,6 +7134,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanTaskVerifications
+     * @name CreateLoanTaskVerification
+     * @summary Create
+     * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
+     * @secure
+     */
+    createLoanTaskVerification: (loanId: string, loanTaskId: string, params: RequestParams = {}) =>
+      this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
+        path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanUsers
      * @name GetLoanUsers
      * @summary Get All
@@ -8845,64 +8842,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name Verify
-     * @summary Verify
-     * @request POST:/api/verifications/verify
-     * @secure
-     */
-    verify: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/verify`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name GetVerificationStatus
-     * @summary Get Status
-     * @request POST:/api/verifications/status
-     * @secure
-     */
-    getVerificationStatus: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/status`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name GetVerificationFrontEndMaterials
-     * @summary Get Front End Materials
-     * @request GET:/api/verifications/frontend-materials/{requestId}
-     * @secure
-     */
-    getVerificationFrontEndMaterials: (requestId: string, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/frontend-materials/${requestId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
         ...params,
       }),
 
