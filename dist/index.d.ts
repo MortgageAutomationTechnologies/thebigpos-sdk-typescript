@@ -38,6 +38,15 @@ export interface Account {
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettings;
     asoSettings?: ASOSettings | null;
+    settings: AccountSettings;
+}
+export interface AccountSettings {
+    isSmsEnabled: boolean;
+    smsNumber?: string | null;
+}
+export interface AccountSettingsRequest {
+    isSmsEnabled: boolean;
+    smsNumber?: string | null;
 }
 export interface Action {
     /** @format uuid */
@@ -152,6 +161,7 @@ export interface AdminAccessUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
     /** @format uuid */
     accountID?: string | null;
     loans: UserLoan[];
@@ -170,8 +180,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    buyerAgent?: LoanContact | null;
-    titleInsuranceAgent?: LoanContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -217,9 +225,11 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
+    buyerAgent?: LoanContact | null;
     sellerAgent?: LoanContact | null;
     settlementAgent?: LoanContact | null;
     escrowAgent?: LoanContact | null;
+    titleInsuranceAgent?: LoanContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -227,6 +237,18 @@ export interface Attachment {
 }
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
+export interface BranchBase {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    name: string;
+    type: string;
+}
 export interface BranchReduced {
     /** @format uuid */
     id: string;
@@ -263,6 +285,7 @@ export interface BranchUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
     /** @format uuid */
     branchID: string;
     branchName: string;
@@ -390,6 +413,17 @@ export interface Corporate {
     branchIDs: string[];
     siteConfigurations: SiteConfigurationReduced[];
 }
+export interface CorporateBase {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    name: string;
+}
 export interface CorporatePaginated {
     rows: Corporate[];
     pagination: Pagination;
@@ -423,6 +457,7 @@ export interface CreateAccountRequest {
      * @min 0
      */
     nlmsid: number;
+    settings: AccountSettingsRequest;
 }
 export interface CreateBranchRequest {
     /**
@@ -527,6 +562,7 @@ export interface DetailedUser {
     canImpersonate: boolean;
     loanIDs: string[];
     drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
 }
 export interface Device {
     /** @format uuid */
@@ -770,7 +806,6 @@ export interface EnabledServices {
     borrowerTasks?: boolean | null;
     docusign?: boolean | null;
     emailNotifications?: boolean | null;
-    textNotifications?: boolean | null;
     voc?: boolean | null;
     spanishPrequal?: boolean | null;
     spanishFullApp?: boolean | null;
@@ -802,6 +837,8 @@ export interface Error {
     message: string;
 }
 export interface ExtendedLoan {
+    /** @format uuid */
+    id: string;
     loanID: string;
     loanNumber?: string | null;
     /** @format date-time */
@@ -1290,6 +1327,8 @@ export interface ListingSearchCriteria {
     partnerIds?: string[] | null;
 }
 export interface Loan {
+    /** @format uuid */
+    id: string;
     loanID: string;
     loanNumber?: string | null;
     /** @format date-time */
@@ -1444,11 +1483,12 @@ export interface LoanQueue {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    loanID?: string | null;
+    loan?: Loan | null;
     type: string;
     reason: string;
     status: string;
     details?: string | null;
+    jobID?: string | null;
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
@@ -1477,15 +1517,16 @@ export interface LoanQueueWithData {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    loanID?: string | null;
+    loan?: Loan | null;
     type: string;
     reason: string;
     status: string;
     details?: string | null;
+    jobID?: string | null;
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
-    data: any;
+    data?: any;
 }
 export interface LoanRecord {
     loanGuid: string;
@@ -1571,30 +1612,6 @@ export interface ModuleParameterValue {
     value?: any;
     isInherited: boolean;
 }
-export interface NotificationLog {
-    /** @format uuid */
-    id: string;
-    type: "Email" | "Text" | "PushNotification";
-    to: string;
-    cc?: string | null;
-    subject?: string | null;
-    message: string;
-    notificationTemplate?: NotificationTemplate | null;
-    /** @format date-time */
-    createdAt: string;
-}
-export interface NotificationLogPaginated {
-    rows: NotificationLog[];
-    pagination: Pagination;
-    /** @format int64 */
-    count: number;
-}
-export interface NotificationLogSearchCriteria {
-    searchText?: string | null;
-    type?: NotificationType | null;
-    to?: string[] | null;
-    cc?: string[] | null;
-}
 export interface NotificationTemplate {
     /** @format date-time */
     createdAt?: string | null;
@@ -1674,6 +1691,7 @@ export interface NotificationTemplateVersion {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
+    textBody: string;
     notificationTemplate: NotificationTemplate;
 }
 export interface NotificationTemplateVersionBase {
@@ -1691,6 +1709,7 @@ export interface NotificationTemplateVersionBase {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
+    textBody: string;
 }
 export interface NotificationTemplateVersionRequest {
     /** @maxLength 255 */
@@ -1698,6 +1717,7 @@ export interface NotificationTemplateVersionRequest {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
+    textBody: string;
 }
 export interface NotificationTemplateVersionUpdateRequest {
     /**
@@ -1710,8 +1730,9 @@ export interface NotificationTemplateVersionUpdateRequest {
     htmlBody: string;
     /** @minLength 1 */
     plainBody: string;
+    /** @minLength 1 */
+    textBody: string;
 }
-export type NotificationType = "Email" | "Text" | "PushNotification";
 export interface Operation {
     op?: string;
     value?: object | null;
@@ -1962,6 +1983,7 @@ export interface SendNotificationForLoanRequest {
     siteConfigurationId?: string | null;
     /** @minLength 1 */
     email: string;
+    phone?: string | null;
     attachments: Attachment[];
 }
 export interface SiteConfiguration {
@@ -2155,6 +2177,7 @@ export interface SiteConfiguration {
     modules: Module[];
     user?: UserPublic | null;
     asoSettings?: ASOSettings | null;
+    accountSettings: AccountSettings;
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
@@ -2347,6 +2370,7 @@ export interface SiteConfigurationByUrl {
     modules: Module[];
     user?: UserPublic | null;
     asoSettings?: ASOSettings | null;
+    accountSettings: AccountSettings;
     workflows: Workflow[];
 }
 export interface SiteConfigurationForm {
@@ -2369,12 +2393,6 @@ export interface SiteConfigurationForm {
     tileLocation: string;
     icon: string;
     entityTypes: string[];
-}
-export interface SiteConfigurationPaginated {
-    rows: SiteConfiguration[];
-    pagination: Pagination;
-    /** @format int64 */
-    count: number;
 }
 export interface SiteConfigurationReduced {
     /** @format uuid */
@@ -2556,6 +2574,37 @@ export interface SiteConfigurationSearchCriteria {
     searchText?: string | null;
     isActive?: boolean | null;
     entityType?: string | null;
+    /** @format uuid */
+    branch?: string | null;
+    /** @format uuid */
+    brand?: string | null;
+    role?: UserRole | null;
+    branchType?: string | null;
+}
+export interface SiteConfigurationWithBranchBrandLOInformation {
+    /** @format uuid */
+    id: string;
+    url?: string | null;
+    name: string;
+    /** @format int64 */
+    nmlsid: number;
+    email?: string | null;
+    companyName?: string | null;
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    branch?: BranchBase | null;
+    corporate?: CorporateBase | null;
+    loanOfficer?: User | null;
+    realtor?: User | null;
+    branchName?: string | null;
+}
+export interface SiteConfigurationWithBranchBrandLOInformationPaginated {
+    rows: SiteConfigurationWithBranchBrandLOInformation[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
 }
 export interface SiteConfigurationWithInherited {
     siteConfiguration: SiteConfiguration;
@@ -2682,6 +2731,7 @@ export interface TestSendNotificationForLoanRequest {
     /** @format uuid */
     siteConfigurationId: string;
     toAddress?: string | null;
+    toPhoneNumber?: string | null;
     templateName?: string | null;
     attachments: Attachment[];
 }
@@ -2778,6 +2828,7 @@ export interface UpdateAccountRequest {
     allowedLoginsWithoutMFA: number;
     losSettings: LOSSettingsUpdateRequest;
     asoSettings?: ASOSettings | null;
+    settings: AccountSettingsRequest;
 }
 export interface UpdateDocumentTemplateRequest {
     /** @minLength 1 */
@@ -2833,6 +2884,7 @@ export interface UpdateMeRequest {
     title?: string | null;
     forcePasswordReset: boolean;
     mfaEnabled: boolean;
+    notificationSettings: UserNotificationSettingsUpdateRequest;
 }
 export interface UpdateMobilePhoneRequest {
     phone: string;
@@ -2928,6 +2980,16 @@ export interface UserLoanTaskUpdateRequest {
 export interface UserMobilePhoneVerificationRequest {
     /** @minLength 1 */
     code: string;
+}
+export interface UserNotificationSettings {
+    emailEnabled: boolean;
+    textEnabled: boolean;
+    textOptIn?: boolean | null;
+}
+export interface UserNotificationSettingsUpdateRequest {
+    emailEnabled: boolean;
+    textEnabled: boolean;
+    textOptIn?: boolean | null;
 }
 export interface UserPaginated {
     rows: User[];
@@ -3095,7 +3157,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.13.0
+ * @version v2.14.2
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4774,6 +4836,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanQueue
+         * @name DeleteLoanQueue
+         * @summary Delete Loan Queue Item
+         * @request DELETE:/api/loans/queue/{loanQueueId}
+         * @secure
+         */
+        deleteLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanQueue
          * @name RetryLoanQueue
          * @summary Retry
          * @request POST:/api/loans/queue/{loanQueueId}/retry
@@ -5086,40 +5158,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         deleteMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
-        /**
-         * No description
-         *
-         * @tags NotificationLogs
-         * @name GetNotificationLogs
-         * @summary Get All
-         * @request GET:/api/notifications/logs
-         * @secure
-         */
-        getNotificationLogs: (query?: {
-            /** @format int32 */
-            pageSize?: number;
-            /** @format int32 */
-            pageNumber?: number;
-            sortBy?: string;
-            sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<NotificationLog[], any>>;
-        /**
-         * No description
-         *
-         * @tags NotificationLogs
-         * @name SearchNotificationLog
-         * @summary Search
-         * @request POST:/api/notifications/logs/search
-         * @secure
-         */
-        searchNotificationLog: (data: NotificationLogSearchCriteria, query?: {
-            /** @format int32 */
-            pageSize?: number;
-            /** @format int32 */
-            pageNumber?: number;
-            sortBy?: string;
-            sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<NotificationLogPaginated, any>>;
         /**
          * No description
          *
@@ -5447,7 +5485,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationPaginated, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithBranchBrandLOInformationPaginated, any>>;
         /**
          * No description
          *
