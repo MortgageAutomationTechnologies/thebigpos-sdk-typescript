@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.14.1
+ * @version v2.14.2
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1814,16 +1814,6 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTaskVerifications
-             * @name CreateLoanTaskVerification
-             * @summary Create
-             * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
-             * @secure
-             */
-            createLoanTaskVerification: (loanId, loanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`, method: "POST", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
              * @tags LoanUsers
              * @name GetLoanUsers
              * @summary Get All
@@ -2656,6 +2646,36 @@ export class Api extends HttpClient {
              * @secure
              */
             deleteMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me/delete`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name Verify
+             * @summary Verify
+             * @request POST:/api/verifications/verify
+             * @secure
+             */
+            verify: (data, params = {}) => this.request(Object.assign({ path: `/api/verifications/verify`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name GetVerificationStatus
+             * @summary Get Status
+             * @request POST:/api/verifications/status
+             * @secure
+             */
+            getVerificationStatus: (data, params = {}) => this.request(Object.assign({ path: `/api/verifications/status`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Verifications
+             * @name GetVerificationFrontEndMaterials
+             * @summary Get Front End Materials
+             * @request GET:/api/verifications/frontend-materials/{requestId}
+             * @secure
+             */
+            getVerificationFrontEndMaterials: (requestId, params = {}) => this.request(Object.assign({ path: `/api/verifications/frontend-materials/${requestId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
