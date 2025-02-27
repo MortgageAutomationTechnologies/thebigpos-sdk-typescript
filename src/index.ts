@@ -1596,11 +1596,14 @@ export interface LoanDraftSearchCriteria {
 export interface LoanLog {
   /** @format uuid */
   id: string;
-  level: string;
+  level: "None" | "Info" | "Warning" | "Error";
+  type: "Loan" | "Queue" | "POSFlagChanged" | "Verification";
   message: string;
   /** @format date-time */
   createdAt: string;
 }
+
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
 
 export interface LoanOfficer {
   /** @format uuid */
@@ -1722,6 +1725,8 @@ export interface LoanUser {
   /** @format date-time */
   createdAt: string;
 }
+
+export type LogLevel = "None" | "Info" | "Warning" | "Error";
 
 export interface MdmUser {
   user_email?: string | null;
@@ -3326,27 +3331,6 @@ export interface UserSearchCriteria {
   roles?: string[] | null;
 }
 
-export interface Verification {
-  requestId: string;
-  message?: string | null;
-  status?: string | null;
-  ssoUrls?: Record<string, string>;
-}
-
-export interface VerificationRequest {
-  requestID?: string | null;
-  loanID?: string | null;
-  /** @minItems 1 */
-  operations: string[];
-  /** @format int32 */
-  _VerificationOperations?: number | null;
-  /** @format int32 */
-  verificationOperations: number;
-  newRequest?: boolean | null;
-  /** @format uuid */
-  loanTaskID?: string | null;
-}
-
 export interface VerifyPasswordRequest {
   /**
    * @format email
@@ -3516,7 +3500,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.14.2
+ * @version v2.14.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -7155,6 +7139,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanTaskVerifications
+     * @name CreateLoanTaskVerification
+     * @summary Create
+     * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
+     * @secure
+     */
+    createLoanTaskVerification: (loanId: string, loanTaskId: string, params: RequestParams = {}) =>
+      this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
+        path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanUsers
      * @name GetLoanUsers
      * @summary Get All
@@ -8845,64 +8847,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name Verify
-     * @summary Verify
-     * @request POST:/api/verifications/verify
-     * @secure
-     */
-    verify: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/verify`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name GetVerificationStatus
-     * @summary Get Status
-     * @request POST:/api/verifications/status
-     * @secure
-     */
-    getVerificationStatus: (data: VerificationRequest, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/status`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Verifications
-     * @name GetVerificationFrontEndMaterials
-     * @summary Get Front End Materials
-     * @request GET:/api/verifications/frontend-materials/{requestId}
-     * @secure
-     */
-    getVerificationFrontEndMaterials: (requestId: string, params: RequestParams = {}) =>
-      this.request<Verification, UnprocessableEntity>({
-        path: `/api/verifications/frontend-materials/${requestId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
         ...params,
       }),
 

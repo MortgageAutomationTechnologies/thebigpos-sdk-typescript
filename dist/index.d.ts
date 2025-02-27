@@ -1441,11 +1441,13 @@ export interface LoanDraftSearchCriteria {
 export interface LoanLog {
     /** @format uuid */
     id: string;
-    level: string;
+    level: "None" | "Info" | "Warning" | "Error";
+    type: "Loan" | "Queue" | "POSFlagChanged" | "Verification";
     message: string;
     /** @format date-time */
     createdAt: string;
 }
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
 export interface LoanOfficer {
     /** @format uuid */
     id: string;
@@ -1555,6 +1557,7 @@ export interface LoanUser {
     /** @format date-time */
     createdAt: string;
 }
+export type LogLevel = "None" | "Info" | "Warning" | "Error";
 export interface MdmUser {
     user_email?: string | null;
     user_id?: string | null;
@@ -3064,25 +3067,6 @@ export interface UserSearchCriteria {
     isActive?: boolean | null;
     roles?: string[] | null;
 }
-export interface Verification {
-    requestId: string;
-    message?: string | null;
-    status?: string | null;
-    ssoUrls?: Record<string, string>;
-}
-export interface VerificationRequest {
-    requestID?: string | null;
-    loanID?: string | null;
-    /** @minItems 1 */
-    operations: string[];
-    /** @format int32 */
-    _VerificationOperations?: number | null;
-    /** @format int32 */
-    verificationOperations: number;
-    newRequest?: boolean | null;
-    /** @format uuid */
-    loanTaskID?: string | null;
-}
 export interface VerifyPasswordRequest {
     /**
      * @format email
@@ -3157,7 +3141,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.14.2
+ * @version v2.14.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5081,6 +5065,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanTaskVerifications
+         * @name CreateLoanTaskVerification
+         * @summary Create
+         * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
+         * @secure
+         */
+        createLoanTaskVerification: (loanId: string, loanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
+        /**
+         * No description
+         *
          * @tags LoanUsers
          * @name GetLoanUsers
          * @summary Get All
@@ -5980,36 +5974,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         deleteMe: (data: UserAccountDeletionRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
-        /**
-         * No description
-         *
-         * @tags Verifications
-         * @name Verify
-         * @summary Verify
-         * @request POST:/api/verifications/verify
-         * @secure
-         */
-        verify: (data: VerificationRequest, params?: RequestParams) => Promise<AxiosResponse<Verification, any>>;
-        /**
-         * No description
-         *
-         * @tags Verifications
-         * @name GetVerificationStatus
-         * @summary Get Status
-         * @request POST:/api/verifications/status
-         * @secure
-         */
-        getVerificationStatus: (data: VerificationRequest, params?: RequestParams) => Promise<AxiosResponse<Verification, any>>;
-        /**
-         * No description
-         *
-         * @tags Verifications
-         * @name GetVerificationFrontEndMaterials
-         * @summary Get Front End Materials
-         * @request GET:/api/verifications/frontend-materials/{requestId}
-         * @secure
-         */
-        getVerificationFrontEndMaterials: (requestId: string, params?: RequestParams) => Promise<AxiosResponse<Verification, any>>;
         /**
          * No description
          *
