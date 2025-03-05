@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.14.3
+ * @version v2.14.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */

@@ -1,13 +1,13 @@
 {
   "name": "@matech/thebigpos-sdk",
-  "version": "2.14.3",
+  "version": "2.14.5",
   "description": "The Big POS Typescript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "mocha -r ts-node/register 'src/api_test.spec.ts' --exit",
-    "browserify": "tsc && browserify -p tinyify dist/index.js -s orcaloans > dist/orcaloans.min.js",
+    "browserify": "tsc && browserify -p tinyify dist/index.js -s thebigpos > dist/thebigpos.min.js",
     "prepare": "husky"
   },
   "repository": {
