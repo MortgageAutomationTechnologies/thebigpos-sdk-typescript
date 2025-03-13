@@ -180,9 +180,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    buyerAgent?: LoanContact | null;
-    settlementAgent?: LoanContact | null;
-    titleInsuranceAgent?: LoanContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -228,8 +225,11 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
+    buyerAgent?: LoanContact | null;
     sellerAgent?: LoanContact | null;
+    settlementAgent?: LoanContact | null;
     escrowAgent?: LoanContact | null;
+    titleInsuranceAgent?: LoanContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -1634,7 +1634,7 @@ export interface NotificationTemplate {
     textEnabled: boolean;
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
-    textBody: string;
+    textBody?: string | null;
     pushNotificationBody: string;
     isDefault: boolean;
     status: string;
@@ -1658,7 +1658,7 @@ export interface NotificationTemplateBase {
     textEnabled: boolean;
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
-    textBody: string;
+    textBody?: string | null;
     pushNotificationBody: string;
     isDefault: boolean;
     status: string;
@@ -1676,7 +1676,7 @@ export interface NotificationTemplateRequest {
     textEnabled: boolean;
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
-    textBody: string;
+    textBody?: string | null;
     pushNotificationBody: string;
     status: string;
     useDefaultHeaderAndFooter: boolean;
@@ -1696,7 +1696,7 @@ export interface NotificationTemplateVersion {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
-    textBody: string;
+    textBody?: string | null;
     notificationTemplate: NotificationTemplate;
 }
 export interface NotificationTemplateVersionBase {
@@ -1714,7 +1714,7 @@ export interface NotificationTemplateVersionBase {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
-    textBody: string;
+    textBody?: string | null;
 }
 export interface NotificationTemplateVersionRequest {
     /** @maxLength 255 */
@@ -1722,7 +1722,7 @@ export interface NotificationTemplateVersionRequest {
     isActive: boolean;
     htmlBody: string;
     plainBody: string;
-    textBody: string;
+    textBody?: string | null;
 }
 export interface NotificationTemplateVersionUpdateRequest {
     /**
@@ -1735,8 +1735,7 @@ export interface NotificationTemplateVersionUpdateRequest {
     htmlBody: string;
     /** @minLength 1 */
     plainBody: string;
-    /** @minLength 1 */
-    textBody: string;
+    textBody?: string | null;
 }
 export interface Operation {
     op?: string;
@@ -2656,6 +2655,8 @@ export interface Task {
     targetUserRole?: string | null;
     /** @format int32 */
     daysDueFromApplication?: number | null;
+    /** @format int32 */
+    weight: number;
     isGlobal: boolean;
     /** @format uuid */
     id: string;
@@ -2703,6 +2704,8 @@ export interface TaskRequest {
      * @min 0
      */
     daysDueFromApplication?: number | null;
+    /** @format int32 */
+    weight: number;
     isGlobal: boolean;
     willAutocompleteAfterResponse: boolean;
     hasAutoPropagationOnAdd: boolean;
@@ -2725,6 +2728,8 @@ export interface TaskUpdateRequest {
      * @min 0
      */
     daysDueFromApplication?: number | null;
+    /** @format int32 */
+    weight: number;
     isGlobal: boolean;
     willAutocompleteAfterResponse: boolean;
     hasAutoPropagationOnAdd: boolean;
@@ -3143,7 +3148,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.14.4
+ * @version v2.15.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
