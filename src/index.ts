@@ -112,31 +112,6 @@ export interface AddressRequest {
   postalCode: string;
 }
 
-export interface AdminAccessGetForm {
-  /** @format date-time */
-  createdAt?: string | null;
-  /** @format date-time */
-  updatedAt?: string | null;
-  /** @format date-time */
-  deletedAt?: string | null;
-  /** @format uuid */
-  id: string;
-  formJSON: any;
-  /** @format int32 */
-  type: number;
-  target: string;
-  authType: string;
-  name: string;
-  isDefault: boolean;
-  description?: string | null;
-  slug?: string | null;
-  status: string;
-  language?: string | null;
-  showProgressBar: boolean;
-  borrowerType?: BorrowerType | null;
-  versions: FormVersion[];
-}
-
 export interface AdminAccessGetForms {
   /** @format date-time */
   createdAt?: string | null;
@@ -509,6 +484,8 @@ export interface CreateAccountRequest {
    */
   nlmsid: number;
   settings: AccountSettingsRequest;
+  environment: "Development" | "Staging" | "UAT" | "Production";
+  losIntegration: LOSIntegration;
 }
 
 export interface CreateBranchRequest {
@@ -914,6 +891,8 @@ export interface EnabledServices {
 
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
 
+export type Environment = "Development" | "Staging" | "UAT" | "Production";
+
 export interface Error {
   message: string;
 }
@@ -1030,6 +1009,31 @@ export type FilterType =
   | "StringNotEmpty"
   | "StringNotEquals"
   | "StringNotContains";
+
+export interface Form {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  formJSON: any;
+  /** @format int32 */
+  type: number;
+  target: string;
+  authType: string;
+  name: string;
+  isDefault: boolean;
+  description?: string | null;
+  slug?: string | null;
+  status: string;
+  language?: string | null;
+  showProgressBar: boolean;
+  borrowerType?: BorrowerType | null;
+  versions: FormVersion[];
+}
 
 export interface FormRequest {
   formJSON: any;
@@ -1370,6 +1374,10 @@ export interface Invite {
 
 /** Array of operations to perform */
 export type JsonPatchDocument = Operation[];
+
+export interface LOSIntegration {
+  instanceID: string;
+}
 
 export interface LOSSettings {
   loanClosingDateFieldID: string;
@@ -2153,6 +2161,8 @@ export interface RunLOCalculationRequest {
   additionalPreApprovalNotes?: string | null;
 }
 
+export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS";
+
 export interface SSOToken {
   /** @format uuid */
   ssoTokenForSignIn: string;
@@ -2167,6 +2177,10 @@ export interface SSOTokenRequest {
   email: string;
   /** @minLength 1 */
   redirectUri: string;
+}
+
+export interface SamlMetadataRequest {
+  ssoIntegration: "ConsumerConnect" | "TheBigPOS";
 }
 
 export interface SendForgotPasswordRequest {
@@ -2201,6 +2215,7 @@ export interface SiteConfiguration {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
+  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -2395,6 +2410,7 @@ export interface SiteConfigurationByUrl {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
+  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -2606,6 +2622,7 @@ export interface SiteConfigurationForm {
 export interface SiteConfigurationReduced {
   /** @format uuid */
   id: string;
+  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -2623,6 +2640,7 @@ export interface SiteConfigurationRequest {
   entityID: string;
   /** @format int32 */
   entityType: number;
+  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
   url: string;
   name: string;
   introduction?: string | null;
@@ -2796,6 +2814,7 @@ export interface SiteConfigurationSearchCriteria {
 export interface SiteConfigurationSummary {
   /** @format uuid */
   id: string;
+  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -2819,6 +2838,8 @@ export interface SiteConfigurationSummaryPaginated {
   /** @format int64 */
   count: number;
 }
+
+export type SiteConfigurationType = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 
 export interface SiteConfigurationWithInherited {
   siteConfiguration: SiteConfiguration;
@@ -3509,7 +3530,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.15.0
+ * @version v2.15.2
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5001,7 +5022,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createForm: (data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForm, UnprocessableEntity>({
+      this.request<Form, UnprocessableEntity>({
         path: `/api/forms`,
         method: "POST",
         body: data,
@@ -5021,7 +5042,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForm, any>({
+      this.request<Form, any>({
         path: `/api/forms/${id}`,
         method: "GET",
         secure: true,
@@ -5039,7 +5060,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     replaceForm: (id: string, data: FormRequest, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForm, UnprocessableEntity>({
+      this.request<Form, UnprocessableEntity>({
         path: `/api/forms/${id}`,
         method: "PUT",
         body: data,
@@ -5076,7 +5097,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     restoreForm: (id: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForm, any>({
+      this.request<Form, any>({
         path: `/api/forms/${id}/restore`,
         method: "POST",
         secure: true,
@@ -7974,12 +7995,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
      * @secure
      */
-    getSamlMetadata: (ssoIntegration: string, params: RequestParams = {}) =>
+    getSamlMetadata: (
+      sSoIntegration: "ConsumerConnect" | "TheBigPOS",
+      ssoIntegration: string,
+      params: RequestParams = {},
+    ) =>
       this.request<string, any>({
         path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`,
         method: "GET",
         secure: true,
-        format: "json",
         ...params,
       }),
 
