@@ -179,6 +179,7 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
+  settlementAgent?: LoanContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -226,7 +227,6 @@ export interface ApplicationRowData {
   loanPurpose?: string | null;
   buyerAgent?: LoanContact | null;
   sellerAgent?: LoanContact | null;
-  settlementAgent?: LoanContact | null;
   escrowAgent?: LoanContact | null;
   titleInsuranceAgent?: LoanContact | null;
 }
