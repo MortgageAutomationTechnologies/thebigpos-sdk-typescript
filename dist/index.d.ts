@@ -156,7 +156,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    settlementAgent?: LoanContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -204,6 +203,7 @@ export interface ApplicationRowData {
     loanPurpose?: string | null;
     buyerAgent?: LoanContact | null;
     sellerAgent?: LoanContact | null;
+    settlementAgent?: LoanContact | null;
     escrowAgent?: LoanContact | null;
     titleInsuranceAgent?: LoanContact | null;
 }
@@ -3164,7 +3164,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.15.2
+ * @version v2.15.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
