@@ -468,7 +468,7 @@ export interface CreateInviteRequest {
     lastName: string;
     /** @format email */
     emailAddress: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     relationship: "NotApplicable" | "Spouse" | "NonSpouse";
     loanID: string;
     route?: string | null;
@@ -1084,6 +1084,7 @@ export interface GenerateDocumentRequest {
      */
     siteConfigurationID: string;
     preview: boolean;
+    recipients: string[];
 }
 export interface GetApplications {
     applications: ApplicationRowData[];
@@ -1985,8 +1986,6 @@ export interface SendForgotPasswordRequest {
      * @minLength 1
      */
     email: string;
-    /** @format uuid */
-    siteConfigurationId?: string | null;
 }
 export interface SendNotificationForLoanRequest {
     /** @minLength 1 */
@@ -2019,11 +2018,7 @@ export interface SiteConfiguration {
     name: string;
     introduction?: string | null;
     introductionTitle?: string | null;
-    /**
-     * @format int64
-     * @min 1000
-     * @max 999999999999
-     */
+    /** @format int64 */
     nmlsid: number;
     address?: string | null;
     address2?: string | null;
@@ -2213,11 +2208,7 @@ export interface SiteConfigurationByUrl {
     name: string;
     introduction?: string | null;
     introductionTitle?: string | null;
-    /**
-     * @format int64
-     * @min 1000
-     * @max 999999999999
-     */
+    /** @format int64 */
     nmlsid: number;
     address?: string | null;
     address2?: string | null;
@@ -3164,7 +3155,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.15.4
+ * @version v2.15.15
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
