@@ -3481,7 +3481,9 @@ export class HttpClient<SecurityDataType = unknown> {
       const propertyContent: any[] = property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || formItem instanceof File;
+        const isRNFileType = formItem && typeof formItem === "object" && "uri" in formItem && "name" in formItem && "type" in formItem;
+        const isWebFileType = formItem instanceof Blob || formItem instanceof File;
+        const isFileType = isRNFileType || isWebFileType;
         formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
       }
 
