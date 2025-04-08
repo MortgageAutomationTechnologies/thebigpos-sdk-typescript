@@ -2094,16 +2094,6 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags Pricing
-             * @name GetPricingCalculation
-             * @summary Get Pricing Calculation
-             * @request POST:/api/pricing/calculator
-             * @secure
-             */
-            getPricingCalculation: (data, params = {}) => this.request(Object.assign({ path: `/api/pricing/calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
              * @tags RequestQueue
              * @name GetRequestQueues
              * @summary Get All

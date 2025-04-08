@@ -224,11 +224,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent?: LoanContact | null;
-  sellerAgent?: LoanContact | null;
-  settlementAgent?: LoanContact | null;
-  escrowAgent?: LoanContact | null;
-  titleInsuranceAgent?: LoanContact | null;
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -855,7 +855,6 @@ export interface EnabledServices {
   fullApp?: boolean | null;
   mobileApp?: boolean | null;
   ringCentral?: boolean | null;
-  pricingCalculator?: boolean | null;
   rates?: boolean | null;
   socialSurvey?: boolean | null;
   borrowerTasks?: boolean | null;
@@ -887,6 +886,13 @@ export interface EnabledServices {
   openHouseForm?: boolean | null;
   listingOfferForm?: boolean | null;
   listings?: boolean | null;
+}
+
+export interface EncompassContact {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  company?: string | null;
 }
 
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
@@ -940,6 +946,8 @@ export interface ExtendedLoan {
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
+  userLoans: UserLoan[];
+  contacts: LoanContact[];
   buyerAgentContact?: Contact | null;
   sellerAgentContact?: Contact | null;
   escrowAgentContact?: Contact | null;
@@ -1261,36 +1269,6 @@ export interface GetForm {
   id: string;
 }
 
-export interface GetPricingCalculationRequest {
-  eppsUserName?: string | null;
-  /** @format int32 */
-  loanAmount: number;
-  /** @format int32 */
-  totalMortgageAmount: number;
-  /** @format int32 */
-  propertyValue: number;
-  propertyType?: string | null;
-  zipCode?: string | null;
-  county?: string | null;
-  city?: string | null;
-  state?: string | null;
-  /** @minLength 1 */
-  loanPurpose: string;
-  propertyOccupancy?: string | null;
-  escrow?: string | null;
-  escrowInsurance: boolean;
-  escrowTaxes: boolean;
-  loanTerm?: string | null;
-  loanType?: string | null;
-  creditScore?: string | null;
-  /** @format uuid */
-  siteConfigurationId: string;
-}
-
-export interface GetPricingForLoanOfficer {
-  rates: PricingRates[];
-}
-
 export interface GetReport {
   loanRecords: LoanRecord[];
   invalidFieldIDs: string[];
@@ -1531,6 +1509,8 @@ export interface Loan {
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
+  userLoans: UserLoan[];
+  contacts: LoanContact[];
 }
 
 export interface LoanComparison {
@@ -1572,10 +1552,33 @@ export interface LoanComparisonScenario {
 }
 
 export interface LoanContact {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
   name?: string | null;
   email?: string | null;
   phone?: string | null;
-  company?: string | null;
+  companyName?: string | null;
+  role:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
 }
 
 export interface LoanDocument {
@@ -1713,6 +1716,20 @@ export interface LoanRecord {
   loanGuid: string;
   loanFields: Record<string, string>;
 }
+
+export type LoanRole =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
 
 export interface LoanSearchCriteria {
   searchText?: string | null;
@@ -2003,16 +2020,6 @@ export interface PreliminaryCondition {
   /** @format date-time */
   rerequestedDate?: string | null;
   rerequestedBy?: CommentUserInformation | null;
-}
-
-export interface PricingRates {
-  rate: string;
-  loanProgram: string;
-  apr: string;
-  /** @format float */
-  price: number;
-  /** @format float */
-  payment: number;
 }
 
 export interface ProblemDetails {
@@ -3205,7 +3212,29 @@ export interface UserBase {
 }
 
 export interface UserLoan {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
   loanID: string;
+  user?: User | null;
+  role:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
+  /** @format int32 */
+  borrowerPair: number;
   customLoanData?: CustomLoanData | null;
 }
 
@@ -7732,26 +7761,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
         method: "PUT",
         query: query,
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Pricing
-     * @name GetPricingCalculation
-     * @summary Get Pricing Calculation
-     * @request POST:/api/pricing/calculator
-     * @secure
-     */
-    getPricingCalculation: (data: GetPricingCalculationRequest, params: RequestParams = {}) =>
-      this.request<GetPricingForLoanOfficer, UnprocessableEntity>({
-        path: `/api/pricing/calculator`,
-        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
