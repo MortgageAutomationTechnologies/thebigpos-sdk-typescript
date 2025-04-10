@@ -1494,6 +1494,26 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanInvites
+             * @name GetLoanInvites
+             * @summary Get Invites
+             * @request GET:/api/loans/{loanId}/invites
+             * @secure
+             */
+            getLoanInvites: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanInvites
+             * @name CreateLoanInvites
+             * @summary Invite Contact
+             * @request POST:/api/loans/{loanId}/invites
+             * @secure
+             */
+            createLoanInvites: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All

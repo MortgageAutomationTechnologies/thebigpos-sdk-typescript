@@ -1405,6 +1405,7 @@ export interface LoanContact {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
+    fullName?: string | null;
     firstName?: string | null;
     lastName?: string | null;
     name?: string | null;
@@ -2882,6 +2883,7 @@ export interface UpdateMeRequest {
      * @maxLength 255
      */
     lastName: string;
+    email: string;
     title?: string | null;
     forcePasswordReset: boolean;
     mfaEnabled: boolean;
@@ -2902,6 +2904,7 @@ export interface UpdateUserRequest {
      * @maxLength 255
      */
     lastName: string;
+    email: string;
     title?: string | null;
     /** @format uuid */
     branchId?: string | null;
@@ -4700,6 +4703,26 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanInvites
+         * @name GetLoanInvites
+         * @summary Get Invites
+         * @request GET:/api/loans/{loanId}/invites
+         * @secure
+         */
+        getLoanInvites: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanInvites
+         * @name CreateLoanInvites
+         * @summary Invite Contact
+         * @request POST:/api/loans/{loanId}/invites
+         * @secure
+         */
+        createLoanInvites: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
         /**
          * No description
          *

@@ -1560,6 +1560,7 @@ export interface LoanContact {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
+  fullName?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   name?: string | null;
@@ -3146,6 +3147,7 @@ export interface UpdateMeRequest {
    * @maxLength 255
    */
   lastName: string;
+  email: string;
   title?: string | null;
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
@@ -3168,6 +3170,7 @@ export interface UpdateUserRequest {
    * @maxLength 255
    */
   lastName: string;
+  email: string;
   title?: string | null;
   /** @format uuid */
   branchId?: string | null;
@@ -6467,6 +6470,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}/reassign`,
         method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanInvites
+     * @name GetLoanInvites
+     * @summary Get Invites
+     * @request GET:/api/loans/{loanId}/invites
+     * @secure
+     */
+    getLoanInvites: (loanId: string, params: RequestParams = {}) =>
+      this.request<Invite[], ProblemDetails>({
+        path: `/api/loans/${loanId}/invites`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanInvites
+     * @name CreateLoanInvites
+     * @summary Invite Contact
+     * @request POST:/api/loans/{loanId}/invites
+     * @secure
+     */
+    createLoanInvites: (loanId: string, data: string[], params: RequestParams = {}) =>
+      this.request<Invite[], ProblemDetails>({
+        path: `/api/loans/${loanId}/invites`,
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
