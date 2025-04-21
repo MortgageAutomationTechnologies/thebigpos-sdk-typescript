@@ -521,14 +521,27 @@ export interface CreateInviteRequest {
   /** @format email */
   emailAddress: string;
   phoneNumber?: string | null;
+  /** @deprecated */
   relationship: "NotApplicable" | "Spouse" | "NonSpouse";
   loanID: string;
   route?: string | null;
   /** @format uuid */
   siteConfigurationID: string;
+  /** @deprecated */
   userRole?: string | null;
-  customData?: any;
-  sourceUrl?: string | null;
+  loanRole:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
 }
 
 export interface CreateUserRelationRequest {
@@ -7240,24 +7253,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`,
         method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LoanUsers
-     * @name GetLoanUsers
-     * @summary Get All
-     * @request GET:/api/loans/{loanId}/users
-     * @secure
-     */
-    getLoanUsers: (loanId: string, params: RequestParams = {}) =>
-      this.request<LoanUser[], any>({
-        path: `/api/loans/${loanId}/users`,
-        method: "GET",
         secure: true,
         format: "json",
         ...params,

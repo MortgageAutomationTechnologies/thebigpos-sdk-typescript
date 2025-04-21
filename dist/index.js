@@ -1845,16 +1845,6 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanUsers
-             * @name GetLoanUsers
-             * @summary Get All
-             * @request GET:/api/loans/{loanId}/users
-             * @secure
-             */
-            getLoanUsers: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanUsers
              * @name GetLoanUser
              * @summary Get Loan User
              * @request GET:/api/loans/{loanId}/users/{userId}
