@@ -179,6 +179,11 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -224,11 +229,6 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent?: EncompassContact | null;
-  sellerAgent?: EncompassContact | null;
-  settlementAgent?: EncompassContact | null;
-  escrowAgent?: EncompassContact | null;
-  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
