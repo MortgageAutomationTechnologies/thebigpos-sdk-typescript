@@ -1344,6 +1344,8 @@ export interface ImportUserLoanTaskRequest {
 }
 
 export interface Invite {
+  /** @format uuid */
+  id: string;
   firstName: string;
   lastName: string;
   emailAddress: string;
