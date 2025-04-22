@@ -179,11 +179,6 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
-  buyerAgent?: EncompassContact | null;
-  sellerAgent?: EncompassContact | null;
-  settlementAgent?: EncompassContact | null;
-  escrowAgent?: EncompassContact | null;
-  titleInsuranceAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -229,6 +224,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -954,8 +954,6 @@ export interface ExtendedLoan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
-  borrowerContact?: Contact | null;
-  coBorrowerContact?: Contact | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
@@ -1360,8 +1358,11 @@ export interface Invite {
   userRole: string;
   loanRole: string;
   customData: any;
+  /** @format uuid */
+  oneTimeToken: string;
   /** @format date-time */
   createdAt: string;
+  invitedBy?: User | null;
 }
 
 /** Array of operations to perform */
@@ -1517,8 +1518,6 @@ export interface Loan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
-  borrowerContact?: Contact | null;
-  coBorrowerContact?: Contact | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
@@ -6512,12 +6511,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanInvites
-     * @name CreateLoanInvites
-     * @summary Invite Contact
+     * @name InviteLoanContacts
+     * @summary Invite Contacts
      * @request POST:/api/loans/{loanId}/invites
      * @secure
      */
-    createLoanInvites: (loanId: string, data: string[], params: RequestParams = {}) =>
+    inviteLoanContacts: (loanId: string, data: string[], params: RequestParams = {}) =>
       this.request<Invite[], ProblemDetails>({
         path: `/api/loans/${loanId}/invites`,
         method: "POST",
@@ -8402,6 +8401,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserInvites
+     * @name ResendInviteNotification
+     * @summary Re-Send Notification
+     * @request PUT:/api/users/invites/{id}/resend
+     * @secure
+     */
+    resendInviteNotification: (id: string, params: RequestParams = {}) =>
+      this.request<void, UnprocessableEntity>({
+        path: `/api/users/invites/${id}/resend`,
+        method: "PUT",
+        secure: true,
         ...params,
       }),
 

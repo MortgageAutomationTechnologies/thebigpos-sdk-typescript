@@ -156,11 +156,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    buyerAgent?: EncompassContact | null;
-    sellerAgent?: EncompassContact | null;
-    settlementAgent?: EncompassContact | null;
-    escrowAgent?: EncompassContact | null;
-    titleInsuranceAgent?: EncompassContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -206,6 +201,11 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
+    buyerAgent?: EncompassContact | null;
+    sellerAgent?: EncompassContact | null;
+    settlementAgent?: EncompassContact | null;
+    escrowAgent?: EncompassContact | null;
+    titleInsuranceAgent?: EncompassContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -861,8 +861,6 @@ export interface ExtendedLoan {
     status?: string | null;
     loanOfficer?: LoanOfficer | null;
     propertyAddress?: Address | null;
-    borrowerContact?: Contact | null;
-    coBorrowerContact?: Contact | null;
     loanLogs: LoanLog[];
     isLocked: boolean;
     source?: string | null;
@@ -1208,8 +1206,11 @@ export interface Invite {
     userRole: string;
     loanRole: string;
     customData: any;
+    /** @format uuid */
+    oneTimeToken: string;
     /** @format date-time */
     createdAt: string;
+    invitedBy?: User | null;
 }
 /** Array of operations to perform */
 export type JsonPatchDocument = Operation[];
@@ -1353,8 +1354,6 @@ export interface Loan {
     status?: string | null;
     loanOfficer?: LoanOfficer | null;
     propertyAddress?: Address | null;
-    borrowerContact?: Contact | null;
-    coBorrowerContact?: Contact | null;
     loanLogs: LoanLog[];
     isLocked: boolean;
     source?: string | null;
@@ -4718,12 +4717,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanInvites
-         * @name CreateLoanInvites
-         * @summary Invite Contact
+         * @name InviteLoanContacts
+         * @summary Invite Contacts
          * @request POST:/api/loans/{loanId}/invites
          * @secure
          */
-        createLoanInvites: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
+        inviteLoanContacts: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
         /**
          * No description
          *
@@ -5709,6 +5708,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         inviteUser: (data: CreateInviteRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags UserInvites
+         * @name ResendInviteNotification
+         * @summary Re-Send Notification
+         * @request PUT:/api/users/invites/{id}/resend
+         * @secure
+         */
+        resendInviteNotification: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
