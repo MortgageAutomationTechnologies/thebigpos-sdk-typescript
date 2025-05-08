@@ -476,8 +476,8 @@ export interface CreateInviteRequest {
     /** @format uuid */
     siteConfigurationID: string;
     /** @deprecated */
-    userRole?: string | null;
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    userRole?: UserRole | null;
+    loanRole?: LoanRole | null;
 }
 export interface CreateUserRelationRequest {
     /**
@@ -811,6 +811,7 @@ export interface EnabledServices {
     openHouseForm?: boolean | null;
     listingOfferForm?: boolean | null;
     listings?: boolean | null;
+    addCoBorrower?: boolean | null;
 }
 export interface EncompassContact {
     name?: string | null;
@@ -1206,7 +1207,7 @@ export interface Invite {
     isExistingAccount: boolean;
     completedLoanApplication: boolean;
     userRole: string;
-    loanRole: string;
+    loanRole?: string | null;
     customData: any;
     /** @format uuid */
     oneTimeToken: string;
@@ -1220,12 +1221,18 @@ export interface LOSIntegration {
     instanceID: string;
 }
 export interface LOSSettings {
-    loanClosingDateFieldID: string;
+    retailLoanClosingDateFieldID: string;
+    wholesaleLoanClosingDateFieldID: string;
+    brokerLoanClosingDateFieldID: string;
+    correspondentLoanClosingDateFieldID: string;
     customEConsentBucketTitle?: string | null;
     loanMilestoneNotificationsEnabled: boolean;
 }
 export interface LOSSettingsUpdateRequest {
-    loanClosingDateFieldID: string;
+    retailLoanClosingDateFieldID: string;
+    wholesaleLoanClosingDateFieldID: string;
+    brokerLoanClosingDateFieldID: string;
+    correspondentLoanClosingDateFieldID: string;
     customEConsentBucketTitle?: string | null;
     loanMilestoneNotificationsEnabled: boolean;
 }
@@ -3154,7 +3161,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.15.15
+ * @version v2.16.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5512,7 +5519,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
          * @secure
          */
-        getSamlMetadata: (sSoIntegration: "ConsumerConnect" | "TheBigPOS", ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        getSamlMetadata: (sSoIntegration: "ConsumerConnect" | "TheBigPOS", ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
+        /**
+         * No description
+         *
+         * @tags SiteConfigurations
+         * @name CreateOrReplaceSamlMetadata
+         * @summary Create or Replace Saml Metadata
+         * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
+         * @secure
+         */
+        createOrReplaceSamlMetadata: (sSoIntegration: "ConsumerConnect" | "TheBigPOS", ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *

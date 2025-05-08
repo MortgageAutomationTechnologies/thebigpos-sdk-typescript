@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.15.15
+ * @version v2.16.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -2216,6 +2216,16 @@ export class Api extends HttpClient {
              * @secure
              */
             getSamlMetadata: (sSoIntegration, ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurations
+             * @name CreateOrReplaceSamlMetadata
+             * @summary Create or Replace Saml Metadata
+             * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
+             * @secure
+             */
+            createOrReplaceSamlMetadata: (sSoIntegration, ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
