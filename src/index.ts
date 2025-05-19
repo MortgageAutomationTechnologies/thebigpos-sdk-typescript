@@ -1753,6 +1753,15 @@ export interface LoanSearchCriteria {
   siteConfigurationId?: string | null;
 }
 
+export interface LoanUpdateRequest {
+  /** @format email */
+  borrowerEmail?: string | null;
+  borrowerEConsent?: boolean | null;
+  borrowerCreditAuth?: boolean | null;
+  borrowerTCPAOptIn?: boolean | null;
+  additionalFields?: Record<string, string>;
+}
+
 export interface LoanUser {
   /** @format uuid */
   id: string;
@@ -3246,7 +3255,9 @@ export interface UserLoan {
     | "EscrowAgent"
     | "SettlementAgent";
   /** @format int32 */
-  borrowerPair: number;
+  borrowerPair?: number | null;
+  /** @format int32 */
+  borrowerPosition?: number | null;
   customLoanData?: CustomLoanData | null;
 }
 
