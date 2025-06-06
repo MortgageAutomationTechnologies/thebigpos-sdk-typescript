@@ -58,7 +58,7 @@ export interface Action {
     applicationSettings?: any;
     surveysToken?: string | null;
 }
-export interface AddFormToSiteConfigurationRequest {
+export interface AddWorkflowToSiteConfigurationRequest {
     slug?: string | null;
     formType?: string | null;
     userRole?: string | null;
@@ -156,6 +156,11 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
+    buyerAgent?: EncompassContact | null;
+    sellerAgent?: EncompassContact | null;
+    titleInsuranceAgent?: EncompassContact | null;
+    escrowAgent?: EncompassContact | null;
+    settlementAgent?: EncompassContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -201,11 +206,6 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
-    buyerAgent?: EncompassContact | null;
-    sellerAgent?: EncompassContact | null;
-    settlementAgent?: EncompassContact | null;
-    escrowAgent?: EncompassContact | null;
-    titleInsuranceAgent?: EncompassContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -3171,7 +3171,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.16.0
+ * @version v2.16.10
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4008,36 +4008,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<Form, any>>;
-        /**
-         * No description
-         *
-         * @tags Forms
-         * @name AddFormToSiteConfiguration
-         * @summary Add to Site Configuration
-         * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-         * @secure
-         */
-        addFormToSiteConfiguration: (formId: string, siteConfigurationId: string, data: AddFormToSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
-        /**
-         * No description
-         *
-         * @tags Forms
-         * @name RemoveFormFromSiteConfiguration
-         * @summary Remove from Site Configuration
-         * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-         * @secure
-         */
-        removeFormFromSiteConfiguration: (formId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms, any>>;
-        /**
-         * No description
-         *
-         * @tags Forms
-         * @name GetSiteConfigurationsByForm
-         * @summary Get Site Configurations by Form
-         * @request GET:/api/forms/{formId}/site-configurations
-         * @secure
-         */
-        getSiteConfigurationsByForm: (formId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationReduced[], any>>;
         /**
          * No description
          *
@@ -5543,6 +5513,46 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags SiteConfigurationWorkflows
+         * @name GetWorkflowSiteConfigurations
+         * @summary List all site configurations assigned to a workflow
+         * @request GET:/api/workflows/{workflowId}/site-configurations
+         * @secure
+         */
+        getWorkflowSiteConfigurations: (workflowId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm[], any>>;
+        /**
+         * No description
+         *
+         * @tags SiteConfigurationWorkflows
+         * @name GetWorkflowSiteConfiguration
+         * @summary Get the workflow-site configuration assignment by composite key
+         * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+         * @secure
+         */
+        getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
+        /**
+         * No description
+         *
+         * @tags SiteConfigurationWorkflows
+         * @name CreateWorkflowSiteConfiguration
+         * @summary Assign a workflow to a site configuration
+         * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+         * @secure
+         */
+        createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, data: AddWorkflowToSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
+        /**
+         * No description
+         *
+         * @tags SiteConfigurationWorkflows
+         * @name DeleteWorkflowSiteConfiguration
+         * @summary Remove a workflow from a site configuration
+         * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+         * @secure
+         */
+        deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
          * @tags SiteForms
          * @name GetFormBySiteConfigurationSlug
          * @summary Get By Site Configuration Slug
@@ -5550,16 +5560,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any>>;
-        /**
-         * No description
-         *
-         * @tags SiteForms
-         * @name GetSiteForms
-         * @summary Get All Site Forms
-         * @request GET:/api/site-forms
-         * @secure
-         */
-        getSiteForms: (params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm[], any>>;
         /**
          * No description
          *

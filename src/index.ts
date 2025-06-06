@@ -74,7 +74,7 @@ export interface Action {
   surveysToken?: string | null;
 }
 
-export interface AddFormToSiteConfigurationRequest {
+export interface AddWorkflowToSiteConfigurationRequest {
   slug?: string | null;
   formType?: string | null;
   userRole?: string | null;
@@ -179,6 +179,11 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -224,11 +229,6 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent?: EncompassContact | null;
-  sellerAgent?: EncompassContact | null;
-  settlementAgent?: EncompassContact | null;
-  escrowAgent?: EncompassContact | null;
-  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -3573,7 +3573,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.16.0
+ * @version v2.16.10
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5143,67 +5143,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<Form, any>({
         path: `/api/forms/${id}/restore`,
         method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Forms
-     * @name AddFormToSiteConfiguration
-     * @summary Add to Site Configuration
-     * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-     * @secure
-     */
-    addFormToSiteConfiguration: (
-      formId: string,
-      siteConfigurationId: string,
-      data: AddFormToSiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
-      this.request<SiteConfigurationForm, UnprocessableEntity>({
-        path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Forms
-     * @name RemoveFormFromSiteConfiguration
-     * @summary Remove from Site Configuration
-     * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-     * @secure
-     */
-    removeFormFromSiteConfiguration: (formId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
-        path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Forms
-     * @name GetSiteConfigurationsByForm
-     * @summary Get Site Configurations by Form
-     * @request GET:/api/forms/{formId}/site-configurations
-     * @secure
-     */
-    getSiteConfigurationsByForm: (formId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationReduced[], UnprocessableEntity>({
-        path: `/api/forms/${formId}/site-configurations`,
-        method: "GET",
         secure: true,
         format: "json",
         ...params,
@@ -8074,6 +8013,84 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags SiteConfigurationWorkflows
+     * @name GetWorkflowSiteConfigurations
+     * @summary List all site configurations assigned to a workflow
+     * @request GET:/api/workflows/{workflowId}/site-configurations
+     * @secure
+     */
+    getWorkflowSiteConfigurations: (workflowId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm[], any>({
+        path: `/api/workflows/${workflowId}/site-configurations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name GetWorkflowSiteConfiguration
+     * @summary Get the workflow-site configuration assignment by composite key
+     * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm, ProblemDetails>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name CreateWorkflowSiteConfiguration
+     * @summary Assign a workflow to a site configuration
+     * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    createWorkflowSiteConfiguration: (
+      workflowId: string,
+      siteConfigurationId: string,
+      data: AddWorkflowToSiteConfigurationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name DeleteWorkflowSiteConfiguration
+     * @summary Remove a workflow from a site configuration
+     * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags SiteForms
      * @name GetFormBySiteConfigurationSlug
      * @summary Get By Site Configuration Slug
@@ -8087,24 +8104,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags SiteForms
-     * @name GetSiteForms
-     * @summary Get All Site Forms
-     * @request GET:/api/site-forms
-     * @secure
-     */
-    getSiteForms: (params: RequestParams = {}) =>
-      this.request<SiteConfigurationForm[], any>({
-        path: `/api/site-forms`,
-        method: "GET",
-        secure: true,
         format: "json",
         ...params,
       }),

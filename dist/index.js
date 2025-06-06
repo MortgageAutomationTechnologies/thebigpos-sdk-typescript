@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.16.0
+ * @version v2.16.10
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -850,36 +850,6 @@ export class Api extends HttpClient {
              * @secure
              */
             restoreForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name AddFormToSiteConfiguration
-             * @summary Add to Site Configuration
-             * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-             * @secure
-             */
-            addFormToSiteConfiguration: (formId, siteConfigurationId, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name RemoveFormFromSiteConfiguration
-             * @summary Remove from Site Configuration
-             * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-             * @secure
-             */
-            removeFormFromSiteConfiguration: (formId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "DELETE", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name GetSiteConfigurationsByForm
-             * @summary Get Site Configurations by Form
-             * @request GET:/api/forms/{formId}/site-configurations
-             * @secure
-             */
-            getSiteConfigurationsByForm: (formId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2229,6 +2199,46 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags SiteConfigurationWorkflows
+             * @name GetWorkflowSiteConfigurations
+             * @summary List all site configurations assigned to a workflow
+             * @request GET:/api/workflows/{workflowId}/site-configurations
+             * @secure
+             */
+            getWorkflowSiteConfigurations: (workflowId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name GetWorkflowSiteConfiguration
+             * @summary Get the workflow-site configuration assignment by composite key
+             * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name CreateWorkflowSiteConfiguration
+             * @summary Assign a workflow to a site configuration
+             * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            createWorkflowSiteConfiguration: (workflowId, siteConfigurationId, data, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name DeleteWorkflowSiteConfiguration
+             * @summary Remove a workflow from a site configuration
+             * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            deleteWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags SiteForms
              * @name GetFormBySiteConfigurationSlug
              * @summary Get By Site Configuration Slug
@@ -2236,16 +2246,6 @@ export class Api extends HttpClient {
              * @secure
              */
             getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags SiteForms
-             * @name GetSiteForms
-             * @summary Get All Site Forms
-             * @request GET:/api/site-forms
-             * @secure
-             */
-            getSiteForms: (params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
