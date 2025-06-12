@@ -75,8 +75,7 @@ export interface Action {
 }
 
 export interface AddWorkflowToSiteConfigurationRequest {
-  /** @minLength 1 */
-  slug: string;
+  slug?: string | null;
 }
 
 export interface Address {
@@ -3565,7 +3564,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.16.11
+ * @version v2.16.12
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
