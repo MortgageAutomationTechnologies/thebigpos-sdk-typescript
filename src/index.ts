@@ -75,17 +75,8 @@ export interface Action {
 }
 
 export interface AddWorkflowToSiteConfigurationRequest {
-  slug?: string | null;
-  formType?: string | null;
-  userRole?: string | null;
-  borrowerType?: string | null;
-  showProgressBar: boolean;
-  showTile: boolean;
-  tileLocation?: string | null;
-  tileText?: string | null;
-  tileSubtitle?: string | null;
-  icon?: string | null;
-  entityTypes?: string[] | null;
+  /** @minLength 1 */
+  slug: string;
 }
 
 export interface Address {
@@ -179,11 +170,6 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
-  buyerAgent?: EncompassContact | null;
-  sellerAgent?: EncompassContact | null;
-  titleInsuranceAgent?: EncompassContact | null;
-  escrowAgent?: EncompassContact | null;
-  settlementAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -229,6 +215,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -2634,6 +2625,7 @@ export interface SiteConfigurationForm {
   tileLocation: string;
   icon: string;
   entityTypes: string[];
+  siteConfiguration: SiteConfigurationReduced;
 }
 
 export interface SiteConfigurationReduced {
@@ -3573,7 +3565,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.16.10
+ * @version v2.16.11
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
