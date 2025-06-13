@@ -2225,7 +2225,7 @@ export class Api extends HttpClient {
              * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
              * @secure
              */
-            createWorkflowSiteConfiguration: (workflowId, siteConfigurationId, data, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *

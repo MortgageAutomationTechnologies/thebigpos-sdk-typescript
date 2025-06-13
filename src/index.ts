@@ -74,10 +74,6 @@ export interface Action {
   surveysToken?: string | null;
 }
 
-export interface AddWorkflowToSiteConfigurationRequest {
-  slug?: string | null;
-}
-
 export interface Address {
   /** @format uuid */
   id: string;
@@ -8046,18 +8042,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
      * @secure
      */
-    createWorkflowSiteConfiguration: (
-      workflowId: string,
-      siteConfigurationId: string,
-      data: AddWorkflowToSiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>({
         path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
         method: "POST",
-        body: data,
         secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),

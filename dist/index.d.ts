@@ -58,9 +58,6 @@ export interface Action {
     applicationSettings?: any;
     surveysToken?: string | null;
 }
-export interface AddWorkflowToSiteConfigurationRequest {
-    slug?: string | null;
-}
 export interface Address {
     /** @format uuid */
     id: string;
@@ -5530,7 +5527,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
          * @secure
          */
-        createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, data: AddWorkflowToSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
+        createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
         /**
          * No description
          *
