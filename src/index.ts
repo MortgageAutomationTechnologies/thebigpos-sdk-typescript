@@ -3560,7 +3560,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.16.12
+ * @version v2.16.14
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
