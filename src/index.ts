@@ -74,20 +74,6 @@ export interface Action {
   surveysToken?: string | null;
 }
 
-export interface AddFormToSiteConfigurationRequest {
-  slug?: string | null;
-  formType?: string | null;
-  userRole?: string | null;
-  borrowerType?: string | null;
-  showProgressBar: boolean;
-  showTile: boolean;
-  tileLocation?: string | null;
-  tileText?: string | null;
-  tileSubtitle?: string | null;
-  icon?: string | null;
-  entityTypes?: string[] | null;
-}
-
 export interface Address {
   /** @format uuid */
   id: string;
@@ -224,11 +210,11 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
-  buyerAgent?: LoanContact | null;
-  sellerAgent?: LoanContact | null;
-  settlementAgent?: LoanContact | null;
-  escrowAgent?: LoanContact | null;
-  titleInsuranceAgent?: LoanContact | null;
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -520,15 +506,16 @@ export interface CreateInviteRequest {
   lastName: string;
   /** @format email */
   emailAddress: string;
-  phoneNumber: string;
+  phoneNumber?: string | null;
+  /** @deprecated */
   relationship: "NotApplicable" | "Spouse" | "NonSpouse";
   loanID: string;
   route?: string | null;
   /** @format uuid */
   siteConfigurationID: string;
-  userRole?: string | null;
-  customData?: any;
-  sourceUrl?: string | null;
+  /** @deprecated */
+  userRole?: UserRole | null;
+  loanRole?: LoanRole | null;
 }
 
 export interface CreateUserRelationRequest {
@@ -855,7 +842,6 @@ export interface EnabledServices {
   fullApp?: boolean | null;
   mobileApp?: boolean | null;
   ringCentral?: boolean | null;
-  pricingCalculator?: boolean | null;
   rates?: boolean | null;
   socialSurvey?: boolean | null;
   borrowerTasks?: boolean | null;
@@ -887,6 +873,14 @@ export interface EnabledServices {
   openHouseForm?: boolean | null;
   listingOfferForm?: boolean | null;
   listings?: boolean | null;
+  addCoBorrower?: boolean | null;
+}
+
+export interface EncompassContact {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  company?: string | null;
 }
 
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
@@ -935,11 +929,11 @@ export interface ExtendedLoan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
-  borrowerContact?: Contact | null;
-  coBorrowerContact?: Contact | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
+  userLoans: UserLoan[];
+  contacts: LoanContact[];
   buyerAgentContact?: Contact | null;
   sellerAgentContact?: Contact | null;
   escrowAgentContact?: Contact | null;
@@ -1197,7 +1191,7 @@ export interface FusionReportFilter {
 }
 
 export interface GenerateDocumentRequest {
-  /** @minLength 1 */
+  /** @deprecated */
   loanID: string;
   /**
    * @format uuid
@@ -1205,11 +1199,13 @@ export interface GenerateDocumentRequest {
    */
   templateID: string;
   /**
+   * @deprecated
    * @format uuid
    * @minLength 1
    */
   siteConfigurationID: string;
   preview: boolean;
+  recipients: string[];
 }
 
 export interface GetApplications {
@@ -1258,36 +1254,6 @@ export interface GetForm {
   showProgressBar: boolean;
   /** @format uuid */
   id: string;
-}
-
-export interface GetPricingCalculationRequest {
-  eppsUserName?: string | null;
-  /** @format int32 */
-  loanAmount: number;
-  /** @format int32 */
-  totalMortgageAmount: number;
-  /** @format int32 */
-  propertyValue: number;
-  propertyType?: string | null;
-  zipCode?: string | null;
-  county?: string | null;
-  city?: string | null;
-  state?: string | null;
-  /** @minLength 1 */
-  loanPurpose: string;
-  propertyOccupancy?: string | null;
-  escrow?: string | null;
-  escrowInsurance: boolean;
-  escrowTaxes: boolean;
-  loanTerm?: string | null;
-  loanType?: string | null;
-  creditScore?: string | null;
-  /** @format uuid */
-  siteConfigurationId: string;
-}
-
-export interface GetPricingForLoanOfficer {
-  rates: PricingRates[];
 }
 
 export interface GetReport {
@@ -1354,6 +1320,8 @@ export interface ImportUserLoanTaskRequest {
 }
 
 export interface Invite {
+  /** @format uuid */
+  id: string;
   firstName: string;
   lastName: string;
   emailAddress: string;
@@ -1366,10 +1334,13 @@ export interface Invite {
   isExistingAccount: boolean;
   completedLoanApplication: boolean;
   userRole: string;
-  loanRole: string;
+  loanRole?: string | null;
   customData: any;
+  /** @format uuid */
+  oneTimeToken: string;
   /** @format date-time */
   createdAt: string;
+  invitedBy?: User | null;
 }
 
 /** Array of operations to perform */
@@ -1380,13 +1351,19 @@ export interface LOSIntegration {
 }
 
 export interface LOSSettings {
-  loanClosingDateFieldID: string;
+  retailLoanClosingDateFieldID: string;
+  wholesaleLoanClosingDateFieldID: string;
+  brokerLoanClosingDateFieldID: string;
+  correspondentLoanClosingDateFieldID: string;
   customEConsentBucketTitle?: string | null;
   loanMilestoneNotificationsEnabled: boolean;
 }
 
 export interface LOSSettingsUpdateRequest {
-  loanClosingDateFieldID: string;
+  retailLoanClosingDateFieldID: string;
+  wholesaleLoanClosingDateFieldID: string;
+  brokerLoanClosingDateFieldID: string;
+  correspondentLoanClosingDateFieldID: string;
   customEConsentBucketTitle?: string | null;
   loanMilestoneNotificationsEnabled: boolean;
 }
@@ -1525,11 +1502,11 @@ export interface Loan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
-  borrowerContact?: Contact | null;
-  coBorrowerContact?: Contact | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
   source?: string | null;
+  userLoans: UserLoan[];
+  contacts: LoanContact[];
 }
 
 export interface LoanComparison {
@@ -1571,10 +1548,34 @@ export interface LoanComparisonScenario {
 }
 
 export interface LoanContact {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  fullName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   name?: string | null;
   email?: string | null;
   phone?: string | null;
-  company?: string | null;
+  companyName?: string | null;
+  role:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
 }
 
 export interface LoanDocument {
@@ -1713,6 +1714,20 @@ export interface LoanRecord {
   loanFields: Record<string, string>;
 }
 
+export type LoanRole =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
 export interface LoanSearchCriteria {
   searchText?: string | null;
   /** @format uuid */
@@ -1723,6 +1738,15 @@ export interface LoanSearchCriteria {
   loanType?: string | null;
   /** @format uuid */
   siteConfigurationId?: string | null;
+}
+
+export interface LoanUpdateRequest {
+  /** @format email */
+  borrowerEmail?: string | null;
+  borrowerEConsent?: boolean | null;
+  borrowerCreditAuth?: boolean | null;
+  borrowerTCPAOptIn?: boolean | null;
+  additionalFields?: Record<string, string>;
 }
 
 export interface LoanUser {
@@ -2004,16 +2028,6 @@ export interface PreliminaryCondition {
   rerequestedBy?: CommentUserInformation | null;
 }
 
-export interface PricingRates {
-  rate: string;
-  loanProgram: string;
-  apr: string;
-  /** @format float */
-  price: number;
-  /** @format float */
-  payment: number;
-}
-
 export interface ProblemDetails {
   type?: string | null;
   title?: string | null;
@@ -2189,8 +2203,6 @@ export interface SendForgotPasswordRequest {
    * @minLength 1
    */
   email: string;
-  /** @format uuid */
-  siteConfigurationId?: string | null;
 }
 
 export interface SendNotificationForLoanRequest {
@@ -2225,11 +2237,7 @@ export interface SiteConfiguration {
   name: string;
   introduction?: string | null;
   introductionTitle?: string | null;
-  /**
-   * @format int64
-   * @min 1000
-   * @max 999999999999
-   */
+  /** @format int64 */
   nmlsid: number;
   address?: string | null;
   address2?: string | null;
@@ -2420,11 +2428,7 @@ export interface SiteConfigurationByUrl {
   name: string;
   introduction?: string | null;
   introductionTitle?: string | null;
-  /**
-   * @format int64
-   * @min 1000
-   * @max 999999999999
-   */
+  /** @format int64 */
   nmlsid: number;
   address?: string | null;
   address2?: string | null;
@@ -2617,6 +2621,7 @@ export interface SiteConfigurationForm {
   tileLocation: string;
   icon: string;
   entityTypes: string[];
+  siteConfiguration: SiteConfigurationReduced;
 }
 
 export interface SiteConfigurationReduced {
@@ -3148,6 +3153,7 @@ export interface UpdateMeRequest {
    * @maxLength 255
    */
   lastName: string;
+  email: string;
   title?: string | null;
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
@@ -3170,6 +3176,7 @@ export interface UpdateUserRequest {
    * @maxLength 255
    */
   lastName: string;
+  email: string;
   title?: string | null;
   /** @format uuid */
   branchId?: string | null;
@@ -3214,7 +3221,31 @@ export interface UserBase {
 }
 
 export interface UserLoan {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
   loanID: string;
+  user?: User | null;
+  role:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
+  /** @format int32 */
+  borrowerPair?: number | null;
+  /** @format int32 */
+  borrowerPosition?: number | null;
   customLoanData?: CustomLoanData | null;
 }
 
@@ -3530,7 +3561,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.15.4
+ * @version v2.18.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5108,67 +5139,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Forms
-     * @name AddFormToSiteConfiguration
-     * @summary Add to Site Configuration
-     * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-     * @secure
-     */
-    addFormToSiteConfiguration: (
-      formId: string,
-      siteConfigurationId: string,
-      data: AddFormToSiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
-      this.request<SiteConfigurationForm, UnprocessableEntity>({
-        path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Forms
-     * @name RemoveFormFromSiteConfiguration
-     * @summary Remove from Site Configuration
-     * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-     * @secure
-     */
-    removeFormFromSiteConfiguration: (formId: string, siteConfigurationId: string, params: RequestParams = {}) =>
-      this.request<AdminAccessGetForms, any>({
-        path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Forms
-     * @name GetSiteConfigurationsByForm
-     * @summary Get Site Configurations by Form
-     * @request GET:/api/forms/{formId}/site-configurations
-     * @secure
-     */
-    getSiteConfigurationsByForm: (formId: string, params: RequestParams = {}) =>
-      this.request<SiteConfigurationReduced[], UnprocessableEntity>({
-        path: `/api/forms/${formId}/site-configurations`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags FormSubmissionFiles
      * @name AddFormSubmissionFile
      * @summary Add
@@ -6312,6 +6282,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanDocuments
+     * @name GenerateLoanDocument
+     * @summary Generate PDF Document
+     * @request POST:/api/loans/{loanId}/documents/generate
+     * @secure
+     */
+    generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params: RequestParams = {}) =>
+      this.request<DocumentDataRequest, any>({
+        path: `/api/loans/${loanId}/documents/generate`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanDrafts
      * @name CreateLoanDraft
      * @summary Create
@@ -6447,6 +6437,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}/reassign`,
         method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanInvites
+     * @name GetLoanInvites
+     * @summary Get Invites
+     * @request GET:/api/loans/{loanId}/invites
+     * @secure
+     */
+    getLoanInvites: (loanId: string, params: RequestParams = {}) =>
+      this.request<Invite[], ProblemDetails>({
+        path: `/api/loans/${loanId}/invites`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanInvites
+     * @name InviteLoanContacts
+     * @summary Invite Contacts
+     * @request POST:/api/loans/{loanId}/invites
+     * @secure
+     */
+    inviteLoanContacts: (loanId: string, data: string[], params: RequestParams = {}) =>
+      this.request<Invite[], ProblemDetails>({
+        path: `/api/loans/${loanId}/invites`,
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -7188,24 +7216,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags LoanUsers
-     * @name GetLoanUsers
-     * @summary Get All
-     * @request GET:/api/loans/{loanId}/users
-     * @secure
-     */
-    getLoanUsers: (loanId: string, params: RequestParams = {}) =>
-      this.request<LoanUser[], any>({
-        path: `/api/loans/${loanId}/users`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LoanUsers
      * @name GetLoanUser
      * @summary Get Loan User
      * @request GET:/api/loans/{loanId}/users/{userId}
@@ -7235,6 +7245,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         secure: true,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanUsers
+     * @name SendLoanUserInviteReminderNotification
+     * @summary Send Invite Reminder Notification
+     * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
+     * @secure
+     */
+    sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/loans/${loanId}/users/${userId}/invite-reminder`,
+        method: "POST",
+        secure: true,
         ...params,
       }),
 
@@ -7751,26 +7778,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Pricing
-     * @name GetPricingCalculation
-     * @summary Get Pricing Calculation
-     * @request POST:/api/pricing/calculator
-     * @secure
-     */
-    getPricingCalculation: (data: GetPricingCalculationRequest, params: RequestParams = {}) =>
-      this.request<GetPricingForLoanOfficer, UnprocessableEntity>({
-        path: `/api/pricing/calculator`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags RequestQueue
      * @name GetRequestQueues
      * @summary Get All
@@ -8000,9 +8007,101 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       ssoIntegration: string,
       params: RequestParams = {},
     ) =>
-      this.request<string, any>({
+      this.request<File, ProblemDetails>({
         path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`,
         method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurations
+     * @name CreateOrReplaceSamlMetadata
+     * @summary Create or Replace Saml Metadata
+     * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
+     * @secure
+     */
+    createOrReplaceSamlMetadata: (
+      sSoIntegration: "ConsumerConnect" | "TheBigPOS",
+      ssoIntegration: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<File, any>({
+        path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name GetWorkflowSiteConfigurations
+     * @summary List all site configurations assigned to a workflow
+     * @request GET:/api/workflows/{workflowId}/site-configurations
+     * @secure
+     */
+    getWorkflowSiteConfigurations: (workflowId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm[], any>({
+        path: `/api/workflows/${workflowId}/site-configurations`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name GetWorkflowSiteConfiguration
+     * @summary Get the workflow-site configuration assignment by composite key
+     * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm, ProblemDetails>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name CreateWorkflowSiteConfiguration
+     * @summary Assign a workflow to a site configuration
+     * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags SiteConfigurationWorkflows
+     * @name DeleteWorkflowSiteConfiguration
+     * @summary Remove a workflow from a site configuration
+     * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+     * @secure
+     */
+    deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "DELETE",
         secure: true,
         ...params,
       }),
@@ -8023,24 +8122,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags SiteForms
-     * @name GetSiteForms
-     * @summary Get All Site Forms
-     * @request GET:/api/site-forms
-     * @secure
-     */
-    getSiteForms: (params: RequestParams = {}) =>
-      this.request<SiteConfigurationForm[], any>({
-        path: `/api/site-forms`,
-        method: "GET",
-        secure: true,
         format: "json",
         ...params,
       }),
@@ -8373,6 +8454,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags UserInvites
+     * @name ResendInviteNotification
+     * @summary Re-Send Notification
+     * @request PUT:/api/users/invites/{id}/resend
+     * @secure
+     */
+    resendInviteNotification: (id: string, params: RequestParams = {}) =>
+      this.request<void, UnprocessableEntity>({
+        path: `/api/users/invites/${id}/resend`,
+        method: "PUT",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserInvites
      * @name VerifyUserInvite
      * @summary Verify
      * @request GET:/api/users/invites/{token}/verify
@@ -8570,12 +8668,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     signUp: (data: RegisterUserRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntity>({
+      this.request<User, UnprocessableEntity>({
         path: `/api/users/register`,
         method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

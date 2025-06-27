@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.15.4
+ * @version v2.18.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -853,36 +853,6 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags Forms
-             * @name AddFormToSiteConfiguration
-             * @summary Add to Site Configuration
-             * @request POST:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-             * @secure
-             */
-            addFormToSiteConfiguration: (formId, siteConfigurationId, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name RemoveFormFromSiteConfiguration
-             * @summary Remove from Site Configuration
-             * @request DELETE:/api/forms/{formId}/site-configurations/{siteConfigurationId}
-             * @secure
-             */
-            removeFormFromSiteConfiguration: (formId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations/${siteConfigurationId}`, method: "DELETE", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags Forms
-             * @name GetSiteConfigurationsByForm
-             * @summary Get Site Configurations by Form
-             * @request GET:/api/forms/{formId}/site-configurations
-             * @secure
-             */
-            getSiteConfigurationsByForm: (formId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
              * @tags FormSubmissionFiles
              * @name AddFormSubmissionFile
              * @summary Add
@@ -1424,6 +1394,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDocuments
+             * @name GenerateLoanDocument
+             * @summary Generate PDF Document
+             * @request POST:/api/loans/{loanId}/documents/generate
+             * @secure
+             */
+            generateLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/generate`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanDrafts
              * @name CreateLoanDraft
              * @summary Create
@@ -1491,6 +1471,26 @@ export class Api extends HttpClient {
              * @secure
              */
             reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanInvites
+             * @name GetLoanInvites
+             * @summary Get Invites
+             * @request GET:/api/loans/{loanId}/invites
+             * @secure
+             */
+            getLoanInvites: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanInvites
+             * @name InviteLoanContacts
+             * @summary Invite Contacts
+             * @request POST:/api/loans/{loanId}/invites
+             * @secure
+             */
+            inviteLoanContacts: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1825,16 +1825,6 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanUsers
-             * @name GetLoanUsers
-             * @summary Get All
-             * @request GET:/api/loans/{loanId}/users
-             * @secure
-             */
-            getLoanUsers: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanUsers
              * @name GetLoanUser
              * @summary Get Loan User
              * @request GET:/api/loans/{loanId}/users/{userId}
@@ -1851,6 +1841,16 @@ export class Api extends HttpClient {
              * @secure
              */
             addLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name SendLoanUserInviteReminderNotification
+             * @summary Send Invite Reminder Notification
+             * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
+             * @secure
+             */
+            sendLoanUserInviteReminderNotification: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}/invite-reminder`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
@@ -2094,16 +2094,6 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags Pricing
-             * @name GetPricingCalculation
-             * @summary Get Pricing Calculation
-             * @request POST:/api/pricing/calculator
-             * @secure
-             */
-            getPricingCalculation: (data, params = {}) => this.request(Object.assign({ path: `/api/pricing/calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
              * @tags RequestQueue
              * @name GetRequestQueues
              * @summary Get All
@@ -2219,6 +2209,56 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags SiteConfigurations
+             * @name CreateOrReplaceSamlMetadata
+             * @summary Create or Replace Saml Metadata
+             * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
+             * @secure
+             */
+            createOrReplaceSamlMetadata: (sSoIntegration, ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name GetWorkflowSiteConfigurations
+             * @summary List all site configurations assigned to a workflow
+             * @request GET:/api/workflows/{workflowId}/site-configurations
+             * @secure
+             */
+            getWorkflowSiteConfigurations: (workflowId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name GetWorkflowSiteConfiguration
+             * @summary Get the workflow-site configuration assignment by composite key
+             * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            getWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name CreateWorkflowSiteConfiguration
+             * @summary Assign a workflow to a site configuration
+             * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            createWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags SiteConfigurationWorkflows
+             * @name DeleteWorkflowSiteConfiguration
+             * @summary Remove a workflow from a site configuration
+             * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
+             * @secure
+             */
+            deleteWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags SiteForms
              * @name GetFormBySiteConfigurationSlug
              * @summary Get By Site Configuration Slug
@@ -2226,16 +2266,6 @@ export class Api extends HttpClient {
              * @secure
              */
             getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags SiteForms
-             * @name GetSiteForms
-             * @summary Get All Site Forms
-             * @request GET:/api/site-forms
-             * @secure
-             */
-            getSiteForms: (params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2400,6 +2430,16 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags UserInvites
+             * @name ResendInviteNotification
+             * @summary Re-Send Notification
+             * @request PUT:/api/users/invites/{id}/resend
+             * @secure
+             */
+            resendInviteNotification: (id, params = {}) => this.request(Object.assign({ path: `/api/users/invites/${id}/resend`, method: "PUT", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserInvites
              * @name VerifyUserInvite
              * @summary Verify
              * @request GET:/api/users/invites/{token}/verify
@@ -2495,7 +2535,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/register
              * @secure
              */
-            signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
