@@ -1191,7 +1191,7 @@ export interface FusionReportFilter {
 }
 
 export interface GenerateDocumentRequest {
-  /** @minLength 1 */
+  /** @deprecated */
   loanID: string;
   /**
    * @format uuid
@@ -1199,6 +1199,7 @@ export interface GenerateDocumentRequest {
    */
   templateID: string;
   /**
+   * @deprecated
    * @format uuid
    * @minLength 1
    */
@@ -3560,7 +3561,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.16.14
+ * @version v2.18.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -6281,6 +6282,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags LoanDocuments
+     * @name GenerateLoanDocument
+     * @summary Generate PDF Document
+     * @request POST:/api/loans/{loanId}/documents/generate
+     * @secure
+     */
+    generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params: RequestParams = {}) =>
+      this.request<DocumentDataRequest, any>({
+        path: `/api/loans/${loanId}/documents/generate`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanDrafts
      * @name CreateLoanDraft
      * @summary Create
@@ -7224,6 +7245,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         secure: true,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanUsers
+     * @name SendLoanUserInviteReminderNotification
+     * @summary Send Invite Reminder Notification
+     * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
+     * @secure
+     */
+    sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/loans/${loanId}/users/${userId}/invite-reminder`,
+        method: "POST",
+        secure: true,
         ...params,
       }),
 
@@ -8630,12 +8668,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     signUp: (data: RegisterUserRequest, params: RequestParams = {}) =>
-      this.request<void, UnprocessableEntity>({
+      this.request<User, UnprocessableEntity>({
         path: `/api/users/register`,
         method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

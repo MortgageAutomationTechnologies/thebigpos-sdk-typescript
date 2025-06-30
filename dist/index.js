@@ -93,7 +93,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.16.14
+ * @version v2.18.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1394,6 +1394,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDocuments
+             * @name GenerateLoanDocument
+             * @summary Generate PDF Document
+             * @request POST:/api/loans/{loanId}/documents/generate
+             * @secure
+             */
+            generateLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/generate`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanDrafts
              * @name CreateLoanDraft
              * @summary Create
@@ -1831,6 +1841,16 @@ export class Api extends HttpClient {
              * @secure
              */
             addLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name SendLoanUserInviteReminderNotification
+             * @summary Send Invite Reminder Notification
+             * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
+             * @secure
+             */
+            sendLoanUserInviteReminderNotification: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}/invite-reminder`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
@@ -2515,7 +2535,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/register
              * @secure
              */
-            signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *

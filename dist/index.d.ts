@@ -1065,7 +1065,7 @@ export interface FusionReportFilter {
     targetValue: string;
 }
 export interface GenerateDocumentRequest {
-    /** @minLength 1 */
+    /** @deprecated */
     loanID: string;
     /**
      * @format uuid
@@ -1073,6 +1073,7 @@ export interface GenerateDocumentRequest {
      */
     templateID: string;
     /**
+     * @deprecated
      * @format uuid
      * @minLength 1
      */
@@ -3159,7 +3160,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.16.14
+ * @version v2.18.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4606,6 +4607,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanDocuments
+         * @name GenerateLoanDocument
+         * @summary Generate PDF Document
+         * @request POST:/api/loans/{loanId}/documents/generate
+         * @secure
+         */
+        generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
+        /**
+         * No description
+         *
          * @tags LoanDrafts
          * @name CreateLoanDraft
          * @summary Create
@@ -5100,6 +5111,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          */
         addLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanUsers
+         * @name SendLoanUserInviteReminderNotification
+         * @summary Send Invite Reminder Notification
+         * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
+         * @secure
+         */
+        sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5848,7 +5869,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/register
          * @secure
          */
-        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<AxiosResponse<User, any>>;
         /**
          * No description
          *
