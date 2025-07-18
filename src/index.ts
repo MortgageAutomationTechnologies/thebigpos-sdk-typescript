@@ -10,143 +10,110 @@
  * ---------------------------------------------------------------
  */
 
-export enum UserRole {
-  Borrower = "Borrower",
-  LoanOfficer = "LoanOfficer",
-  Admin = "Admin",
-  SuperAdmin = "SuperAdmin",
-  Realtor = "Realtor",
-  SettlementAgent = "SettlementAgent",
-  LoanProcessor = "LoanProcessor",
-  LoanOfficerAssistant = "LoanOfficerAssistant",
-  BranchManager = "BranchManager",
-  SystemAdmin = "SystemAdmin",
-}
+export type UserRole =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "BranchManager"
+  | "SystemAdmin";
 
-export enum SiteConfigurationType {
-  None = "None",
-  Account = "Account",
-  Corporate = "Corporate",
-  Branch = "Branch",
-  LoanOfficer = "LoanOfficer",
-  Partner = "Partner",
-}
+export type SiteConfigurationType =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
 
-export enum SSOIntegrationType {
-  ConsumerConnect = "ConsumerConnect",
-  TheBigPOS = "TheBigPOS",
-}
+export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS";
 
-export enum LogLevel {
-  None = "None",
-  Info = "Info",
-  Warning = "Warning",
-  Error = "Error",
-}
+export type OperationType =
+  | "Add"
+  | "Remove"
+  | "Replace"
+  | "Move"
+  | "Copy"
+  | "Test"
+  | "Invalid";
 
-export enum LoanRole {
-  Borrower = "Borrower",
-  CoBorrower = "CoBorrower",
-  NonBorrower = "NonBorrower",
-  LoanOfficer = "LoanOfficer",
-  LoanProcessor = "LoanProcessor",
-  LoanOfficerAssistant = "LoanOfficerAssistant",
-  SupportingLoanOfficer = "SupportingLoanOfficer",
-  BuyerAgent = "BuyerAgent",
-  SellerAgent = "SellerAgent",
-  TitleInsuranceAgent = "TitleInsuranceAgent",
-  EscrowAgent = "EscrowAgent",
-  SettlementAgent = "SettlementAgent",
-}
+export type LogLevel = "None" | "Info" | "Warning" | "Error";
 
-export enum LoanQueueType {
-  Unknown = "Unknown",
-  New = "New",
-  Append = "Append",
-  Update = "Update",
-  FieldUpdates = "FieldUpdates",
-  Document = "Document",
-  Buckets = "Buckets",
-}
+export type LoanRole =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
 
-export enum LoanQueueReason {
-  Unknown = "Unknown",
-  Locked = "Locked",
-  LOSError = "LOSError",
-  Exception = "Exception",
-}
+export type LoanQueueType =
+  | "Unknown"
+  | "New"
+  | "Append"
+  | "Update"
+  | "FieldUpdates"
+  | "Document"
+  | "Buckets";
 
-export enum LoanLogType {
-  Loan = "Loan",
-  Queue = "Queue",
-  POSFlagChanged = "POSFlagChanged",
-  Verification = "Verification",
-}
+export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 
-export enum LoanImportStatus {
-  WaitingProcess = "WaitingProcess",
-  InProgress = "InProgress",
-  Completed = "Completed",
-  Failed = "Failed",
-  Cancelled = "Cancelled",
-}
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
 
-export enum LOSStatus {
-  Unknown = "Unknown",
-  Pending = "Pending",
-  Retrying = "Retrying",
-  Successful = "Successful",
-  Failed = "Failed",
-  FailedPermanently = "FailedPermanently",
-}
+export type LoanImportStatus =
+  | "WaitingProcess"
+  | "InProgress"
+  | "Completed"
+  | "Failed"
+  | "Cancelled";
 
-export enum FilterType {
-  DateGreaterThanOrEqualTo = "DateGreaterThanOrEqualTo",
-  DateGreaterThan = "DateGreaterThan",
-  DateLessThan = "DateLessThan",
-  DateLessThanOrEqualTo = "DateLessThanOrEqualTo",
-  DateEquals = "DateEquals",
-  DateDoesntEqual = "DateDoesntEqual",
-  DateNonEmpty = "DateNonEmpty",
-  DateEmpty = "DateEmpty",
-  StringContains = "StringContains",
-  StringEquals = "StringEquals",
-  StringNotEmpty = "StringNotEmpty",
-  StringNotEquals = "StringNotEquals",
-  StringNotContains = "StringNotContains",
-}
+export type LOSStatus =
+  | "Unknown"
+  | "Pending"
+  | "Retrying"
+  | "Successful"
+  | "Failed"
+  | "FailedPermanently";
 
-export enum Environment {
-  Development = "Development",
-  Staging = "Staging",
-  UAT = "UAT",
-  Production = "Production",
-}
+export type FilterType =
+  | "DateGreaterThanOrEqualTo"
+  | "DateGreaterThan"
+  | "DateLessThan"
+  | "DateLessThanOrEqualTo"
+  | "DateEquals"
+  | "DateDoesntEqual"
+  | "DateNonEmpty"
+  | "DateEmpty"
+  | "StringContains"
+  | "StringEquals"
+  | "StringNotEmpty"
+  | "StringNotEquals"
+  | "StringNotContains";
 
-export enum EntityType {
-  Account = "Account",
-  Corporate = "Corporate",
-  Branch = "Branch",
-  LoanOfficer = "LoanOfficer",
-  Realtor = "Realtor",
-}
+export type Environment = "Development" | "Staging" | "UAT" | "Production";
 
-export enum BranchType {
-  Mortgage = "Mortgage",
-  RealEstate = "RealEstate",
-}
+export type EntityType =
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Realtor";
 
-export enum BorrowerType {
-  Borrower = "Borrower",
-  CoBorrower = "CoBorrower",
-  Unknown = "Unknown",
-}
+export type BranchType = "Mortgage" | "RealEstate";
 
-export enum BorrowerRelationship {
-  NotApplicable = "NotApplicable",
-  Spouse = "Spouse",
-  NonSpouse = "NonSpouse",
-}
+export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
+
+export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 
 export interface ASOSettings {
   enabled: boolean;
@@ -652,7 +619,10 @@ export interface CreateInviteRequest {
 }
 
 export interface CreateLoanImportRequest {
-  /** @format date-time */
+  /**
+   * @format date-time
+   * @minLength 1
+   */
   endDate: string;
   /**
    * @format date-time
@@ -990,6 +960,7 @@ export interface EnabledServices {
   borrowerTasks?: boolean | null;
   docusign?: boolean | null;
   emailNotifications?: boolean | null;
+  autoTaskReminders?: boolean | null;
   voc?: boolean | null;
   spanishPrequal?: boolean | null;
   spanishFullApp?: boolean | null;
@@ -1058,6 +1029,7 @@ export interface ExtendedLoan {
   isInSync: boolean;
   /** @format date-time */
   syncDate?: string | null;
+  excludeFromAutoTaskReminders?: boolean | null;
   fileStarter?: string | null;
   isPOSLoan?: boolean | null;
   referenceID: string;
@@ -1068,8 +1040,10 @@ export interface ExtendedLoan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
+  loanSettings?: LoanSettings | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
+  isLockedFromEditing: boolean;
   source?: string | null;
   userLoans: UserLoan[];
   contacts: LoanContact[];
@@ -1430,6 +1404,8 @@ export interface GetWorkflowRequest {
   language?: string | null;
 }
 
+export type IContractResolver = object;
+
 export interface ImportUserLoanTaskRequest {
   /**
    * @format uuid
@@ -1614,6 +1590,7 @@ export interface Loan {
   isInSync: boolean;
   /** @format date-time */
   syncDate?: string | null;
+  excludeFromAutoTaskReminders?: boolean | null;
   fileStarter?: string | null;
   isPOSLoan?: boolean | null;
   referenceID: string;
@@ -1624,8 +1601,10 @@ export interface Loan {
   status?: string | null;
   loanOfficer?: LoanOfficer | null;
   propertyAddress?: Address | null;
+  loanSettings?: LoanSettings | null;
   loanLogs: LoanLog[];
   isLocked: boolean;
+  isLockedFromEditing: boolean;
   source?: string | null;
   userLoans: UserLoan[];
   contacts: LoanContact[];
@@ -1667,6 +1646,15 @@ export interface LoanComparisonScenario {
   discount?: string | null;
   lenderCredit?: string | null;
   fundingFee?: string | null;
+}
+
+export interface LoanConsentRequest {
+  /** @format email */
+  borrowerEmail?: string | null;
+  borrowerEConsent?: boolean | null;
+  borrowerCreditAuth?: boolean | null;
+  borrowerTCPAOptIn?: boolean | null;
+  additionalFields?: Record<string, string>;
 }
 
 export interface LoanContact {
@@ -1873,13 +1861,28 @@ export interface LoanSearchCriteria {
   siteConfigurationId?: string | null;
 }
 
-export interface LoanUpdateRequest {
-  /** @format email */
-  borrowerEmail?: string | null;
-  borrowerEConsent?: boolean | null;
-  borrowerCreditAuth?: boolean | null;
-  borrowerTCPAOptIn?: boolean | null;
-  additionalFields?: Record<string, string>;
+export interface LoanSettings {
+  excludeFromAutoTaskReminders: boolean;
+}
+
+export interface LoanUpdateRequestJsonPatchDocument {
+  operations?: LoanUpdateRequestOperation[] | null;
+  contractResolver?: IContractResolver | null;
+}
+
+export interface LoanUpdateRequestOperation {
+  operationType:
+    | "Add"
+    | "Remove"
+    | "Replace"
+    | "Move"
+    | "Copy"
+    | "Test"
+    | "Invalid";
+  path?: string | null;
+  op?: string | null;
+  from?: string | null;
+  value?: any;
 }
 
 export interface LoanUser {
@@ -2536,6 +2539,7 @@ export interface SiteConfiguration {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
+  autoTaskReminderIntervalsInDays: number[];
 }
 
 export interface SiteConfigurationByUrl {
@@ -2727,6 +2731,7 @@ export interface SiteConfigurationByUrl {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
+  autoTaskReminderIntervalsInDays: number[];
   workflows: Workflow[];
 }
 
@@ -2931,6 +2936,7 @@ export interface SiteConfigurationRequest {
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
+  autoTaskReminderIntervalsInDays: number[];
 }
 
 export interface SiteConfigurationSearchCriteria {
@@ -3717,7 +3723,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.18.3
+ * @version v2.18.5
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5863,14 +5869,14 @@ export class Api<
      * No description
      *
      * @tags LegacyLoan
-     * @name UpdateLoan
-     * @summary Update Loan
+     * @name UpdateLoanConsent
+     * @summary Update Loan Consent
      * @request PATCH:/api/los/loan/application/{loanID}
      * @secure
      * @response `200` `string` Success
      * @response `422` `UnprocessableEntity` Client Error
      */
-    updateLoan: (
+    updateLoanConsent: (
       loanId: string,
       data: JsonPatchDocument,
       params: RequestParams = {},
@@ -7508,15 +7514,40 @@ export class Api<
      * @tags Loans
      * @name ImportLoanFromLos
      * @summary Import from LOS
-     * @request POST:/api/loans/{loanId}/import-from-los
+     * @request POST:/api/loans/import-from-los/{loanId}
      * @secure
      * @response `200` `Loan` Success
      */
     importLoanFromLos: (loanId: string, params: RequestParams = {}) =>
       this.request<Loan, any>({
-        path: `/api/loans/${loanId}/import-from-los`,
+        path: `/api/loans/import-from-los/${loanId}`,
         method: "POST",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
+     * @name UpdateLoan
+     * @summary Update loan fields
+     * @request PATCH:/api/loans/{loanId}
+     * @secure
+     * @response `200` `Loan` Success
+     */
+    updateLoan: (
+      loanId: string,
+      data: JsonPatchDocument,
+      params: RequestParams = {},
+    ) =>
+      this.request<Loan, any>({
+        path: `/api/loans/${loanId}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -9183,6 +9214,26 @@ export class Api<
     ) =>
       this.request<void, any>({
         path: `/api/integrations/los/loans/${loanId}/locked`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags TheBigPOS
+     * @name IntegrationsLosLoansBucketsList
+     * @request GET:/api/integrations/los/loans/{loanID}/buckets
+     * @secure
+     * @response `200` `void` Success
+     */
+    integrationsLosLoansBucketsList: (
+      loanId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/integrations/los/loans/${loanId}/buckets`,
         method: "GET",
         secure: true,
         ...params,
