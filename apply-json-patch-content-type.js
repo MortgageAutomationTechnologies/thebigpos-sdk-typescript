@@ -11,7 +11,18 @@
 const fs = require('fs')
 
 const path = './src/index.ts'
-let content = fs.readFileSync(path, 'utf8')
+
+if (!fs.existsSync(path)) {
+	console.error(`Error: File not found at path "${path}". Please ensure the SDK has been generated.`);
+	process.exit(1);
+}
+let content;
+try {
+	content = fs.readFileSync(path, 'utf8');
+} catch (err) {
+	console.error(`Error: Unable to read file at path "${path}". Details: ${err.message}`);
+	process.exit(1);
+}
 
 // Update PATCH methods to use ContentType.JsonPatch
 content = content.replace(
@@ -35,7 +46,7 @@ content = content.replace(
 	(match, body) => {
 		const updated = body.replace(
 			/value\?:\s*object\s*\|?\s*null?;/,
-			'value?: any | null;'
+			'value?: string | number | boolean | null | object;'
 		)
 		return `export interface Operation {\n  ${updated.trim()}\n}`
 	}

@@ -2039,7 +2039,7 @@ export interface NotificationTemplateVersionUpdateRequest {
 
 export interface Operation {
   op?: string;
-  value?: any | null;
+  value?: string | number | boolean | null | object;
   path?: string;
 }
 
