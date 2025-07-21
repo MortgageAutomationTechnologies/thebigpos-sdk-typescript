@@ -10,18 +10,18 @@
 
 const fs = require('fs')
 
-const path = './src/index.ts'
+const path = require('path').resolve(__dirname, '../src/index.ts')
 
 if (!fs.existsSync(path)) {
-	console.error(`Error: File not found at path "${path}". Please ensure the SDK has been generated.`);
-	process.exit(1);
+	console.error(`Error: File not found at path "${path}". Please ensure the SDK has been generated.`)
+	process.exit(1)
 }
-let content;
+let content
 try {
-	content = fs.readFileSync(path, 'utf8');
+	content = fs.readFileSync(path, 'utf8')
 } catch (err) {
-	console.error(`Error: Unable to read file at path "${path}". Details: ${err.message}`);
-	process.exit(1);
+	console.error(`Error: Unable to read file at path "${path}". Details: ${err.message}`)
+	process.exit(1)
 }
 
 // Update PATCH methods to use ContentType.JsonPatch
