@@ -1,2 +1,3 @@
+[ -f ./src/index.ts ] && node apply-json-patch-content-type.js
 yarn build
 git add .
