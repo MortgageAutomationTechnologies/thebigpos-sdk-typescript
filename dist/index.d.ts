@@ -159,6 +159,11 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
+    buyerAgent?: EncompassContact | null;
+    sellerAgent?: EncompassContact | null;
+    settlementAgent?: EncompassContact | null;
+    escrowAgent?: EncompassContact | null;
+    titleInsuranceAgent?: EncompassContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
     borrowerLastName?: string | null;
@@ -204,11 +209,6 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
-    buyerAgent?: EncompassContact | null;
-    sellerAgent?: EncompassContact | null;
-    settlementAgent?: EncompassContact | null;
-    escrowAgent?: EncompassContact | null;
-    titleInsuranceAgent?: EncompassContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -350,14 +350,6 @@ export interface ConditionComment {
     dateCreated: string;
     createdBy: string;
     createdByName: string;
-}
-export interface Contact {
-    /** @format uuid */
-    id: string;
-    firstName?: string | null;
-    lastName?: string | null;
-    name?: string | null;
-    email?: string | null;
 }
 export interface ContactInfo {
     phone: string;
@@ -823,65 +815,6 @@ export interface EncompassContact {
 }
 export interface Error {
     message: string;
-}
-export interface ExtendedLoan {
-    /** @format uuid */
-    id: string;
-    loanID: string;
-    loanNumber?: string | null;
-    /** @format date-time */
-    initialDisclosureProvidedDate?: string | null;
-    /** @format date-time */
-    closingDisclosureSentDate?: string | null;
-    /** @format date-time */
-    underwritingApprovalDate?: string | null;
-    /** @format date-time */
-    closingDate?: string | null;
-    /** @format date-time */
-    fundingOrderDate?: string | null;
-    /** @format date-time */
-    currentStatusDate?: string | null;
-    loanChannel?: string | null;
-    /** @format double */
-    totalLoanAmount?: number | null;
-    currentLoanStatus?: string | null;
-    currentMilestone?: string | null;
-    lastCompletedMilestone?: string | null;
-    /** @format date-time */
-    startDate?: string | null;
-    isInSync: boolean;
-    /** @format date-time */
-    syncDate?: string | null;
-    excludeFromAutoTaskReminders?: boolean | null;
-    fileStarter?: string | null;
-    isPOSLoan?: boolean | null;
-    referenceID: string;
-    /** @format int32 */
-    term?: number | null;
-    loanProgram?: string | null;
-    loanType?: string | null;
-    status?: string | null;
-    loanOfficer?: LoanOfficer | null;
-    propertyAddress?: Address | null;
-    loanSettings?: LoanSettings | null;
-    loanLogs: LoanLog[];
-    isLocked: boolean;
-    isLockedFromEditing: boolean;
-    source?: string | null;
-    userLoans: UserLoan[];
-    contacts: LoanContact[];
-    buyerAgentContact?: Contact | null;
-    sellerAgentContact?: Contact | null;
-    escrowAgentContact?: Contact | null;
-    titleInsuranceAgentContact?: Contact | null;
-    settlementAgentContact?: Contact | null;
-    loanProcessorContact?: Contact | null;
-}
-export interface ExtendedLoanPaginated {
-    rows: ExtendedLoan[];
-    pagination: Pagination;
-    /** @format int64 */
-    count: number;
 }
 export interface File {
     /** @format uuid */
@@ -1437,6 +1370,9 @@ export interface LoanContact {
     companyName?: string | null;
     role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 }
+export interface LoanContactList {
+    email: string;
+}
 export interface LoanDocument {
     /** @format date-time */
     createdAt: string;
@@ -1455,6 +1391,37 @@ export interface LoanDocument {
     contents?: string | null;
     failoverDocumentPath?: string | null;
 }
+export interface LoanDocumentSearch {
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    name: string;
+    loanID?: string | null;
+    userID?: string | null;
+    initialBucket?: string | null;
+    losDocumentID?: string | null;
+    losStatus: string;
+    contents?: string | null;
+    failoverDocumentPath?: string | null;
+}
+export interface LoanDocumentSearchCriteria {
+    searchText?: string | null;
+    bucket?: string | null;
+    /** @format uuid */
+    userID?: string | null;
+    documentIDs?: string[] | null;
+}
+export interface LoanDocumentSearchPaginated {
+    rows: LoanDocumentSearch[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
 export interface LoanDraftSearchCriteria {
     searchText?: string | null;
     /** @format uuid */
@@ -1462,6 +1429,28 @@ export interface LoanDraftSearchCriteria {
     /** @format uuid */
     siteConfigurationId?: string | null;
     isUnassigned?: boolean | null;
+}
+export interface LoanList {
+    /** @format uuid */
+    id: string;
+    status?: string | null;
+    loanID?: string | null;
+    loanNumber?: string | null;
+    /** @format double */
+    totalLoanAmount?: number | null;
+    /** @format date-time */
+    startDate?: string | null;
+    propertyAddress?: Address | null;
+    loanOfficer?: LoanOfficerList | null;
+    buyerAgentContact?: LoanContactList | null;
+    sellerAgentContact?: LoanContactList | null;
+    userLoans: UserLoan[];
+}
+export interface LoanListPaginated {
+    rows: LoanList[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
 }
 export interface LoanLog {
     /** @format uuid */
@@ -1482,6 +1471,9 @@ export interface LoanOfficer {
     nmlsid: string;
     profilePhotoUrl: string;
     siteConfiguration: SiteConfiguration;
+}
+export interface LoanOfficerList {
+    name?: string | null;
 }
 export interface LoanOfficerPublic {
     firstName: string;
@@ -1632,6 +1624,12 @@ export interface MilestoneConfigurationRequest {
     /** @minLength 1 */
     loanType: string;
     notificationsEnabled: boolean;
+}
+export interface MobileSettings {
+    /** @format uuid */
+    id: string;
+    hasMobile: boolean;
+    downloadLink?: string | null;
 }
 export interface Module {
     /** @format uuid */
@@ -2003,6 +2001,11 @@ export interface SendForgotPasswordRequest {
      */
     email: string;
 }
+export interface SendLoanDocumentsRequest {
+    documentIDs: string[];
+    loanUserIDs: string[];
+    emailAddresses: string[];
+}
 export interface SendNotificationForLoanRequest {
     /** @minLength 1 */
     loanID: string;
@@ -2205,6 +2208,7 @@ export interface SiteConfiguration {
     asoSettings?: ASOSettings | null;
     accountSettings: AccountSettings;
     autoTaskReminderIntervalsInDays: number[];
+    mobileSettings: MobileSettings;
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
@@ -2396,6 +2400,7 @@ export interface SiteConfigurationByUrl {
     asoSettings?: ASOSettings | null;
     accountSettings: AccountSettings;
     autoTaskReminderIntervalsInDays: number[];
+    mobileSettings: MobileSettings;
     workflows: Workflow[];
 }
 export interface SiteConfigurationForm {
@@ -3189,7 +3194,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.19.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4350,6 +4355,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
@@ -4373,6 +4379,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoan: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
@@ -4468,6 +4475,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @deprecated
          * @secure
          * @response `200` `DocumentDataRequest` Success
+         * @response `423` `UnprocessableEntity` Client Error
          */
         createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
         /**
@@ -4696,6 +4704,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `RunLOCalculation` Success
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculation, any>>;
         /**
@@ -4719,6 +4728,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `LoanComparisonScenario` Created
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonScenario, any>>;
         /**
@@ -4785,6 +4795,24 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LoanDocuments
+         * @name SearchLoanDocuments
+         * @summary Search loan documents
+         * @request POST:/api/loans/{loanId}/documents/search
+         * @secure
+         * @response `200` `LoanDocumentSearchPaginated` Success
+         */
+        searchLoanDocuments: (loanId: string, data: LoanDocumentSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentSearchPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
          * @name DownloadLoanDocument
          * @summary Download By ID
          * @request GET:/api/loans/{loanId}/documents/{documentId}/download
@@ -4804,6 +4832,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `LoanDocument` Created
          * @response `404` `ProblemDetails` Not Found
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoanDocument: (loanId: string, data: {
             name?: string;
@@ -4822,6 +4851,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `LoanDocument` Success
          * @response `404` `ProblemDetails` Not Found
          * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
          */
         retryFailedLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
@@ -4835,6 +4865,19 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `DocumentDataRequest` Success
          */
         generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
+         * @name SendLoanDocuments
+         * @summary Send existing documents to loan users or external emails
+         * @request POST:/api/loans/{loanId}/documents/distribute
+         * @secure
+         * @response `200` `void` Success
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        sendLoanDocuments: (loanId: string, data: SendLoanDocumentsRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5154,7 +5197,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/loans/search
          * @secure
-         * @response `200` `ExtendedLoanPaginated` Success
+         * @response `200` `LoanListPaginated` Success
          */
         searchLoans: (data: LoanSearchCriteria, query?: {
             /** @format int32 */
@@ -5163,7 +5206,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<ExtendedLoanPaginated, any>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanListPaginated, any>>;
         /**
          * No description
          *
@@ -5329,6 +5372,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `UserLoanTask` Created
          * @response `404` `ProblemDetails` Not Found
+         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
@@ -5341,6 +5385,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `(UserLoanTask)[]` Created
          * @response `404` `ProblemDetails` Not Found
+         * @response `423` `UnprocessableEntity` Client Error
          */
         importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**

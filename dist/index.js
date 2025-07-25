@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.19.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1162,8 +1162,9 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1185,6 +1186,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1274,6 +1276,7 @@ export class Api extends HttpClient {
              * @deprecated
              * @secure
              * @response `200` `DocumentDataRequest` Success
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1297,7 +1300,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `ListingFile` Success
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1330,7 +1333,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `(ListingPhoto)[]` Success
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1473,6 +1476,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `RunLOCalculation` Success
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             runLoanCalculator: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1496,6 +1500,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `LoanComparisonScenario` Created
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoanComparison: (loanId, index, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/${index}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1559,6 +1564,17 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanDocuments
+             * @name SearchLoanDocuments
+             * @summary Search loan documents
+             * @request POST:/api/loans/{loanId}/documents/search
+             * @secure
+             * @response `200` `LoanDocumentSearchPaginated` Success
+             */
+            searchLoanDocuments: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
              * @name DownloadLoanDocument
              * @summary Download By ID
              * @request GET:/api/loans/{loanId}/documents/{documentId}/download
@@ -1578,6 +1594,7 @@ export class Api extends HttpClient {
              * @response `201` `LoanDocument` Created
              * @response `404` `ProblemDetails` Not Found
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1591,6 +1608,7 @@ export class Api extends HttpClient {
              * @response `200` `LoanDocument` Success
              * @response `404` `ProblemDetails` Not Found
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             retryFailedLoanDocument: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}/retry`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -1604,6 +1622,19 @@ export class Api extends HttpClient {
              * @response `200` `DocumentDataRequest` Success
              */
             generateLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/generate`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name SendLoanDocuments
+             * @summary Send existing documents to loan users or external emails
+             * @request POST:/api/loans/{loanId}/documents/distribute
+             * @secure
+             * @response `200` `void` Success
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            sendLoanDocuments: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/distribute`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -1885,7 +1916,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loans/search
              * @secure
-             * @response `200` `ExtendedLoanPaginated` Success
+             * @response `200` `LoanListPaginated` Success
              */
             searchLoans: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1909,7 +1940,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `Loan` Success
              */
-            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2041,6 +2072,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `UserLoanTask` Created
              * @response `404` `ProblemDetails` Not Found
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoanTask: (loanId, taskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${taskId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2053,6 +2085,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `(UserLoanTask)[]` Created
              * @response `404` `ProblemDetails` Not Found
+             * @response `423` `UnprocessableEntity` Client Error
              */
             importLoanTask: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/import`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
