@@ -264,10 +264,6 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
-  buyerAgent?: EncompassContact | null;
-  sellerAgent?: EncompassContact | null;
-  settlementAgent?: EncompassContact | null;
-  escrowAgent?: EncompassContact | null;
   titleInsuranceAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
@@ -314,6 +310,10 @@ export interface ApplicationRowData {
   subjectPropertyState?: string | null;
   subjectPropertyZip?: string | null;
   loanPurpose?: string | null;
+  buyerAgent?: EncompassContact | null;
+  sellerAgent?: EncompassContact | null;
+  settlementAgent?: EncompassContact | null;
+  escrowAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -600,6 +600,16 @@ export interface CreateInviteRequest {
   /** @deprecated */
   userRole?: UserRole | null;
   loanRole?: LoanRole | null;
+}
+
+export interface CreateLosCredentials {
+  /** @format uuid */
+  accountID: string;
+  instanceID: string;
+  clientID: string;
+  clientSecret: string;
+  encryptionKeyArn: string;
+  encryptionPassword: string;
 }
 
 export interface CreateUserRelationRequest {
@@ -2355,6 +2365,8 @@ export interface SiteConfiguration {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2548,6 +2560,8 @@ export interface SiteConfigurationByUrl {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2772,6 +2786,7 @@ export interface SiteConfigurationRequest {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -3685,7 +3700,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.19.1
+ * @version v2.20.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5837,7 +5852,6 @@ export class Api<
      * @secure
      * @response `200` `string` Success
      * @response `422` `UnprocessableEntity` Client Error
-     * @response `423` `UnprocessableEntity` Client Error
      */
     updateLoanConsent: (
       loanId: string,
@@ -5849,7 +5863,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6067,13 +6081,12 @@ export class Api<
      * @deprecated
      * @secure
      * @response `200` `DocumentDataRequest` Success
-     * @response `423` `UnprocessableEntity` Client Error
      */
     createLegacyLoanDocument: (
       data: GenerateDocumentRequest,
       params: RequestParams = {},
     ) =>
-      this.request<DocumentDataRequest, UnprocessableEntity>({
+      this.request<DocumentDataRequest, any>({
         path: `/api/los/loan/generatedocument`,
         method: "POST",
         body: data,
@@ -6133,7 +6146,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6213,7 +6226,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6753,7 +6766,6 @@ export class Api<
      * @response `201` `LoanDocument` Created
      * @response `404` `ProblemDetails` Not Found
      * @response `422` `UnprocessableEntity` Client Error
-     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoanDocument: (
       loanId: string,
@@ -6786,7 +6798,6 @@ export class Api<
      * @response `200` `LoanDocument` Success
      * @response `404` `ProblemDetails` Not Found
      * @response `422` `UnprocessableEntity` Client Error
-     * @response `423` `UnprocessableEntity` Client Error
      */
     retryFailedLoanDocument: (
       loanId: string,
@@ -7501,7 +7512,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -7773,7 +7784,6 @@ export class Api<
      * @secure
      * @response `201` `UserLoanTask` Created
      * @response `404` `ProblemDetails` Not Found
-     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoanTask: (
       loanId: string,
@@ -7781,7 +7791,7 @@ export class Api<
       data: UserLoanTaskRequest,
       params: RequestParams = {},
     ) =>
-      this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
+      this.request<UserLoanTask, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${taskId}`,
         method: "POST",
         body: data,
@@ -7801,14 +7811,13 @@ export class Api<
      * @secure
      * @response `201` `(UserLoanTask)[]` Created
      * @response `404` `ProblemDetails` Not Found
-     * @response `423` `UnprocessableEntity` Client Error
      */
     importLoanTask: (
       loanId: string,
       data: ImportUserLoanTaskRequest[],
       params: RequestParams = {},
     ) =>
-      this.request<UserLoanTask[], ProblemDetails | UnprocessableEntity>({
+      this.request<UserLoanTask[], ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/import`,
         method: "POST",
         body: data,
@@ -9192,6 +9201,28 @@ export class Api<
         path: `/api/integrations/los/loans/${loanId}/buckets`,
         method: "GET",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags TheBigPOS
+     * @name IntegrationsLosCredentialsCreate
+     * @request POST:/api/integrations/los/credentials
+     * @secure
+     * @response `200` `void` Success
+     */
+    integrationsLosCredentialsCreate: (
+      data: CreateLosCredentials,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/integrations/los/credentials`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 

@@ -159,10 +159,6 @@ export interface AllowImpersonationRequest {
     email: string;
 }
 export interface ApplicationRowData {
-    buyerAgent?: EncompassContact | null;
-    sellerAgent?: EncompassContact | null;
-    settlementAgent?: EncompassContact | null;
-    escrowAgent?: EncompassContact | null;
     titleInsuranceAgent?: EncompassContact | null;
     borrowerEmail?: string | null;
     borrowerFirstName?: string | null;
@@ -209,6 +205,10 @@ export interface ApplicationRowData {
     subjectPropertyState?: string | null;
     subjectPropertyZip?: string | null;
     loanPurpose?: string | null;
+    buyerAgent?: EncompassContact | null;
+    sellerAgent?: EncompassContact | null;
+    settlementAgent?: EncompassContact | null;
+    escrowAgent?: EncompassContact | null;
 }
 export interface Attachment {
     fileName: string;
@@ -470,6 +470,15 @@ export interface CreateInviteRequest {
     /** @deprecated */
     userRole?: UserRole | null;
     loanRole?: LoanRole | null;
+}
+export interface CreateLosCredentials {
+    /** @format uuid */
+    accountID: string;
+    instanceID: string;
+    clientID: string;
+    clientSecret: string;
+    encryptionKeyArn: string;
+    encryptionPassword: string;
 }
 export interface CreateUserRelationRequest {
     /**
@@ -2064,6 +2073,8 @@ export interface SiteConfiguration {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     linkedInUrl?: string | null;
+    /** @minLength 1 */
+    youTubeUrl: string;
     licenses: string[];
     contactUsUrl?: string | null;
     licenseInfoUrl?: string | null;
@@ -2256,6 +2267,8 @@ export interface SiteConfigurationByUrl {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     linkedInUrl?: string | null;
+    /** @minLength 1 */
+    youTubeUrl: string;
     licenses: string[];
     contactUsUrl?: string | null;
     licenseInfoUrl?: string | null;
@@ -2477,6 +2490,7 @@ export interface SiteConfigurationRequest {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     linkedInUrl?: string | null;
+    youTubeUrl?: string | null;
     licenses: string[];
     contactUsUrl?: string | null;
     licenseInfoUrl?: string | null;
@@ -3194,7 +3208,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.19.1
+ * @version v2.20.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4355,7 +4369,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
          */
         updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
@@ -4475,7 +4488,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @deprecated
          * @secure
          * @response `200` `DocumentDataRequest` Success
-         * @response `423` `UnprocessableEntity` Client Error
          */
         createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
         /**
@@ -4832,7 +4844,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `LoanDocument` Created
          * @response `404` `ProblemDetails` Not Found
          * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoanDocument: (loanId: string, data: {
             name?: string;
@@ -4851,7 +4862,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `LoanDocument` Success
          * @response `404` `ProblemDetails` Not Found
          * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
          */
         retryFailedLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
@@ -5372,7 +5382,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `UserLoanTask` Created
          * @response `404` `ProblemDetails` Not Found
-         * @response `423` `UnprocessableEntity` Client Error
          */
         createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
@@ -5385,7 +5394,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `(UserLoanTask)[]` Created
          * @response `404` `ProblemDetails` Not Found
-         * @response `423` `UnprocessableEntity` Client Error
          */
         importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
@@ -6109,6 +6117,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `void` Success
          */
         integrationsLosLoansBucketsList: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name IntegrationsLosCredentialsCreate
+         * @request POST:/api/integrations/los/credentials
+         * @secure
+         * @response `200` `void` Success
+         */
+        integrationsLosCredentialsCreate: (data: CreateLosCredentials, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
