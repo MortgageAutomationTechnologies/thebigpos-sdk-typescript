@@ -29,144 +29,6 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-export var UserRole;
-(function (UserRole) {
-    UserRole["Borrower"] = "Borrower";
-    UserRole["LoanOfficer"] = "LoanOfficer";
-    UserRole["Admin"] = "Admin";
-    UserRole["SuperAdmin"] = "SuperAdmin";
-    UserRole["Realtor"] = "Realtor";
-    UserRole["SettlementAgent"] = "SettlementAgent";
-    UserRole["LoanProcessor"] = "LoanProcessor";
-    UserRole["LoanOfficerAssistant"] = "LoanOfficerAssistant";
-    UserRole["BranchManager"] = "BranchManager";
-    UserRole["SystemAdmin"] = "SystemAdmin";
-})(UserRole || (UserRole = {}));
-export var SiteConfigurationType;
-(function (SiteConfigurationType) {
-    SiteConfigurationType["None"] = "None";
-    SiteConfigurationType["Account"] = "Account";
-    SiteConfigurationType["Corporate"] = "Corporate";
-    SiteConfigurationType["Branch"] = "Branch";
-    SiteConfigurationType["LoanOfficer"] = "LoanOfficer";
-    SiteConfigurationType["Partner"] = "Partner";
-})(SiteConfigurationType || (SiteConfigurationType = {}));
-export var SSOIntegrationType;
-(function (SSOIntegrationType) {
-    SSOIntegrationType["ConsumerConnect"] = "ConsumerConnect";
-    SSOIntegrationType["TheBigPOS"] = "TheBigPOS";
-})(SSOIntegrationType || (SSOIntegrationType = {}));
-export var LogLevel;
-(function (LogLevel) {
-    LogLevel["None"] = "None";
-    LogLevel["Info"] = "Info";
-    LogLevel["Warning"] = "Warning";
-    LogLevel["Error"] = "Error";
-})(LogLevel || (LogLevel = {}));
-export var LoanRole;
-(function (LoanRole) {
-    LoanRole["Borrower"] = "Borrower";
-    LoanRole["CoBorrower"] = "CoBorrower";
-    LoanRole["NonBorrower"] = "NonBorrower";
-    LoanRole["LoanOfficer"] = "LoanOfficer";
-    LoanRole["LoanProcessor"] = "LoanProcessor";
-    LoanRole["LoanOfficerAssistant"] = "LoanOfficerAssistant";
-    LoanRole["SupportingLoanOfficer"] = "SupportingLoanOfficer";
-    LoanRole["BuyerAgent"] = "BuyerAgent";
-    LoanRole["SellerAgent"] = "SellerAgent";
-    LoanRole["TitleInsuranceAgent"] = "TitleInsuranceAgent";
-    LoanRole["EscrowAgent"] = "EscrowAgent";
-    LoanRole["SettlementAgent"] = "SettlementAgent";
-})(LoanRole || (LoanRole = {}));
-export var LoanQueueType;
-(function (LoanQueueType) {
-    LoanQueueType["Unknown"] = "Unknown";
-    LoanQueueType["New"] = "New";
-    LoanQueueType["Append"] = "Append";
-    LoanQueueType["Update"] = "Update";
-    LoanQueueType["FieldUpdates"] = "FieldUpdates";
-    LoanQueueType["Document"] = "Document";
-    LoanQueueType["Buckets"] = "Buckets";
-})(LoanQueueType || (LoanQueueType = {}));
-export var LoanQueueReason;
-(function (LoanQueueReason) {
-    LoanQueueReason["Unknown"] = "Unknown";
-    LoanQueueReason["Locked"] = "Locked";
-    LoanQueueReason["LOSError"] = "LOSError";
-    LoanQueueReason["Exception"] = "Exception";
-})(LoanQueueReason || (LoanQueueReason = {}));
-export var LoanLogType;
-(function (LoanLogType) {
-    LoanLogType["Loan"] = "Loan";
-    LoanLogType["Queue"] = "Queue";
-    LoanLogType["POSFlagChanged"] = "POSFlagChanged";
-    LoanLogType["Verification"] = "Verification";
-})(LoanLogType || (LoanLogType = {}));
-export var LoanImportStatus;
-(function (LoanImportStatus) {
-    LoanImportStatus["WaitingProcess"] = "WaitingProcess";
-    LoanImportStatus["InProgress"] = "InProgress";
-    LoanImportStatus["Completed"] = "Completed";
-    LoanImportStatus["Failed"] = "Failed";
-    LoanImportStatus["Cancelled"] = "Cancelled";
-})(LoanImportStatus || (LoanImportStatus = {}));
-export var LOSStatus;
-(function (LOSStatus) {
-    LOSStatus["Unknown"] = "Unknown";
-    LOSStatus["Pending"] = "Pending";
-    LOSStatus["Retrying"] = "Retrying";
-    LOSStatus["Successful"] = "Successful";
-    LOSStatus["Failed"] = "Failed";
-    LOSStatus["FailedPermanently"] = "FailedPermanently";
-})(LOSStatus || (LOSStatus = {}));
-export var FilterType;
-(function (FilterType) {
-    FilterType["DateGreaterThanOrEqualTo"] = "DateGreaterThanOrEqualTo";
-    FilterType["DateGreaterThan"] = "DateGreaterThan";
-    FilterType["DateLessThan"] = "DateLessThan";
-    FilterType["DateLessThanOrEqualTo"] = "DateLessThanOrEqualTo";
-    FilterType["DateEquals"] = "DateEquals";
-    FilterType["DateDoesntEqual"] = "DateDoesntEqual";
-    FilterType["DateNonEmpty"] = "DateNonEmpty";
-    FilterType["DateEmpty"] = "DateEmpty";
-    FilterType["StringContains"] = "StringContains";
-    FilterType["StringEquals"] = "StringEquals";
-    FilterType["StringNotEmpty"] = "StringNotEmpty";
-    FilterType["StringNotEquals"] = "StringNotEquals";
-    FilterType["StringNotContains"] = "StringNotContains";
-})(FilterType || (FilterType = {}));
-export var Environment;
-(function (Environment) {
-    Environment["Development"] = "Development";
-    Environment["Staging"] = "Staging";
-    Environment["UAT"] = "UAT";
-    Environment["Production"] = "Production";
-})(Environment || (Environment = {}));
-export var EntityType;
-(function (EntityType) {
-    EntityType["Account"] = "Account";
-    EntityType["Corporate"] = "Corporate";
-    EntityType["Branch"] = "Branch";
-    EntityType["LoanOfficer"] = "LoanOfficer";
-    EntityType["Realtor"] = "Realtor";
-})(EntityType || (EntityType = {}));
-export var BranchType;
-(function (BranchType) {
-    BranchType["Mortgage"] = "Mortgage";
-    BranchType["RealEstate"] = "RealEstate";
-})(BranchType || (BranchType = {}));
-export var BorrowerType;
-(function (BorrowerType) {
-    BorrowerType["Borrower"] = "Borrower";
-    BorrowerType["CoBorrower"] = "CoBorrower";
-    BorrowerType["Unknown"] = "Unknown";
-})(BorrowerType || (BorrowerType = {}));
-export var BorrowerRelationship;
-(function (BorrowerRelationship) {
-    BorrowerRelationship["NotApplicable"] = "NotApplicable";
-    BorrowerRelationship["Spouse"] = "Spouse";
-    BorrowerRelationship["NonSpouse"] = "NonSpouse";
-})(BorrowerRelationship || (BorrowerRelationship = {}));
 import axios from "axios";
 export var ContentType;
 (function (ContentType) {
@@ -241,7 +103,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.18.3
+ * @version v2.18.5
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1293,14 +1155,14 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name UpdateLoan
-             * @summary Update Loan
+             * @name UpdateLoanConsent
+             * @summary Update Loan Consent
              * @request PATCH:/api/los/loan/application/{loanID}
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -2064,11 +1926,22 @@ export class Api extends HttpClient {
              * @tags Loans
              * @name ImportLoanFromLos
              * @summary Import from LOS
-             * @request POST:/api/loans/{loanId}/import-from-los
+             * @request POST:/api/loans/import-from-los/{loanId}
              * @secure
              * @response `200` `Loan` Success
              */
-            importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/import-from-los`, method: "POST", secure: true, format: "json" }, params)),
+            importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/import-from-los/${loanId}`, method: "POST", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name UpdateLoan
+             * @summary Update loan fields
+             * @request PATCH:/api/loans/{loanId}
+             * @secure
+             * @response `200` `Loan` Success
+             */
+            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -2875,6 +2748,16 @@ export class Api extends HttpClient {
              * @response `200` `void` Success
              */
             integrationsLosLoansLockedList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/locked`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name IntegrationsLosLoansBucketsList
+             * @request GET:/api/integrations/los/loans/{loanID}/buckets
+             * @secure
+             * @response `200` `void` Success
+             */
+            integrationsLosLoansBucketsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/buckets`, method: "GET", secure: true }, params)),
             /**
              * No description
              *
