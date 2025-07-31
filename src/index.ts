@@ -264,7 +264,6 @@ export interface AllowImpersonationRequest {
 }
 
 export interface ApplicationRowData {
-  titleInsuranceAgent?: EncompassContact | null;
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;
@@ -314,6 +313,7 @@ export interface ApplicationRowData {
   sellerAgent?: EncompassContact | null;
   settlementAgent?: EncompassContact | null;
   escrowAgent?: EncompassContact | null;
+  titleInsuranceAgent?: EncompassContact | null;
 }
 
 export interface Attachment {
@@ -2510,7 +2510,7 @@ export interface SiteConfiguration {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
   mobileSettings: MobileSettings;
 }
 
@@ -2705,7 +2705,7 @@ export interface SiteConfigurationByUrl {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
   mobileSettings: MobileSettings;
   workflows: Workflow[];
 }
@@ -2912,7 +2912,7 @@ export interface SiteConfigurationRequest {
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
 }
 
 export interface SiteConfigurationSearchCriteria {
@@ -3700,7 +3700,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.20.1
+ * @version v2.19.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
