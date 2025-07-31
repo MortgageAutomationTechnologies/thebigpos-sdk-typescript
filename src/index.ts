@@ -1,6 +1,5 @@
 /* eslint-disable */
 /* tslint:disable */
-// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -9,104 +8,6 @@
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
-
-export type UserRole =
-  | "Borrower"
-  | "LoanOfficer"
-  | "Admin"
-  | "SuperAdmin"
-  | "Realtor"
-  | "SettlementAgent"
-  | "LoanProcessor"
-  | "LoanOfficerAssistant"
-  | "BranchManager"
-  | "SystemAdmin";
-
-export type SiteConfigurationType =
-  | "None"
-  | "Account"
-  | "Corporate"
-  | "Branch"
-  | "LoanOfficer"
-  | "Partner";
-
-export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS";
-
-export type OperationType =
-  | "Add"
-  | "Remove"
-  | "Replace"
-  | "Move"
-  | "Copy"
-  | "Test"
-  | "Invalid";
-
-export type LogLevel = "None" | "Info" | "Warning" | "Error";
-
-export type LoanRole =
-  | "Borrower"
-  | "CoBorrower"
-  | "NonBorrower"
-  | "LoanOfficer"
-  | "LoanProcessor"
-  | "LoanOfficerAssistant"
-  | "SupportingLoanOfficer"
-  | "BuyerAgent"
-  | "SellerAgent"
-  | "TitleInsuranceAgent"
-  | "EscrowAgent"
-  | "SettlementAgent";
-
-export type LoanQueueType =
-  | "Unknown"
-  | "New"
-  | "Append"
-  | "Update"
-  | "FieldUpdates"
-  | "Document"
-  | "Buckets";
-
-export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
-
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
-
-export type LOSStatus =
-  | "Unknown"
-  | "Pending"
-  | "Retrying"
-  | "Successful"
-  | "Failed"
-  | "FailedPermanently";
-
-export type FilterType =
-  | "DateGreaterThanOrEqualTo"
-  | "DateGreaterThan"
-  | "DateLessThan"
-  | "DateLessThanOrEqualTo"
-  | "DateEquals"
-  | "DateDoesntEqual"
-  | "DateNonEmpty"
-  | "DateEmpty"
-  | "StringContains"
-  | "StringEquals"
-  | "StringNotEmpty"
-  | "StringNotEquals"
-  | "StringNotContains";
-
-export type Environment = "Development" | "Staging" | "UAT" | "Production";
-
-export type EntityType =
-  | "Account"
-  | "Corporate"
-  | "Branch"
-  | "LoanOfficer"
-  | "Realtor";
-
-export type BranchType = "Mortgage" | "RealEstate";
-
-export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
-
-export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 
 export interface ASOSettings {
   enabled: boolean;
@@ -263,6 +164,41 @@ export interface AllowImpersonationRequest {
   email: string;
 }
 
+export interface Amortization {
+  /** @format double */
+  balance: number;
+  /** @format double */
+  periodicInterest: number;
+  /** @format int32 */
+  periods: number;
+  /** @format double */
+  periodicPayment: number;
+  /** @format double */
+  totalInterest: number;
+  /** @format double */
+  totalPayment: number;
+  /** @format date-time */
+  startDate: string;
+  /** @format date-time */
+  endDate?: string | null;
+  schedule: AmortizationSchedule[];
+  /** @format int32 */
+  monthsWithPmi: number;
+}
+
+export interface AmortizationSchedule {
+  /** @format double */
+  interest: number;
+  /** @format double */
+  principal: number;
+  /** @format double */
+  balance: number;
+  /** @format date-time */
+  date: string;
+  /** @format double */
+  pmi: number;
+}
+
 export interface ApplicationRowData {
   borrowerEmail?: string | null;
   borrowerFirstName?: string | null;
@@ -321,6 +257,10 @@ export interface Attachment {
   base64Data: string;
 }
 
+export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
+
+export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
+
 export interface BranchBase {
   /** @format date-time */
   createdAt: string;
@@ -348,6 +288,8 @@ export interface BranchSearchCriteria {
   brands?: string[] | null;
   type?: string | null;
 }
+
+export type BranchType = "Mortgage" | "RealEstate";
 
 export interface BranchUser {
   /** @format date-time */
@@ -469,15 +411,6 @@ export interface ConditionComment {
   dateCreated: string;
   createdBy: string;
   createdByName: string;
-}
-
-export interface Contact {
-  /** @format uuid */
-  id: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  name?: string | null;
-  email?: string | null;
 }
 
 export interface ContactInfo {
@@ -609,6 +542,16 @@ export interface CreateInviteRequest {
   /** @deprecated */
   userRole?: UserRole | null;
   loanRole?: LoanRole | null;
+}
+
+export interface CreateLosCredentials {
+  /** @format uuid */
+  accountID: string;
+  instanceID: string;
+  clientID: string;
+  clientSecret: string;
+  encryptionKeyArn: string;
+  encryptionPassword: string;
 }
 
 export interface CreateUserRelationRequest {
@@ -978,69 +921,12 @@ export interface EncompassContact {
   company?: string | null;
 }
 
+export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
+
+export type Environment = "Development" | "Staging" | "UAT" | "Production";
+
 export interface Error {
   message: string;
-}
-
-export interface ExtendedLoan {
-  /** @format uuid */
-  id: string;
-  loanID: string;
-  loanNumber?: string | null;
-  /** @format date-time */
-  initialDisclosureProvidedDate?: string | null;
-  /** @format date-time */
-  closingDisclosureSentDate?: string | null;
-  /** @format date-time */
-  underwritingApprovalDate?: string | null;
-  /** @format date-time */
-  closingDate?: string | null;
-  /** @format date-time */
-  fundingOrderDate?: string | null;
-  /** @format date-time */
-  currentStatusDate?: string | null;
-  loanChannel?: string | null;
-  /** @format double */
-  totalLoanAmount?: number | null;
-  currentLoanStatus?: string | null;
-  currentMilestone?: string | null;
-  lastCompletedMilestone?: string | null;
-  /** @format date-time */
-  startDate?: string | null;
-  isInSync: boolean;
-  /** @format date-time */
-  syncDate?: string | null;
-  excludeFromAutoTaskReminders?: boolean | null;
-  fileStarter?: string | null;
-  isPOSLoan?: boolean | null;
-  referenceID: string;
-  /** @format int32 */
-  term?: number | null;
-  loanProgram?: string | null;
-  loanType?: string | null;
-  status?: string | null;
-  loanOfficer?: LoanOfficer | null;
-  propertyAddress?: Address | null;
-  loanSettings?: LoanSettings | null;
-  loanLogs: LoanLog[];
-  isLocked: boolean;
-  isLockedFromEditing: boolean;
-  source?: string | null;
-  userLoans: UserLoan[];
-  contacts: LoanContact[];
-  buyerAgentContact?: Contact | null;
-  sellerAgentContact?: Contact | null;
-  escrowAgentContact?: Contact | null;
-  titleInsuranceAgentContact?: Contact | null;
-  settlementAgentContact?: Contact | null;
-  loanProcessorContact?: Contact | null;
-}
-
-export interface ExtendedLoanPaginated {
-  rows: ExtendedLoan[];
-  pagination: Pagination;
-  /** @format int64 */
-  count: number;
 }
 
 export interface File {
@@ -1082,6 +968,21 @@ export interface FileWithBytes {
   mimeType?: string | null;
   extension?: string | null;
 }
+
+export type FilterType =
+  | "DateGreaterThanOrEqualTo"
+  | "DateGreaterThan"
+  | "DateLessThan"
+  | "DateLessThanOrEqualTo"
+  | "DateEquals"
+  | "DateDoesntEqual"
+  | "DateNonEmpty"
+  | "DateEmpty"
+  | "StringContains"
+  | "StringEquals"
+  | "StringNotEmpty"
+  | "StringNotEquals"
+  | "StringNotContains";
 
 export interface Form {
   /** @format date-time */
@@ -1449,6 +1350,8 @@ export interface LOSSettingsUpdateRequest {
   loanMilestoneNotificationsEnabled: boolean;
 }
 
+export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently";
+
 export interface Listing {
   /** @format date-time */
   createdAt: string;
@@ -1669,6 +1572,10 @@ export interface LoanContact {
     | "SettlementAgent";
 }
 
+export interface LoanContactList {
+  email: string;
+}
+
 export interface LoanDocument {
   /** @format date-time */
   createdAt: string;
@@ -1688,6 +1595,40 @@ export interface LoanDocument {
   failoverDocumentPath?: string | null;
 }
 
+export interface LoanDocumentSearch {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  name: string;
+  loanID?: string | null;
+  userID?: string | null;
+  initialBucket?: string | null;
+  losDocumentID?: string | null;
+  losStatus: string;
+  contents?: string | null;
+  failoverDocumentPath?: string | null;
+}
+
+export interface LoanDocumentSearchCriteria {
+  searchText?: string | null;
+  bucket?: string | null;
+  /** @format uuid */
+  userID?: string | null;
+  documentIDs?: string[] | null;
+}
+
+export interface LoanDocumentSearchPaginated {
+  rows: LoanDocumentSearch[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface LoanDraftSearchCriteria {
   searchText?: string | null;
   /** @format uuid */
@@ -1695,6 +1636,30 @@ export interface LoanDraftSearchCriteria {
   /** @format uuid */
   siteConfigurationId?: string | null;
   isUnassigned?: boolean | null;
+}
+
+export interface LoanList {
+  /** @format uuid */
+  id: string;
+  status?: string | null;
+  loanID?: string | null;
+  loanNumber?: string | null;
+  /** @format double */
+  totalLoanAmount?: number | null;
+  /** @format date-time */
+  startDate?: string | null;
+  propertyAddress?: Address | null;
+  loanOfficer?: LoanOfficerList | null;
+  buyerAgentContact?: LoanContactList | null;
+  sellerAgentContact?: LoanContactList | null;
+  userLoans: UserLoan[];
+}
+
+export interface LoanListPaginated {
+  rows: LoanList[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface LoanLog {
@@ -1707,6 +1672,8 @@ export interface LoanLog {
   createdAt: string;
 }
 
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+
 export interface LoanOfficer {
   /** @format uuid */
   id: string;
@@ -1717,6 +1684,10 @@ export interface LoanOfficer {
   nmlsid: string;
   profilePhotoUrl: string;
   siteConfiguration: SiteConfiguration;
+}
+
+export interface LoanOfficerList {
+  name?: string | null;
 }
 
 export interface LoanOfficerPublic {
@@ -1765,6 +1736,8 @@ export interface LoanQueuePaginated {
   count: number;
 }
 
+export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
+
 export interface LoanQueueSearchCriteria {
   searchText?: string | null;
   loanID?: string | null;
@@ -1772,6 +1745,8 @@ export interface LoanQueueSearchCriteria {
   status?: LOSStatus | null;
   reason?: LoanQueueReason | null;
 }
+
+export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 
 export interface LoanQueueWithData {
   /** @format date-time */
@@ -1799,6 +1774,20 @@ export interface LoanRecord {
   loanFields: Record<string, string>;
 }
 
+export type LoanRole =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
 export interface LoanSearchCriteria {
   searchText?: string | null;
   /** @format uuid */
@@ -1821,14 +1810,7 @@ export interface LoanUpdateRequestJsonPatchDocument {
 }
 
 export interface LoanUpdateRequestOperation {
-  operationType:
-    | "Add"
-    | "Remove"
-    | "Replace"
-    | "Move"
-    | "Copy"
-    | "Test"
-    | "Invalid";
+  operationType: "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
   path?: string | null;
   op?: string | null;
   from?: string | null;
@@ -1847,6 +1829,8 @@ export interface LoanUser {
   /** @format date-time */
   createdAt: string;
 }
+
+export type LogLevel = "None" | "Info" | "Warning" | "Error";
 
 export interface MdmUser {
   user_email?: string | null;
@@ -1891,6 +1875,13 @@ export interface MilestoneConfigurationRequest {
   notificationsEnabled: boolean;
 }
 
+export interface MobileSettings {
+  /** @format uuid */
+  id: string;
+  hasMobile: boolean;
+  downloadLink?: string | null;
+}
+
 export interface Module {
   /** @format uuid */
   id: string;
@@ -1908,6 +1899,65 @@ export interface ModuleParameterValue {
   parameterType: string;
   value?: any;
   isInherited: boolean;
+}
+
+export interface MonthlyPayment {
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  /** @format double */
+  monthlyTaxes: number;
+  /** @format double */
+  monthlyInsurance: number;
+  /** @format double */
+  loanToValue: number;
+  /** @format double */
+  monthlyPmi: number;
+  /** @format double */
+  monthlyPayment: number;
+  amortization: Amortization;
+}
+
+export interface MonthlyPaymentRequest {
+  /**
+   * @format double
+   * @min 0
+   * @exclusiveMin true
+   */
+  loanAmount: number;
+  /**
+   * @format double
+   * @min 0
+   * @exclusiveMin true
+   */
+  homeValue: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 0
+   */
+  annualTaxes: number;
+  /**
+   * @format double
+   * @min 0
+   */
+  annualInsurance: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 100
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
 }
 
 export interface NotificationTemplate {
@@ -2042,6 +2092,8 @@ export interface Operation {
   value?: string | number | boolean | null | object;
   path?: string;
 }
+
+export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 
 export interface OverridePasswordRequest {
   /** @minLength 8 */
@@ -2259,6 +2311,8 @@ export interface RunLOCalculationRequest {
   additionalPreApprovalNotes?: string | null;
 }
 
+export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS";
+
 export interface SSOToken {
   /** @format uuid */
   ssoTokenForSignIn: string;
@@ -2285,6 +2339,12 @@ export interface SendForgotPasswordRequest {
    * @minLength 1
    */
   email: string;
+}
+
+export interface SendLoanDocumentsRequest {
+  documentIDs: string[];
+  loanUserIDs: string[];
+  emailAddresses: string[];
 }
 
 export interface SendNotificationForLoanRequest {
@@ -2346,6 +2406,8 @@ export interface SiteConfiguration {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2489,7 +2551,8 @@ export interface SiteConfiguration {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
+  mobileSettings: MobileSettings;
 }
 
 export interface SiteConfigurationByUrl {
@@ -2538,6 +2601,8 @@ export interface SiteConfigurationByUrl {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2681,7 +2746,8 @@ export interface SiteConfigurationByUrl {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
+  mobileSettings: MobileSettings;
   workflows: Workflow[];
 }
 
@@ -2761,6 +2827,7 @@ export interface SiteConfigurationRequest {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2886,7 +2953,7 @@ export interface SiteConfigurationRequest {
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
 }
 
 export interface SiteConfigurationSearchCriteria {
@@ -2928,6 +2995,8 @@ export interface SiteConfigurationSummaryPaginated {
   /** @format int64 */
   count: number;
 }
+
+export type SiteConfigurationType = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 
 export interface SiteConfigurationWithInherited {
   siteConfiguration: SiteConfiguration;
@@ -3457,6 +3526,18 @@ export interface UserRelationshipProspect {
   deletedAt?: string | null;
 }
 
+export type UserRole =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "BranchManager"
+  | "SystemAdmin";
+
 export interface UserSearchCriteria {
   searchText?: string | null;
   isActive?: boolean | null;
@@ -3496,19 +3577,12 @@ export interface Workflow {
   icon: string;
 }
 
-import type {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  HeadersDefaults,
-  ResponseType,
-} from "axios";
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams
-  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -3523,13 +3597,9 @@ export interface FullRequestParams
   body?: unknown;
 }
 
-export type RequestParams = Omit<
-  FullRequestParams,
-  "body" | "method" | "query" | "path"
->;
+export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown>
-  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
     securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
@@ -3540,7 +3610,6 @@ export interface ApiConfig<SecurityDataType = unknown>
 export enum ContentType {
   JsonPatch = "application/json-patch+json",
   Json = "application/json",
-  JsonApi = "application/vnd.api+json",
   FormData = "multipart/form-data",
   UrlEncoded = "application/x-www-form-urlencoded",
   Text = "text/plain",
@@ -3553,16 +3622,8 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({
-    securityWorker,
-    secure,
-    format,
-    ...axiosConfig
-  }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({
-      ...axiosConfig,
-      baseURL: axiosConfig.baseURL || "",
-    });
+  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -3572,10 +3633,7 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(
-    params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig,
-  ): AxiosRequestConfig {
+  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -3583,11 +3641,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method &&
-          this.instance.defaults.headers[
-            method.toLowerCase() as keyof HeadersDefaults
-          ]) ||
-          {}),
+        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -3608,15 +3662,11 @@ export class HttpClient<SecurityDataType = unknown> {
     }
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] =
-        property instanceof Array ? property : [property];
+      const propertyContent: any[] = property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(
-          key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
-        );
+        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
       }
 
       return formData;
@@ -3640,21 +3690,11 @@ export class HttpClient<SecurityDataType = unknown> {
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (
-      type === ContentType.FormData &&
-      body &&
-      body !== null &&
-      typeof body === "object"
-    ) {
+    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (
-      type === ContentType.Text &&
-      body &&
-      body !== null &&
-      typeof body !== "string"
-    ) {
+    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
       body = JSON.stringify(body);
     }
 
@@ -3674,13 +3714,11 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.19.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
-export class Api<
-  SecurityDataType extends unknown,
-> extends HttpClient<SecurityDataType> {
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -3688,7 +3726,6 @@ export class Api<
    * @name PostRoot
    * @request POST:/
    * @secure
-   * @response `200` `void` Success
    */
   postRoot = (params: RequestParams = {}) =>
     this.request<void, any>({
@@ -3705,7 +3742,6 @@ export class Api<
    * @name GetRoot
    * @request GET:/
    * @secure
-   * @response `200` `string` Success
    */
   getRoot = (params: RequestParams = {}) =>
     this.request<string, any>({
@@ -3724,8 +3760,6 @@ export class Api<
      * @summary Get
      * @request GET:/api/account
      * @secure
-     * @response `200` `Account` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getMyAccount: (params: RequestParams = {}) =>
       this.request<Account, ProblemDetails>({
@@ -3744,14 +3778,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/account
      * @secure
-     * @response `200` `Account` Success
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `ProblemDetails` Client Error
      */
-    replaceMyAccount: (
-      data: UpdateAccountRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceMyAccount: (data: UpdateAccountRequest, params: RequestParams = {}) =>
       this.request<Account, ProblemDetails>({
         path: `/api/account`,
         method: "PUT",
@@ -3770,7 +3798,6 @@ export class Api<
      * @summary Get Site Configuration
      * @request GET:/api/account/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
      */
     getSiteConfigurationByAccount: (params: RequestParams = {}) =>
       this.request<SiteConfiguration, any>({
@@ -3789,13 +3816,8 @@ export class Api<
      * @summary Update Site Configuration
      * @request PUT:/api/account/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    updateSiteConfigurationForAccount: (
-      data: SiteConfiguration,
-      params: RequestParams = {},
-    ) =>
+    updateSiteConfigurationForAccount: (data: SiteConfiguration, params: RequestParams = {}) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/account/site-configurations`,
         method: "PUT",
@@ -3814,7 +3836,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/accounts
      * @secure
-     * @response `200` `(Account)[]` Success
      */
     getAccounts: (params: RequestParams = {}) =>
       this.request<Account[], any>({
@@ -3833,8 +3854,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/accounts
      * @secure
-     * @response `201` `Account` Created
-     * @response `422` `ProblemDetails` Client Error
      */
     createAccount: (data: CreateAccountRequest, params: RequestParams = {}) =>
       this.request<Account, ProblemDetails>({
@@ -3855,8 +3874,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/accounts/{id}
      * @secure
-     * @response `201` `Account` Created
-     * @response `422` `ProblemDetails` Client Error
      */
     getAccount: (id: string, params: RequestParams = {}) =>
       this.request<Account, ProblemDetails>({
@@ -3875,9 +3892,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/accounts/{id}
      * @secure
-     * @response `204` `Account` No Content
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `ProblemDetails` Client Error
      */
     deleteAccount: (
       id: string,
@@ -3904,15 +3918,8 @@ export class Api<
      * @summary Update Loans
      * @request PUT:/api/accounts/{id}/loan
      * @secure
-     * @response `200` `void` Success
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    updateLoansByAccount: (
-      id: string,
-      data: Loan[],
-      params: RequestParams = {},
-    ) =>
+    updateLoansByAccount: (id: string, data: Loan[], params: RequestParams = {}) =>
       this.request<void, ProblemDetails | UnprocessableEntity>({
         path: `/api/accounts/${id}/loan`,
         method: "PUT",
@@ -3930,8 +3937,6 @@ export class Api<
      * @summary Get Loans
      * @request GET:/api/accounts/{id}/loan
      * @secure
-     * @response `200` `(Loan)[]` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoansByAccount: (id: string, params: RequestParams = {}) =>
       this.request<Loan[], ProblemDetails>({
@@ -3950,13 +3955,8 @@ export class Api<
      * @summary Generate Token From Refresh Token
      * @request POST:/api/refresh-token
      * @secure
-     * @response `200` `Token` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    getTokenFromRefreshToken: (
-      data: RefreshTokenRequest,
-      params: RequestParams = {},
-    ) =>
+    getTokenFromRefreshToken: (data: RefreshTokenRequest, params: RequestParams = {}) =>
       this.request<Token, UnprocessableEntity>({
         path: `/api/refresh-token`,
         method: "POST",
@@ -3975,8 +3975,6 @@ export class Api<
      * @summary Get Token
      * @request POST:/api/token
      * @secure
-     * @response `200` `Token` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     getToken: (data: TokenRequest, params: RequestParams = {}) =>
       this.request<Token, UnprocessableEntity>({
@@ -3997,13 +3995,8 @@ export class Api<
      * @summary Get Token From Challenge Code
      * @request POST:/api/token/code
      * @secure
-     * @response `200` `Token` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    getTokenFromChallengeCode: (
-      data: TokenChallengeRequest,
-      params: RequestParams = {},
-    ) =>
+    getTokenFromChallengeCode: (data: TokenChallengeRequest, params: RequestParams = {}) =>
       this.request<Token, UnprocessableEntity>({
         path: `/api/token/code`,
         method: "POST",
@@ -4022,8 +4015,6 @@ export class Api<
      * @summary Get System Token
      * @request POST:/api/oauth2/token
      * @secure
-     * @response `200` `Token` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     getSystemToken: (data: SystemTokenRequest, params: RequestParams = {}) =>
       this.request<Token, UnprocessableEntity>({
@@ -4044,8 +4035,6 @@ export class Api<
      * @summary Get SSO Guid Token
      * @request POST:/api/token/sso
      * @secure
-     * @response `200` `SSOToken` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     getSsoToken: (data: SSOTokenRequest, params: RequestParams = {}) =>
       this.request<SSOToken, UnprocessableEntity>({
@@ -4066,7 +4055,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/branches
      * @secure
-     * @response `200` `GetBranchPaginated` Success
      */
     getBranches: (
       query?: {
@@ -4097,8 +4085,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/branches
      * @secure
-     * @response `200` `GetBranch` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createBranch: (data: CreateBranchRequest, params: RequestParams = {}) =>
       this.request<GetBranch, UnprocessableEntity>({
@@ -4119,7 +4105,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/branches/search
      * @secure
-     * @response `200` `GetBranchPaginated` Success
      */
     searchBranches: (
       data: BranchSearchCriteria,
@@ -4152,7 +4137,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/branches/{branchId}
      * @secure
-     * @response `200` `GetBranch` Success
      */
     getBranch: (branchId: string, params: RequestParams = {}) =>
       this.request<GetBranch, any>({
@@ -4171,14 +4155,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/branches/{branchId}
      * @secure
-     * @response `200` `GetBranch` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceBranch: (
-      branchId: string,
-      data: CreateBranchRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceBranch: (branchId: string, data: CreateBranchRequest, params: RequestParams = {}) =>
       this.request<GetBranch, UnprocessableEntity>({
         path: `/api/branches/${branchId}`,
         method: "PUT",
@@ -4197,7 +4175,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/branches/{branchId}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteBranch: (branchId: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -4215,8 +4192,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/branches/{branchId}/restore
      * @secure
-     * @response `204` `void` No Content
-     * @response `400` `ProblemDetails` Bad Request
      */
     restoreBranch: (branchId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -4234,14 +4209,8 @@ export class Api<
      * @summary Create Branch Site Configuration
      * @request POST:/api/branches/{branchId}/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createBranchSiteConfiguration: (
-      branchId: string,
-      data: SiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    createBranchSiteConfiguration: (branchId: string, data: SiteConfigurationRequest, params: RequestParams = {}) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/branches/${branchId}/site-configurations`,
         method: "POST",
@@ -4260,13 +4229,8 @@ export class Api<
      * @summary Get Branch Site Configuration
      * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfigurationWithInherited` Success
      */
-    getBranchSiteConfiguration: (
-      branchId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
@@ -4283,8 +4247,6 @@ export class Api<
      * @summary Replace Branch Site Configuration
      * @request PUT:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replaceBranchSiteConfiguration: (
       branchId: string,
@@ -4314,7 +4276,6 @@ export class Api<
      * @summary Get Branch Loan Officers
      * @request GET:/api/branches/{branchId}/loan-officers
      * @secure
-     * @response `200` `LoanOfficerPublic` Success
      */
     getLoanOfficersByBranch: (branchId: string, params: RequestParams = {}) =>
       this.request<LoanOfficerPublic, any>({
@@ -4333,7 +4294,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/business-rules
      * @secure
-     * @response `200` `(BusinessRule)[]` Success
      */
     getBusinessRules: (
       query?: {
@@ -4358,13 +4318,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/business-rules
      * @secure
-     * @response `200` `BusinessRule` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createBusinessRule: (
-      data: BusinessRuleRequest,
-      params: RequestParams = {},
-    ) =>
+    createBusinessRule: (data: BusinessRuleRequest, params: RequestParams = {}) =>
       this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules`,
         method: "POST",
@@ -4383,7 +4338,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/business-rules/{id}
      * @secure
-     * @response `200` `BusinessRule` Success
      */
     getBusinessRule: (id: string, params: RequestParams = {}) =>
       this.request<BusinessRule, any>({
@@ -4402,14 +4356,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/business-rules/{id}
      * @secure
-     * @response `200` `BusinessRule` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceBusinessRule: (
-      id: string,
-      data: BusinessRuleRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceBusinessRule: (id: string, data: BusinessRuleRequest, params: RequestParams = {}) =>
       this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules/${id}`,
         method: "PUT",
@@ -4428,7 +4376,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/business-rules/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteBusinessRule: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -4446,7 +4393,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/business-rules/{id}/restore
      * @secure
-     * @response `200` `BusinessRule` Success
      */
     restoreBusinessRule: (id: string, params: RequestParams = {}) =>
       this.request<BusinessRule, any>({
@@ -4465,7 +4411,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/corporates
      * @secure
-     * @response `200` `CorporatePaginated` Success
      */
     getCorporates: (
       query?: {
@@ -4496,8 +4441,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/corporates
      * @secure
-     * @response `200` `Corporate` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createCorporate: (data: CorporateRequest, params: RequestParams = {}) =>
       this.request<Corporate, UnprocessableEntity>({
@@ -4518,7 +4461,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/corporates/search
      * @secure
-     * @response `200` `CorporatePaginated` Success
      */
     searchCorporate: (
       data: CorporateSearchCriteria,
@@ -4551,7 +4493,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/corporates/{id}
      * @secure
-     * @response `200` `Corporate` Success
      */
     getCorporate: (id: string, params: RequestParams = {}) =>
       this.request<Corporate, any>({
@@ -4570,14 +4511,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/corporates/{id}
      * @secure
-     * @response `200` `Corporate` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceCorporate: (
-      id: string,
-      data: CorporateRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceCorporate: (id: string, data: CorporateRequest, params: RequestParams = {}) =>
       this.request<Corporate, UnprocessableEntity>({
         path: `/api/corporates/${id}`,
         method: "PUT",
@@ -4596,7 +4531,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/corporates/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteCorporate: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -4614,7 +4548,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/corporates/{id}/restore
      * @secure
-     * @response `204` `void` No Content
      */
     restoreCorporate: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -4632,8 +4565,6 @@ export class Api<
      * @summary Create Site Configuration
      * @request POST:/api/corporates/{corporateId}/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createCorporateSiteConfiguration: (
       corporateId: string,
@@ -4658,13 +4589,8 @@ export class Api<
      * @summary Get Site Configuration
      * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfigurationWithInherited` Success
      */
-    getCorporateSiteConfiguration: (
-      corporateId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
@@ -4681,8 +4607,6 @@ export class Api<
      * @summary Replace Site Configuration
      * @request PUT:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replaceCorporateSiteConfiguration: (
       corporateId: string,
@@ -4712,7 +4636,6 @@ export class Api<
      * @summary Get Branches
      * @request GET:/api/corporates/{id}/branches
      * @secure
-     * @response `200` `(BranchReduced)[]` Success
      */
     getBranchesByCorporate: (id: string, params: RequestParams = {}) =>
       this.request<BranchReduced[], any>({
@@ -4731,7 +4654,6 @@ export class Api<
      * @summary Get Loan Officers
      * @request GET:/api/corporates/{id}/loan-officers
      * @secure
-     * @response `200` `LoanOfficerPublic` Success
      */
     getLoanOfficersByCorporate: (id: string, params: RequestParams = {}) =>
       this.request<LoanOfficerPublic, any>({
@@ -4750,7 +4672,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/devices
      * @secure
-     * @response `200` `DevicePaginated` Success
      */
     getDevices: (
       query?: {
@@ -4782,7 +4703,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/devices/{id}
      * @secure
-     * @response `200` `Device` Success
      */
     getDevice: (id: string, params: RequestParams = {}) =>
       this.request<Device, any>({
@@ -4801,13 +4721,8 @@ export class Api<
      * @summary Update
      * @request PUT:/api/devices/{id}
      * @secure
-     * @response `200` `Device` Success
      */
-    updateDevice: (
-      id: string,
-      data: DeviceRequest,
-      params: RequestParams = {},
-    ) =>
+    updateDevice: (id: string, data: DeviceRequest, params: RequestParams = {}) =>
       this.request<Device, any>({
         path: `/api/devices/${id}`,
         method: "PUT",
@@ -4826,7 +4741,6 @@ export class Api<
      * @summary Get by Serial Number
      * @request GET:/api/devices/{sn}/profile
      * @secure
-     * @response `200` `DeviceMDM` Success
      */
     getDeviceBySerialNumber: (sn: string, params: RequestParams = {}) =>
       this.request<DeviceMDM, any>({
@@ -4845,13 +4759,8 @@ export class Api<
      * @summary Create Action by Serial Number
      * @request POST:/api/devices/{sn}/actions/{actionName}
      * @secure
-     * @response `200` `Action` Success
      */
-    createDeviceActionBySerialNumber: (
-      sn: string,
-      actionName: string,
-      params: RequestParams = {},
-    ) =>
+    createDeviceActionBySerialNumber: (sn: string, actionName: string, params: RequestParams = {}) =>
       this.request<Action, any>({
         path: `/api/devices/${sn}/actions/${actionName}`,
         method: "POST",
@@ -4868,7 +4777,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/document-buckets
      * @secure
-     * @response `200` `(string)[]` Success
      */
     getDocumentBuckets: (
       query?: {
@@ -4894,7 +4802,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/document-templates
      * @secure
-     * @response `200` `(DocumentTemplateBase)[]` Success
      */
     getDocumentTemplates: (
       query?: {
@@ -4919,14 +4826,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/document-templates
      * @secure
-     * @response `201` `DocumentTemplateBase` Created
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createDocumentTemplate: (
-      data: CreateDocumentTemplateRequest,
-      params: RequestParams = {},
-    ) =>
+    createDocumentTemplate: (data: CreateDocumentTemplateRequest, params: RequestParams = {}) =>
       this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates`,
         method: "POST",
@@ -4945,7 +4846,6 @@ export class Api<
      * @summary Get Custom
      * @request GET:/api/document-templates/{type}
      * @secure
-     * @response `200` `(DocumentTemplateBase)[]` Success
      */
     getCustomDocumentTemplates: (
       type: string,
@@ -4974,8 +4874,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/document-templates/{id}
      * @secure
-     * @response `200` `DocumentTemplate` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getDocumentTemplate: (id: string, params: RequestParams = {}) =>
       this.request<DocumentTemplate, ProblemDetails>({
@@ -4994,16 +4892,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/document-templates/{id}
      * @secure
-     * @response `200` `DocumentTemplateBase` Success
-     * @response `401` `ProblemDetails` Unauthorized
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceDocumentTemplate: (
-      id: string,
-      data: UpdateDocumentTemplateRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params: RequestParams = {}) =>
       this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates/${id}`,
         method: "PUT",
@@ -5022,9 +4912,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/document-templates/{id}
      * @secure
-     * @response `204` `void` No Content
-     * @response `401` `ProblemDetails` Unauthorized
-     * @response `404` `ProblemDetails` Not Found
      */
     deleteDocumentTemplate: (id: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -5042,9 +4929,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/document-templates/{id}/restore
      * @secure
-     * @response `204` `void` No Content
-     * @response `401` `ProblemDetails` Unauthorized
-     * @response `404` `ProblemDetails` Not Found
      */
     restoreDocumentTemplate: (id: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -5062,12 +4946,8 @@ export class Api<
      * @summary Get All
      * @request GET:/api/document-templates/{documentId}/versions
      * @secure
-     * @response `200` `(DocumentTemplateVersion)[]` Success
      */
-    getDocumentTemplateVersions: (
-      documentId: string,
-      params: RequestParams = {},
-    ) =>
+    getDocumentTemplateVersions: (documentId: string, params: RequestParams = {}) =>
       this.request<DocumentTemplateVersion[], any>({
         path: `/api/document-templates/${documentId}/versions`,
         method: "GET",
@@ -5084,7 +4964,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/document-templates/{documentId}/versions
      * @secure
-     * @response `200` `DocumentTemplateVersion` Success
      */
     createDocumentTemplateVersion: (
       documentId: string,
@@ -5109,13 +4988,8 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/document-templates/{documentId}/versions/{id}
      * @secure
-     * @response `200` `DocumentTemplateVersion` Success
      */
-    getDocumentTemplateVersion: (
-      documentId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    getDocumentTemplateVersion: (documentId: string, id: string, params: RequestParams = {}) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
         method: "GET",
@@ -5132,7 +5006,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/document-templates/{documentId}/versions/{id}
      * @secure
-     * @response `200` `DocumentTemplateVersion` Success
      */
     replaceDocumentTemplateVersion: (
       documentId: string,
@@ -5158,13 +5031,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/document-templates/{documentId}/versions/{id}
      * @secure
-     * @response `200` `DocumentTemplateVersion` Success
      */
-    deleteDocumentTemplateVersion: (
-      documentId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    deleteDocumentTemplateVersion: (documentId: string, id: string, params: RequestParams = {}) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
         method: "DELETE",
@@ -5181,7 +5049,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/files
      * @secure
-     * @response `200` `FilePaginated` Success
      */
     getAllFiles: (
       query?: {
@@ -5213,8 +5080,6 @@ export class Api<
      * @summary Upload
      * @request POST:/api/files
      * @secure
-     * @response `201` `File` Created
-     * @response `422` `UnprocessableEntity` Client Error
      */
     uploadFile: (
       data: {
@@ -5244,7 +5109,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/files/{id}
      * @secure
-     * @response `201` `File` Created
      */
     getFileById: (id: string, params: RequestParams = {}) =>
       this.request<File, any>({
@@ -5263,8 +5127,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/files/{id}
      * @secure
-     * @response `200` `string` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replaceFile: (id: string, data: FileRequest, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
@@ -5285,7 +5147,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/files/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteFile: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -5303,7 +5164,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/files/search
      * @secure
-     * @response `200` `FilePaginated` Success
      */
     searchFiles: (
       data: FileSearchCriteria,
@@ -5336,7 +5196,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/forms
      * @secure
-     * @response `200` `(AdminAccessGetForms)[]` Success
      */
     getForms: (
       query?: {
@@ -5361,8 +5220,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/forms
      * @secure
-     * @response `201` `Form` Created
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createForm: (data: FormRequest, params: RequestParams = {}) =>
       this.request<Form, UnprocessableEntity>({
@@ -5383,7 +5240,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/forms/{id}
      * @secure
-     * @response `200` `Form` Success
      */
     getForm: (id: string, params: RequestParams = {}) =>
       this.request<Form, any>({
@@ -5402,8 +5258,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/forms/{id}
      * @secure
-     * @response `200` `Form` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replaceForm: (id: string, data: FormRequest, params: RequestParams = {}) =>
       this.request<Form, UnprocessableEntity>({
@@ -5424,7 +5278,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/forms/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteForm: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -5442,7 +5295,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/forms/{id}/restore
      * @secure
-     * @response `200` `Form` Success
      */
     restoreForm: (id: string, params: RequestParams = {}) =>
       this.request<Form, any>({
@@ -5461,7 +5313,6 @@ export class Api<
      * @summary Add
      * @request POST:/api/form-submissions/{formSubmissionId}/files
      * @secure
-     * @response `200` `FormSubmissionFile` Success
      */
     addFormSubmissionFile: (
       formSubmissionId: string,
@@ -5490,13 +5341,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}
      * @secure
-     * @response `204` `void` No Content
      */
-    deleteFormSubmissionFile: (
-      formSubmissionFileId: string,
-      formSubmissionId: string,
-      params: RequestParams = {},
-    ) =>
+    deleteFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}`,
         method: "DELETE",
@@ -5512,7 +5358,6 @@ export class Api<
      * @summary Download by Id
      * @request GET:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}/download
      * @secure
-     * @response `200` `FileWithBytes` Success
      */
     downloadFormSubmissionFile: (
       formSubmissionFileId: string,
@@ -5540,7 +5385,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/form-submissions
      * @secure
-     * @response `200` `FormSubmissionPaginated` Success
      */
     getFormSubmissions: (
       query?: {
@@ -5570,7 +5414,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/form-submissions
      * @secure
-     * @response `201` `FormSubmission` Created
      */
     createFormSubmission: (
       data: FormSubmissionRequest,
@@ -5598,7 +5441,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/form-submissions/{id}
      * @secure
-     * @response `200` `FormSubmission` Success
      */
     getFormSubmission: (id: string, params: RequestParams = {}) =>
       this.request<FormSubmission, any>({
@@ -5617,13 +5459,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/form-submissions/{id}
      * @secure
-     * @response `200` `FormSubmission` Success
      */
-    replaceFormSubmission: (
-      id: string,
-      data: FormSubmissionRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceFormSubmission: (id: string, data: FormSubmissionRequest, params: RequestParams = {}) =>
       this.request<FormSubmission, any>({
         path: `/api/form-submissions/${id}`,
         method: "PUT",
@@ -5642,7 +5479,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/form-submissions/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteFormSubmission: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -5660,7 +5496,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/form-submissions/search
      * @secure
-     * @response `200` `FormSubmissionPaginated` Success
      */
     searchFormSubmissions: (
       data: FormSubmissionSearchCriteria,
@@ -5693,7 +5528,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/forms/{formId}/versions
      * @secure
-     * @response `200` `(FormVersion)[]` Success
      */
     getFormVersions: (formId: string, params: RequestParams = {}) =>
       this.request<FormVersion[], any>({
@@ -5712,13 +5546,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/forms/{formId}/versions
      * @secure
-     * @response `200` `FormVersion` Success
      */
-    createFormVersion: (
-      formId: string,
-      data: FormVersionRequest,
-      params: RequestParams = {},
-    ) =>
+    createFormVersion: (formId: string, data: FormVersionRequest, params: RequestParams = {}) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions`,
         method: "POST",
@@ -5737,7 +5566,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/forms/{formId}/versions/{id}
      * @secure
-     * @response `200` `FormVersion` Success
      */
     getFormVersion: (formId: string, id: string, params: RequestParams = {}) =>
       this.request<FormVersion, any>({
@@ -5756,14 +5584,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/forms/{formId}/versions/{id}
      * @secure
-     * @response `200` `FormVersion` Success
      */
-    replaceFormVersion: (
-      formId: string,
-      id: string,
-      data: FormVersionUpdateRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params: RequestParams = {}) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions/${id}`,
         method: "PUT",
@@ -5782,13 +5604,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/forms/{formId}/versions/{id}
      * @secure
-     * @response `200` `FormVersion` Success
      */
-    deleteFormVersion: (
-      formId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    deleteFormVersion: (formId: string, id: string, params: RequestParams = {}) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions/${id}`,
         method: "DELETE",
@@ -5805,7 +5622,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/los/loan/application/{loanID}
      * @secure
-     * @response `200` `Record<string,any>` Success
      */
     getLoanData: (loanId: string, params: RequestParams = {}) =>
       this.request<Record<string, any>, any>({
@@ -5824,20 +5640,14 @@ export class Api<
      * @summary Update Loan Consent
      * @request PATCH:/api/los/loan/application/{loanID}
      * @secure
-     * @response `200` `string` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    updateLoanConsent: (
-      loanId: string,
-      data: JsonPatchDocument,
-      params: RequestParams = {},
-    ) =>
+    updateLoanConsent: (loanId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
         path: `/api/los/loan/application/${loanId}`,
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -5850,7 +5660,6 @@ export class Api<
      * @summary Get Report
      * @request POST:/api/los/loan/reports
      * @secure
-     * @response `200` `GetReport` Success
      */
     getLoansReport: (data: GetReportRequest, params: RequestParams = {}) =>
       this.request<GetReport, any>({
@@ -5871,8 +5680,6 @@ export class Api<
      * @summary Create Loan
      * @request POST:/api/los/loan/application
      * @secure
-     * @response `200` `string` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createLoan: (data: any, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
@@ -5893,7 +5700,6 @@ export class Api<
      * @summary Get Documents
      * @request GET:/api/los/loan/tasks/documents/{loanID}
      * @secure
-     * @response `200` `(DocumentData)[]` Success
      */
     getTaskDocumentsByLoan: (
       loanId: string,
@@ -5920,7 +5726,6 @@ export class Api<
      * @summary Get Document Content
      * @request GET:/api/los/loan/{loanID}/document/{documentId}/content
      * @secure
-     * @response `200` `void` Success
      */
     getLoanDocumentContent: (
       loanId: string,
@@ -5947,7 +5752,6 @@ export class Api<
      * @summary Get Loan Recipients
      * @request GET:/api/los/loan/recipients/{loanID}
      * @secure
-     * @response `204` `void` No Content
      */
     getLoanRecipients: (loanId: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -5965,7 +5769,6 @@ export class Api<
      * @summary Get Contact Information
      * @request GET:/api/los/loan/contacts/{loanID}
      * @secure
-     * @response `200` `Record<string,ContactRowData>` Success
      */
     getLoanContactInformation: (loanId: string, params: RequestParams = {}) =>
       this.request<Record<string, ContactRowData>, any>({
@@ -5984,12 +5787,8 @@ export class Api<
      * @summary Get Preliminary Conditions
      * @request GET:/api/los/loan/{loanID}/conditions/preliminary
      * @secure
-     * @response `200` `(PreliminaryCondition)[]` Success
      */
-    getPreliminaryConditionsForLoan: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    getPreliminaryConditionsForLoan: (loanId: string, params: RequestParams = {}) =>
       this.request<PreliminaryCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/preliminary`,
         method: "GET",
@@ -6006,12 +5805,8 @@ export class Api<
      * @summary Get Underwriting Conditions
      * @request GET:/api/los/loan/{loanID}/conditions/underwriting
      * @secure
-     * @response `200` `(UnderwritingCondition)[]` Success
      */
-    getUnderwritingConditionsForLoan: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    getUnderwritingConditionsForLoan: (loanId: string, params: RequestParams = {}) =>
       this.request<UnderwritingCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/underwriting`,
         method: "GET",
@@ -6028,14 +5823,8 @@ export class Api<
      * @summary Get Embedded Signing Link
      * @request POST:/api/los/loan/embeddedsigning/{envelopeId}/{userName}/{email}
      * @secure
-     * @response `200` `string` Success
      */
-    getLoanEmbeddedSigningLink: (
-      envelopeId: string,
-      userName: string,
-      email: string,
-      params: RequestParams = {},
-    ) =>
+    getLoanEmbeddedSigningLink: (envelopeId: string, userName: string, email: string, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/los/loan/embeddedsigning/${envelopeId}/${userName}/${email}`,
         method: "POST",
@@ -6053,12 +5842,8 @@ export class Api<
      * @request POST:/api/los/loan/generatedocument
      * @deprecated
      * @secure
-     * @response `200` `DocumentDataRequest` Success
      */
-    createLegacyLoanDocument: (
-      data: GenerateDocumentRequest,
-      params: RequestParams = {},
-    ) =>
+    createLegacyLoanDocument: (data: GenerateDocumentRequest, params: RequestParams = {}) =>
       this.request<DocumentDataRequest, any>({
         path: `/api/los/loan/generatedocument`,
         method: "POST",
@@ -6077,7 +5862,6 @@ export class Api<
      * @summary Add
      * @request POST:/api/listings/{listingId}/files
      * @secure
-     * @response `200` `ListingFile` Success
      */
     addListingFile: (
       listingId: string,
@@ -6107,19 +5891,14 @@ export class Api<
      * @summary Update
      * @request PATCH:/api/listings/{listingId}/files
      * @secure
-     * @response `200` `ListingFile` Success
      */
-    updateListingFiles: (
-      listingId: string,
-      data: JsonPatchDocument,
-      params: RequestParams = {},
-    ) =>
+    updateListingFiles: (listingId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<ListingFile, any>({
         path: `/api/listings/${listingId}/files`,
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6132,13 +5911,8 @@ export class Api<
      * @summary Remove
      * @request DELETE:/api/listings/{listingId}/files/{id}
      * @secure
-     * @response `204` `Listing` No Content
      */
-    removeListingFile: (
-      listingId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    removeListingFile: (listingId: string, id: string, params: RequestParams = {}) =>
       this.request<Listing, any>({
         path: `/api/listings/${listingId}/files/${id}`,
         method: "DELETE",
@@ -6155,7 +5929,6 @@ export class Api<
      * @summary Add
      * @request POST:/api/listings/{listingId}/photos
      * @secure
-     * @response `200` `ListingPhoto` Success
      */
     addListingPhoto: (
       listingId: string,
@@ -6187,19 +5960,14 @@ export class Api<
      * @summary Update
      * @request PATCH:/api/listings/{listingId}/photos
      * @secure
-     * @response `200` `(ListingPhoto)[]` Success
      */
-    updateListingPhotos: (
-      listingId: string,
-      data: JsonPatchDocument,
-      params: RequestParams = {},
-    ) =>
+    updateListingPhotos: (listingId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<ListingPhoto[], any>({
         path: `/api/listings/${listingId}/photos`,
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6212,13 +5980,8 @@ export class Api<
      * @summary Remove
      * @request DELETE:/api/listings/{listingId}/photos/{id}
      * @secure
-     * @response `204` `Listing` No Content
      */
-    removeListingPhoto: (
-      listingId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    removeListingPhoto: (listingId: string, id: string, params: RequestParams = {}) =>
       this.request<Listing, any>({
         path: `/api/listings/${listingId}/photos/${id}`,
         method: "DELETE",
@@ -6235,7 +5998,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/listings
      * @secure
-     * @response `200` `ListingPaginated` Success
      */
     getListings: (
       query?: {
@@ -6265,7 +6027,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/listings
      * @secure
-     * @response `201` `Listing` Created
      */
     createListing: (data: ListingRequest, params: RequestParams = {}) =>
       this.request<Listing, any>({
@@ -6286,7 +6047,6 @@ export class Api<
      * @summary Get by Slug
      * @request GET:/api/listings/slug/{slug}
      * @secure
-     * @response `200` `Listing` Success
      */
     getListingBySlug: (slug: string, params: RequestParams = {}) =>
       this.request<Listing, any>({
@@ -6305,7 +6065,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/listings/{id}
      * @secure
-     * @response `200` `Listing` Success
      */
     getListing: (id: string, params: RequestParams = {}) =>
       this.request<Listing, any>({
@@ -6324,13 +6083,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/listings/{id}
      * @secure
-     * @response `200` `Listing` Success
      */
-    replaceListing: (
-      id: string,
-      data: ListingRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceListing: (id: string, data: ListingRequest, params: RequestParams = {}) =>
       this.request<Listing, any>({
         path: `/api/listings/${id}`,
         method: "PUT",
@@ -6349,7 +6103,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/listings/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteListing: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -6367,7 +6120,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/listings/search
      * @secure
-     * @response `200` `ListingPaginated` Success
      */
     searchListings: (
       data: ListingSearchCriteria,
@@ -6400,7 +6152,6 @@ export class Api<
      * @summary Update Background Image
      * @request PUT:/api/listings/{id}/background-image
      * @secure
-     * @response `200` `File` Success
      */
     updateListingBackgroundImage: (
       id: string,
@@ -6428,7 +6179,6 @@ export class Api<
      * @summary Delete Background Image
      * @request DELETE:/api/listings/{id}/background-image
      * @secure
-     * @response `204` `void` No Content
      */
     deleteListingBackgroundImage: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -6446,7 +6196,6 @@ export class Api<
      * @summary Get Open House Flyer
      * @request GET:/api/listings/{id}/open-house-flyer
      * @secure
-     * @response `200` `File` Success
      */
     getListingOpenHouseFlyer: (id: string, params: RequestParams = {}) =>
       this.request<File, any>({
@@ -6465,7 +6214,6 @@ export class Api<
      * @summary Get
      * @request GET:/api/loans/{loanID}/calculators/loan-calculator
      * @secure
-     * @response `200` `RunLOCalculation` Success
      */
     getLoanCalculator: (loanId: string, params: RequestParams = {}) =>
       this.request<RunLOCalculation, any>({
@@ -6484,14 +6232,8 @@ export class Api<
      * @summary Run
      * @request POST:/api/loans/{loanID}/calculators/loan-calculator
      * @secure
-     * @response `200` `RunLOCalculation` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    runLoanCalculator: (
-      loanId: string,
-      data: RunLOCalculationRequest,
-      params: RequestParams = {},
-    ) =>
+    runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params: RequestParams = {}) =>
       this.request<RunLOCalculation, UnprocessableEntity>({
         path: `/api/loans/${loanId}/calculators/loan-calculator`,
         method: "POST",
@@ -6510,7 +6252,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/loans/{loanID}/loan-comparison
      * @secure
-     * @response `200` `LoanComparison` Success
      */
     getLoanComparisons: (loanId: string, params: RequestParams = {}) =>
       this.request<LoanComparison, any>({
@@ -6529,15 +6270,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanID}/loan-comparison/{index}
      * @secure
-     * @response `201` `LoanComparisonScenario` Created
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createLoanComparison: (
-      loanId: string,
-      index: number,
-      data: LoanComparisonScenario,
-      params: RequestParams = {},
-    ) =>
+    createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params: RequestParams = {}) =>
       this.request<LoanComparisonScenario, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/${index}`,
         method: "POST",
@@ -6556,13 +6290,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/loans/{loanID}/loan-comparison/{index}
      * @secure
-     * @response `204` `void` No Content
      */
-    deleteLoanComparison: (
-      loanId: string,
-      index: number,
-      params: RequestParams = {},
-    ) =>
+    deleteLoanComparison: (loanId: string, index: number, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/loans/${loanId}/loan-comparison/${index}`,
         method: "DELETE",
@@ -6578,14 +6307,8 @@ export class Api<
      * @summary Create PDF
      * @request POST:/api/loans/{loanID}/loan-comparison/pdf
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createLoanComparisonPdf: (
-      loanId: string,
-      data: PostLoanComparisonPdfRequest,
-      params: RequestParams = {},
-    ) =>
+    createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/pdf`,
         method: "POST",
@@ -6603,7 +6326,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/loans/{loanId}/documents/buckets
      * @secure
-     * @response `200` `(string)[]` Success
      */
     getLoanDocumentBuckets: (loanId: string, params: RequestParams = {}) =>
       this.request<string[], any>({
@@ -6622,13 +6344,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanId}/documents/buckets
      * @secure
-     * @response `201` `(string)[]` Created
      */
-    createLoanDocumentBuckets: (
-      loanId: string,
-      data: string[],
-      params: RequestParams = {},
-    ) =>
+    createLoanDocumentBuckets: (loanId: string, data: string[], params: RequestParams = {}) =>
       this.request<string[], any>({
         path: `/api/loans/${loanId}/documents/buckets`,
         method: "POST",
@@ -6647,8 +6364,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/loans/{loanId}/documents/{documentId}
      * @secure
-     * @response `200` `LoanDocument` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanDocument: (
       loanId: string,
@@ -6672,18 +6387,45 @@ export class Api<
      * No description
      *
      * @tags LoanDocuments
+     * @name SearchLoanDocuments
+     * @summary Search loan documents
+     * @request POST:/api/loans/{loanId}/documents/search
+     * @secure
+     */
+    searchLoanDocuments: (
+      loanId: string,
+      data: LoanDocumentSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanDocumentSearchPaginated, any>({
+        path: `/api/loans/${loanId}/documents/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDocuments
      * @name DownloadLoanDocument
      * @summary Download By ID
      * @request GET:/api/loans/{loanId}/documents/{documentId}/download
      * @secure
-     * @response `200` `string` Success
-     * @response `404` `ProblemDetails` Not Found
      */
-    downloadLoanDocument: (
-      loanId: string,
-      documentId: string,
-      params: RequestParams = {},
-    ) =>
+    downloadLoanDocument: (loanId: string, documentId: string, params: RequestParams = {}) =>
       this.request<string, ProblemDetails>({
         path: `/api/loans/${loanId}/documents/${documentId}/download`,
         method: "GET",
@@ -6700,9 +6442,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanId}/documents
      * @secure
-     * @response `201` `LoanDocument` Created
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createLoanDocument: (
       loanId: string,
@@ -6732,15 +6471,8 @@ export class Api<
      * @summary Retry
      * @request POST:/api/loans/{loanId}/documents/{documentId}/retry
      * @secure
-     * @response `200` `LoanDocument` Success
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    retryFailedLoanDocument: (
-      loanId: string,
-      documentId: string,
-      params: RequestParams = {},
-    ) =>
+    retryFailedLoanDocument: (loanId: string, documentId: string, params: RequestParams = {}) =>
       this.request<LoanDocument, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/documents/${documentId}/retry`,
         method: "POST",
@@ -6757,13 +6489,8 @@ export class Api<
      * @summary Generate PDF Document
      * @request POST:/api/loans/{loanId}/documents/generate
      * @secure
-     * @response `200` `DocumentDataRequest` Success
      */
-    generateLoanDocument: (
-      loanId: string,
-      data: GenerateDocumentRequest,
-      params: RequestParams = {},
-    ) =>
+    generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params: RequestParams = {}) =>
       this.request<DocumentDataRequest, any>({
         path: `/api/loans/${loanId}/documents/generate`,
         method: "POST",
@@ -6777,12 +6504,30 @@ export class Api<
     /**
      * No description
      *
+     * @tags LoanDocuments
+     * @name SendLoanDocuments
+     * @summary Send existing documents to loan users or external emails
+     * @request POST:/api/loans/{loanId}/documents/distribute
+     * @secure
+     */
+    sendLoanDocuments: (loanId: string, data: SendLoanDocumentsRequest, params: RequestParams = {}) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/${loanId}/documents/distribute`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanDrafts
      * @name CreateLoanDraft
      * @summary Create
      * @request POST:/api/loans/drafts
      * @secure
-     * @response `201` `Draft` Created
      */
     createLoanDraft: (data: DraftRequest, params: RequestParams = {}) =>
       this.request<Draft, any>({
@@ -6803,7 +6548,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/loans/drafts
      * @secure
-     * @response `200` `(DraftContent)[]` Success
      */
     getLoanDrafts: (params: RequestParams = {}) =>
       this.request<DraftContent[], any>({
@@ -6822,7 +6566,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/loans/drafts/{draftId}
      * @secure
-     * @response `200` `DraftContent` Success
      */
     getLoanDraft: (draftId: string, params: RequestParams = {}) =>
       this.request<DraftContent, any>({
@@ -6841,13 +6584,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/loans/drafts/{draftId}
      * @secure
-     * @response `200` `Draft` Success
      */
-    replaceLoanDraft: (
-      draftId: string,
-      data: DraftRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceLoanDraft: (draftId: string, data: DraftRequest, params: RequestParams = {}) =>
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}`,
         method: "PUT",
@@ -6866,7 +6604,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/loans/drafts/{draftId}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteLoanDraft: (draftId: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -6884,7 +6621,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/drafts/search
      * @secure
-     * @response `201` `DraftContentPaginated` Created
      */
     searchLoanDrafts: (
       data: LoanDraftSearchCriteria,
@@ -6917,13 +6653,8 @@ export class Api<
      * @summary Reassign Loan officer
      * @request PUT:/api/loans/drafts/{draftId}/reassign
      * @secure
-     * @response `200` `Draft` Success
      */
-    reassignLoanOfficer: (
-      draftId: string,
-      data: DraftLoanOfficerReassignRequest,
-      params: RequestParams = {},
-    ) =>
+    reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params: RequestParams = {}) =>
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}/reassign`,
         method: "PUT",
@@ -6942,8 +6673,6 @@ export class Api<
      * @summary Get Invites
      * @request GET:/api/loans/{loanId}/invites
      * @secure
-     * @response `200` `(Invite)[]` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanInvites: (loanId: string, params: RequestParams = {}) =>
       this.request<Invite[], ProblemDetails>({
@@ -6962,14 +6691,8 @@ export class Api<
      * @summary Invite Contacts
      * @request POST:/api/loans/{loanId}/invites
      * @secure
-     * @response `200` `(Invite)[]` Success
-     * @response `404` `ProblemDetails` Not Found
      */
-    inviteLoanContacts: (
-      loanId: string,
-      data: string[],
-      params: RequestParams = {},
-    ) =>
+    inviteLoanContacts: (loanId: string, data: string[], params: RequestParams = {}) =>
       this.request<Invite[], ProblemDetails>({
         path: `/api/loans/${loanId}/invites`,
         method: "POST",
@@ -6988,7 +6711,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/loan-officers
      * @secure
-     * @response `200` `BranchUserPaginated` Success
      */
     getLoanOfficers: (
       query?: {
@@ -7019,7 +6741,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/loan-officers/search
      * @secure
-     * @response `200` `BranchUserPaginated` Success
      */
     searchLoanOfficers: (
       data: LoanOfficerSearchCriteria,
@@ -7052,7 +6773,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/loan-officers/{id}
      * @secure
-     * @response `200` `BranchUser` Success
      */
     getLoanOfficer: (id: string, params: RequestParams = {}) =>
       this.request<BranchUser, any>({
@@ -7071,7 +6791,6 @@ export class Api<
      * @summary Get Loans
      * @request GET:/api/loan-officers/applications
      * @secure
-     * @response `200` `GetApplications` Success
      */
     getLoanOfficerLoans: (params: RequestParams = {}) =>
       this.request<GetApplications, any>({
@@ -7090,8 +6809,6 @@ export class Api<
      * @summary Create Site Configuration
      * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createLoanOfficerSiteConfiguration: (
       loanOfficerId: string,
@@ -7116,13 +6833,8 @@ export class Api<
      * @summary Get Site Configuration
      * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfigurationWithInherited` Success
      */
-    getLoanOfficerSiteConfiguration: (
-      loanOfficerId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
@@ -7139,8 +6851,6 @@ export class Api<
      * @summary Replace Site Configuration
      * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replaceLoanOfficerSiteConfiguration: (
       loanOfficerId: string,
@@ -7170,7 +6880,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/queue/search
      * @secure
-     * @response `200` `LoanQueuePaginated` Success
      */
     searchLoanQueue: (
       data: LoanQueueSearchCriteria,
@@ -7203,8 +6912,6 @@ export class Api<
      * @summary Get Loan Queue Record
      * @request GET:/api/loans/queue/{loanQueueId}
      * @secure
-     * @response `200` `any` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
       this.request<any, ProblemDetails>({
@@ -7223,14 +6930,8 @@ export class Api<
      * @summary Replace Loan Queue Record
      * @request PUT:/api/loans/queue/{loanQueueId}
      * @secure
-     * @response `200` `LoanQueueWithData` Success
-     * @response `404` `ProblemDetails` Not Found
      */
-    replaceLoanQueue: (
-      loanQueueId: string,
-      data: UpdateLoanQueueRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params: RequestParams = {}) =>
       this.request<LoanQueueWithData, ProblemDetails>({
         path: `/api/loans/queue/${loanQueueId}`,
         method: "PUT",
@@ -7249,8 +6950,6 @@ export class Api<
      * @summary Delete Loan Queue Item
      * @request DELETE:/api/loans/queue/{loanQueueId}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
     deleteLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -7268,8 +6967,6 @@ export class Api<
      * @summary Retry
      * @request POST:/api/loans/queue/{loanQueueId}/retry
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
     retryLoanQueue: (loanQueueId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -7287,7 +6984,6 @@ export class Api<
      * @summary Get Loans
      * @request GET:/api/loans
      * @secure
-     * @response `200` `GetApplications` Success
      */
     getLoans: (params: RequestParams = {}) =>
       this.request<GetApplications, any>({
@@ -7306,7 +7002,6 @@ export class Api<
      * @summary Get Loans by Account Setting
      * @request POST:/api/loans/temp-pipeline
      * @secure
-     * @response `200` `any` Success
      */
     getLoansByAccountSetting: (
       data: LoanSearchCriteria,
@@ -7339,8 +7034,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/loans/{loanID}
      * @secure
-     * @response `200` `Loan` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoan: (loanId: string, params: RequestParams = {}) =>
       this.request<Loan, ProblemDetails>({
@@ -7359,7 +7052,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/search
      * @secure
-     * @response `200` `ExtendedLoanPaginated` Success
      */
     searchLoans: (
       data: LoanSearchCriteria,
@@ -7373,7 +7065,7 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<ExtendedLoanPaginated, any>({
+      this.request<LoanListPaginated, any>({
         path: `/api/loans/search`,
         method: "POST",
         query: query,
@@ -7392,7 +7084,6 @@ export class Api<
      * @summary Import from LOS
      * @request POST:/api/loans/import-from-los/{loanId}
      * @secure
-     * @response `200` `Loan` Success
      */
     importLoanFromLos: (loanId: string, params: RequestParams = {}) =>
       this.request<Loan, any>({
@@ -7411,19 +7102,14 @@ export class Api<
      * @summary Update loan fields
      * @request PATCH:/api/loans/{loanId}
      * @secure
-     * @response `200` `Loan` Success
      */
-    updateLoan: (
-      loanId: string,
-      data: JsonPatchDocument,
-      params: RequestParams = {},
-    ) =>
+    updateLoan: (loanId: string, data: JsonPatchDocument, params: RequestParams = {}) =>
       this.request<Loan, any>({
         path: `/api/loans/${loanId}`,
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -7436,8 +7122,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
      * @secure
-     * @response `200` `TaskCommentPaginated` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     searchLoanTaskComments: (
       loanId: string,
@@ -7472,15 +7156,8 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
      * @secure
-     * @response `200` `TaskComment` Success
-     * @response `404` `ProblemDetails` Not Found
      */
-    getLoanTaskComment: (
-      id: string,
-      loanId: string,
-      userLoanTaskId: string,
-      params: RequestParams = {},
-    ) =>
+    getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params: RequestParams = {}) =>
       this.request<TaskComment, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`,
         method: "GET",
@@ -7497,8 +7174,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments
      * @secure
-     * @response `201` `TaskComment` Created
-     * @response `404` `ProblemDetails` Not Found
      */
     createLoanTaskComment: (
       loanId: string,
@@ -7524,8 +7199,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
      * @secure
-     * @response `200` `TaskComment` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     replaceLoanTaskComment: (
       loanId: string,
@@ -7552,15 +7225,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
-    deleteLoanTaskComment: (
-      loanId: string,
-      userLoanTaskId: string,
-      commentId: string,
-      params: RequestParams = {},
-    ) =>
+    deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
         method: "DELETE",
@@ -7576,9 +7242,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents
      * @secure
-     * @response `201` `UserLoanTask` Created
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createLoanTaskDocument: (
       loanId: string,
@@ -7609,14 +7272,8 @@ export class Api<
      * @summary Create Bucket
      * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents/bucket
      * @secure
-     * @response `204` `UserLoanTask` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createLoanTaskDocumentBucket: (
-      loanId: string,
-      loanTaskId: string,
-      params: RequestParams = {},
-    ) =>
+    createLoanTaskDocumentBucket: (loanId: string, loanTaskId: string, params: RequestParams = {}) =>
       this.request<UserLoanTask, UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents/bucket`,
         method: "POST",
@@ -7633,8 +7290,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/loans/{loanID}/tasks
      * @secure
-     * @response `200` `(UserLoanTask)[]` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanTasks: (loanId: string, params: RequestParams = {}) =>
       this.request<UserLoanTask[], ProblemDetails>({
@@ -7653,8 +7308,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/loans/{loanID}/tasks/{id}
      * @secure
-     * @response `200` `UserLoanTask` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanTask: (id: string, loanId: string, params: RequestParams = {}) =>
       this.request<UserLoanTask, ProblemDetails>({
@@ -7673,8 +7326,6 @@ export class Api<
      * @summary Get Difference
      * @request GET:/api/loans/{loanID}/tasks/diff
      * @secure
-     * @response `200` `(UserLoanTask)[]` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getLoanTaskDifference: (loanId: string, params: RequestParams = {}) =>
       this.request<UserLoanTask[], ProblemDetails>({
@@ -7693,15 +7344,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanID}/tasks/{taskID}
      * @secure
-     * @response `201` `UserLoanTask` Created
-     * @response `404` `ProblemDetails` Not Found
      */
-    createLoanTask: (
-      loanId: string,
-      taskId: string,
-      data: UserLoanTaskRequest,
-      params: RequestParams = {},
-    ) =>
+    createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params: RequestParams = {}) =>
       this.request<UserLoanTask, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${taskId}`,
         method: "POST",
@@ -7720,14 +7364,8 @@ export class Api<
      * @summary Import
      * @request POST:/api/loans/{loanID}/tasks/import
      * @secure
-     * @response `201` `(UserLoanTask)[]` Created
-     * @response `404` `ProblemDetails` Not Found
      */
-    importLoanTask: (
-      loanId: string,
-      data: ImportUserLoanTaskRequest[],
-      params: RequestParams = {},
-    ) =>
+    importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params: RequestParams = {}) =>
       this.request<UserLoanTask[], ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/import`,
         method: "POST",
@@ -7746,8 +7384,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
      * @secure
-     * @response `200` `UserLoanTask` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     replaceLoanTask: (
       loanId: string,
@@ -7773,14 +7409,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/loans/{loanID}/tasks/{userLoanTaskID}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
-    deleteLoanTask: (
-      loanId: string,
-      userLoanTaskId: string,
-      params: RequestParams = {},
-    ) =>
+    deleteLoanTask: (loanId: string, userLoanTaskId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`,
         method: "DELETE",
@@ -7796,13 +7426,8 @@ export class Api<
      * @summary Send Outstanding Task Notification
      * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
-    sendOutstandingLoanTaskNotification: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    sendOutstandingLoanTaskNotification: (loanId: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/reminders/outstanding`,
         method: "POST",
@@ -7818,15 +7443,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
      * @secure
-     * @response `200` `UserLoanTask` Success
-     * @response `404` `ProblemDetails` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createLoanTaskVerification: (
-      loanId: string,
-      loanTaskId: string,
-      params: RequestParams = {},
-    ) =>
+    createLoanTaskVerification: (loanId: string, loanTaskId: string, params: RequestParams = {}) =>
       this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`,
         method: "POST",
@@ -7843,7 +7461,6 @@ export class Api<
      * @summary Get Loan User
      * @request GET:/api/loans/{loanId}/users/{userId}
      * @secure
-     * @response `200` `LoanUser` Success
      */
     getLoanUser: (loanId: string, userId: string, params: RequestParams = {}) =>
       this.request<LoanUser, any>({
@@ -7862,7 +7479,6 @@ export class Api<
      * @summary Add User to Loan
      * @request POST:/api/loans/{loanId}/users/{userId}
      * @secure
-     * @response `201` `LoanUser` Created
      */
     addLoanUser: (loanId: string, userId: string, params: RequestParams = {}) =>
       this.request<LoanUser, any>({
@@ -7881,13 +7497,8 @@ export class Api<
      * @summary Send Invite Reminder Notification
      * @request POST:/api/loans/{loanId}/users/{userId}/invite-reminder
      * @secure
-     * @response `204` `void` No Content
      */
-    sendLoanUserInviteReminderNotification: (
-      loanId: string,
-      userId: string,
-      params: RequestParams = {},
-    ) =>
+    sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/loans/${loanId}/users/${userId}/invite-reminder`,
         method: "POST",
@@ -7903,7 +7514,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/milestones
      * @secure
-     * @response `200` `(MilestoneConfiguration)[]` Success
      */
     getMilestones: (params: RequestParams = {}) =>
       this.request<MilestoneConfiguration[], any>({
@@ -7922,13 +7532,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/milestones
      * @secure
-     * @response `201` `MilestoneConfiguration` Created
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createMilestone: (
-      data: MilestoneConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    createMilestone: (data: MilestoneConfigurationRequest, params: RequestParams = {}) =>
       this.request<MilestoneConfiguration, UnprocessableEntity>({
         path: `/api/milestones`,
         method: "POST",
@@ -7947,8 +7552,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/milestones/{id}
      * @secure
-     * @response `200` `MilestoneConfiguration` Success
-     * @response `404` `Error` Not Found
      */
     getMilestone: (id: string, params: RequestParams = {}) =>
       this.request<MilestoneConfiguration, Error>({
@@ -7967,15 +7570,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/milestones/{id}
      * @secure
-     * @response `200` `MilestoneConfiguration` Success
-     * @response `404` `Error` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceMilestone: (
-      id: string,
-      data: MilestoneConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params: RequestParams = {}) =>
       this.request<MilestoneConfiguration, Error | UnprocessableEntity>({
         path: `/api/milestones/${id}`,
         method: "PUT",
@@ -7994,8 +7590,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/milestones/{id}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `Error` Not Found
      */
     deleteMilestone: (id: string, params: RequestParams = {}) =>
       this.request<void, Error>({
@@ -8008,18 +7602,32 @@ export class Api<
     /**
      * No description
      *
+     * @tags MortgageCalculators
+     * @name MortgageCalculatorsMonthlyPaymentCreate
+     * @request POST:/api/mortgage-calculators/monthly-payment
+     * @secure
+     */
+    mortgageCalculatorsMonthlyPaymentCreate: (data: MonthlyPaymentRequest, params: RequestParams = {}) =>
+      this.request<MonthlyPayment, ProblemDetails>({
+        path: `/api/mortgage-calculators/monthly-payment`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Notifications
      * @name SendNotificationForLoan
      * @summary Send Notification for Loan
      * @request POST:/api/notifications
      * @secure
-     * @response `200` `void` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    sendNotificationForLoan: (
-      data: SendNotificationForLoanRequest,
-      params: RequestParams = {},
-    ) =>
+    sendNotificationForLoan: (data: SendNotificationForLoanRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/notifications`,
         method: "POST",
@@ -8037,13 +7645,8 @@ export class Api<
      * @summary Send Test Notification for Loan
      * @request POST:/api/notifications/test
      * @secure
-     * @response `200` `void` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    sendTestNotificationForLoan: (
-      data: TestSendNotificationForLoanRequest,
-      params: RequestParams = {},
-    ) =>
+    sendTestNotificationForLoan: (data: TestSendNotificationForLoanRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/notifications/test`,
         method: "POST",
@@ -8061,7 +7664,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/notification-templates
      * @secure
-     * @response `200` `(NotificationTemplateBase)[]` Success
      */
     getNotificationTemplates: (
       query?: {
@@ -8086,13 +7688,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/notification-templates
      * @secure
-     * @response `201` `NotificationTemplate` Created
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createNotificationTemplate: (
-      data: NotificationTemplateRequest,
-      params: RequestParams = {},
-    ) =>
+    createNotificationTemplate: (data: NotificationTemplateRequest, params: RequestParams = {}) =>
       this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates`,
         method: "POST",
@@ -8111,7 +7708,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/notification-templates/{id}
      * @secure
-     * @response `200` `NotificationTemplate` Success
      */
     getNotificationTemplate: (id: string, params: RequestParams = {}) =>
       this.request<NotificationTemplate, any>({
@@ -8130,14 +7726,8 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/notification-templates/{id}
      * @secure
-     * @response `200` `NotificationTemplate` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceNotificationTemplate: (
-      id: string,
-      data: NotificationTemplateRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params: RequestParams = {}) =>
       this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates/${id}`,
         method: "PUT",
@@ -8156,7 +7746,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/notification-templates/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteNotificationTemplate: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -8174,7 +7763,6 @@ export class Api<
      * @summary Restore
      * @request POST:/api/notification-templates/{id}/restore
      * @secure
-     * @response `200` `NotificationTemplate` Success
      */
     restoreNotificationTemplate: (id: string, params: RequestParams = {}) =>
       this.request<NotificationTemplate, any>({
@@ -8193,12 +7781,8 @@ export class Api<
      * @summary Get All
      * @request GET:/api/notification-templates/{notificationId}/versions
      * @secure
-     * @response `200` `(NotificationTemplateVersion)[]` Success
      */
-    getNotificationTemplateVersions: (
-      notificationId: string,
-      params: RequestParams = {},
-    ) =>
+    getNotificationTemplateVersions: (notificationId: string, params: RequestParams = {}) =>
       this.request<NotificationTemplateVersion[], any>({
         path: `/api/notification-templates/${notificationId}/versions`,
         method: "GET",
@@ -8215,7 +7799,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/notification-templates/{notificationId}/versions
      * @secure
-     * @response `200` `NotificationTemplateVersion` Success
      */
     createNotificationTemplateVersion: (
       notificationId: string,
@@ -8240,13 +7823,8 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/notification-templates/{notificationId}/versions/{id}
      * @secure
-     * @response `200` `NotificationTemplateVersion` Success
      */
-    getNotificationTemplateVersion: (
-      notificationId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    getNotificationTemplateVersion: (notificationId: string, id: string, params: RequestParams = {}) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions/${id}`,
         method: "GET",
@@ -8263,7 +7841,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
      * @secure
-     * @response `200` `NotificationTemplateVersion` Success
      */
     replaceNotificationTemplateVersion: (
       notificationId: string,
@@ -8289,13 +7866,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/notification-templates/{notificationId}/versions/{id}
      * @secure
-     * @response `200` `NotificationTemplateVersion` Success
      */
-    deleteNotificationTemplateVersion: (
-      notificationId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    deleteNotificationTemplateVersion: (notificationId: string, id: string, params: RequestParams = {}) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions/${id}`,
         method: "DELETE",
@@ -8312,7 +7884,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/partners
      * @secure
-     * @response `200` `BranchUserPaginated` Success
      */
     getPartners: (
       query?: {
@@ -8355,7 +7926,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/partners/search
      * @secure
-     * @response `200` `BranchUserPaginated` Success
      */
     searchPartners: (
       data: PartnerSearchCriteria,
@@ -8388,7 +7958,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/partners/{id}
      * @secure
-     * @response `200` `BranchUser` Success
      */
     getPartner: (id: string, params: RequestParams = {}) =>
       this.request<BranchUser, any>({
@@ -8407,14 +7976,8 @@ export class Api<
      * @summary Create Site Configuration
      * @request POST:/api/partners/{realtorId}/site-configurations
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createPartnerSiteConfiguration: (
-      realtorId: string,
-      data: SiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    createPartnerSiteConfiguration: (realtorId: string, data: SiteConfigurationRequest, params: RequestParams = {}) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/partners/${realtorId}/site-configurations`,
         method: "POST",
@@ -8433,13 +7996,8 @@ export class Api<
      * @summary Get Site Configuration
      * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfigurationWithInherited` Success
      */
-    getPartnerSiteConfiguration: (
-      realtorId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
@@ -8456,8 +8014,6 @@ export class Api<
      * @summary Replace Site Configuration
      * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     replacePartnerSiteConfiguration: (
       realtorId: string,
@@ -8488,7 +8044,6 @@ export class Api<
      * @request GET:/api/request-queues
      * @deprecated
      * @secure
-     * @response `200` `(RequestQueue)[]` Success
      */
     getRequestQueues: (params: RequestParams = {}) =>
       this.request<RequestQueue[], any>({
@@ -8508,7 +8063,6 @@ export class Api<
      * @request POST:/api/request-queues/{id}/run
      * @deprecated
      * @secure
-     * @response `200` `void` Success
      */
     runRequestQueue: (
       id: string,
@@ -8535,7 +8089,6 @@ export class Api<
      * @request DELETE:/api/request-queues/{id}
      * @deprecated
      * @secure
-     * @response `204` `void` No Content
      */
     deleteQueueRequest: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -8553,7 +8106,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/site-configurations/{id}
      * @secure
-     * @response `200` `SiteConfiguration` Success
      */
     getSiteConfiguration: (id: string, params: RequestParams = {}) =>
       this.request<SiteConfiguration, any>({
@@ -8573,13 +8125,8 @@ export class Api<
      * @request POST:/api/site-configurations/url
      * @deprecated
      * @secure
-     * @response `200` `SiteConfigurationByUrl` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    searchSiteConfigurationByUrl: (
-      data: GetSiteConfigurationRequest,
-      params: RequestParams = {},
-    ) =>
+    searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params: RequestParams = {}) =>
       this.request<SiteConfigurationByUrl, UnprocessableEntity>({
         path: `/api/site-configurations/url`,
         method: "POST",
@@ -8598,8 +8145,6 @@ export class Api<
      * @summary Get By URL
      * @request GET:/api/site-configurations
      * @secure
-     * @response `200` `SiteConfigurationByUrl` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     getSiteConfigurationByUrl: (
       query?: {
@@ -8625,8 +8170,6 @@ export class Api<
      * @request POST:/api/site-configurations/louser
      * @deprecated
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     searchSiteConfigurationByLoanOfficerUser: (
       data: GetSiteConfigurationByLOUserIDRequest,
@@ -8650,13 +8193,8 @@ export class Api<
      * @summary Get By Loan Officer User
      * @request GET:/api/site-configurations/louser/{loUserId}
      * @secure
-     * @response `200` `SiteConfiguration` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    getSiteConfigurationByLoanOfficerUser: (
-      loUserId: string,
-      params: RequestParams = {},
-    ) =>
+    getSiteConfigurationByLoanOfficerUser: (loUserId: string, params: RequestParams = {}) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/site-configurations/louser/${loUserId}`,
         method: "GET",
@@ -8673,8 +8211,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/site-configurations/search
      * @secure
-     * @response `200` `SiteConfigurationSummaryPaginated` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     searchSiteConfigurations: (
       data: SiteConfigurationSearchCriteria,
@@ -8707,7 +8243,6 @@ export class Api<
      * @summary Get Forms by Site Configuration
      * @request GET:/api/site-configurations/{id}/forms
      * @secure
-     * @response `200` `(AdminAccessGetForms)[]` Success
      */
     getFormsBySiteConfiguration: (id: string, params: RequestParams = {}) =>
       this.request<AdminAccessGetForms[], any>({
@@ -8726,8 +8261,6 @@ export class Api<
      * @summary Get Saml Metadata
      * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
      * @secure
-     * @response `200` `File` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getSamlMetadata: (
       sSoIntegration: "ConsumerConnect" | "TheBigPOS",
@@ -8749,7 +8282,6 @@ export class Api<
      * @summary Create or Replace Saml Metadata
      * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
      * @secure
-     * @response `200` `File` Success
      */
     createOrReplaceSamlMetadata: (
       sSoIntegration: "ConsumerConnect" | "TheBigPOS",
@@ -8771,12 +8303,8 @@ export class Api<
      * @summary List all site configurations assigned to a workflow
      * @request GET:/api/workflows/{workflowId}/site-configurations
      * @secure
-     * @response `200` `(SiteConfigurationForm)[]` Success
      */
-    getWorkflowSiteConfigurations: (
-      workflowId: string,
-      params: RequestParams = {},
-    ) =>
+    getWorkflowSiteConfigurations: (workflowId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationForm[], any>({
         path: `/api/workflows/${workflowId}/site-configurations`,
         method: "GET",
@@ -8793,14 +8321,8 @@ export class Api<
      * @summary Get the workflow-site configuration assignment by composite key
      * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `200` `SiteConfigurationForm` Success
-     * @response `404` `ProblemDetails` Not Found
      */
-    getWorkflowSiteConfiguration: (
-      workflowId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<SiteConfigurationForm, ProblemDetails>({
         path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
         method: "GET",
@@ -8817,24 +8339,15 @@ export class Api<
      * @summary Assign a workflow to a site configuration
      * @request POST:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `201` `SiteConfigurationForm` Created
-     * @response `409` `ProblemDetails` Conflict
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    createWorkflowSiteConfiguration: (
-      workflowId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>(
-        {
-          path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
-          method: "POST",
-          secure: true,
-          format: "json",
-          ...params,
-        },
-      ),
+    createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
+      this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>({
+        path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
 
     /**
      * No description
@@ -8844,13 +8357,8 @@ export class Api<
      * @summary Remove a workflow from a site configuration
      * @request DELETE:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
      * @secure
-     * @response `204` `void` No Content
      */
-    deleteWorkflowSiteConfiguration: (
-      workflowId: string,
-      siteConfigurationId: string,
-      params: RequestParams = {},
-    ) =>
+    deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
         method: "DELETE",
@@ -8866,12 +8374,8 @@ export class Api<
      * @summary Get By Site Configuration Slug
      * @request POST:/api/site-forms
      * @secure
-     * @response `200` `GetForm` Success
      */
-    getFormBySiteConfigurationSlug: (
-      data: GetSiteFormRequest,
-      params: RequestParams = {},
-    ) =>
+    getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params: RequestParams = {}) =>
       this.request<GetForm, any>({
         path: `/api/site-forms`,
         method: "POST",
@@ -8890,7 +8394,6 @@ export class Api<
      * @summary Get by Users
      * @request GET:/api/surveys
      * @secure
-     * @response `200` `(SocialSurveyRecord)[]` Success
      */
     getSurveysByUsers: (
       query?: {
@@ -8916,8 +8419,6 @@ export class Api<
      * @summary Get by User
      * @request POST:/api/surveys
      * @secure
-     * @response `200` `(SocialSurveyRecord)[]` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     getSurveysByUser: (data: SurveyEmailRequest, params: RequestParams = {}) =>
       this.request<SocialSurveyRecord[], UnprocessableEntity>({
@@ -8938,8 +8439,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/tasks
      * @secure
-     * @response `200` `Task` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getTasks: (
       query?: {
@@ -8969,7 +8468,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/tasks
      * @secure
-     * @response `201` `Task` Created
      */
     createTask: (data: TaskRequest, params: RequestParams = {}) =>
       this.request<Task, any>({
@@ -8990,8 +8488,6 @@ export class Api<
      * @summary Get By ID
      * @request GET:/api/tasks/{id}
      * @secure
-     * @response `200` `Task` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     getTask: (id: string, params: RequestParams = {}) =>
       this.request<Task, ProblemDetails>({
@@ -9010,8 +8506,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/tasks/{id}
      * @secure
-     * @response `200` `void` Success
-     * @response `404` `ProblemDetails` Not Found
      */
     replaceTask: (id: string, data: TaskRequest, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -9031,8 +8525,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/tasks/{id}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `ProblemDetails` Not Found
      */
     deleteTask: (id: string, params: RequestParams = {}) =>
       this.request<void, ProblemDetails>({
@@ -9050,7 +8542,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/tasks/search
      * @secure
-     * @response `200` `TaskPaginated` Success
      */
     searchTasks: (
       data: TaskSearchCriteria,
@@ -9079,15 +8570,11 @@ export class Api<
      * No description
      *
      * @tags TheBigPOS
-     * @name IntegrationsLosLoansLockedList
+     * @name IntegrationsLosLoansLockedDetail
      * @request GET:/api/integrations/los/loans/{loanID}/locked
      * @secure
-     * @response `200` `void` Success
      */
-    integrationsLosLoansLockedList: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    integrationsLosLoansLockedDetail: (loanId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/integrations/los/loans/${loanId}/locked`,
         method: "GET",
@@ -9099,19 +8586,33 @@ export class Api<
      * No description
      *
      * @tags TheBigPOS
-     * @name IntegrationsLosLoansBucketsList
+     * @name IntegrationsLosLoansBucketsDetail
      * @request GET:/api/integrations/los/loans/{loanID}/buckets
      * @secure
-     * @response `200` `void` Success
      */
-    integrationsLosLoansBucketsList: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    integrationsLosLoansBucketsDetail: (loanId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/integrations/los/loans/${loanId}/buckets`,
         method: "GET",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags TheBigPOS
+     * @name IntegrationsLosCredentialsCreate
+     * @request POST:/api/integrations/los/credentials
+     * @secure
+     */
+    integrationsLosCredentialsCreate: (data: CreateLosCredentials, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/integrations/los/credentials`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -9123,14 +8624,8 @@ export class Api<
      * @summary Request Impersonation as Impersonator
      * @request POST:/api/users/impersonation/request
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `Error` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    requestImpersonation: (
-      data: RequestImpersonationRequest,
-      params: RequestParams = {},
-    ) =>
+    requestImpersonation: (data: RequestImpersonationRequest, params: RequestParams = {}) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/request`,
         method: "POST",
@@ -9148,14 +8643,8 @@ export class Api<
      * @summary Allow Impersonation as Impersonatee
      * @request POST:/api/users/impersonation/allow
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `Error` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    allowImpersonation: (
-      data: AllowImpersonationRequest,
-      params: RequestParams = {},
-    ) =>
+    allowImpersonation: (data: AllowImpersonationRequest, params: RequestParams = {}) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow`,
         method: "POST",
@@ -9173,14 +8662,8 @@ export class Api<
      * @summary Allow Impersonation as Impersonatee via AllowGuid
      * @request POST:/api/users/impersonation/allow/{allowToken}
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `Error` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    allowImpersonationWithGuid: (
-      allowToken: string,
-      params: RequestParams = {},
-    ) =>
+    allowImpersonationWithGuid: (allowToken: string, params: RequestParams = {}) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow/${allowToken}`,
         method: "POST",
@@ -9196,8 +8679,6 @@ export class Api<
      * @summary Begin Impersonation as Impersonator
      * @request POST:/api/users/impersonation
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     beginImpersonation: (params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9215,8 +8696,6 @@ export class Api<
      * @summary Stop Impersonation as either Impersonator or Impersonatee
      * @request DELETE:/api/users/impersonation
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     stopImpersonation: (params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9234,14 +8713,8 @@ export class Api<
      * @summary Force Impersonation as Super Admin Impersonator
      * @request POST:/api/users/impersonation/force
      * @secure
-     * @response `204` `void` No Content
-     * @response `404` `Error` Not Found
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    forceImpersonation: (
-      data: RequestImpersonationRequest,
-      params: RequestParams = {},
-    ) =>
+    forceImpersonation: (data: RequestImpersonationRequest, params: RequestParams = {}) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/force`,
         method: "POST",
@@ -9259,8 +8732,6 @@ export class Api<
      * @summary Extend Impersonation Session as Impersonator
      * @request POST:/api/users/impersonation/extend
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     extendImpersonation: (params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9278,8 +8749,6 @@ export class Api<
      * @summary Invite
      * @request POST:/api/users/invites
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     inviteUser: (data: CreateInviteRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9299,9 +8768,6 @@ export class Api<
      * @summary Re-Send Notification
      * @request PUT:/api/users/invites/{id}/resend
      * @secure
-     * @response `204` `void` No Content
-     * @response `401` `UnprocessableEntity` Unauthorized
-     * @response `404` `UnprocessableEntity` Not Found
      */
     resendInviteNotification: (id: string, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9319,8 +8785,6 @@ export class Api<
      * @summary Verify
      * @request GET:/api/users/invites/{token}/verify
      * @secure
-     * @response `200` `Invite` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     verifyUserInvite: (token: string, params: RequestParams = {}) =>
       this.request<Invite, UnprocessableEntity>({
@@ -9339,7 +8803,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/users/{userID}/relations
      * @secure
-     * @response `200` `(UserRelation)[]` Success
      */
     getUserRelations: (userId: string, params: RequestParams = {}) =>
       this.request<UserRelation[], any>({
@@ -9358,13 +8821,8 @@ export class Api<
      * @summary Create
      * @request POST:/api/users/{userID}/relations
      * @secure
-     * @response `204` `void` No Content
      */
-    createUserRelation: (
-      userId: string,
-      data: CreateUserRelationRequest,
-      params: RequestParams = {},
-    ) =>
+    createUserRelation: (userId: string, data: CreateUserRelationRequest, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/users/${userId}/relations`,
         method: "POST",
@@ -9382,7 +8840,6 @@ export class Api<
      * @summary Get by ID
      * @request GET:/api/users/{userID}/relations/{id}
      * @secure
-     * @response `200` `UserRelation` Success
      */
     getUserRelation: (userId: string, id: string, params: RequestParams = {}) =>
       this.request<UserRelation, any>({
@@ -9401,13 +8858,8 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/users/{userID}/relations/{id}
      * @secure
-     * @response `204` `void` No Content
      */
-    deleteUserRelation: (
-      userId: string,
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    deleteUserRelation: (userId: string, id: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/users/${userId}/relations/${id}`,
         method: "DELETE",
@@ -9423,7 +8875,6 @@ export class Api<
      * @summary Get All
      * @request GET:/api/users
      * @secure
-     * @response `200` `(User)[]` Success
      */
     getUsers: (
       query?: {
@@ -9453,8 +8904,6 @@ export class Api<
      * @summary Create
      * @request POST:/api/users
      * @secure
-     * @response `200` `DetailedUser` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     createUser: (data: CreateUserRequest, params: RequestParams = {}) =>
       this.request<DetailedUser, UnprocessableEntity>({
@@ -9475,7 +8924,6 @@ export class Api<
      * @summary Search
      * @request POST:/api/users/search
      * @secure
-     * @response `200` `UserPaginated` Success
      */
     searchUsers: (
       data: UserSearchCriteria,
@@ -9508,7 +8956,6 @@ export class Api<
      * @summary Get by Email
      * @request POST:/api/users/byemail
      * @secure
-     * @response `200` `AdminAccessUser` Success
      */
     getUserByEmail: (data: GetUserByEmailRequest, params: RequestParams = {}) =>
       this.request<AdminAccessUser, any>({
@@ -9529,8 +8976,6 @@ export class Api<
      * @summary Sign Up
      * @request POST:/api/users/register
      * @secure
-     * @response `200` `User` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
     signUp: (data: RegisterUserRequest, params: RequestParams = {}) =>
       this.request<User, UnprocessableEntity>({
@@ -9551,14 +8996,8 @@ export class Api<
      * @summary Update
      * @request PUT:/api/users/{id}
      * @secure
-     * @response `200` `DetailedUser` Success
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    replaceUser: (
-      id: string,
-      data: UpdateUserRequest,
-      params: RequestParams = {},
-    ) =>
+    replaceUser: (id: string, data: UpdateUserRequest, params: RequestParams = {}) =>
       this.request<DetailedUser, UnprocessableEntity>({
         path: `/api/users/${id}`,
         method: "PUT",
@@ -9577,7 +9016,6 @@ export class Api<
      * @summary Delete
      * @request DELETE:/api/users/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteUser: (
       id: string,
@@ -9603,7 +9041,6 @@ export class Api<
      * @summary Restore User
      * @request POST:/api/users/{id}/restore
      * @secure
-     * @response `204` `void` No Content
      */
     restoreUser: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -9621,8 +9058,6 @@ export class Api<
      * @summary Change Password
      * @request POST:/api/users/change-password
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     changePassword: (data: ChangePasswordRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9642,8 +9077,6 @@ export class Api<
      * @summary Verify Password
      * @request POST:/api/users/verify-password
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     verifyPassword: (data: VerifyPasswordRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9663,14 +9096,8 @@ export class Api<
      * @summary Override Password
      * @request POST:/api/users/{id}/override-password
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    overridePassword: (
-      id: string,
-      data: OverridePasswordRequest,
-      params: RequestParams = {},
-    ) =>
+    overridePassword: (id: string, data: OverridePasswordRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/${id}/override-password`,
         method: "POST",
@@ -9688,13 +9115,8 @@ export class Api<
      * @summary Forgot Password
      * @request POST:/api/users/forgot-password
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    forgotPassword: (
-      data: SendForgotPasswordRequest,
-      params: RequestParams = {},
-    ) =>
+    forgotPassword: (data: SendForgotPasswordRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/forgot-password`,
         method: "POST",
@@ -9712,8 +9134,6 @@ export class Api<
      * @summary Send Verification Code
      * @request POST:/api/users/mobile-phone/send-code
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
     sendMobilePhoneVerificationCode: (params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
@@ -9731,13 +9151,8 @@ export class Api<
      * @summary Verify Mobile Phone
      * @request PUT:/api/users/mobile-phone/verify-code
      * @secure
-     * @response `204` `void` No Content
-     * @response `422` `UnprocessableEntity` Client Error
      */
-    verifyUserMobilePhone: (
-      data: UserMobilePhoneVerificationRequest,
-      params: RequestParams = {},
-    ) =>
+    verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params: RequestParams = {}) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/mobile-phone/verify-code`,
         method: "PUT",
@@ -9755,7 +9170,6 @@ export class Api<
      * @summary Get
      * @request GET:/api/users/me
      * @secure
-     * @response `200` `DetailedUser` Success
      */
     getMe: (params: RequestParams = {}) =>
       this.request<DetailedUser, any>({
@@ -9774,7 +9188,6 @@ export class Api<
      * @summary Replace
      * @request PUT:/api/users/me
      * @secure
-     * @response `200` `DetailedUser` Success
      */
     replaceMe: (data: UpdateMeRequest, params: RequestParams = {}) =>
       this.request<DetailedUser, any>({
@@ -9795,12 +9208,8 @@ export class Api<
      * @summary Update Phone
      * @request PUT:/api/users/me/phone-number
      * @secure
-     * @response `204` `DetailedUser` No Content
      */
-    updateMyPhone: (
-      data: UpdateMobilePhoneRequest,
-      params: RequestParams = {},
-    ) =>
+    updateMyPhone: (data: UpdateMobilePhoneRequest, params: RequestParams = {}) =>
       this.request<DetailedUser, any>({
         path: `/api/users/me/phone-number`,
         method: "PUT",
@@ -9819,7 +9228,6 @@ export class Api<
      * @summary Get Relationships
      * @request GET:/api/users/me/relationships
      * @secure
-     * @response `200` `(UserRelationship)[]` Success
      */
     getMyRelationships: (params: RequestParams = {}) =>
       this.request<UserRelationship[], any>({
@@ -9838,7 +9246,6 @@ export class Api<
      * @summary Get Relationship Prospects
      * @request GET:/api/users/me/relationships/prospects
      * @secure
-     * @response `200` `(UserRelationshipProspect)[]` Success
      */
     getMyRelationshipProspects: (params: RequestParams = {}) =>
       this.request<UserRelationshipProspect[], any>({
@@ -9857,7 +9264,6 @@ export class Api<
      * @summary Delete Relationship Prospect
      * @request DELETE:/api/users/me/relationships/prospects/{id}
      * @secure
-     * @response `204` `void` No Content
      */
     deleteRelationshipProspect: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -9875,7 +9281,6 @@ export class Api<
      * @summary Delete
      * @request POST:/api/users/me/delete
      * @secure
-     * @response `204` `void` No Content
      */
     deleteMe: (data: UserAccountDeletionRequest, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -9895,7 +9300,6 @@ export class Api<
      * @summary Get Workflow
      * @request POST:/api/workflow
      * @secure
-     * @response `200` `GetForm` Success
      */
     getWorkflow: (data: GetWorkflowRequest, params: RequestParams = {}) =>
       this.request<GetForm, any>({
