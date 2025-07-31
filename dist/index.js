@@ -1945,11 +1945,12 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags MortgageCalculators
-             * @name MortgageCalculatorsMonthlyPaymentCreate
+             * @name CalculateMortgageMonthlyPayment
+             * @summary Calculate Monthly Payment
              * @request POST:/api/mortgage-calculators/monthly-payment
              * @secure
              */
-            mortgageCalculatorsMonthlyPaymentCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/monthly-payment`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            calculateMortgageMonthlyPayment: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/monthly-payment`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *

@@ -5358,11 +5358,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags MortgageCalculators
-         * @name MortgageCalculatorsMonthlyPaymentCreate
+         * @name CalculateMortgageMonthlyPayment
+         * @summary Calculate Monthly Payment
          * @request POST:/api/mortgage-calculators/monthly-payment
          * @secure
          */
-        mortgageCalculatorsMonthlyPaymentCreate: (data: MonthlyPaymentRequest, params?: RequestParams) => Promise<AxiosResponse<MonthlyPayment, any>>;
+        calculateMortgageMonthlyPayment: (data: MonthlyPaymentRequest, params?: RequestParams) => Promise<AxiosResponse<MonthlyPayment, any>>;
         /**
          * No description
          *

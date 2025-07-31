@@ -7603,11 +7603,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags MortgageCalculators
-     * @name MortgageCalculatorsMonthlyPaymentCreate
+     * @name CalculateMortgageMonthlyPayment
+     * @summary Calculate Monthly Payment
      * @request POST:/api/mortgage-calculators/monthly-payment
      * @secure
      */
-    mortgageCalculatorsMonthlyPaymentCreate: (data: MonthlyPaymentRequest, params: RequestParams = {}) =>
+    calculateMortgageMonthlyPayment: (data: MonthlyPaymentRequest, params: RequestParams = {}) =>
       this.request<MonthlyPayment, ProblemDetails>({
         path: `/api/mortgage-calculators/monthly-payment`,
         method: "POST",
