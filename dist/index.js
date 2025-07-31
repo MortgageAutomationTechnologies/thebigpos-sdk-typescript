@@ -103,7 +103,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.19.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1184,6 +1184,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1472,6 +1473,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `RunLOCalculation` Success
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             runLoanCalculator: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1495,6 +1497,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `LoanComparisonScenario` Created
              * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
              */
             createLoanComparison: (loanId, index, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/${index}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1558,6 +1561,17 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanDocuments
+             * @name SearchLoanDocuments
+             * @summary Search loan documents
+             * @request POST:/api/loans/{loanId}/documents/search
+             * @secure
+             * @response `200` `LoanDocumentSearchPaginated` Success
+             */
+            searchLoanDocuments: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
              * @name DownloadLoanDocument
              * @summary Download By ID
              * @request GET:/api/loans/{loanId}/documents/{documentId}/download
@@ -1603,6 +1617,19 @@ export class Api extends HttpClient {
              * @response `200` `DocumentDataRequest` Success
              */
             generateLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/generate`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name SendLoanDocuments
+             * @summary Send existing documents to loan users or external emails
+             * @request POST:/api/loans/{loanId}/documents/distribute
+             * @secure
+             * @response `200` `void` Success
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            sendLoanDocuments: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/distribute`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -1713,6 +1740,17 @@ export class Api extends HttpClient {
              * @response `200` `LoanImport` Success
              */
             getLoanImport: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImportLogs
+             * @summary Get Loan Import Logs
+             * @request GET:/api/loan-imports/{id}/logs
+             * @secure
+             * @response `200` `LoanImportLogPaginated` Success
+             */
+            getLoanImportLogs: (id, query, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1917,7 +1955,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loans/search
              * @secure
-             * @response `200` `ExtendedLoanPaginated` Success
+             * @response `200` `LoanListPaginated` Success
              */
             searchLoans: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2758,6 +2796,16 @@ export class Api extends HttpClient {
              * @response `200` `void` Success
              */
             integrationsLosLoansBucketsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/buckets`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name IntegrationsLosCredentialsCreate
+             * @request POST:/api/integrations/los/credentials
+             * @secure
+             * @response `200` `void` Success
+             */
+            integrationsLosCredentialsCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/credentials`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *

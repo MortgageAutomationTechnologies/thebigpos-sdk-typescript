@@ -77,6 +77,8 @@ export type LoanImportStatus =
   | "Failed"
   | "Cancelled";
 
+export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
+
 export type LOSStatus =
   | "Unknown"
   | "Pending"
@@ -478,15 +480,6 @@ export interface ConditionComment {
   createdByName: string;
 }
 
-export interface Contact {
-  /** @format uuid */
-  id: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  name?: string | null;
-  email?: string | null;
-}
-
 export interface ContactInfo {
   phone: string;
   tollFreePhone?: string | null;
@@ -629,6 +622,17 @@ export interface CreateLoanImportRequest {
    * @minLength 1
    */
   startDate: string;
+  importMode: "All" | "NewOnly" | "UpdateOnly";
+}
+
+export interface CreateLosCredentials {
+  /** @format uuid */
+  accountID: string;
+  instanceID: string;
+  clientID: string;
+  clientSecret: string;
+  encryptionKeyArn: string;
+  encryptionPassword: string;
 }
 
 export interface CreateUserRelationRequest {
@@ -988,6 +992,7 @@ export interface EnabledServices {
   listingOfferForm?: boolean | null;
   listings?: boolean | null;
   addCoBorrower?: boolean | null;
+  autoNameTaskDocuments?: boolean | null;
 }
 
 export interface EncompassContact {
@@ -999,67 +1004,6 @@ export interface EncompassContact {
 
 export interface Error {
   message: string;
-}
-
-export interface ExtendedLoan {
-  /** @format uuid */
-  id: string;
-  loanID: string;
-  loanNumber?: string | null;
-  /** @format date-time */
-  initialDisclosureProvidedDate?: string | null;
-  /** @format date-time */
-  closingDisclosureSentDate?: string | null;
-  /** @format date-time */
-  underwritingApprovalDate?: string | null;
-  /** @format date-time */
-  closingDate?: string | null;
-  /** @format date-time */
-  fundingOrderDate?: string | null;
-  /** @format date-time */
-  currentStatusDate?: string | null;
-  loanChannel?: string | null;
-  /** @format double */
-  totalLoanAmount?: number | null;
-  currentLoanStatus?: string | null;
-  currentMilestone?: string | null;
-  lastCompletedMilestone?: string | null;
-  /** @format date-time */
-  startDate?: string | null;
-  isInSync: boolean;
-  /** @format date-time */
-  syncDate?: string | null;
-  excludeFromAutoTaskReminders?: boolean | null;
-  fileStarter?: string | null;
-  isPOSLoan?: boolean | null;
-  referenceID: string;
-  /** @format int32 */
-  term?: number | null;
-  loanProgram?: string | null;
-  loanType?: string | null;
-  status?: string | null;
-  loanOfficer?: LoanOfficer | null;
-  propertyAddress?: Address | null;
-  loanSettings?: LoanSettings | null;
-  loanLogs: LoanLog[];
-  isLocked: boolean;
-  isLockedFromEditing: boolean;
-  source?: string | null;
-  userLoans: UserLoan[];
-  contacts: LoanContact[];
-  buyerAgentContact?: Contact | null;
-  sellerAgentContact?: Contact | null;
-  escrowAgentContact?: Contact | null;
-  titleInsuranceAgentContact?: Contact | null;
-  settlementAgentContact?: Contact | null;
-  loanProcessorContact?: Contact | null;
-}
-
-export interface ExtendedLoanPaginated {
-  rows: ExtendedLoan[];
-  pagination: Pagination;
-  /** @format int64 */
-  count: number;
 }
 
 export interface File {
@@ -1688,6 +1632,10 @@ export interface LoanContact {
     | "SettlementAgent";
 }
 
+export interface LoanContactList {
+  email: string;
+}
+
 export interface LoanDocument {
   /** @format date-time */
   createdAt: string;
@@ -1705,6 +1653,40 @@ export interface LoanDocument {
   losStatus: string;
   contents?: string | null;
   failoverDocumentPath?: string | null;
+}
+
+export interface LoanDocumentSearch {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  name: string;
+  loanID?: string | null;
+  userID?: string | null;
+  initialBucket?: string | null;
+  losDocumentID?: string | null;
+  losStatus: string;
+  contents?: string | null;
+  failoverDocumentPath?: string | null;
+}
+
+export interface LoanDocumentSearchCriteria {
+  searchText?: string | null;
+  bucket?: string | null;
+  /** @format uuid */
+  userID?: string | null;
+  documentIDs?: string[] | null;
+}
+
+export interface LoanDocumentSearchPaginated {
+  rows: LoanDocumentSearch[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface LoanDraftSearchCriteria {
@@ -1736,12 +1718,51 @@ export interface LoanImport {
     | "Completed"
     | "Failed"
     | "Cancelled";
+  importMode: "All" | "NewOnly" | "UpdateOnly";
   /** @format date-time */
   createdAt?: string | null;
 }
 
+export interface LoanImportLog {
+  level: "None" | "Info" | "Warning" | "Error";
+  message: string;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface LoanImportLogPaginated {
+  rows: LoanImportLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface LoanImportPaginated {
   rows: LoanImport[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface LoanList {
+  /** @format uuid */
+  id: string;
+  status?: string | null;
+  loanID?: string | null;
+  loanNumber?: string | null;
+  /** @format double */
+  totalLoanAmount?: number | null;
+  /** @format date-time */
+  startDate?: string | null;
+  propertyAddress?: Address | null;
+  loanOfficer?: LoanOfficerList | null;
+  buyerAgentContact?: LoanContactList | null;
+  sellerAgentContact?: LoanContactList | null;
+  userLoans: UserLoan[];
+}
+
+export interface LoanListPaginated {
+  rows: LoanList[];
   pagination: Pagination;
   /** @format int64 */
   count: number;
@@ -1767,6 +1788,10 @@ export interface LoanOfficer {
   nmlsid: string;
   profilePhotoUrl: string;
   siteConfiguration: SiteConfiguration;
+}
+
+export interface LoanOfficerList {
+  name?: string | null;
 }
 
 export interface LoanOfficerPublic {
@@ -1939,6 +1964,13 @@ export interface MilestoneConfigurationRequest {
   /** @minLength 1 */
   loanType: string;
   notificationsEnabled: boolean;
+}
+
+export interface MobileSettings {
+  /** @format uuid */
+  id: string;
+  hasMobile: boolean;
+  downloadLink?: string | null;
 }
 
 export interface Module {
@@ -2337,6 +2369,12 @@ export interface SendForgotPasswordRequest {
   email: string;
 }
 
+export interface SendLoanDocumentsRequest {
+  documentIDs: string[];
+  loanUserIDs: string[];
+  emailAddresses: string[];
+}
+
 export interface SendNotificationForLoanRequest {
   /** @minLength 1 */
   loanID: string;
@@ -2396,6 +2434,8 @@ export interface SiteConfiguration {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2540,6 +2580,7 @@ export interface SiteConfiguration {
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
   autoTaskReminderIntervalsInDays: number[];
+  mobileSettings: MobileSettings;
 }
 
 export interface SiteConfigurationByUrl {
@@ -2588,6 +2629,8 @@ export interface SiteConfigurationByUrl {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  /** @minLength 1 */
+  youTubeUrl: string;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2732,6 +2775,7 @@ export interface SiteConfigurationByUrl {
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
   autoTaskReminderIntervalsInDays: number[];
+  mobileSettings: MobileSettings;
   workflows: Workflow[];
 }
 
@@ -2811,6 +2855,7 @@ export interface SiteConfigurationRequest {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -3581,7 +3626,7 @@ export type RequestParams = Omit<
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
-    securityData: SecurityDataType | null,
+    securityData: SecurityDataType | null
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
@@ -3623,7 +3668,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected mergeRequestParams(
     params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig,
+    params2?: AxiosRequestConfig
   ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
@@ -3664,7 +3709,7 @@ export class HttpClient<SecurityDataType = unknown> {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
         formData.append(
           key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
+          isFileType ? formItem : this.stringifyFormItem(formItem)
         );
       }
 
@@ -3723,12 +3768,12 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.19.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
 export class Api<
-  SecurityDataType extends unknown,
+  SecurityDataType extends unknown
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
@@ -3799,7 +3844,7 @@ export class Api<
      */
     replaceMyAccount: (
       data: UpdateAccountRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Account, ProblemDetails>({
         path: `/api/account`,
@@ -3843,7 +3888,7 @@ export class Api<
      */
     updateSiteConfigurationForAccount: (
       data: SiteConfiguration,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/account/site-configurations`,
@@ -3934,7 +3979,7 @@ export class Api<
         /** @default false */
         hardDelete?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Account, ProblemDetails>({
         path: `/api/accounts/${id}`,
@@ -3960,7 +4005,7 @@ export class Api<
     updateLoansByAccount: (
       id: string,
       data: Loan[],
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, ProblemDetails | UnprocessableEntity>({
         path: `/api/accounts/${id}/loan`,
@@ -4004,7 +4049,7 @@ export class Api<
      */
     getTokenFromRefreshToken: (
       data: RefreshTokenRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Token, UnprocessableEntity>({
         path: `/api/refresh-token`,
@@ -4051,7 +4096,7 @@ export class Api<
      */
     getTokenFromChallengeCode: (
       data: TokenChallengeRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Token, UnprocessableEntity>({
         path: `/api/token/code`,
@@ -4127,7 +4172,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetBranchPaginated, any>({
         path: `/api/branches`,
@@ -4180,7 +4225,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetBranchPaginated, any>({
         path: `/api/branches/search`,
@@ -4226,7 +4271,7 @@ export class Api<
     replaceBranch: (
       branchId: string,
       data: CreateBranchRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetBranch, UnprocessableEntity>({
         path: `/api/branches/${branchId}`,
@@ -4289,7 +4334,7 @@ export class Api<
     createBranchSiteConfiguration: (
       branchId: string,
       data: SiteConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/branches/${branchId}/site-configurations`,
@@ -4314,7 +4359,7 @@ export class Api<
     getBranchSiteConfiguration: (
       branchId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
@@ -4342,7 +4387,7 @@ export class Api<
       query?: {
         applyToChildren?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`,
@@ -4388,7 +4433,7 @@ export class Api<
       query?: {
         showAll?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BusinessRule[], any>({
         path: `/api/business-rules`,
@@ -4412,7 +4457,7 @@ export class Api<
      */
     createBusinessRule: (
       data: BusinessRuleRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules`,
@@ -4457,7 +4502,7 @@ export class Api<
     replaceBusinessRule: (
       id: string,
       data: BusinessRuleRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BusinessRule, UnprocessableEntity>({
         path: `/api/business-rules/${id}`,
@@ -4526,7 +4571,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<CorporatePaginated, any>({
         path: `/api/corporates`,
@@ -4579,7 +4624,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<CorporatePaginated, any>({
         path: `/api/corporates/search`,
@@ -4625,7 +4670,7 @@ export class Api<
     replaceCorporate: (
       id: string,
       data: CorporateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Corporate, UnprocessableEntity>({
         path: `/api/corporates/${id}`,
@@ -4687,7 +4732,7 @@ export class Api<
     createCorporateSiteConfiguration: (
       corporateId: string,
       data: SiteConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/corporates/${corporateId}/site-configurations`,
@@ -4712,7 +4757,7 @@ export class Api<
     getCorporateSiteConfiguration: (
       corporateId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
@@ -4740,7 +4785,7 @@ export class Api<
       query?: {
         applyToChildren?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`,
@@ -4812,7 +4857,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DevicePaginated, any>({
         path: `/api/devices`,
@@ -4855,7 +4900,7 @@ export class Api<
     updateDevice: (
       id: string,
       data: DeviceRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Device, any>({
         path: `/api/devices/${id}`,
@@ -4899,7 +4944,7 @@ export class Api<
     createDeviceActionBySerialNumber: (
       sn: string,
       actionName: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Action, any>({
         path: `/api/devices/${sn}/actions/${actionName}`,
@@ -4924,7 +4969,7 @@ export class Api<
         /** @default false */
         includeSystemBuckets?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<string[], any>({
         path: `/api/document-buckets`,
@@ -4949,7 +4994,7 @@ export class Api<
       query?: {
         showAll?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateBase[], any>({
         path: `/api/document-templates`,
@@ -4974,7 +5019,7 @@ export class Api<
      */
     createDocumentTemplate: (
       data: CreateDocumentTemplateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates`,
@@ -5004,7 +5049,7 @@ export class Api<
         /** @default true */
         publishedOnly?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateBase[], any>({
         path: `/api/document-templates/${type}`,
@@ -5051,7 +5096,7 @@ export class Api<
     replaceDocumentTemplate: (
       id: string,
       data: UpdateDocumentTemplateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateBase, ProblemDetails | UnprocessableEntity>({
         path: `/api/document-templates/${id}`,
@@ -5115,7 +5160,7 @@ export class Api<
      */
     getDocumentTemplateVersions: (
       documentId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateVersion[], any>({
         path: `/api/document-templates/${documentId}/versions`,
@@ -5138,7 +5183,7 @@ export class Api<
     createDocumentTemplateVersion: (
       documentId: string,
       data: DocumentTemplateVersionRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions`,
@@ -5163,7 +5208,7 @@ export class Api<
     getDocumentTemplateVersion: (
       documentId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
@@ -5187,7 +5232,7 @@ export class Api<
       documentId: string,
       id: string,
       data: DocumentTemplateVersionUpdateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
@@ -5212,7 +5257,7 @@ export class Api<
     deleteDocumentTemplateVersion: (
       documentId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentTemplateVersion, any>({
         path: `/api/document-templates/${documentId}/versions/${id}`,
@@ -5243,7 +5288,7 @@ export class Api<
         /** @default false */
         includeDeleted?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FilePaginated, any>({
         path: `/api/files`,
@@ -5273,7 +5318,7 @@ export class Api<
         isPublic?: boolean;
         bucket?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<File, UnprocessableEntity>({
         path: `/api/files`,
@@ -5364,7 +5409,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FilePaginated, any>({
         path: `/api/files/search`,
@@ -5391,7 +5436,7 @@ export class Api<
       query?: {
         showAll?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<AdminAccessGetForms[], any>({
         path: `/api/forms`,
@@ -5519,7 +5564,7 @@ export class Api<
         file?: File;
         name?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormSubmissionFile, any>({
         path: `/api/form-submissions/${formSubmissionId}/files`,
@@ -5544,7 +5589,7 @@ export class Api<
     deleteFormSubmissionFile: (
       formSubmissionFileId: string,
       formSubmissionId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}`,
@@ -5570,7 +5615,7 @@ export class Api<
         /** @format uuid */
         siteConfigurationId?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FileWithBytes, any>({
         path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}/download`,
@@ -5600,7 +5645,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormSubmissionPaginated, any>({
         path: `/api/form-submissions`,
@@ -5626,7 +5671,7 @@ export class Api<
       query?: {
         formID?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormSubmission, any>({
         path: `/api/form-submissions`,
@@ -5671,7 +5716,7 @@ export class Api<
     replaceFormSubmission: (
       id: string,
       data: FormSubmissionRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormSubmission, any>({
         path: `/api/form-submissions/${id}`,
@@ -5721,7 +5766,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormSubmissionPaginated, any>({
         path: `/api/form-submissions/search`,
@@ -5766,7 +5811,7 @@ export class Api<
     createFormVersion: (
       formId: string,
       data: FormVersionRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions`,
@@ -5811,7 +5856,7 @@ export class Api<
       formId: string,
       id: string,
       data: FormVersionUpdateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions/${id}`,
@@ -5836,7 +5881,7 @@ export class Api<
     deleteFormVersion: (
       formId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<FormVersion, any>({
         path: `/api/forms/${formId}/versions/${id}`,
@@ -5879,7 +5924,7 @@ export class Api<
     updateLoanConsent: (
       loanId: string,
       data: JsonPatchDocument,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<string, UnprocessableEntity>({
         path: `/api/los/loan/application/${loanId}`,
@@ -5922,6 +5967,7 @@ export class Api<
      * @secure
      * @response `200` `string` Success
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoan: (data: any, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
@@ -5950,7 +5996,7 @@ export class Api<
         /** @default true */
         includeBase64?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentData[], any>({
         path: `/api/los/loan/tasks/documents/${loanId}`,
@@ -5978,7 +6024,7 @@ export class Api<
         /** @default "base64" */
         contentType?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/los/loan/${loanId}/document/${documentId}/content`,
@@ -6037,7 +6083,7 @@ export class Api<
      */
     getPreliminaryConditionsForLoan: (
       loanId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<PreliminaryCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/preliminary`,
@@ -6059,7 +6105,7 @@ export class Api<
      */
     getUnderwritingConditionsForLoan: (
       loanId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UnderwritingCondition[], any>({
         path: `/api/los/loan/${loanId}/conditions/underwriting`,
@@ -6083,7 +6129,7 @@ export class Api<
       envelopeId: string,
       userName: string,
       email: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<string, any>({
         path: `/api/los/loan/embeddedsigning/${envelopeId}/${userName}/${email}`,
@@ -6106,7 +6152,7 @@ export class Api<
      */
     createLegacyLoanDocument: (
       data: GenerateDocumentRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentDataRequest, any>({
         path: `/api/los/loan/generatedocument`,
@@ -6136,7 +6182,7 @@ export class Api<
         /** @format int32 */
         weight?: number;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingFile, any>({
         path: `/api/listings/${listingId}/files`,
@@ -6161,7 +6207,7 @@ export class Api<
     updateListingFiles: (
       listingId: string,
       data: JsonPatchDocument,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingFile, any>({
         path: `/api/listings/${listingId}/files`,
@@ -6186,7 +6232,7 @@ export class Api<
     removeListingFile: (
       listingId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Listing, any>({
         path: `/api/listings/${listingId}/files/${id}`,
@@ -6216,7 +6262,7 @@ export class Api<
         /** @format int32 */
         weight?: number;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingPhoto, any>({
         path: `/api/listings/${listingId}/photos`,
@@ -6241,7 +6287,7 @@ export class Api<
     updateListingPhotos: (
       listingId: string,
       data: JsonPatchDocument,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingPhoto[], any>({
         path: `/api/listings/${listingId}/photos`,
@@ -6266,7 +6312,7 @@ export class Api<
     removeListingPhoto: (
       listingId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Listing, any>({
         path: `/api/listings/${listingId}/photos/${id}`,
@@ -6295,7 +6341,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingPaginated, any>({
         path: `/api/listings`,
@@ -6378,7 +6424,7 @@ export class Api<
     replaceListing: (
       id: string,
       data: ListingRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Listing, any>({
         path: `/api/listings/${id}`,
@@ -6428,7 +6474,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ListingPaginated, any>({
         path: `/api/listings/search`,
@@ -6457,7 +6503,7 @@ export class Api<
         /** @format binary */
         file?: File;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<File, any>({
         path: `/api/listings/${id}/background-image`,
@@ -6535,11 +6581,12 @@ export class Api<
      * @secure
      * @response `200` `RunLOCalculation` Success
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     runLoanCalculator: (
       loanId: string,
       data: RunLOCalculationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<RunLOCalculation, UnprocessableEntity>({
         path: `/api/loans/${loanId}/calculators/loan-calculator`,
@@ -6580,12 +6627,13 @@ export class Api<
      * @secure
      * @response `201` `LoanComparisonScenario` Created
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoanComparison: (
       loanId: string,
       index: number,
       data: LoanComparisonScenario,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanComparisonScenario, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/${index}`,
@@ -6610,7 +6658,7 @@ export class Api<
     deleteLoanComparison: (
       loanId: string,
       index: number,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/loans/${loanId}/loan-comparison/${index}`,
@@ -6633,7 +6681,7 @@ export class Api<
     createLoanComparisonPdf: (
       loanId: string,
       data: PostLoanComparisonPdfRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/loans/${loanId}/loan-comparison/pdf`,
@@ -6676,7 +6724,7 @@ export class Api<
     createLoanDocumentBuckets: (
       loanId: string,
       data: string[],
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<string[], any>({
         path: `/api/loans/${loanId}/documents/buckets`,
@@ -6706,13 +6754,47 @@ export class Api<
         /** @default false */
         preview?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanDocument, ProblemDetails>({
         path: `/api/loans/${loanId}/documents/${documentId}`,
         method: "GET",
         query: query,
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDocuments
+     * @name SearchLoanDocuments
+     * @summary Search loan documents
+     * @request POST:/api/loans/{loanId}/documents/search
+     * @secure
+     * @response `200` `LoanDocumentSearchPaginated` Success
+     */
+    searchLoanDocuments: (
+      loanId: string,
+      data: LoanDocumentSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<LoanDocumentSearchPaginated, any>({
+        path: `/api/loans/${loanId}/documents/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -6731,7 +6813,7 @@ export class Api<
     downloadLoanDocument: (
       loanId: string,
       documentId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<string, ProblemDetails>({
         path: `/api/loans/${loanId}/documents/${documentId}/download`,
@@ -6761,7 +6843,7 @@ export class Api<
         file?: File;
         bucket?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanDocument, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/documents`,
@@ -6788,7 +6870,7 @@ export class Api<
     retryFailedLoanDocument: (
       loanId: string,
       documentId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanDocument, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/documents/${documentId}/retry`,
@@ -6811,7 +6893,7 @@ export class Api<
     generateLoanDocument: (
       loanId: string,
       data: GenerateDocumentRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DocumentDataRequest, any>({
         path: `/api/loans/${loanId}/documents/generate`,
@@ -6820,6 +6902,32 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDocuments
+     * @name SendLoanDocuments
+     * @summary Send existing documents to loan users or external emails
+     * @request POST:/api/loans/{loanId}/documents/distribute
+     * @secure
+     * @response `200` `void` Success
+     * @response `400` `ProblemDetails` Bad Request
+     * @response `404` `ProblemDetails` Not Found
+     */
+    sendLoanDocuments: (
+      loanId: string,
+      data: SendLoanDocumentsRequest,
+      params: RequestParams = {}
+    ) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/${loanId}/documents/distribute`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -6895,7 +7003,7 @@ export class Api<
     replaceLoanDraft: (
       draftId: string,
       data: DraftRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}`,
@@ -6945,7 +7053,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DraftContentPaginated, any>({
         path: `/api/loans/drafts/search`,
@@ -6971,7 +7079,7 @@ export class Api<
     reassignLoanOfficer: (
       draftId: string,
       data: DraftLoanOfficerReassignRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Draft, any>({
         path: `/api/loans/drafts/${draftId}/reassign`,
@@ -7004,7 +7112,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanImportPaginated, any>({
         path: `/api/loan-imports`,
@@ -7027,7 +7135,7 @@ export class Api<
      */
     createLoanImport: (
       data: CreateLoanImportRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanImport, any>({
         path: `/api/loan-imports`,
@@ -7053,6 +7161,37 @@ export class Api<
       this.request<LoanImport, any>({
         path: `/api/loan-imports/${id}`,
         method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name GetLoanImportLogs
+     * @summary Get Loan Import Logs
+     * @request GET:/api/loan-imports/{id}/logs
+     * @secure
+     * @response `200` `LoanImportLogPaginated` Success
+     */
+    getLoanImportLogs: (
+      id: string,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<LoanImportLogPaginated, any>({
+        path: `/api/loan-imports/${id}/logs`,
+        method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -7092,7 +7231,7 @@ export class Api<
     inviteLoanContacts: (
       loanId: string,
       data: string[],
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Invite[], ProblemDetails>({
         path: `/api/loans/${loanId}/invites`,
@@ -7124,7 +7263,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BranchUserPaginated, any>({
         path: `/api/loan-officers`,
@@ -7155,7 +7294,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BranchUserPaginated, any>({
         path: `/api/loan-officers/search`,
@@ -7220,7 +7359,7 @@ export class Api<
     createLoanOfficerSiteConfiguration: (
       loanOfficerId: string,
       data: SiteConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations`,
@@ -7245,7 +7384,7 @@ export class Api<
     getLoanOfficerSiteConfiguration: (
       loanOfficerId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
@@ -7273,7 +7412,7 @@ export class Api<
       query?: {
         applyToChildren?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`,
@@ -7306,7 +7445,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanQueuePaginated, any>({
         path: `/api/loans/queue/search`,
@@ -7353,7 +7492,7 @@ export class Api<
     replaceLoanQueue: (
       loanQueueId: string,
       data: UpdateLoanQueueRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<LoanQueueWithData, ProblemDetails>({
         path: `/api/loans/queue/${loanQueueId}`,
@@ -7442,7 +7581,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<any, any>({
         path: `/api/loans/temp-pipeline`,
@@ -7483,7 +7622,7 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/search
      * @secure
-     * @response `200` `ExtendedLoanPaginated` Success
+     * @response `200` `LoanListPaginated` Success
      */
     searchLoans: (
       data: LoanSearchCriteria,
@@ -7495,9 +7634,9 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
-      this.request<ExtendedLoanPaginated, any>({
+      this.request<LoanListPaginated, any>({
         path: `/api/loans/search`,
         method: "POST",
         query: query,
@@ -7540,7 +7679,7 @@ export class Api<
     updateLoan: (
       loanId: string,
       data: JsonPatchDocument,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Loan, any>({
         path: `/api/loans/${loanId}`,
@@ -7575,7 +7714,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<TaskCommentPaginated, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`,
@@ -7603,7 +7742,7 @@ export class Api<
       id: string,
       loanId: string,
       userLoanTaskId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<TaskComment, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`,
@@ -7628,7 +7767,7 @@ export class Api<
       loanId: string,
       userLoanTaskId: string,
       data: TaskCommentRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<TaskComment, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`,
@@ -7656,7 +7795,7 @@ export class Api<
       userLoanTaskId: string,
       commentId: string,
       data: TaskCommentRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<TaskComment, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
@@ -7683,7 +7822,7 @@ export class Api<
       loanId: string,
       userLoanTaskId: string,
       commentId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`,
@@ -7713,7 +7852,7 @@ export class Api<
         file?: File;
         bucket?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents`,
@@ -7739,7 +7878,7 @@ export class Api<
     createLoanTaskDocumentBucket: (
       loanId: string,
       loanTaskId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask, UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents/bucket`,
@@ -7824,7 +7963,7 @@ export class Api<
       loanId: string,
       taskId: string,
       data: UserLoanTaskRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${taskId}`,
@@ -7850,7 +7989,7 @@ export class Api<
     importLoanTask: (
       loanId: string,
       data: ImportUserLoanTaskRequest[],
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask[], ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/import`,
@@ -7877,7 +8016,7 @@ export class Api<
       loanId: string,
       userLoanTaskId: string,
       data: UserLoanTaskUpdateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`,
@@ -7903,7 +8042,7 @@ export class Api<
     deleteLoanTask: (
       loanId: string,
       userLoanTaskId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`,
@@ -7925,7 +8064,7 @@ export class Api<
      */
     sendOutstandingLoanTaskNotification: (
       loanId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, ProblemDetails>({
         path: `/api/loans/${loanId}/tasks/reminders/outstanding`,
@@ -7949,7 +8088,7 @@ export class Api<
     createLoanTaskVerification: (
       loanId: string,
       loanTaskId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserLoanTask, ProblemDetails | UnprocessableEntity>({
         path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`,
@@ -8010,7 +8149,7 @@ export class Api<
     sendLoanUserInviteReminderNotification: (
       loanId: string,
       userId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/loans/${loanId}/users/${userId}/invite-reminder`,
@@ -8051,7 +8190,7 @@ export class Api<
      */
     createMilestone: (
       data: MilestoneConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<MilestoneConfiguration, UnprocessableEntity>({
         path: `/api/milestones`,
@@ -8098,7 +8237,7 @@ export class Api<
     replaceMilestone: (
       id: string,
       data: MilestoneConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<MilestoneConfiguration, Error | UnprocessableEntity>({
         path: `/api/milestones/${id}`,
@@ -8142,7 +8281,7 @@ export class Api<
      */
     sendNotificationForLoan: (
       data: SendNotificationForLoanRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/notifications`,
@@ -8166,7 +8305,7 @@ export class Api<
      */
     sendTestNotificationForLoan: (
       data: TestSendNotificationForLoanRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/notifications/test`,
@@ -8191,7 +8330,7 @@ export class Api<
       query?: {
         showAll?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateBase[], any>({
         path: `/api/notification-templates`,
@@ -8215,7 +8354,7 @@ export class Api<
      */
     createNotificationTemplate: (
       data: NotificationTemplateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates`,
@@ -8260,7 +8399,7 @@ export class Api<
     replaceNotificationTemplate: (
       id: string,
       data: NotificationTemplateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplate, UnprocessableEntity>({
         path: `/api/notification-templates/${id}`,
@@ -8321,7 +8460,7 @@ export class Api<
      */
     getNotificationTemplateVersions: (
       notificationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateVersion[], any>({
         path: `/api/notification-templates/${notificationId}/versions`,
@@ -8344,7 +8483,7 @@ export class Api<
     createNotificationTemplateVersion: (
       notificationId: string,
       data: NotificationTemplateVersionRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions`,
@@ -8369,7 +8508,7 @@ export class Api<
     getNotificationTemplateVersion: (
       notificationId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions/${id}`,
@@ -8393,7 +8532,7 @@ export class Api<
       notificationId: string,
       id: string,
       data: NotificationTemplateVersionUpdateRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions/${id}`,
@@ -8418,7 +8557,7 @@ export class Api<
     deleteNotificationTemplateVersion: (
       notificationId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<NotificationTemplateVersion, any>({
         path: `/api/notification-templates/${notificationId}/versions/${id}`,
@@ -8460,7 +8599,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BranchUserPaginated, any>({
         path: `/api/partners`,
@@ -8491,7 +8630,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<BranchUserPaginated, any>({
         path: `/api/partners/search`,
@@ -8537,7 +8676,7 @@ export class Api<
     createPartnerSiteConfiguration: (
       realtorId: string,
       data: SiteConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/partners/${realtorId}/site-configurations`,
@@ -8562,7 +8701,7 @@ export class Api<
     getPartnerSiteConfiguration: (
       realtorId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationWithInherited, any>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
@@ -8590,7 +8729,7 @@ export class Api<
       query?: {
         applyToChildren?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`,
@@ -8640,7 +8779,7 @@ export class Api<
         /** @default false */
         force?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/request-queues/${id}/run`,
@@ -8702,7 +8841,7 @@ export class Api<
      */
     searchSiteConfigurationByUrl: (
       data: GetSiteConfigurationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationByUrl, UnprocessableEntity>({
         path: `/api/site-configurations/url`,
@@ -8729,7 +8868,7 @@ export class Api<
       query?: {
         url?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationByUrl, UnprocessableEntity>({
         path: `/api/site-configurations`,
@@ -8754,7 +8893,7 @@ export class Api<
      */
     searchSiteConfigurationByLoanOfficerUser: (
       data: GetSiteConfigurationByLOUserIDRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/site-configurations/louser`,
@@ -8779,7 +8918,7 @@ export class Api<
      */
     getSiteConfigurationByLoanOfficerUser: (
       loUserId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfiguration, UnprocessableEntity>({
         path: `/api/site-configurations/louser/${loUserId}`,
@@ -8810,7 +8949,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationSummaryPaginated, UnprocessableEntity>({
         path: `/api/site-configurations/search`,
@@ -8856,7 +8995,7 @@ export class Api<
     getSamlMetadata: (
       sSoIntegration: "ConsumerConnect" | "TheBigPOS",
       ssoIntegration: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<File, ProblemDetails>({
         path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`,
@@ -8878,7 +9017,7 @@ export class Api<
     createOrReplaceSamlMetadata: (
       sSoIntegration: "ConsumerConnect" | "TheBigPOS",
       ssoIntegration: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<File, any>({
         path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`,
@@ -8899,7 +9038,7 @@ export class Api<
      */
     getWorkflowSiteConfigurations: (
       workflowId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationForm[], any>({
         path: `/api/workflows/${workflowId}/site-configurations`,
@@ -8923,7 +9062,7 @@ export class Api<
     getWorkflowSiteConfiguration: (
       workflowId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationForm, ProblemDetails>({
         path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
@@ -8948,7 +9087,7 @@ export class Api<
     createWorkflowSiteConfiguration: (
       workflowId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SiteConfigurationForm, ProblemDetails | UnprocessableEntity>(
         {
@@ -8957,7 +9096,7 @@ export class Api<
           secure: true,
           format: "json",
           ...params,
-        },
+        }
       ),
 
     /**
@@ -8973,7 +9112,7 @@ export class Api<
     deleteWorkflowSiteConfiguration: (
       workflowId: string,
       siteConfigurationId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`,
@@ -8994,7 +9133,7 @@ export class Api<
      */
     getFormBySiteConfigurationSlug: (
       data: GetSiteFormRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetForm, any>({
         path: `/api/site-forms`,
@@ -9021,7 +9160,7 @@ export class Api<
         /** @format int32 */
         limit?: number;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<SocialSurveyRecord[], any>({
         path: `/api/surveys`,
@@ -9074,7 +9213,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Task, ProblemDetails>({
         path: `/api/tasks`,
@@ -9186,7 +9325,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<TaskPaginated, any>({
         path: `/api/tasks/search`,
@@ -9210,7 +9349,7 @@ export class Api<
      */
     integrationsLosLoansLockedList: (
       loanId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/integrations/los/loans/${loanId}/locked`,
@@ -9230,12 +9369,34 @@ export class Api<
      */
     integrationsLosLoansBucketsList: (
       loanId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/integrations/los/loans/${loanId}/buckets`,
         method: "GET",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags TheBigPOS
+     * @name IntegrationsLosCredentialsCreate
+     * @request POST:/api/integrations/los/credentials
+     * @secure
+     * @response `200` `void` Success
+     */
+    integrationsLosCredentialsCreate: (
+      data: CreateLosCredentials,
+      params: RequestParams = {}
+    ) =>
+      this.request<void, any>({
+        path: `/api/integrations/los/credentials`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -9253,7 +9414,7 @@ export class Api<
      */
     requestImpersonation: (
       data: RequestImpersonationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/request`,
@@ -9278,7 +9439,7 @@ export class Api<
      */
     allowImpersonation: (
       data: AllowImpersonationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow`,
@@ -9303,7 +9464,7 @@ export class Api<
      */
     allowImpersonationWithGuid: (
       allowToken: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/allow/${allowToken}`,
@@ -9364,7 +9525,7 @@ export class Api<
      */
     forceImpersonation: (
       data: RequestImpersonationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Error | UnprocessableEntity>({
         path: `/api/users/impersonation/force`,
@@ -9487,7 +9648,7 @@ export class Api<
     createUserRelation: (
       userId: string,
       data: CreateUserRelationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/users/${userId}/relations`,
@@ -9530,7 +9691,7 @@ export class Api<
     deleteUserRelation: (
       userId: string,
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/users/${userId}/relations/${id}`,
@@ -9558,7 +9719,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<User[], any>({
         path: `/api/users`,
@@ -9611,7 +9772,7 @@ export class Api<
         sortBy?: string;
         sortDirection?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UserPaginated, any>({
         path: `/api/users/search`,
@@ -9681,7 +9842,7 @@ export class Api<
     replaceUser: (
       id: string,
       data: UpdateUserRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DetailedUser, UnprocessableEntity>({
         path: `/api/users/${id}`,
@@ -9709,7 +9870,7 @@ export class Api<
         /** @default false */
         permanent?: boolean;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/users/${id}`,
@@ -9793,7 +9954,7 @@ export class Api<
     overridePassword: (
       id: string,
       data: OverridePasswordRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/${id}/override-password`,
@@ -9817,7 +9978,7 @@ export class Api<
      */
     forgotPassword: (
       data: SendForgotPasswordRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/forgot-password`,
@@ -9860,7 +10021,7 @@ export class Api<
      */
     verifyUserMobilePhone: (
       data: UserMobilePhoneVerificationRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, UnprocessableEntity>({
         path: `/api/users/mobile-phone/verify-code`,
@@ -9923,7 +10084,7 @@ export class Api<
      */
     updateMyPhone: (
       data: UpdateMobilePhoneRequest,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DetailedUser, any>({
         path: `/api/users/me/phone-number`,
