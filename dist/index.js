@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.19.3
+ * @version v2.20.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1198,7 +1198,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `(DocumentData)[]` Success
              */
-            getTaskDocumentsByLoan: (loanId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents/${loanId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            getTaskDocumentsByLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2766,6 +2766,26 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags TheBigPOS
+             * @name IntegrationsLosLoansDocumentsDetail
+             * @request GET:/api/integrations/los/loans/{loanID}/documents/{documentID}
+             * @secure
+             * @response `200` `void` Success
+             */
+            integrationsLosLoansDocumentsDetail: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/documents/${documentId}`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name IntegrationsLosLoansDocumentsList
+             * @request GET:/api/integrations/los/loans/{loanID}/documents
+             * @secure
+             * @response `200` `void` Success
+             */
+            integrationsLosLoansDocumentsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/documents`, method: "GET", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags UserImpersonation
              * @name RequestImpersonation
              * @summary Request Impersonation as Impersonator
@@ -3103,7 +3123,7 @@ export class Api extends HttpClient {
              * @summary Get
              * @request GET:/api/users/me
              * @secure
-             * @response `200` `DetailedUser` Success
+             * @response `200` `ImpersonatedDetailedUser` Success
              */
             getMe: (params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "GET", secure: true, format: "json" }, params)),
             /**

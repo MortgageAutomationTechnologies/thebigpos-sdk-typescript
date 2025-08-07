@@ -614,11 +614,11 @@ export interface DocumentData {
     documentID: string;
     /** @format uuid */
     eSignRecordID: string;
-    documentBucketTitle: string;
-    documentName: string;
+    documentBucketTitle?: string | null;
+    documentName?: string | null;
     /** @format date-time */
     createdAt: string;
-    extension: string;
+    extension?: string | null;
     password: string;
     systemGenerated: boolean;
 }
@@ -1032,7 +1032,6 @@ export interface GenerateDocumentRequest {
     /**
      * @deprecated
      * @format uuid
-     * @minLength 1
      */
     siteConfigurationID: string;
     preview: boolean;
@@ -1126,6 +1125,34 @@ export interface GetWorkflowRequest {
     language?: string | null;
 }
 export type IContractResolver = object;
+export interface ImpersonatedDetailedUser {
+    /** @format date-time */
+    createdAt?: string | null;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    role: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string | null;
+    title?: string | null;
+    forcePasswordReset: boolean;
+    mfaEnabled: boolean;
+    phoneVerified: boolean;
+    /** @format int32 */
+    loginsWithoutMFACount: number;
+    canImpersonate: boolean;
+    loanIDs: string[];
+    drafts: Draft[];
+    notificationSettings?: UserNotificationSettings | null;
+    /** @deprecated */
+    impersonatedBy?: string | null;
+    impersonatingUser?: User | null;
+}
 export interface ImportUserLoanTaskRequest {
     /**
      * @format uuid
@@ -1858,10 +1885,6 @@ export interface ProblemDetails {
 export interface RefreshTokenRequest {
     /** @minLength 1 */
     refreshToken: string;
-    /** @minLength 1 */
-    username: string;
-    /** @format uuid */
-    siteConfigurationId?: string | null;
 }
 export interface RegisterUserRequest {
     /**
@@ -3208,7 +3231,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.19.3
+ * @version v2.20.3
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4405,10 +4428,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `(DocumentData)[]` Success
          */
-        getTaskDocumentsByLoan: (loanId: string, query?: {
-            /** @default true */
-            includeBase64?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<DocumentData[], any>>;
+        getTaskDocumentsByLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentData[], any>>;
         /**
          * No description
          *
@@ -6130,6 +6150,26 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags TheBigPOS
+         * @name IntegrationsLosLoansDocumentsDetail
+         * @request GET:/api/integrations/los/loans/{loanID}/documents/{documentID}
+         * @secure
+         * @response `200` `void` Success
+         */
+        integrationsLosLoansDocumentsDetail: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name IntegrationsLosLoansDocumentsList
+         * @request GET:/api/integrations/los/loans/{loanID}/documents
+         * @secure
+         * @response `200` `void` Success
+         */
+        integrationsLosLoansDocumentsList: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
          * @tags UserImpersonation
          * @name RequestImpersonation
          * @summary Request Impersonation as Impersonator
@@ -6484,9 +6524,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get
          * @request GET:/api/users/me
          * @secure
-         * @response `200` `DetailedUser` Success
+         * @response `200` `ImpersonatedDetailedUser` Success
          */
-        getMe: (params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
+        getMe: (params?: RequestParams) => Promise<AxiosResponse<ImpersonatedDetailedUser, any>>;
         /**
          * No description
          *
