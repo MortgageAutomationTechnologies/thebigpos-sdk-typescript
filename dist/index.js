@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.20.3
+ * @version v2.20.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1711,6 +1711,50 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanImport
+             * @name GetLoanImports
+             * @summary Get Loan Imports
+             * @request GET:/api/loan-imports
+             * @secure
+             * @response `200` `LoanImportPaginated` Success
+             */
+            getLoanImports: (query, params = {}) => this.request(Object.assign({ path: `/api/loan-imports`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name CreateLoanImport
+             * @summary Create Loan Import
+             * @request POST:/api/loan-imports
+             * @secure
+             * @response `201` `LoanImport` Created
+             */
+            createLoanImport: (data, params = {}) => this.request(Object.assign({ path: `/api/loan-imports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImport
+             * @summary Get Loan Import
+             * @request GET:/api/loan-imports/{id}
+             * @secure
+             * @response `200` `LoanImport` Success
+             */
+            getLoanImport: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImportLogs
+             * @summary Get Loan Import Logs
+             * @request GET:/api/loan-imports/{id}/logs
+             * @secure
+             * @response `200` `LoanImportLogPaginated` Success
+             */
+            getLoanImportLogs: (id, query, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanInvites
              * @name GetLoanInvites
              * @summary Get Invites
@@ -1870,6 +1914,18 @@ export class Api extends HttpClient {
              * @response `404` `ProblemDetails` Not Found
              */
             retryLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}/retry`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name CreateLoanByDraftId
+             * @summary Create Loan by DraftId
+             * @request POST:/api/loans
+             * @secure
+             * @response `200` `string` Success
+             * @response `422` `UnprocessableEntity` Client Error
+             */
+            createLoanByDraftId: (data, params = {}) => this.request(Object.assign({ path: `/api/loans`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *

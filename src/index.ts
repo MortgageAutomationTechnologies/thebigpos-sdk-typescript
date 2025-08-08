@@ -70,6 +70,15 @@ export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 
 export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
 
+export type LoanImportStatus =
+  | "WaitingProcess"
+  | "InProgress"
+  | "Completed"
+  | "Failed"
+  | "Cancelled";
+
+export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
+
 export type LOSStatus =
   | "Unknown"
   | "Pending"
@@ -600,6 +609,20 @@ export interface CreateInviteRequest {
   /** @deprecated */
   userRole?: UserRole | null;
   loanRole?: LoanRole | null;
+}
+
+export interface CreateLoanImportRequest {
+  /**
+   * @format date-time
+   * @minLength 1
+   */
+  endDate: string;
+  /**
+   * @format date-time
+   * @minLength 1
+   */
+  startDate: string;
+  importMode: "All" | "NewOnly" | "UpdateOnly";
 }
 
 export interface CreateLosCredentials {
@@ -1641,6 +1664,14 @@ export interface LoanContactList {
   email: string;
 }
 
+export interface LoanCreateRequest {
+  /**
+   * @format uuid
+   * @minLength 1
+   */
+  draftId: string;
+}
+
 export interface LoanDocument {
   /** @format date-time */
   createdAt: string;
@@ -1701,6 +1732,52 @@ export interface LoanDraftSearchCriteria {
   /** @format uuid */
   siteConfigurationId?: string | null;
   isUnassigned?: boolean | null;
+}
+
+export interface LoanImport {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  accountID: string;
+  /** @format date-time */
+  endDate: string;
+  /** @format date-time */
+  startDate: string;
+  /** @format int32 */
+  attemptCount: number;
+  /** @format int32 */
+  importedCount: number;
+  statusMessage?: string | null;
+  status:
+    | "WaitingProcess"
+    | "InProgress"
+    | "Completed"
+    | "Failed"
+    | "Cancelled";
+  importMode: "All" | "NewOnly" | "UpdateOnly";
+  /** @format date-time */
+  createdAt?: string | null;
+}
+
+export interface LoanImportLog {
+  level: "None" | "Info" | "Warning" | "Error";
+  message: string;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface LoanImportLogPaginated {
+  rows: LoanImportLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface LoanImportPaginated {
+  rows: LoanImport[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface LoanList {
@@ -2166,6 +2243,11 @@ export interface ProblemDetails {
 export interface RefreshTokenRequest {
   /** @minLength 1 */
   refreshToken: string;
+  /**
+   * @deprecated
+   * @format uuid
+   */
+  siteConfigurationId?: string | null;
 }
 
 export interface RegisterUserRequest {
@@ -3724,7 +3806,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.20.3
+ * @version v2.20.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -7042,6 +7124,112 @@ export class Api<
     /**
      * No description
      *
+     * @tags LoanImport
+     * @name GetLoanImports
+     * @summary Get Loan Imports
+     * @request GET:/api/loan-imports
+     * @secure
+     * @response `200` `LoanImportPaginated` Success
+     */
+    getLoanImports: (
+      query?: {
+        status?: LoanImportStatus;
+        searchText?: string;
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImportPaginated, any>({
+        path: `/api/loan-imports`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name CreateLoanImport
+     * @summary Create Loan Import
+     * @request POST:/api/loan-imports
+     * @secure
+     * @response `201` `LoanImport` Created
+     */
+    createLoanImport: (
+      data: CreateLoanImportRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImport, any>({
+        path: `/api/loan-imports`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name GetLoanImport
+     * @summary Get Loan Import
+     * @request GET:/api/loan-imports/{id}
+     * @secure
+     * @response `200` `LoanImport` Success
+     */
+    getLoanImport: (id: string, params: RequestParams = {}) =>
+      this.request<LoanImport, any>({
+        path: `/api/loan-imports/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name GetLoanImportLogs
+     * @summary Get Loan Import Logs
+     * @request GET:/api/loan-imports/{id}/logs
+     * @secure
+     * @response `200` `LoanImportLogPaginated` Success
+     */
+    getLoanImportLogs: (
+      id: string,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImportLogPaginated, any>({
+        path: `/api/loan-imports/${id}/logs`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanInvites
      * @name GetLoanInvites
      * @summary Get Invites
@@ -7381,6 +7569,31 @@ export class Api<
         path: `/api/loans/queue/${loanQueueId}/retry`,
         method: "POST",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
+     * @name CreateLoanByDraftId
+     * @summary Create Loan by DraftId
+     * @request POST:/api/loans
+     * @secure
+     * @response `200` `string` Success
+     * @response `422` `UnprocessableEntity` Client Error
+     */
+    createLoanByDraftId: (
+      data: LoanCreateRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<string, UnprocessableEntity>({
+        path: `/api/loans`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
