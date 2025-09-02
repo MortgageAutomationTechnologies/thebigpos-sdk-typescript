@@ -358,18 +358,6 @@ export interface ContactInfo {
     tollFreePhone?: string | null;
     fax?: string | null;
 }
-export interface ContactRowData {
-    companyName?: string | null;
-    name?: string | null;
-    license?: string | null;
-    address?: string | null;
-    city?: string | null;
-    state?: string | null;
-    zip?: string | null;
-    phone?: string | null;
-    cell?: string | null;
-    email?: string | null;
-}
 export interface Corporate {
     /** @format date-time */
     createdAt?: string | null;
@@ -474,6 +462,8 @@ export interface CreateInviteRequest {
     loanRole?: LoanRole | null;
 }
 export interface CreateLoanImportRequest {
+    /** @format uuid */
+    accountID: string;
     /**
      * @format date-time
      * @minLength 1
@@ -486,14 +476,14 @@ export interface CreateLoanImportRequest {
     startDate: string;
     importMode: "All" | "NewOnly" | "UpdateOnly";
 }
-export interface CreateLosCredentials {
-    /** @format uuid */
-    accountID: string;
-    instanceID: string;
-    clientID: string;
-    clientSecret: string;
-    encryptionKeyArn: string;
-    encryptionPassword: string;
+export interface CreateUserDeviceRequest {
+    token: string;
+}
+export interface CreateUserDraft {
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+}
+export interface CreateUserLoan {
+    loanRole?: LoanRole | null;
 }
 export interface CreateUserRelationRequest {
     /**
@@ -1038,7 +1028,7 @@ export interface FusionReportFilter {
 }
 export interface GenerateDocumentRequest {
     /** @deprecated */
-    loanID: string;
+    loanID?: string | null;
     /**
      * @format uuid
      * @minLength 1
@@ -1048,7 +1038,7 @@ export interface GenerateDocumentRequest {
      * @deprecated
      * @format uuid
      */
-    siteConfigurationID: string;
+    siteConfigurationID?: string | null;
     preview: boolean;
     recipients: string[];
 }
@@ -1215,6 +1205,7 @@ export interface LOSSettings {
     correspondentLoanClosingDateFieldID: string;
     customEConsentBucketTitle?: string | null;
     loanMilestoneNotificationsEnabled: boolean;
+    useLocalPipeline: boolean;
 }
 export interface LOSSettingsUpdateRequest {
     retailLoanClosingDateFieldID: string;
@@ -1556,6 +1547,17 @@ export interface LoanLog {
     /** @format date-time */
     createdAt: string;
 }
+export interface LoanLogPaginated {
+    rows: LoanLog[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface LoanLogSearchCriteria {
+    searchText?: string | null;
+    types?: LoanLogType[] | null;
+    levels?: LogLevel[] | null;
+}
 export interface LoanOfficer {
     /** @format uuid */
     id: string;
@@ -1761,7 +1763,7 @@ export interface NotificationTemplate {
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
     textBody?: string | null;
-    pushNotificationBody: string;
+    pushNotificationBody?: string | null;
     isDefault: boolean;
     status: string;
     useDefaultHeaderAndFooter: boolean;
@@ -1785,7 +1787,7 @@ export interface NotificationTemplateBase {
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
     textBody?: string | null;
-    pushNotificationBody: string;
+    pushNotificationBody?: string | null;
     isDefault: boolean;
     status: string;
     useDefaultHeaderAndFooter: boolean;
@@ -1803,7 +1805,7 @@ export interface NotificationTemplateRequest {
     pushNotificationEnabled: boolean;
     emailEnabled: boolean;
     textBody?: string | null;
-    pushNotificationBody: string;
+    pushNotificationBody?: string | null;
     status: string;
     useDefaultHeaderAndFooter: boolean;
 }
@@ -1823,6 +1825,7 @@ export interface NotificationTemplateVersion {
     htmlBody: string;
     plainBody: string;
     textBody?: string | null;
+    pushNotificationBody?: string | null;
     notificationTemplate: NotificationTemplate;
 }
 export interface NotificationTemplateVersionBase {
@@ -1841,6 +1844,7 @@ export interface NotificationTemplateVersionBase {
     htmlBody: string;
     plainBody: string;
     textBody?: string | null;
+    pushNotificationBody?: string | null;
 }
 export interface NotificationTemplateVersionRequest {
     /** @maxLength 255 */
@@ -1849,6 +1853,7 @@ export interface NotificationTemplateVersionRequest {
     htmlBody: string;
     plainBody: string;
     textBody?: string | null;
+    pushNotificationBody?: string | null;
 }
 export interface NotificationTemplateVersionUpdateRequest {
     /**
@@ -1862,6 +1867,7 @@ export interface NotificationTemplateVersionUpdateRequest {
     /** @minLength 1 */
     plainBody: string;
     textBody?: string | null;
+    pushNotificationBody?: string | null;
 }
 export interface Operation {
     op?: string;
@@ -2160,8 +2166,7 @@ export interface SiteConfiguration {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     linkedInUrl?: string | null;
-    /** @minLength 1 */
-    youTubeUrl: string;
+    youTubeUrl?: string | null;
     licenses: string[];
     contactUsUrl?: string | null;
     licenseInfoUrl?: string | null;
@@ -2307,6 +2312,7 @@ export interface SiteConfiguration {
     accountSettings: AccountSettings;
     autoTaskReminderIntervalsInDays?: number[] | null;
     mobileSettings: MobileSettings;
+    losSettings?: LOSSettings | null;
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
@@ -2354,8 +2360,7 @@ export interface SiteConfigurationByUrl {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     linkedInUrl?: string | null;
-    /** @minLength 1 */
-    youTubeUrl: string;
+    youTubeUrl?: string | null;
     licenses: string[];
     contactUsUrl?: string | null;
     licenseInfoUrl?: string | null;
@@ -2501,6 +2506,7 @@ export interface SiteConfigurationByUrl {
     accountSettings: AccountSettings;
     autoTaskReminderIntervalsInDays?: number[] | null;
     mobileSettings: MobileSettings;
+    losSettings?: LOSSettings | null;
     workflows: Workflow[];
 }
 export interface SiteConfigurationForm {
@@ -3084,6 +3090,29 @@ export interface UserBase {
     lastName: string;
     email: string;
 }
+export interface UserDevice {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userID: string;
+    token: string;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    deletedAt?: string | null;
+}
+export interface UserDraft {
+    /** @format uuid */
+    draftID: string;
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    user: User;
+}
+export interface UserDraftPaginated {
+    rows: UserDraft[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
 export interface UserLoan {
     /** @format date-time */
     createdAt: string;
@@ -3295,7 +3324,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.20.4
+ * @version v2.21.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4522,17 +4551,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LegacyLoan
-         * @name GetLoanContactInformation
-         * @summary Get Contact Information
-         * @request GET:/api/los/loan/contacts/{loanID}
-         * @secure
-         * @response `200` `Record<string,ContactRowData>` Success
-         */
-        getLoanContactInformation: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Record<string, ContactRowData>, any>>;
-        /**
-         * No description
-         *
-         * @tags LegacyLoan
          * @name GetPreliminaryConditionsForLoan
          * @summary Get Preliminary Conditions
          * @request GET:/api/los/loan/{loanID}/conditions/preliminary
@@ -5143,6 +5161,24 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanLogs
+         * @name SearchLoanLogs
+         * @summary Search loan logs
+         * @request POST:/api/loans/{loanId}/logs/search
+         * @secure
+         * @response `200` `LoanLogPaginated` Success
+         */
+        searchLoanLogs: (loanId: string, data: LoanLogSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanLogPaginated, any>>;
+        /**
+         * No description
+         *
          * @tags LoanOfficers
          * @name GetLoanOfficers
          * @summary Get All
@@ -5188,17 +5224,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `BranchUser` Success
          */
         getLoanOfficer: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any>>;
-        /**
-         * No description
-         *
-         * @tags LoanOfficers
-         * @name GetLoanOfficerLoans
-         * @summary Get Loans
-         * @request GET:/api/loan-officers/applications
-         * @secure
-         * @response `200` `GetApplications` Success
-         */
-        getLoanOfficerLoans: (params?: RequestParams) => Promise<AxiosResponse<GetApplications, any>>;
         /**
          * No description
          *
@@ -5622,7 +5647,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `LoanUser` Created
          */
-        addLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
+        addLoanUser: (loanId: string, userId: string, data: CreateUserLoan, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanUsers
+         * @name RemoveLoanUser
+         * @summary Remove User from Loan
+         * @request DELETE:/api/loans/{loanId}/users/{userId}
+         * @secure
+         * @response `204` `LoanUser` No Content
+         */
+        removeLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -6256,53 +6292,78 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
-         * @tags TheBigPOS
-         * @name IntegrationsLosLoansLockedList
-         * @request GET:/api/integrations/los/loans/{loanID}/locked
+         * @tags UserDevices
+         * @name CreateUserDevice
+         * @summary Create a new user device
+         * @request POST:/api/userdevices
          * @secure
-         * @response `200` `void` Success
+         * @response `201` `UserDevice` Created
+         * @response `400` `ProblemDetails` Bad Request
          */
-        integrationsLosLoansLockedList: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        createUserDevice: (data: CreateUserDeviceRequest, params?: RequestParams) => Promise<AxiosResponse<UserDevice, any>>;
         /**
          * No description
          *
-         * @tags TheBigPOS
-         * @name IntegrationsLosLoansBucketsList
-         * @request GET:/api/integrations/los/loans/{loanID}/buckets
+         * @tags UserDevices
+         * @name DeleteUserDevice
+         * @summary Delete user device
+         * @request DELETE:/api/userdevices/{id}
          * @secure
-         * @response `200` `void` Success
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
          */
-        integrationsLosLoansBucketsList: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        deleteUserDevice: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
-         * @tags TheBigPOS
-         * @name IntegrationsLosCredentialsCreate
-         * @request POST:/api/integrations/los/credentials
+         * @tags UserDraft
+         * @name GetDraftUsers
+         * @summary Get draft users
+         * @request GET:/api/loans/drafts/{draftId}/users
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `UserDraftPaginated` Success
          */
-        integrationsLosCredentialsCreate: (data: CreateLosCredentials, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        getDraftUsers: (draftId: string, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserDraftPaginated, any>>;
         /**
          * No description
          *
-         * @tags TheBigPOS
-         * @name IntegrationsLosLoansDocumentsDetail
-         * @request GET:/api/integrations/los/loans/{loanID}/documents/{documentID}
+         * @tags UserDraft
+         * @name GetDraftUser
+         * @summary Get draft user
+         * @request GET:/api/loans/drafts/{draftId}/users/{userId}
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `UserDraft` Success
          */
-        integrationsLosLoansDocumentsDetail: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        getDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any>>;
         /**
          * No description
          *
-         * @tags TheBigPOS
-         * @name IntegrationsLosLoansDocumentsList
-         * @request GET:/api/integrations/los/loans/{loanID}/documents
+         * @tags UserDraft
+         * @name AddDraftUsers
+         * @summary Add draft user
+         * @request POST:/api/loans/drafts/{draftId}/users/{userId}
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `UserDraft` Success
          */
-        integrationsLosLoansDocumentsList: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        addDraftUsers: (draftId: string, userId: string, data: CreateUserDraft, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any>>;
+        /**
+         * No description
+         *
+         * @tags UserDraft
+         * @name DeleteDraftUser
+         * @summary Delete draft user
+         * @request DELETE:/api/loans/drafts/{draftId}/users/{userId}
+         * @secure
+         * @response `204` `void` No Content
+         */
+        deleteDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *

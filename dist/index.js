@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.20.4
+ * @version v2.21.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1225,17 +1225,6 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name GetLoanContactInformation
-             * @summary Get Contact Information
-             * @request GET:/api/los/loan/contacts/{loanID}
-             * @secure
-             * @response `200` `Record<string,ContactRowData>` Success
-             */
-            getLoanContactInformation: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/contacts/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
              * @name GetPreliminaryConditionsForLoan
              * @summary Get Preliminary Conditions
              * @request GET:/api/los/loan/{loanID}/conditions/preliminary
@@ -1779,6 +1768,17 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanLogs
+             * @name SearchLoanLogs
+             * @summary Search loan logs
+             * @request POST:/api/loans/{loanId}/logs/search
+             * @secure
+             * @response `200` `LoanLogPaginated` Success
+             */
+            searchLoanLogs: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -1809,17 +1809,6 @@ export class Api extends HttpClient {
              * @response `200` `BranchUser` Success
              */
             getLoanOfficer: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${id}`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanOfficers
-             * @name GetLoanOfficerLoans
-             * @summary Get Loans
-             * @request GET:/api/loan-officers/applications
-             * @secure
-             * @response `200` `GetApplications` Success
-             */
-            getLoanOfficerLoans: (params = {}) => this.request(Object.assign({ path: `/api/loan-officers/applications`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2208,7 +2197,18 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `LoanUser` Created
              */
-            addLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", secure: true, format: "json" }, params)),
+            addLoanUser: (loanId, userId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name RemoveLoanUser
+             * @summary Remove User from Loan
+             * @request DELETE:/api/loans/{loanId}/users/{userId}
+             * @secure
+             * @response `204` `LoanUser` No Content
+             */
+            removeLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "DELETE", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2792,53 +2792,71 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosLoansLockedList
-             * @request GET:/api/integrations/los/loans/{loanID}/locked
+             * @tags UserDevices
+             * @name CreateUserDevice
+             * @summary Create a new user device
+             * @request POST:/api/userdevices
              * @secure
-             * @response `200` `void` Success
+             * @response `201` `UserDevice` Created
+             * @response `400` `ProblemDetails` Bad Request
              */
-            integrationsLosLoansLockedList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/locked`, method: "GET", secure: true }, params)),
+            createUserDevice: (data, params = {}) => this.request(Object.assign({ path: `/api/userdevices`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosLoansBucketsList
-             * @request GET:/api/integrations/los/loans/{loanID}/buckets
+             * @tags UserDevices
+             * @name DeleteUserDevice
+             * @summary Delete user device
+             * @request DELETE:/api/userdevices/{id}
              * @secure
-             * @response `200` `void` Success
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
              */
-            integrationsLosLoansBucketsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/buckets`, method: "GET", secure: true }, params)),
+            deleteUserDevice: (id, params = {}) => this.request(Object.assign({ path: `/api/userdevices/${id}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosCredentialsCreate
-             * @request POST:/api/integrations/los/credentials
+             * @tags UserDraft
+             * @name GetDraftUsers
+             * @summary Get draft users
+             * @request GET:/api/loans/drafts/{draftId}/users
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `UserDraftPaginated` Success
              */
-            integrationsLosCredentialsCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/credentials`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            getDraftUsers: (draftId, query, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosLoansDocumentsDetail
-             * @request GET:/api/integrations/los/loans/{loanID}/documents/{documentID}
+             * @tags UserDraft
+             * @name GetDraftUser
+             * @summary Get draft user
+             * @request GET:/api/loans/drafts/{draftId}/users/{userId}
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `UserDraft` Success
              */
-            integrationsLosLoansDocumentsDetail: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/documents/${documentId}`, method: "GET", secure: true }, params)),
+            getDraftUser: (draftId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosLoansDocumentsList
-             * @request GET:/api/integrations/los/loans/{loanID}/documents
+             * @tags UserDraft
+             * @name AddDraftUsers
+             * @summary Add draft user
+             * @request POST:/api/loans/drafts/{draftId}/users/{userId}
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `UserDraft` Success
              */
-            integrationsLosLoansDocumentsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/documents`, method: "GET", secure: true }, params)),
+            addDraftUsers: (draftId, userId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDraft
+             * @name DeleteDraftUser
+             * @summary Delete draft user
+             * @request DELETE:/api/loans/drafts/{draftId}/users/{userId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteDraftUser: (draftId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
