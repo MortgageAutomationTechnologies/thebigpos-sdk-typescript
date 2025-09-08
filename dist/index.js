@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.22.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -118,7 +118,7 @@ export class Api extends HttpClient {
          * @name PostRoot
          * @request POST:/
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          */
         this.postRoot = (params = {}) => this.request(Object.assign({ path: `/`, method: "POST", secure: true }, params));
         /**
@@ -128,7 +128,7 @@ export class Api extends HttpClient {
          * @name GetRoot
          * @request GET:/
          * @secure
-         * @response `200` `string` Success
+         * @response `200` `string` OK
          */
         this.getRoot = (params = {}) => this.request(Object.assign({ path: `/`, method: "GET", secure: true }, params));
         this.api = {
@@ -140,7 +140,7 @@ export class Api extends HttpClient {
              * @summary Get
              * @request GET:/api/account
              * @secure
-             * @response `200` `Account` Success
+             * @response `200` `Account` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getMyAccount: (params = {}) => this.request(Object.assign({ path: `/api/account`, method: "GET", secure: true, format: "json" }, params)),
@@ -152,9 +152,9 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/account
              * @secure
-             * @response `200` `Account` Success
+             * @response `200` `Account` OK
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `ProblemDetails` Client Error
+             * @response `422` `ProblemDetails` Unprocessable Content
              */
             replaceMyAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -165,7 +165,7 @@ export class Api extends HttpClient {
              * @summary Get Site Configuration
              * @request GET:/api/account/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
+             * @response `200` `SiteConfiguration` OK
              */
             getSiteConfigurationByAccount: (params = {}) => this.request(Object.assign({ path: `/api/account/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -176,8 +176,8 @@ export class Api extends HttpClient {
              * @summary Update Site Configuration
              * @request PUT:/api/account/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             updateSiteConfigurationForAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/account/site-configurations`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -188,7 +188,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/accounts
              * @secure
-             * @response `200` `(Account)[]` Success
+             * @response `200` `(Account)[]` OK
              */
             getAccounts: (params = {}) => this.request(Object.assign({ path: `/api/accounts`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -200,7 +200,7 @@ export class Api extends HttpClient {
              * @request POST:/api/accounts
              * @secure
              * @response `201` `Account` Created
-             * @response `422` `ProblemDetails` Client Error
+             * @response `422` `ProblemDetails` Unprocessable Content
              */
             createAccount: (data, params = {}) => this.request(Object.assign({ path: `/api/accounts`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -212,7 +212,7 @@ export class Api extends HttpClient {
              * @request GET:/api/accounts/{id}
              * @secure
              * @response `201` `Account` Created
-             * @response `422` `ProblemDetails` Client Error
+             * @response `422` `ProblemDetails` Unprocessable Content
              */
             getAccount: (id, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -225,7 +225,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `204` `Account` No Content
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `ProblemDetails` Client Error
+             * @response `422` `ProblemDetails` Unprocessable Content
              */
             deleteAccount: (id, query, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}`, method: "DELETE", query: query, secure: true, format: "json" }, params)),
             /**
@@ -236,9 +236,9 @@ export class Api extends HttpClient {
              * @summary Update Loans
              * @request PUT:/api/accounts/{id}/loan
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `void` OK
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             updateLoansByAccount: (id, data, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}/loan`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -249,7 +249,7 @@ export class Api extends HttpClient {
              * @summary Get Loans
              * @request GET:/api/accounts/{id}/loan
              * @secure
-             * @response `200` `(Loan)[]` Success
+             * @response `200` `(Loan)[]` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoansByAccount: (id, params = {}) => this.request(Object.assign({ path: `/api/accounts/${id}/loan`, method: "GET", secure: true, format: "json" }, params)),
@@ -261,8 +261,8 @@ export class Api extends HttpClient {
              * @summary Generate Token From Refresh Token
              * @request POST:/api/refresh-token
              * @secure
-             * @response `200` `Token` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Token` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getTokenFromRefreshToken: (data, params = {}) => this.request(Object.assign({ path: `/api/refresh-token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -273,8 +273,8 @@ export class Api extends HttpClient {
              * @summary Get Token
              * @request POST:/api/token
              * @secure
-             * @response `200` `Token` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Token` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -285,8 +285,8 @@ export class Api extends HttpClient {
              * @summary Get Token From Challenge Code
              * @request POST:/api/token/code
              * @secure
-             * @response `200` `Token` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Token` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/api/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -297,8 +297,8 @@ export class Api extends HttpClient {
              * @summary Get System Token
              * @request POST:/api/oauth2/token
              * @secure
-             * @response `200` `Token` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Token` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getSystemToken: (data, params = {}) => this.request(Object.assign({ path: `/api/oauth2/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -309,8 +309,8 @@ export class Api extends HttpClient {
              * @summary Get SSO Guid Token
              * @request POST:/api/token/sso
              * @secure
-             * @response `200` `SSOToken` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SSOToken` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getSsoToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token/sso`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -321,7 +321,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/branches
              * @secure
-             * @response `200` `GetBranchPaginated` Success
+             * @response `200` `GetBranchPaginated` OK
              */
             getBranches: (query, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -332,8 +332,8 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/branches
              * @secure
-             * @response `200` `GetBranch` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `GetBranch` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createBranch: (data, params = {}) => this.request(Object.assign({ path: `/api/branches`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -344,7 +344,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/branches/search
              * @secure
-             * @response `200` `GetBranchPaginated` Success
+             * @response `200` `GetBranchPaginated` OK
              */
             searchBranches: (data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -355,7 +355,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/branches/{branchId}
              * @secure
-             * @response `200` `GetBranch` Success
+             * @response `200` `GetBranch` OK
              */
             getBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -366,8 +366,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/branches/{branchId}
              * @secure
-             * @response `200` `GetBranch` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `GetBranch` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceBranch: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -401,8 +401,8 @@ export class Api extends HttpClient {
              * @summary Create Branch Site Configuration
              * @request POST:/api/branches/{branchId}/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createBranchSiteConfiguration: (branchId, data, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -413,7 +413,7 @@ export class Api extends HttpClient {
              * @summary Get Branch Site Configuration
              * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfigurationWithInherited` Success
+             * @response `200` `SiteConfigurationWithInherited` OK
              */
             getBranchSiteConfiguration: (branchId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -424,8 +424,8 @@ export class Api extends HttpClient {
              * @summary Replace Branch Site Configuration
              * @request PUT:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceBranchSiteConfiguration: (branchId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -436,7 +436,7 @@ export class Api extends HttpClient {
              * @summary Get Branch Loan Officers
              * @request GET:/api/branches/{branchId}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `LoanOfficerPublic` OK
              */
             getLoanOfficersByBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -447,7 +447,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/business-rules
              * @secure
-             * @response `200` `(BusinessRule)[]` Success
+             * @response `200` `(BusinessRule)[]` OK
              */
             getBusinessRules: (query, params = {}) => this.request(Object.assign({ path: `/api/business-rules`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -458,8 +458,8 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/business-rules
              * @secure
-             * @response `200` `BusinessRule` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `BusinessRule` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createBusinessRule: (data, params = {}) => this.request(Object.assign({ path: `/api/business-rules`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -470,7 +470,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/business-rules/{id}
              * @secure
-             * @response `200` `BusinessRule` Success
+             * @response `200` `BusinessRule` OK
              */
             getBusinessRule: (id, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -481,8 +481,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/business-rules/{id}
              * @secure
-             * @response `200` `BusinessRule` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `BusinessRule` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceBusinessRule: (id, data, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -504,7 +504,7 @@ export class Api extends HttpClient {
              * @summary Restore
              * @request POST:/api/business-rules/{id}/restore
              * @secure
-             * @response `200` `BusinessRule` Success
+             * @response `200` `BusinessRule` OK
              */
             restoreBusinessRule: (id, params = {}) => this.request(Object.assign({ path: `/api/business-rules/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -515,7 +515,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/corporates
              * @secure
-             * @response `200` `CorporatePaginated` Success
+             * @response `200` `CorporatePaginated` OK
              */
             getCorporates: (query, params = {}) => this.request(Object.assign({ path: `/api/corporates`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -526,8 +526,8 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/corporates
              * @secure
-             * @response `200` `Corporate` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Corporate` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createCorporate: (data, params = {}) => this.request(Object.assign({ path: `/api/corporates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -538,7 +538,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/corporates/search
              * @secure
-             * @response `200` `CorporatePaginated` Success
+             * @response `200` `CorporatePaginated` OK
              */
             searchCorporate: (data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -549,7 +549,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/corporates/{id}
              * @secure
-             * @response `200` `Corporate` Success
+             * @response `200` `Corporate` OK
              */
             getCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -560,8 +560,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/corporates/{id}
              * @secure
-             * @response `200` `Corporate` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Corporate` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceCorporate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -594,8 +594,8 @@ export class Api extends HttpClient {
              * @summary Create Site Configuration
              * @request POST:/api/corporates/{corporateId}/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createCorporateSiteConfiguration: (corporateId, data, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -606,7 +606,7 @@ export class Api extends HttpClient {
              * @summary Get Site Configuration
              * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfigurationWithInherited` Success
+             * @response `200` `SiteConfigurationWithInherited` OK
              */
             getCorporateSiteConfiguration: (corporateId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -617,8 +617,8 @@ export class Api extends HttpClient {
              * @summary Replace Site Configuration
              * @request PUT:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceCorporateSiteConfiguration: (corporateId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/corporates/${corporateId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -629,7 +629,7 @@ export class Api extends HttpClient {
              * @summary Get Branches
              * @request GET:/api/corporates/{id}/branches
              * @secure
-             * @response `200` `(BranchReduced)[]` Success
+             * @response `200` `(BranchReduced)[]` OK
              */
             getBranchesByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/branches`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -640,7 +640,7 @@ export class Api extends HttpClient {
              * @summary Get Loan Officers
              * @request GET:/api/corporates/{id}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `LoanOfficerPublic` OK
              */
             getLoanOfficersByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -651,7 +651,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/devices
              * @secure
-             * @response `200` `DevicePaginated` Success
+             * @response `200` `DevicePaginated` OK
              */
             getDevices: (query, params = {}) => this.request(Object.assign({ path: `/api/devices`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -662,7 +662,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/devices/{id}
              * @secure
-             * @response `200` `Device` Success
+             * @response `200` `Device` OK
              */
             getDevice: (id, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -673,7 +673,7 @@ export class Api extends HttpClient {
              * @summary Update
              * @request PUT:/api/devices/{id}
              * @secure
-             * @response `200` `Device` Success
+             * @response `200` `Device` OK
              */
             updateDevice: (id, data, params = {}) => this.request(Object.assign({ path: `/api/devices/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -684,7 +684,7 @@ export class Api extends HttpClient {
              * @summary Get by Serial Number
              * @request GET:/api/devices/{sn}/profile
              * @secure
-             * @response `200` `DeviceMDM` Success
+             * @response `200` `DeviceMDM` OK
              */
             getDeviceBySerialNumber: (sn, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/profile`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -695,7 +695,7 @@ export class Api extends HttpClient {
              * @summary Create Action by Serial Number
              * @request POST:/api/devices/{sn}/actions/{actionName}
              * @secure
-             * @response `200` `Action` Success
+             * @response `200` `Action` OK
              */
             createDeviceActionBySerialNumber: (sn, actionName, params = {}) => this.request(Object.assign({ path: `/api/devices/${sn}/actions/${actionName}`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -706,7 +706,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/document-buckets
              * @secure
-             * @response `200` `(string)[]` Success
+             * @response `200` `(string)[]` OK
              */
             getDocumentBuckets: (query, params = {}) => this.request(Object.assign({ path: `/api/document-buckets`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -717,7 +717,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/document-templates
              * @secure
-             * @response `200` `(DocumentTemplateBase)[]` Success
+             * @response `200` `(DocumentTemplateBase)[]` OK
              */
             getDocumentTemplates: (query, params = {}) => this.request(Object.assign({ path: `/api/document-templates`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -730,7 +730,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `DocumentTemplateBase` Created
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createDocumentTemplate: (data, params = {}) => this.request(Object.assign({ path: `/api/document-templates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -741,7 +741,7 @@ export class Api extends HttpClient {
              * @summary Get Custom
              * @request GET:/api/document-templates/{type}
              * @secure
-             * @response `200` `(DocumentTemplateBase)[]` Success
+             * @response `200` `(DocumentTemplateBase)[]` OK
              */
             getCustomDocumentTemplates: (type, query, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${type}`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -752,7 +752,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/document-templates/{id}
              * @secure
-             * @response `200` `DocumentTemplate` Success
+             * @response `200` `DocumentTemplate` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getDocumentTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "GET", secure: true, format: "json" }, params)),
@@ -764,10 +764,10 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/document-templates/{id}
              * @secure
-             * @response `200` `DocumentTemplateBase` Success
+             * @response `200` `DocumentTemplateBase` OK
              * @response `401` `ProblemDetails` Unauthorized
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceDocumentTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -804,7 +804,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/document-templates/{documentId}/versions
              * @secure
-             * @response `200` `(DocumentTemplateVersion)[]` Success
+             * @response `200` `(DocumentTemplateVersion)[]` OK
              */
             getDocumentTemplateVersions: (documentId, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -815,7 +815,7 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/document-templates/{documentId}/versions
              * @secure
-             * @response `200` `DocumentTemplateVersion` Success
+             * @response `200` `DocumentTemplateVersion` OK
              */
             createDocumentTemplateVersion: (documentId, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -826,7 +826,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/document-templates/{documentId}/versions/{id}
              * @secure
-             * @response `200` `DocumentTemplateVersion` Success
+             * @response `200` `DocumentTemplateVersion` OK
              */
             getDocumentTemplateVersion: (documentId, id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -837,7 +837,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/document-templates/{documentId}/versions/{id}
              * @secure
-             * @response `200` `DocumentTemplateVersion` Success
+             * @response `200` `DocumentTemplateVersion` OK
              */
             replaceDocumentTemplateVersion: (documentId, id, data, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -848,7 +848,7 @@ export class Api extends HttpClient {
              * @summary Delete
              * @request DELETE:/api/document-templates/{documentId}/versions/{id}
              * @secure
-             * @response `200` `DocumentTemplateVersion` Success
+             * @response `200` `DocumentTemplateVersion` OK
              */
             deleteDocumentTemplateVersion: (documentId, id, params = {}) => this.request(Object.assign({ path: `/api/document-templates/${documentId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
             /**
@@ -859,7 +859,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/files
              * @secure
-             * @response `200` `FilePaginated` Success
+             * @response `200` `FilePaginated` OK
              */
             getAllFiles: (query, params = {}) => this.request(Object.assign({ path: `/api/files`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -871,7 +871,7 @@ export class Api extends HttpClient {
              * @request POST:/api/files
              * @secure
              * @response `201` `File` Created
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             uploadFile: (data, params = {}) => this.request(Object.assign({ path: `/api/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -893,8 +893,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/files/{id}
              * @secure
-             * @response `200` `string` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `string` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceFile: (id, data, params = {}) => this.request(Object.assign({ path: `/api/files/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -916,7 +916,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/files/search
              * @secure
-             * @response `200` `FilePaginated` Success
+             * @response `200` `FilePaginated` OK
              */
             searchFiles: (data, query, params = {}) => this.request(Object.assign({ path: `/api/files/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -927,7 +927,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/forms
              * @secure
-             * @response `200` `(AdminAccessGetForms)[]` Success
+             * @response `200` `(AdminAccessGetForms)[]` OK
              */
             getForms: (query, params = {}) => this.request(Object.assign({ path: `/api/forms`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -939,7 +939,7 @@ export class Api extends HttpClient {
              * @request POST:/api/forms
              * @secure
              * @response `201` `Form` Created
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createForm: (data, params = {}) => this.request(Object.assign({ path: `/api/forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -950,7 +950,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/forms/{id}
              * @secure
-             * @response `200` `Form` Success
+             * @response `200` `Form` OK
              */
             getForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -961,8 +961,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/forms/{id}
              * @secure
-             * @response `200` `Form` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Form` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceForm: (id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -984,7 +984,7 @@ export class Api extends HttpClient {
              * @summary Restore
              * @request POST:/api/forms/{id}/restore
              * @secure
-             * @response `200` `Form` Success
+             * @response `200` `Form` OK
              */
             restoreForm: (id, params = {}) => this.request(Object.assign({ path: `/api/forms/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -995,7 +995,7 @@ export class Api extends HttpClient {
              * @summary Add
              * @request POST:/api/form-submissions/{formSubmissionId}/files
              * @secure
-             * @response `200` `FormSubmissionFile` Success
+             * @response `200` `FormSubmissionFile` OK
              */
             addFormSubmissionFile: (formSubmissionId, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${formSubmissionId}/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1017,7 +1017,7 @@ export class Api extends HttpClient {
              * @summary Download by Id
              * @request GET:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}/download
              * @secure
-             * @response `200` `FileWithBytes` Success
+             * @response `200` `FileWithBytes` OK
              */
             downloadFormSubmissionFile: (formSubmissionFileId, formSubmissionId, query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${formSubmissionId}/files/${formSubmissionFileId}/download`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -1028,7 +1028,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/form-submissions
              * @secure
-             * @response `200` `FormSubmissionPaginated` Success
+             * @response `200` `FormSubmissionPaginated` OK
              */
             getFormSubmissions: (query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -1050,7 +1050,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/form-submissions/{id}
              * @secure
-             * @response `200` `FormSubmission` Success
+             * @response `200` `FormSubmission` OK
              */
             getFormSubmission: (id, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1061,7 +1061,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/form-submissions/{id}
              * @secure
-             * @response `200` `FormSubmission` Success
+             * @response `200` `FormSubmission` OK
              */
             replaceFormSubmission: (id, data, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1083,7 +1083,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/form-submissions/search
              * @secure
-             * @response `200` `FormSubmissionPaginated` Success
+             * @response `200` `FormSubmissionPaginated` OK
              */
             searchFormSubmissions: (data, query, params = {}) => this.request(Object.assign({ path: `/api/form-submissions/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1094,7 +1094,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/forms/{formId}/versions
              * @secure
-             * @response `200` `(FormVersion)[]` Success
+             * @response `200` `(FormVersion)[]` OK
              */
             getFormVersions: (formId, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1105,7 +1105,7 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/forms/{formId}/versions
              * @secure
-             * @response `200` `FormVersion` Success
+             * @response `200` `FormVersion` OK
              */
             createFormVersion: (formId, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1116,7 +1116,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/forms/{formId}/versions/{id}
              * @secure
-             * @response `200` `FormVersion` Success
+             * @response `200` `FormVersion` OK
              */
             getFormVersion: (formId, id, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1127,7 +1127,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/forms/{formId}/versions/{id}
              * @secure
-             * @response `200` `FormVersion` Success
+             * @response `200` `FormVersion` OK
              */
             replaceFormVersion: (formId, id, data, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1138,7 +1138,7 @@ export class Api extends HttpClient {
              * @summary Delete
              * @request DELETE:/api/forms/{formId}/versions/{id}
              * @secure
-             * @response `200` `FormVersion` Success
+             * @response `200` `FormVersion` OK
              */
             deleteFormVersion: (formId, id, params = {}) => this.request(Object.assign({ path: `/api/forms/${formId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
             /**
@@ -1149,7 +1149,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/los/loan/application/{loanID}
              * @secure
-             * @response `200` `Record<string,any>` Success
+             * @response `200` `Record<string,any>` OK
              */
             getLoanData: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1160,10 +1160,10 @@ export class Api extends HttpClient {
              * @summary Update Loan Consent
              * @request PATCH:/api/los/loan/application/{loanID}
              * @secure
-             * @response `200` `string` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `string` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1172,7 +1172,7 @@ export class Api extends HttpClient {
              * @summary Get Report
              * @request POST:/api/los/loan/reports
              * @secure
-             * @response `200` `GetReport` Success
+             * @response `200` `GetReport` OK
              */
             getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1183,8 +1183,9 @@ export class Api extends HttpClient {
              * @summary Create Loan
              * @request POST:/api/los/loan/application
              * @secure
-             * @response `200` `string` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `string` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
+             * @response `423` `UnprocessableEntity` Locked
              */
             createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1195,9 +1196,9 @@ export class Api extends HttpClient {
              * @summary Get Documents
              * @request GET:/api/los/loan/tasks/documents/{loanID}
              * @secure
-             * @response `200` `(DocumentData)[]` Success
+             * @response `200` `(DocumentData)[]` OK
              */
-            getTaskDocumentsByLoan: (loanId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents/${loanId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            getTaskDocumentsByLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/tasks/documents/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1206,7 +1207,7 @@ export class Api extends HttpClient {
              * @summary Get Document Content
              * @request GET:/api/los/loan/{loanID}/document/{documentId}/content
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `void` OK
              */
             getLoanDocumentContent: (loanId, documentId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/document/${documentId}/content`, method: "GET", query: query, secure: true }, params)),
             /**
@@ -1224,22 +1225,11 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name GetLoanContactInformation
-             * @summary Get Contact Information
-             * @request GET:/api/los/loan/contacts/{loanID}
-             * @secure
-             * @response `200` `Record<string,ContactRowData>` Success
-             */
-            getLoanContactInformation: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/contacts/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LegacyLoan
              * @name GetPreliminaryConditionsForLoan
              * @summary Get Preliminary Conditions
              * @request GET:/api/los/loan/{loanID}/conditions/preliminary
              * @secure
-             * @response `200` `(PreliminaryCondition)[]` Success
+             * @response `200` `(PreliminaryCondition)[]` OK
              */
             getPreliminaryConditionsForLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/conditions/preliminary`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1250,7 +1240,7 @@ export class Api extends HttpClient {
              * @summary Get Underwriting Conditions
              * @request GET:/api/los/loan/{loanID}/conditions/underwriting
              * @secure
-             * @response `200` `(UnderwritingCondition)[]` Success
+             * @response `200` `(UnderwritingCondition)[]` OK
              */
             getUnderwritingConditionsForLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/conditions/underwriting`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1261,7 +1251,7 @@ export class Api extends HttpClient {
              * @summary Get Embedded Signing Link
              * @request POST:/api/los/loan/embeddedsigning/{envelopeId}/{userName}/{email}
              * @secure
-             * @response `200` `string` Success
+             * @response `200` `string` OK
              */
             getLoanEmbeddedSigningLink: (envelopeId, userName, email, params = {}) => this.request(Object.assign({ path: `/api/los/loan/embeddedsigning/${envelopeId}/${userName}/${email}`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -1273,7 +1263,7 @@ export class Api extends HttpClient {
              * @request POST:/api/los/loan/generatedocument
              * @deprecated
              * @secure
-             * @response `200` `DocumentDataRequest` Success
+             * @response `200` `DocumentDataRequest` OK
              */
             createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1284,7 +1274,7 @@ export class Api extends HttpClient {
              * @summary Add
              * @request POST:/api/listings/{listingId}/files
              * @secure
-             * @response `200` `ListingFile` Success
+             * @response `200` `ListingFile` OK
              */
             addListingFile: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1295,9 +1285,9 @@ export class Api extends HttpClient {
              * @summary Update
              * @request PATCH:/api/listings/{listingId}/files
              * @secure
-             * @response `200` `ListingFile` Success
+             * @response `200` `ListingFile` OK
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1317,7 +1307,7 @@ export class Api extends HttpClient {
              * @summary Add
              * @request POST:/api/listings/{listingId}/photos
              * @secure
-             * @response `200` `ListingPhoto` Success
+             * @response `200` `ListingPhoto` OK
              */
             addListingPhoto: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1328,9 +1318,9 @@ export class Api extends HttpClient {
              * @summary Update
              * @request PATCH:/api/listings/{listingId}/photos
              * @secure
-             * @response `200` `(ListingPhoto)[]` Success
+             * @response `200` `(ListingPhoto)[]` OK
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1350,7 +1340,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/listings
              * @secure
-             * @response `200` `ListingPaginated` Success
+             * @response `200` `ListingPaginated` OK
              */
             getListings: (query, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -1372,7 +1362,7 @@ export class Api extends HttpClient {
              * @summary Get by Slug
              * @request GET:/api/listings/slug/{slug}
              * @secure
-             * @response `200` `Listing` Success
+             * @response `200` `Listing` OK
              */
             getListingBySlug: (slug, params = {}) => this.request(Object.assign({ path: `/api/listings/slug/${slug}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1383,7 +1373,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/listings/{id}
              * @secure
-             * @response `200` `Listing` Success
+             * @response `200` `Listing` OK
              */
             getListing: (id, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1394,7 +1384,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/listings/{id}
              * @secure
-             * @response `200` `Listing` Success
+             * @response `200` `Listing` OK
              */
             replaceListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1416,7 +1406,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/listings/search
              * @secure
-             * @response `200` `ListingPaginated` Success
+             * @response `200` `ListingPaginated` OK
              */
             searchListings: (data, query, params = {}) => this.request(Object.assign({ path: `/api/listings/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1427,7 +1417,7 @@ export class Api extends HttpClient {
              * @summary Update Background Image
              * @request PUT:/api/listings/{id}/background-image
              * @secure
-             * @response `200` `File` Success
+             * @response `200` `File` OK
              */
             updateListingBackgroundImage: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}/background-image`, method: "PUT", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1449,7 +1439,7 @@ export class Api extends HttpClient {
              * @summary Get Open House Flyer
              * @request GET:/api/listings/{id}/open-house-flyer
              * @secure
-             * @response `200` `File` Success
+             * @response `200` `File` OK
              */
             getListingOpenHouseFlyer: (id, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}/open-house-flyer`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1460,7 +1450,7 @@ export class Api extends HttpClient {
              * @summary Get
              * @request GET:/api/loans/{loanID}/calculators/loan-calculator
              * @secure
-             * @response `200` `RunLOCalculation` Success
+             * @response `200` `RunLOCalculation` OK
              */
             getLoanCalculator: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1471,8 +1461,9 @@ export class Api extends HttpClient {
              * @summary Run
              * @request POST:/api/loans/{loanID}/calculators/loan-calculator
              * @secure
-             * @response `200` `RunLOCalculation` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `RunLOCalculation` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
+             * @response `423` `UnprocessableEntity` Locked
              */
             runLoanCalculator: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/calculators/loan-calculator`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1483,7 +1474,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/loans/{loanID}/loan-comparison
              * @secure
-             * @response `200` `LoanComparison` Success
+             * @response `200` `LoanComparison` OK
              */
             getLoanComparisons: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1495,7 +1486,8 @@ export class Api extends HttpClient {
              * @request POST:/api/loans/{loanID}/loan-comparison/{index}
              * @secure
              * @response `201` `LoanComparisonScenario` Created
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
+             * @response `423` `UnprocessableEntity` Locked
              */
             createLoanComparison: (loanId, index, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/${index}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1518,7 +1510,7 @@ export class Api extends HttpClient {
              * @request POST:/api/loans/{loanID}/loan-comparison/pdf
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanComparisonPdf: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/loan-comparison/pdf`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -1529,7 +1521,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/loans/{loanId}/documents/buckets
              * @secure
-             * @response `200` `(string)[]` Success
+             * @response `200` `(string)[]` OK
              */
             getLoanDocumentBuckets: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/buckets`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1551,10 +1543,21 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/loans/{loanId}/documents/{documentId}
              * @secure
-             * @response `200` `LoanDocument` Success
+             * @response `200` `LoanDocument` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanDocument: (loanId, documentId, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name SearchLoanDocuments
+             * @summary Search loan documents
+             * @request POST:/api/loans/{loanId}/documents/search
+             * @secure
+             * @response `200` `LoanDocumentSearchPaginated` OK
+             */
+            searchLoanDocuments: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1563,7 +1566,7 @@ export class Api extends HttpClient {
              * @summary Download By ID
              * @request GET:/api/loans/{loanId}/documents/{documentId}/download
              * @secure
-             * @response `200` `string` Success
+             * @response `200` `string` OK
              * @response `404` `ProblemDetails` Not Found
              */
             downloadLoanDocument: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}/download`, method: "GET", secure: true, format: "json" }, params)),
@@ -1577,7 +1580,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `LoanDocument` Created
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1588,9 +1591,9 @@ export class Api extends HttpClient {
              * @summary Retry
              * @request POST:/api/loans/{loanId}/documents/{documentId}/retry
              * @secure
-             * @response `200` `LoanDocument` Success
+             * @response `200` `LoanDocument` OK
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             retryFailedLoanDocument: (loanId, documentId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}/retry`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -1601,9 +1604,22 @@ export class Api extends HttpClient {
              * @summary Generate PDF Document
              * @request POST:/api/loans/{loanId}/documents/generate
              * @secure
-             * @response `200` `DocumentDataRequest` Success
+             * @response `200` `DocumentDataRequest` OK
              */
             generateLoanDocument: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/generate`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name SendLoanDocuments
+             * @summary Send existing documents to loan users or external emails
+             * @request POST:/api/loans/{loanId}/documents/distribute
+             * @secure
+             * @response `200` `void` OK
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            sendLoanDocuments: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/distribute`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
@@ -1623,7 +1639,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/loans/drafts
              * @secure
-             * @response `200` `(DraftContent)[]` Success
+             * @response `200` `(DraftContent)[]` OK
              */
             getLoanDrafts: (params = {}) => this.request(Object.assign({ path: `/api/loans/drafts`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1634,7 +1650,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/loans/drafts/{draftId}
              * @secure
-             * @response `200` `DraftContent` Success
+             * @response `200` `DraftContent` OK
              */
             getLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1645,7 +1661,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/loans/drafts/{draftId}
              * @secure
-             * @response `200` `Draft` Success
+             * @response `200` `Draft` OK
              */
             replaceLoanDraft: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1678,9 +1694,53 @@ export class Api extends HttpClient {
              * @summary Reassign Loan officer
              * @request PUT:/api/loans/drafts/{draftId}/reassign
              * @secure
-             * @response `200` `Draft` Success
+             * @response `200` `Draft` OK
              */
             reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImports
+             * @summary Get Loan Imports
+             * @request GET:/api/loan-imports
+             * @secure
+             * @response `200` `LoanImportPaginated` OK
+             */
+            getLoanImports: (query, params = {}) => this.request(Object.assign({ path: `/api/loan-imports`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name CreateLoanImport
+             * @summary Create Loan Import
+             * @request POST:/api/loan-imports
+             * @secure
+             * @response `201` `LoanImport` Created
+             */
+            createLoanImport: (data, params = {}) => this.request(Object.assign({ path: `/api/loan-imports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImport
+             * @summary Get Loan Import
+             * @request GET:/api/loan-imports/{id}
+             * @secure
+             * @response `200` `LoanImport` OK
+             */
+            getLoanImport: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanImport
+             * @name GetLoanImportLogs
+             * @summary Get Loan Import Logs
+             * @request GET:/api/loan-imports/{id}/logs
+             * @secure
+             * @response `200` `LoanImportLogPaginated` OK
+             */
+            getLoanImportLogs: (id, query, params = {}) => this.request(Object.assign({ path: `/api/loan-imports/${id}/logs`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1689,7 +1749,7 @@ export class Api extends HttpClient {
              * @summary Get Invites
              * @request GET:/api/loans/{loanId}/invites
              * @secure
-             * @response `200` `(Invite)[]` Success
+             * @response `200` `(Invite)[]` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanInvites: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "GET", secure: true, format: "json" }, params)),
@@ -1701,10 +1761,21 @@ export class Api extends HttpClient {
              * @summary Invite Contacts
              * @request POST:/api/loans/{loanId}/invites
              * @secure
-             * @response `200` `(Invite)[]` Success
+             * @response `200` `(Invite)[]` OK
              * @response `404` `ProblemDetails` Not Found
              */
             inviteLoanContacts: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/invites`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanLogs
+             * @name SearchLoanLogs
+             * @summary Search loan logs
+             * @request POST:/api/loans/{loanId}/logs/search
+             * @secure
+             * @response `200` `LoanLogPaginated` OK
+             */
+            searchLoanLogs: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1713,7 +1784,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/loan-officers
              * @secure
-             * @response `200` `BranchUserPaginated` Success
+             * @response `200` `BranchUserPaginated` OK
              */
             getLoanOfficers: (query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -1724,7 +1795,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loan-officers/search
              * @secure
-             * @response `200` `BranchUserPaginated` Success
+             * @response `200` `BranchUserPaginated` OK
              */
             searchLoanOfficers: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1735,20 +1806,9 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/loan-officers/{id}
              * @secure
-             * @response `200` `BranchUser` Success
+             * @response `200` `BranchUser` OK
              */
             getLoanOfficer: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${id}`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanOfficers
-             * @name GetLoanOfficerLoans
-             * @summary Get Loans
-             * @request GET:/api/loan-officers/applications
-             * @secure
-             * @response `200` `GetApplications` Success
-             */
-            getLoanOfficerLoans: (params = {}) => this.request(Object.assign({ path: `/api/loan-officers/applications`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1757,8 +1817,8 @@ export class Api extends HttpClient {
              * @summary Create Site Configuration
              * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanOfficerSiteConfiguration: (loanOfficerId, data, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1769,7 +1829,7 @@ export class Api extends HttpClient {
              * @summary Get Site Configuration
              * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfigurationWithInherited` Success
+             * @response `200` `SiteConfigurationWithInherited` OK
              */
             getLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1780,8 +1840,8 @@ export class Api extends HttpClient {
              * @summary Replace Site Configuration
              * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceLoanOfficerSiteConfiguration: (loanOfficerId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loan-officers/${loanOfficerId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1792,7 +1852,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loans/queue/search
              * @secure
-             * @response `200` `LoanQueuePaginated` Success
+             * @response `200` `LoanQueuePaginated` OK
              */
             searchLoanQueue: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1803,7 +1863,7 @@ export class Api extends HttpClient {
              * @summary Get Loan Queue Record
              * @request GET:/api/loans/queue/{loanQueueId}
              * @secure
-             * @response `200` `any` Success
+             * @response `200` `any` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanQueue: (loanQueueId, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "GET", secure: true, format: "json" }, params)),
@@ -1815,7 +1875,7 @@ export class Api extends HttpClient {
              * @summary Replace Loan Queue Record
              * @request PUT:/api/loans/queue/{loanQueueId}
              * @secure
-             * @response `200` `LoanQueueWithData` Success
+             * @response `200` `LoanQueueWithData` OK
              * @response `404` `ProblemDetails` Not Found
              */
             replaceLoanQueue: (loanQueueId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/queue/${loanQueueId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -1847,11 +1907,23 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags Loans
+             * @name CreateLoanByDraftId
+             * @summary Create Loan by DraftId
+             * @request POST:/api/loans
+             * @secure
+             * @response `200` `string` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
+             */
+            createLoanByDraftId: (data, params = {}) => this.request(Object.assign({ path: `/api/loans`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
              * @name GetLoans
              * @summary Get Loans
              * @request GET:/api/loans
              * @secure
-             * @response `200` `GetApplications` Success
+             * @response `200` `GetApplications` OK
              */
             getLoans: (params = {}) => this.request(Object.assign({ path: `/api/loans`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1862,7 +1934,7 @@ export class Api extends HttpClient {
              * @summary Get Loans by Account Setting
              * @request POST:/api/loans/temp-pipeline
              * @secure
-             * @response `200` `any` Success
+             * @response `200` `any` OK
              */
             getLoansByAccountSetting: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/temp-pipeline`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1873,7 +1945,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/loans/{loanID}
              * @secure
-             * @response `200` `Loan` Success
+             * @response `200` `Loan` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoan: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "GET", secure: true, format: "json" }, params)),
@@ -1885,7 +1957,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loans/search
              * @secure
-             * @response `200` `ExtendedLoanPaginated` Success
+             * @response `200` `LoanListPaginated` OK
              */
             searchLoans: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -1896,7 +1968,7 @@ export class Api extends HttpClient {
              * @summary Import from LOS
              * @request POST:/api/loans/import-from-los/{loanId}
              * @secure
-             * @response `200` `Loan` Success
+             * @response `200` `Loan` OK
              */
             importLoanFromLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/import-from-los/${loanId}`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -1907,9 +1979,9 @@ export class Api extends HttpClient {
              * @summary Update loan fields
              * @request PATCH:/api/loans/{loanId}
              * @secure
-             * @response `200` `Loan` Success
+             * @response `200` `Loan` OK
              */
-            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1918,7 +1990,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
              * @secure
-             * @response `200` `TaskCommentPaginated` Success
+             * @response `200` `TaskCommentPaginated` OK
              * @response `404` `ProblemDetails` Not Found
              */
             searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -1930,7 +2002,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
              * @secure
-             * @response `200` `TaskComment` Success
+             * @response `200` `TaskComment` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanTaskComment: (id, loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${id}`, method: "GET", secure: true, format: "json" }, params)),
@@ -1954,7 +2026,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
              * @secure
-             * @response `200` `TaskComment` Success
+             * @response `200` `TaskComment` OK
              * @response `404` `ProblemDetails` Not Found
              */
             replaceLoanTaskComment: (loanId, userLoanTaskId, commentId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/${commentId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -1980,7 +2052,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `UserLoanTask` Created
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanTaskDocument: (loanId, loanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents`, method: "POST", body: data, secure: true, type: ContentType.FormData, format: "json" }, params)),
             /**
@@ -1992,7 +2064,7 @@ export class Api extends HttpClient {
              * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents/bucket
              * @secure
              * @response `204` `UserLoanTask` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanTaskDocumentBucket: (loanId, loanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/documents/bucket`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -2003,7 +2075,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/loans/{loanID}/tasks
              * @secure
-             * @response `200` `(UserLoanTask)[]` Success
+             * @response `200` `(UserLoanTask)[]` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanTasks: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks`, method: "GET", secure: true, format: "json" }, params)),
@@ -2015,7 +2087,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/loans/{loanID}/tasks/{id}
              * @secure
-             * @response `200` `UserLoanTask` Success
+             * @response `200` `UserLoanTask` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanTask: (id, loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${id}`, method: "GET", secure: true, format: "json" }, params)),
@@ -2027,7 +2099,7 @@ export class Api extends HttpClient {
              * @summary Get Difference
              * @request GET:/api/loans/{loanID}/tasks/diff
              * @secure
-             * @response `200` `(UserLoanTask)[]` Success
+             * @response `200` `(UserLoanTask)[]` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanTaskDifference: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/diff`, method: "GET", secure: true, format: "json" }, params)),
@@ -2063,7 +2135,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
              * @secure
-             * @response `200` `UserLoanTask` Success
+             * @response `200` `UserLoanTask` OK
              * @response `404` `ProblemDetails` Not Found
              */
             replaceLoanTask: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -2099,9 +2171,9 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
              * @secure
-             * @response `200` `UserLoanTask` Success
+             * @response `200` `UserLoanTask` OK
              * @response `404` `ProblemDetails` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createLoanTaskVerification: (loanId, loanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${loanTaskId}/verifications`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -2112,7 +2184,7 @@ export class Api extends HttpClient {
              * @summary Get Loan User
              * @request GET:/api/loans/{loanId}/users/{userId}
              * @secure
-             * @response `200` `LoanUser` Success
+             * @response `200` `LoanUser` OK
              */
             getLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2125,7 +2197,18 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `LoanUser` Created
              */
-            addLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", secure: true, format: "json" }, params)),
+            addLoanUser: (loanId, userId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanUsers
+             * @name RemoveLoanUser
+             * @summary Remove User from Loan
+             * @request DELETE:/api/loans/{loanId}/users/{userId}
+             * @secure
+             * @response `204` `LoanUser` No Content
+             */
+            removeLoanUser: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}`, method: "DELETE", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2145,7 +2228,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/milestones
              * @secure
-             * @response `200` `(MilestoneConfiguration)[]` Success
+             * @response `200` `(MilestoneConfiguration)[]` OK
              */
             getMilestones: (params = {}) => this.request(Object.assign({ path: `/api/milestones`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2157,7 +2240,7 @@ export class Api extends HttpClient {
              * @request POST:/api/milestones
              * @secure
              * @response `201` `MilestoneConfiguration` Created
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createMilestone: (data, params = {}) => this.request(Object.assign({ path: `/api/milestones`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2168,7 +2251,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/milestones/{id}
              * @secure
-             * @response `200` `MilestoneConfiguration` Success
+             * @response `200` `MilestoneConfiguration` OK
              * @response `404` `Error` Not Found
              */
             getMilestone: (id, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "GET", secure: true, format: "json" }, params)),
@@ -2180,9 +2263,9 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/milestones/{id}
              * @secure
-             * @response `200` `MilestoneConfiguration` Success
+             * @response `200` `MilestoneConfiguration` OK
              * @response `404` `Error` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceMilestone: (id, data, params = {}) => this.request(Object.assign({ path: `/api/milestones/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2200,13 +2283,61 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageMonthlyPayment
+             * @summary Calculate Monthly Payment
+             * @request POST:/api/mortgage-calculators/monthly-payment
+             * @secure
+             * @response `200` `MonthlyPaymentCalculator` OK
+             * @response `422` `ProblemDetails` Unprocessable Content
+             */
+            calculateMortgageMonthlyPayment: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/monthly-payment`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageAffordability
+             * @summary Calculate Affordability
+             * @request POST:/api/mortgage-calculators/affordability
+             * @secure
+             * @response `200` `AffordabilityCalculator` OK
+             * @response `422` `ProblemDetails` Unprocessable Content
+             */
+            calculateMortgageAffordability: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/affordability`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageLoanComparison
+             * @summary Calculate Loan Comparison
+             * @request POST:/api/mortgage-calculators/loan-comparison
+             * @secure
+             * @response `200` `LoanComparisonCalculator` OK
+             * @response `422` `ProblemDetails` Unprocessable Content
+             */
+            calculateMortgageLoanComparison: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/loan-comparison`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageRefinance
+             * @summary Calculate Refinance
+             * @request POST:/api/mortgage-calculators/refinance
+             * @secure
+             * @response `200` `RefinanceCalculator` OK
+             * @response `422` `ProblemDetails` Unprocessable Content
+             */
+            calculateMortgageRefinance: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/refinance`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags Notifications
              * @name SendNotificationForLoan
              * @summary Send Notification for Loan
              * @request POST:/api/notifications
              * @secure
-             * @response `200` `void` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `void` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             sendNotificationForLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/notifications`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2217,8 +2348,8 @@ export class Api extends HttpClient {
              * @summary Send Test Notification for Loan
              * @request POST:/api/notifications/test
              * @secure
-             * @response `200` `void` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `void` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             sendTestNotificationForLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/notifications/test`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2229,7 +2360,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/notification-templates
              * @secure
-             * @response `200` `(NotificationTemplateBase)[]` Success
+             * @response `200` `(NotificationTemplateBase)[]` OK
              */
             getNotificationTemplates: (query, params = {}) => this.request(Object.assign({ path: `/api/notification-templates`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2241,7 +2372,7 @@ export class Api extends HttpClient {
              * @request POST:/api/notification-templates
              * @secure
              * @response `201` `NotificationTemplate` Created
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createNotificationTemplate: (data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2252,7 +2383,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/notification-templates/{id}
              * @secure
-             * @response `200` `NotificationTemplate` Success
+             * @response `200` `NotificationTemplate` OK
              */
             getNotificationTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2263,8 +2394,8 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/notification-templates/{id}
              * @secure
-             * @response `200` `NotificationTemplate` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `NotificationTemplate` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceNotificationTemplate: (id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2286,7 +2417,7 @@ export class Api extends HttpClient {
              * @summary Restore
              * @request POST:/api/notification-templates/{id}/restore
              * @secure
-             * @response `200` `NotificationTemplate` Success
+             * @response `200` `NotificationTemplate` OK
              */
             restoreNotificationTemplate: (id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${id}/restore`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -2297,7 +2428,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/notification-templates/{notificationId}/versions
              * @secure
-             * @response `200` `(NotificationTemplateVersion)[]` Success
+             * @response `200` `(NotificationTemplateVersion)[]` OK
              */
             getNotificationTemplateVersions: (notificationId, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2308,7 +2439,7 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/notification-templates/{notificationId}/versions
              * @secure
-             * @response `200` `NotificationTemplateVersion` Success
+             * @response `200` `NotificationTemplateVersion` OK
              */
             createNotificationTemplateVersion: (notificationId, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2319,7 +2450,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/notification-templates/{notificationId}/versions/{id}
              * @secure
-             * @response `200` `NotificationTemplateVersion` Success
+             * @response `200` `NotificationTemplateVersion` OK
              */
             getNotificationTemplateVersion: (notificationId, id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2330,7 +2461,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
              * @secure
-             * @response `200` `NotificationTemplateVersion` Success
+             * @response `200` `NotificationTemplateVersion` OK
              */
             replaceNotificationTemplateVersion: (notificationId, id, data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2341,7 +2472,7 @@ export class Api extends HttpClient {
              * @summary Delete
              * @request DELETE:/api/notification-templates/{notificationId}/versions/{id}
              * @secure
-             * @response `200` `NotificationTemplateVersion` Success
+             * @response `200` `NotificationTemplateVersion` OK
              */
             deleteNotificationTemplateVersion: (notificationId, id, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/${notificationId}/versions/${id}`, method: "DELETE", secure: true, format: "json" }, params)),
             /**
@@ -2352,7 +2483,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/partners
              * @secure
-             * @response `200` `BranchUserPaginated` Success
+             * @response `200` `BranchUserPaginated` OK
              */
             getPartners: (query, params = {}) => this.request(Object.assign({ path: `/api/partners`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2363,7 +2494,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/partners/search
              * @secure
-             * @response `200` `BranchUserPaginated` Success
+             * @response `200` `BranchUserPaginated` OK
              */
             searchPartners: (data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2374,7 +2505,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/partners/{id}
              * @secure
-             * @response `200` `BranchUser` Success
+             * @response `200` `BranchUser` OK
              */
             getPartner: (id, params = {}) => this.request(Object.assign({ path: `/api/partners/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2385,8 +2516,8 @@ export class Api extends HttpClient {
              * @summary Create Site Configuration
              * @request POST:/api/partners/{realtorId}/site-configurations
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createPartnerSiteConfiguration: (realtorId, data, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2397,7 +2528,7 @@ export class Api extends HttpClient {
              * @summary Get Site Configuration
              * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfigurationWithInherited` Success
+             * @response `200` `SiteConfigurationWithInherited` OK
              */
             getPartnerSiteConfiguration: (realtorId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2408,8 +2539,8 @@ export class Api extends HttpClient {
              * @summary Replace Site Configuration
              * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replacePartnerSiteConfiguration: (realtorId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2421,7 +2552,7 @@ export class Api extends HttpClient {
              * @request GET:/api/request-queues
              * @deprecated
              * @secure
-             * @response `200` `(RequestQueue)[]` Success
+             * @response `200` `(RequestQueue)[]` OK
              */
             getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queues`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2433,7 +2564,7 @@ export class Api extends HttpClient {
              * @request POST:/api/request-queues/{id}/run
              * @deprecated
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `void` OK
              */
             runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}/run`, method: "POST", query: query, secure: true }, params)),
             /**
@@ -2456,7 +2587,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/site-configurations/{id}
              * @secure
-             * @response `200` `SiteConfiguration` Success
+             * @response `200` `SiteConfiguration` OK
              */
             getSiteConfiguration: (id, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2468,8 +2599,8 @@ export class Api extends HttpClient {
              * @request POST:/api/site-configurations/url
              * @deprecated
              * @secure
-             * @response `200` `SiteConfigurationByUrl` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfigurationByUrl` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             searchSiteConfigurationByUrl: (data, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/url`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2480,8 +2611,8 @@ export class Api extends HttpClient {
              * @summary Get By URL
              * @request GET:/api/site-configurations
              * @secure
-             * @response `200` `SiteConfigurationByUrl` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfigurationByUrl` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getSiteConfigurationByUrl: (query, params = {}) => this.request(Object.assign({ path: `/api/site-configurations`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2493,8 +2624,8 @@ export class Api extends HttpClient {
              * @request POST:/api/site-configurations/louser
              * @deprecated
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             searchSiteConfigurationByLoanOfficerUser: (data, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/louser`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2505,8 +2636,8 @@ export class Api extends HttpClient {
              * @summary Get By Loan Officer User
              * @request GET:/api/site-configurations/louser/{loUserId}
              * @secure
-             * @response `200` `SiteConfiguration` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfiguration` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getSiteConfigurationByLoanOfficerUser: (loUserId, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/louser/${loUserId}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2517,8 +2648,8 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/site-configurations/search
              * @secure
-             * @response `200` `SiteConfigurationSummaryPaginated` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `SiteConfigurationSummaryPaginated` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             searchSiteConfigurations: (data, query, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2529,7 +2660,7 @@ export class Api extends HttpClient {
              * @summary Get Forms by Site Configuration
              * @request GET:/api/site-configurations/{id}/forms
              * @secure
-             * @response `200` `(AdminAccessGetForms)[]` Success
+             * @response `200` `(AdminAccessGetForms)[]` OK
              */
             getFormsBySiteConfiguration: (id, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/${id}/forms`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2540,7 +2671,7 @@ export class Api extends HttpClient {
              * @summary Get Saml Metadata
              * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
              * @secure
-             * @response `200` `File` Success
+             * @response `200` `File` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getSamlMetadata: (sSoIntegration, ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "GET", secure: true }, params)),
@@ -2552,7 +2683,7 @@ export class Api extends HttpClient {
              * @summary Create or Replace Saml Metadata
              * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
              * @secure
-             * @response `200` `File` Success
+             * @response `200` `File` OK
              */
             createOrReplaceSamlMetadata: (sSoIntegration, ssoIntegration, params = {}) => this.request(Object.assign({ path: `/api/site-configurations/sso/saml/${ssoIntegration}/metadata`, method: "POST", secure: true }, params)),
             /**
@@ -2563,7 +2694,7 @@ export class Api extends HttpClient {
              * @summary List all site configurations assigned to a workflow
              * @request GET:/api/workflows/{workflowId}/site-configurations
              * @secure
-             * @response `200` `(SiteConfigurationForm)[]` Success
+             * @response `200` `(SiteConfigurationForm)[]` OK
              */
             getWorkflowSiteConfigurations: (workflowId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2574,7 +2705,7 @@ export class Api extends HttpClient {
              * @summary Get the workflow-site configuration assignment by composite key
              * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
              * @secure
-             * @response `200` `SiteConfigurationForm` Success
+             * @response `200` `SiteConfigurationForm` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "GET", secure: true, format: "json" }, params)),
@@ -2588,7 +2719,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `SiteConfigurationForm` Created
              * @response `409` `ProblemDetails` Conflict
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createWorkflowSiteConfiguration: (workflowId, siteConfigurationId, params = {}) => this.request(Object.assign({ path: `/api/workflows/${workflowId}/site-configurations/${siteConfigurationId}`, method: "POST", secure: true, format: "json" }, params)),
             /**
@@ -2610,7 +2741,7 @@ export class Api extends HttpClient {
              * @summary Get By Site Configuration Slug
              * @request POST:/api/site-forms
              * @secure
-             * @response `200` `GetForm` Success
+             * @response `200` `GetForm` OK
              */
             getFormBySiteConfigurationSlug: (data, params = {}) => this.request(Object.assign({ path: `/api/site-forms`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2621,7 +2752,7 @@ export class Api extends HttpClient {
              * @summary Get by Users
              * @request GET:/api/surveys
              * @secure
-             * @response `200` `(SocialSurveyRecord)[]` Success
+             * @response `200` `(SocialSurveyRecord)[]` OK
              */
             getSurveysByUsers: (query, params = {}) => this.request(Object.assign({ path: `/api/surveys`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2632,8 +2763,8 @@ export class Api extends HttpClient {
              * @summary Get by User
              * @request POST:/api/surveys
              * @secure
-             * @response `200` `(SocialSurveyRecord)[]` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `(SocialSurveyRecord)[]` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             getSurveysByUser: (data, params = {}) => this.request(Object.assign({ path: `/api/surveys`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2644,7 +2775,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/tasks
              * @secure
-             * @response `200` `Task` Success
+             * @response `200` `Task` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getTasks: (query, params = {}) => this.request(Object.assign({ path: `/api/tasks`, method: "GET", query: query, secure: true, format: "json" }, params)),
@@ -2667,7 +2798,7 @@ export class Api extends HttpClient {
              * @summary Get By ID
              * @request GET:/api/tasks/{id}
              * @secure
-             * @response `200` `Task` Success
+             * @response `200` `Task` OK
              * @response `404` `ProblemDetails` Not Found
              */
             getTask: (id, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "GET", secure: true, format: "json" }, params)),
@@ -2679,10 +2810,10 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/tasks/{id}
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `Task` OK
              * @response `404` `ProblemDetails` Not Found
              */
-            replaceTask: (id, data, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            replaceTask: (id, data, params = {}) => this.request(Object.assign({ path: `/api/tasks/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -2703,29 +2834,208 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/tasks/search
              * @secure
-             * @response `200` `TaskPaginated` Success
+             * @response `200` `TaskPaginated` OK
              */
             searchTasks: (data, query, params = {}) => this.request(Object.assign({ path: `/api/tasks/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags TheBigPOS
-             * @name IntegrationsLosLoansLockedList
-             * @request GET:/api/integrations/los/loans/{loanID}/locked
+             * @name IntegrationsLosLoansCreate
+             * @request POST:/api/integrations/los/loans
              * @secure
-             * @response `200` `void` Success
+             * @response `200` `void` OK
              */
-            integrationsLosLoansLockedList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/locked`, method: "GET", secure: true }, params)),
+            integrationsLosLoansCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
              * No description
              *
-             * @tags TheBigPOS
-             * @name IntegrationsLosLoansBucketsList
-             * @request GET:/api/integrations/los/loans/{loanID}/buckets
+             * @tags UserDevices
+             * @name CreateUserDevice
+             * @summary Create a new user device
+             * @request POST:/api/userdevices
              * @secure
-             * @response `200` `void` Success
+             * @response `201` `UserDevice` Created
+             * @response `400` `ProblemDetails` Bad Request
              */
-            integrationsLosLoansBucketsList: (loanId, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans/${loanId}/buckets`, method: "GET", secure: true }, params)),
+            createUserDevice: (data, params = {}) => this.request(Object.assign({ path: `/api/userdevices`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDevices
+             * @name DeleteUserDevice
+             * @summary Delete user device
+             * @request DELETE:/api/userdevices/{id}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            deleteUserDevice: (id, params = {}) => this.request(Object.assign({ path: `/api/userdevices/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDraft
+             * @name GetDraftUsers
+             * @summary Get draft users
+             * @request GET:/api/loans/drafts/{draftId}/users
+             * @secure
+             * @response `200` `UserDraftPaginated` OK
+             */
+            getDraftUsers: (draftId, query, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDraft
+             * @name GetDraftUser
+             * @summary Get draft user
+             * @request GET:/api/loans/drafts/{draftId}/users/{userId}
+             * @secure
+             * @response `200` `UserDraft` OK
+             */
+            getDraftUser: (draftId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDraft
+             * @name AddDraftUsers
+             * @summary Add draft user
+             * @request POST:/api/loans/drafts/{draftId}/users/{userId}
+             * @secure
+             * @response `200` `UserDraft` OK
+             */
+            addDraftUsers: (draftId, userId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserDraft
+             * @name DeleteDraftUser
+             * @summary Delete draft user
+             * @request DELETE:/api/loans/drafts/{draftId}/users/{userId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteDraftUser: (draftId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name ListGroupScopes
+             * @summary List Group Access Scopes
+             * @request GET:/api/user-groups/{groupId}/scopes
+             * @secure
+             * @response `200` `(UserGroupAccessScope)[]` OK
+             */
+            listGroupScopes: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name CreateGroupScope
+             * @summary Create Group Access Scope
+             * @request POST:/api/user-groups/{groupId}/scopes
+             * @secure
+             * @response `200` `UserGroupAccessScope` OK
+             */
+            createGroupScope: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name RemoveGroupScope
+             * @summary Remove Group Access Scope
+             * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            removeGroupScope: (groupId, scopeId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes/${scopeId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name ListGroupMembers
+             * @summary List Group Members
+             * @request GET:/api/user-groups/{groupId}/members
+             * @secure
+             * @response `200` `(UserGroupMember)[]` OK
+             */
+            listGroupMembers: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name CreateGroupMember
+             * @summary Create Group Member
+             * @request POST:/api/user-groups/{groupId}/members
+             * @secure
+             * @response `200` `UserGroupMember` OK
+             */
+            createGroupMember: (groupId, data, query, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name RemoveGroupMember
+             * @summary Remove Group Member
+             * @request DELETE:/api/user-groups/{groupId}/members/{userId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            removeGroupMember: (groupId, userId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members/${userId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name ListUserGroups
+             * @summary List User Groups
+             * @request GET:/api/user-groups
+             * @secure
+             * @response `200` `UserGroupPaginated` OK
+             */
+            listUserGroups: (query, params = {}) => this.request(Object.assign({ path: `/api/user-groups`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name CreateUserGroup
+             * @summary Create User Group
+             * @request POST:/api/user-groups
+             * @secure
+             * @response `201` `UserGroup` Created
+             */
+            createUserGroup: (data, params = {}) => this.request(Object.assign({ path: `/api/user-groups`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name GetUserGroup
+             * @summary Get User Group by ID
+             * @request GET:/api/user-groups/{groupId}
+             * @secure
+             * @response `200` `UserGroup` OK
+             */
+            getUserGroup: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name UpdateUserGroup
+             * @summary Update User Group
+             * @request PUT:/api/user-groups/{groupId}
+             * @secure
+             * @response `200` `UserGroup` OK
+             */
+            updateUserGroup: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name DeleteUserGroup
+             * @summary Delete (soft) User Group
+             * @request DELETE:/api/user-groups/{groupId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteUserGroup: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
@@ -2736,7 +3046,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `204` `void` No Content
              * @response `404` `Error` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             requestImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/request`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2749,7 +3059,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `204` `void` No Content
              * @response `404` `Error` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             allowImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/allow`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2762,7 +3072,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `204` `void` No Content
              * @response `404` `Error` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             allowImpersonationWithGuid: (allowToken, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/allow/${allowToken}`, method: "POST", secure: true }, params)),
             /**
@@ -2774,7 +3084,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/impersonation
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             beginImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation`, method: "POST", secure: true }, params)),
             /**
@@ -2786,7 +3096,7 @@ export class Api extends HttpClient {
              * @request DELETE:/api/users/impersonation
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             stopImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation`, method: "DELETE", secure: true }, params)),
             /**
@@ -2799,7 +3109,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `204` `void` No Content
              * @response `404` `Error` Not Found
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             forceImpersonation: (data, params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/force`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2811,7 +3121,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/impersonation/extend
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             extendImpersonation: (params = {}) => this.request(Object.assign({ path: `/api/users/impersonation/extend`, method: "POST", secure: true }, params)),
             /**
@@ -2823,7 +3133,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/invites
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             inviteUser: (data, params = {}) => this.request(Object.assign({ path: `/api/users/invites`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -2847,8 +3157,8 @@ export class Api extends HttpClient {
              * @summary Verify
              * @request GET:/api/users/invites/{token}/verify
              * @secure
-             * @response `200` `Invite` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `Invite` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             verifyUserInvite: (token, params = {}) => this.request(Object.assign({ path: `/api/users/invites/${token}/verify`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2859,7 +3169,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/users/{userID}/relations
              * @secure
-             * @response `200` `(UserRelation)[]` Success
+             * @response `200` `(UserRelation)[]` OK
              */
             getUserRelations: (userId, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2881,7 +3191,7 @@ export class Api extends HttpClient {
              * @summary Get by ID
              * @request GET:/api/users/{userID}/relations/{id}
              * @secure
-             * @response `200` `UserRelation` Success
+             * @response `200` `UserRelation` OK
              */
             getUserRelation: (userId, id, params = {}) => this.request(Object.assign({ path: `/api/users/${userId}/relations/${id}`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2903,7 +3213,7 @@ export class Api extends HttpClient {
              * @summary Get All
              * @request GET:/api/users
              * @secure
-             * @response `200` `(User)[]` Success
+             * @response `200` `(User)[]` OK
              */
             getUsers: (query, params = {}) => this.request(Object.assign({ path: `/api/users`, method: "GET", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2914,8 +3224,8 @@ export class Api extends HttpClient {
              * @summary Create
              * @request POST:/api/users
              * @secure
-             * @response `200` `DetailedUser` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `DetailedUser` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             createUser: (data, params = {}) => this.request(Object.assign({ path: `/api/users`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2926,7 +3236,7 @@ export class Api extends HttpClient {
              * @summary Search
              * @request POST:/api/users/search
              * @secure
-             * @response `200` `UserPaginated` Success
+             * @response `200` `UserPaginated` OK
              */
             searchUsers: (data, query, params = {}) => this.request(Object.assign({ path: `/api/users/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2937,7 +3247,7 @@ export class Api extends HttpClient {
              * @summary Get by Email
              * @request POST:/api/users/byemail
              * @secure
-             * @response `200` `AdminAccessUser` Success
+             * @response `200` `AdminAccessUser` OK
              */
             getUserByEmail: (data, params = {}) => this.request(Object.assign({ path: `/api/users/byemail`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2948,8 +3258,8 @@ export class Api extends HttpClient {
              * @summary Sign Up
              * @request POST:/api/users/register
              * @secure
-             * @response `200` `User` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `User` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             signUp: (data, params = {}) => this.request(Object.assign({ path: `/api/users/register`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2960,8 +3270,8 @@ export class Api extends HttpClient {
              * @summary Update
              * @request PUT:/api/users/{id}
              * @secure
-             * @response `200` `DetailedUser` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `200` `DetailedUser` OK
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             replaceUser: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -2995,7 +3305,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/change-password
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             changePassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/change-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -3007,7 +3317,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/verify-password
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             verifyPassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/verify-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -3019,7 +3329,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/{id}/override-password
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             overridePassword: (id, data, params = {}) => this.request(Object.assign({ path: `/api/users/${id}/override-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -3031,7 +3341,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/forgot-password
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             forgotPassword: (data, params = {}) => this.request(Object.assign({ path: `/api/users/forgot-password`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -3043,7 +3353,7 @@ export class Api extends HttpClient {
              * @request POST:/api/users/mobile-phone/send-code
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             sendMobilePhoneVerificationCode: (params = {}) => this.request(Object.assign({ path: `/api/users/mobile-phone/send-code`, method: "POST", secure: true }, params)),
             /**
@@ -3055,7 +3365,7 @@ export class Api extends HttpClient {
              * @request PUT:/api/users/mobile-phone/verify-code
              * @secure
              * @response `204` `void` No Content
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `422` `UnprocessableEntity` Unprocessable Content
              */
             verifyUserMobilePhone: (data, params = {}) => this.request(Object.assign({ path: `/api/users/mobile-phone/verify-code`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
             /**
@@ -3066,7 +3376,7 @@ export class Api extends HttpClient {
              * @summary Get
              * @request GET:/api/users/me
              * @secure
-             * @response `200` `DetailedUser` Success
+             * @response `200` `ImpersonatedDetailedUser` OK
              */
             getMe: (params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -3077,7 +3387,7 @@ export class Api extends HttpClient {
              * @summary Replace
              * @request PUT:/api/users/me
              * @secure
-             * @response `200` `DetailedUser` Success
+             * @response `200` `DetailedUser` OK
              */
             replaceMe: (data, params = {}) => this.request(Object.assign({ path: `/api/users/me`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
@@ -3099,7 +3409,7 @@ export class Api extends HttpClient {
              * @summary Get Relationships
              * @request GET:/api/users/me/relationships
              * @secure
-             * @response `200` `(UserRelationship)[]` Success
+             * @response `200` `(UserRelationship)[]` OK
              */
             getMyRelationships: (params = {}) => this.request(Object.assign({ path: `/api/users/me/relationships`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -3110,7 +3420,7 @@ export class Api extends HttpClient {
              * @summary Get Relationship Prospects
              * @request GET:/api/users/me/relationships/prospects
              * @secure
-             * @response `200` `(UserRelationshipProspect)[]` Success
+             * @response `200` `(UserRelationshipProspect)[]` OK
              */
             getMyRelationshipProspects: (params = {}) => this.request(Object.assign({ path: `/api/users/me/relationships/prospects`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -3143,7 +3453,7 @@ export class Api extends HttpClient {
              * @summary Get Workflow
              * @request POST:/api/workflow
              * @secure
-             * @response `200` `GetForm` Success
+             * @response `200` `GetForm` OK
              */
             getWorkflow: (data, params = {}) => this.request(Object.assign({ path: `/api/workflow`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
         };
