@@ -79,6 +79,8 @@ export type LoanImportStatus =
 
 export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
 
+export type LoanAccessScopeType = "User" | "Branch";
+
 export type LOSStatus =
   | "Unknown"
   | "Pending"
@@ -264,12 +266,133 @@ export interface AdminUser {
   password: string;
 }
 
+export interface AffordabilityCalculator {
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  /** @format double */
+  monthlyTaxes: number;
+  /** @format double */
+  monthlyInsurance: number;
+  /** @format double */
+  monthlyPmi: number;
+  /** @format double */
+  monthlyTotal: number;
+  /** @format double */
+  actualFrontRatio: number;
+  /** @format double */
+  actualBackRatio: number;
+  /** @format double */
+  loanAmount: number;
+  /** @format double */
+  downPayment: number;
+  /** @format double */
+  homeValue: number;
+  amortization: Amortization;
+}
+
+export interface AffordabilityCalculatorRequest {
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  totalMonthlyIncome: number;
+  /**
+   * @format double
+   * @min 0
+   */
+  totalMonthlyExpenses: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 95
+   */
+  downPayment: number;
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 5
+   * @max 60
+   */
+  frontRatio: number;
+  /**
+   * @format double
+   * @min 5
+   * @max 80
+   */
+  backRatio: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  annualTaxes: number;
+  /**
+   * @format double
+   * @min 200
+   * @max 50000
+   */
+  annualInsurance: number;
+}
+
 export interface AllowImpersonationRequest {
   /**
    * @format email
    * @minLength 1
    */
   email: string;
+}
+
+export interface Amortization {
+  /** @format double */
+  balance: number;
+  /** @format double */
+  periodicInterest: number;
+  /** @format int32 */
+  periods: number;
+  /** @format double */
+  periodicPayment: number;
+  /** @format double */
+  totalInterest: number;
+  /** @format double */
+  totalPayment: number;
+  /** @format date-time */
+  startDate: string;
+  /** @format date-time */
+  endDate?: string | null;
+  schedule: AmortizationSchedule[];
+  /** @format int32 */
+  monthsWithPmi: number;
+}
+
+export interface AmortizationSchedule {
+  /** @format double */
+  interest: number;
+  /** @format double */
+  principal: number;
+  /** @format double */
+  balance: number;
+  /** @format date-time */
+  date: string;
+  /** @format double */
+  pmi: number;
 }
 
 export interface ApplicationRowData {
@@ -533,6 +656,14 @@ export interface CorporateSearchCriteria {
   isActive?: boolean | null;
 }
 
+export interface CreateAccessScopeRequest {
+  scopeType: "User" | "Branch";
+  /** @format uuid */
+  userId?: string | null;
+  /** @format uuid */
+  branchId?: string | null;
+}
+
 export interface CreateAccountRequest {
   /** @minLength 1 */
   name: string;
@@ -577,6 +708,24 @@ export interface CreateDocumentTemplateRequest {
   description?: string | null;
   destinationBucket?: string | null;
   status: string;
+}
+
+export interface CreateGroupMemberRequest {
+  /** @format uuid */
+  userId: string;
+  loanRole:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
 }
 
 export interface CreateInviteRequest {
@@ -632,6 +781,16 @@ export interface CreateUserDraft {
     | "TitleInsuranceAgent"
     | "EscrowAgent"
     | "SettlementAgent";
+}
+
+export interface CreateUserGroupRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @maxLength 1000 */
+  description?: string | null;
 }
 
 export interface CreateUserLoan {
@@ -1592,6 +1751,80 @@ export interface LoanComparison {
   loanLocked: boolean;
 }
 
+export interface LoanComparisonCalculator {
+  /** @format double */
+  loanAmount: number;
+  loans: LoanComparisonCalculatorLoan[];
+}
+
+export interface LoanComparisonCalculatorLoan {
+  /** @format double */
+  points: number;
+  /** @format double */
+  originationFees: number;
+  /** @format double */
+  closingCosts: number;
+  /** @format double */
+  totalClosingCosts: number;
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  amortization: Amortization;
+}
+
+export interface LoanComparisonCalculatorLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 3
+   */
+  points: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 5
+   */
+  originationFees: number;
+  /**
+   * @format double
+   * @min 500
+   * @max 100000
+   */
+  closingCosts: number;
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+}
+
+export interface LoanComparisonCalculatorRequest {
+  /**
+   * @format double
+   * @min 30000
+   */
+  loanAmount: number;
+  loans: LoanComparisonCalculatorLoanRequest[];
+}
+
 export interface LoanComparisonScenario {
   loanProgram?: string | null;
   /** @minLength 1 */
@@ -1976,6 +2209,18 @@ export interface LoanUser {
   createdAt: string;
 }
 
+export interface LosLoanCreationRequest {
+  loanOfficerUserName?: string | null;
+  loanTemplate?: string | null;
+  additionalFields: Record<string, string | null>;
+  folder?: string | null;
+  /** @format int32 */
+  borrowerPair: number;
+  applyLoanAssociation: boolean;
+  siteID?: string | null;
+  existingLoanID?: string | null;
+}
+
 export interface MdmUser {
   user_email?: string | null;
   user_id?: string | null;
@@ -2023,7 +2268,11 @@ export interface MobileSettings {
   /** @format uuid */
   id: string;
   hasMobile: boolean;
+  /** @deprecated */
   downloadLink?: string | null;
+  universalUrl?: string | null;
+  appleStoreUrl?: string | null;
+  googlePlayStoreUrl?: string | null;
 }
 
 export interface Module {
@@ -2043,6 +2292,66 @@ export interface ModuleParameterValue {
   parameterType: string;
   value?: any;
   isInherited: boolean;
+}
+
+export interface MonthlyPaymentCalculator {
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  /** @format double */
+  monthlyTaxes: number;
+  /** @format double */
+  monthlyInsurance: number;
+  /** @format double */
+  loanToValue: number;
+  /** @format double */
+  monthlyPmi: number;
+  /** @format double */
+  monthlyPayment: number;
+  amortization: Amortization;
+}
+
+export interface MonthlyPaymentCalculatorRequest {
+  /**
+   * @format double
+   * @min 30000
+   */
+  loanAmount: number;
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  annualTaxes: number;
+  /**
+   * @format double
+   * @min 200
+   * @max 50000
+   */
+  annualInsurance: number;
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
 }
 
 export interface NotificationTemplate {
@@ -2261,6 +2570,130 @@ export interface ProblemDetails {
   [key: string]: any;
 }
 
+export interface RefinanceCalculator {
+  currentLoan: RefinanceLoan;
+  refinanceLoan: RefinanceLoan;
+  /** @format double */
+  monthlyPaymentSavings: number;
+  /** @format double */
+  taxSavingsLosses: number;
+  /** @format double */
+  balanceLosses: number;
+  /** @format double */
+  totalLosses: number;
+  /** @format double */
+  totalClosingCosts: number;
+  /** @format double */
+  totalBenefit: number;
+}
+
+export interface RefinanceCalculatorRequest {
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  currentLoan: RefinanceCurrentLoanRequest;
+  refinanceLoan: RefinanceRefinanceLoanRequest;
+  taxRates: TaxRatesRequest;
+}
+
+export interface RefinanceCurrentLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 30000
+   */
+  originalLoanAmount: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 480
+   */
+  monthsPaid: number;
+}
+
+export interface RefinanceLoan {
+  /** @format double */
+  loanAmount: number;
+  /** @format double */
+  monthlyPayment: number;
+  /** @format double */
+  totalMonthlyPayments: number;
+  /** @format double */
+  balanceAtSale: number;
+  /** @format double */
+  interestPaid: number;
+  /** @format double */
+  taxSavings: number;
+  /** @format double */
+  points: number;
+  amortization: Amortization;
+}
+
+export interface RefinanceRefinanceLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 3
+   */
+  points: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 5
+   */
+  originationFees: number;
+  /**
+   * @format double
+   * @min 500
+   * @max 100000
+   */
+  closingCosts: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 30
+   */
+  yearsBeforeSale: number;
+}
+
 export interface RefreshTokenRequest {
   /** @minLength 1 */
   refreshToken: string;
@@ -2444,6 +2877,20 @@ export interface SendNotificationForLoanRequest {
   email: string;
   phone?: string | null;
   attachments: Attachment[];
+}
+
+export interface SimpleBranch {
+  /** @format uuid */
+  id: string;
+  name: string;
+  type: string;
+}
+
+export interface SimpleUser {
+  /** @format uuid */
+  id: string;
+  name?: string | null;
+  email?: string | null;
 }
 
 export interface SiteConfiguration {
@@ -3036,6 +3483,7 @@ export interface SiteConfigurationRequest {
   calendarUrl?: string | null;
   surveysUrl?: string | null;
   enabledServices: EnabledServices;
+  mobileSettings: MobileSettings;
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
@@ -3221,6 +3669,21 @@ export interface TaskUpdateRequest {
   id: string;
 }
 
+export interface TaxRatesRequest {
+  /**
+   * @format double
+   * @min 0
+   * @max 15
+   */
+  stateTaxRate: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 50
+   */
+  marginalIncomeTaxRate: number;
+}
+
 export interface TestSendNotificationForLoanRequest {
   loanData: Record<string, string>;
   /** @format uuid */
@@ -3400,6 +3863,16 @@ export interface UpdateMobilePhoneRequest {
   phone: string;
 }
 
+export interface UpdateUserGroupRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @maxLength 1000 */
+  description?: string | null;
+}
+
 export interface UpdateUserRequest {
   phone?: string | null;
   /**
@@ -3494,6 +3967,51 @@ export interface UserDraftPaginated {
   count: number;
 }
 
+export interface UserGroup {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  accountID: string;
+  name: string;
+  description?: string | null;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+}
+
+export interface UserGroupAccessScope {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  groupId: string;
+  scopeType: "User" | "Branch";
+  /** @format uuid */
+  userId?: string | null;
+  /** @format uuid */
+  branchId?: string | null;
+  user?: SimpleUser | null;
+  branch?: SimpleBranch | null;
+}
+
+export interface UserGroupMember {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  groupId: string;
+  /** @format uuid */
+  userId: string;
+  loanRole: string;
+  user: SimpleUser;
+}
+
+export interface UserGroupPaginated {
+  rows: UserGroup[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface UserLoan {
   /** @format date-time */
   createdAt: string;
@@ -3502,7 +4020,7 @@ export interface UserLoan {
   /** @format date-time */
   deletedAt?: string | null;
   loanID: string;
-  user?: User | null;
+  user: User;
   role:
     | "Borrower"
     | "CoBorrower"
@@ -3568,12 +4086,14 @@ export interface UserNotificationSettings {
   emailEnabled: boolean;
   textEnabled: boolean;
   textOptIn?: boolean | null;
+  pushEnabled: boolean;
 }
 
 export interface UserNotificationSettingsUpdateRequest {
   emailEnabled: boolean;
   textEnabled: boolean;
   textOptIn?: boolean | null;
+  pushEnabled: boolean;
 }
 
 export interface UserPaginated {
@@ -3865,7 +4385,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.21.4
+ * @version v2.22.6
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -8411,6 +8931,106 @@ export class Api<
     /**
      * No description
      *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageMonthlyPayment
+     * @summary Calculate Monthly Payment
+     * @request POST:/api/mortgage-calculators/monthly-payment
+     * @secure
+     * @response `200` `MonthlyPaymentCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageMonthlyPayment: (
+      data: MonthlyPaymentCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<MonthlyPaymentCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/monthly-payment`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageAffordability
+     * @summary Calculate Affordability
+     * @request POST:/api/mortgage-calculators/affordability
+     * @secure
+     * @response `200` `AffordabilityCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageAffordability: (
+      data: AffordabilityCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<AffordabilityCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/affordability`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageLoanComparison
+     * @summary Calculate Loan Comparison
+     * @request POST:/api/mortgage-calculators/loan-comparison
+     * @secure
+     * @response `200` `LoanComparisonCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageLoanComparison: (
+      data: LoanComparisonCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanComparisonCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/loan-comparison`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageRefinance
+     * @summary Calculate Refinance
+     * @request POST:/api/mortgage-calculators/refinance
+     * @secure
+     * @response `200` `RefinanceCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageRefinance: (
+      data: RefinanceCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<RefinanceCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/refinance`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Notifications
      * @name SendNotificationForLoan
      * @summary Send Notification for Loan
@@ -9481,6 +10101,28 @@ export class Api<
     /**
      * No description
      *
+     * @tags TheBigPOS
+     * @name IntegrationsLosLoansCreate
+     * @request POST:/api/integrations/los/loans
+     * @secure
+     * @response `200` `void` Success
+     */
+    integrationsLosLoansCreate: (
+      data: LosLoanCreationRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/integrations/los/loans`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags UserDevices
      * @name CreateUserDevice
      * @summary Create a new user device
@@ -9621,6 +10263,262 @@ export class Api<
         path: `/api/loans/drafts/${draftId}/users/${userId}`,
         method: "DELETE",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name GetGroupMembers
+     * @summary Get scopes
+     * @request GET:/api/user-groups/{groupId}/scopes
+     * @secure
+     * @response `200` `(UserGroupAccessScope)[]` Success
+     */
+    getGroupMembers: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroupAccessScope[], any>({
+        path: `/api/user-groups/${groupId}/scopes`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name CreateGroupScope
+     * @summary Create a new scope
+     * @request POST:/api/user-groups/{groupId}/scopes
+     * @secure
+     * @response `200` `UserGroupAccessScope` Success
+     */
+    createGroupScope: (
+      groupId: string,
+      data: CreateAccessScopeRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupAccessScope, any>({
+        path: `/api/user-groups/${groupId}/scopes`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name DeleteGroupScope
+     * @summary Delete a scope
+     * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteGroupScope: (
+      groupId: string,
+      scopeId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}/scopes/${scopeId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name GetGroupMembers2
+     * @summary Get Group Members
+     * @request GET:/api/user-groups/{groupId}/members
+     * @originalName getGroupMembers
+     * @duplicate
+     * @secure
+     * @response `200` `(UserGroupMember)[]` Success
+     */
+    getGroupMembers2: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroupMember[], any>({
+        path: `/api/user-groups/${groupId}/members`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name CreateGroupMember
+     * @summary Create Group Member
+     * @request POST:/api/user-groups/{groupId}/members
+     * @secure
+     * @response `200` `UserGroupMember` Success
+     */
+    createGroupMember: (
+      groupId: string,
+      data: CreateGroupMemberRequest,
+      query?: {
+        /** @format uuid */
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupMember, any>({
+        path: `/api/user-groups/${groupId}/members`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name RemoveGroupMember
+     * @summary Remove Group Member
+     * @request DELETE:/api/user-groups/{groupId}/members/{userId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    removeGroupMember: (
+      groupId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}/members/${userId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name SearchUserGroups
+     * @summary Search User Groups
+     * @request POST:/api/user-groups/search
+     * @secure
+     * @response `200` `UserGroupPaginated` Success
+     */
+    searchUserGroups: (
+      query?: {
+        searchText?: string;
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupPaginated, any>({
+        path: `/api/user-groups/search`,
+        method: "POST",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name GetUserGroup
+     * @summary Get User Group by ID
+     * @request GET:/api/user-groups/{groupId}
+     * @secure
+     * @response `200` `UserGroup` Success
+     */
+    getUserGroup: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name UpdateUserGroup
+     * @summary Update User Group
+     * @request PUT:/api/user-groups/{groupId}
+     * @secure
+     * @response `200` `UserGroup` Success
+     */
+    updateUserGroup: (
+      groupId: string,
+      data: UpdateUserGroupRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name DeleteUserGroup
+     * @summary Delete (soft) User Group
+     * @request DELETE:/api/user-groups/{groupId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteUserGroup: (groupId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name CreateUserGroup
+     * @summary Create User Group
+     * @request POST:/api/user-groups
+     * @secure
+     * @response `201` `UserGroup` Created
+     */
+    createUserGroup: (
+      data: CreateUserGroupRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.21.4
+ * @version v2.22.6
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -2283,6 +2283,54 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageMonthlyPayment
+             * @summary Calculate Monthly Payment
+             * @request POST:/api/mortgage-calculators/monthly-payment
+             * @secure
+             * @response `200` `MonthlyPaymentCalculator` Success
+             * @response `422` `ProblemDetails` Client Error
+             */
+            calculateMortgageMonthlyPayment: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/monthly-payment`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageAffordability
+             * @summary Calculate Affordability
+             * @request POST:/api/mortgage-calculators/affordability
+             * @secure
+             * @response `200` `AffordabilityCalculator` Success
+             * @response `422` `ProblemDetails` Client Error
+             */
+            calculateMortgageAffordability: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/affordability`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageLoanComparison
+             * @summary Calculate Loan Comparison
+             * @request POST:/api/mortgage-calculators/loan-comparison
+             * @secure
+             * @response `200` `LoanComparisonCalculator` Success
+             * @response `422` `ProblemDetails` Client Error
+             */
+            calculateMortgageLoanComparison: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/loan-comparison`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags MortgageCalculators
+             * @name CalculateMortgageRefinance
+             * @summary Calculate Refinance
+             * @request POST:/api/mortgage-calculators/refinance
+             * @secure
+             * @response `200` `RefinanceCalculator` Success
+             * @response `422` `ProblemDetails` Client Error
+             */
+            calculateMortgageRefinance: (data, params = {}) => this.request(Object.assign({ path: `/api/mortgage-calculators/refinance`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags Notifications
              * @name SendNotificationForLoan
              * @summary Send Notification for Loan
@@ -2792,6 +2840,16 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags TheBigPOS
+             * @name IntegrationsLosLoansCreate
+             * @request POST:/api/integrations/los/loans
+             * @secure
+             * @response `200` `void` Success
+             */
+            integrationsLosLoansCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
              * @tags UserDevices
              * @name CreateUserDevice
              * @summary Create a new user device
@@ -2857,6 +2915,129 @@ export class Api extends HttpClient {
              * @response `204` `void` No Content
              */
             deleteDraftUser: (draftId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/users/${userId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name GetGroupMembers
+             * @summary Get scopes
+             * @request GET:/api/user-groups/{groupId}/scopes
+             * @secure
+             * @response `200` `(UserGroupAccessScope)[]` Success
+             */
+            getGroupMembers: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name CreateGroupScope
+             * @summary Create a new scope
+             * @request POST:/api/user-groups/{groupId}/scopes
+             * @secure
+             * @response `200` `UserGroupAccessScope` Success
+             */
+            createGroupScope: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupAccessScopes
+             * @name DeleteGroupScope
+             * @summary Delete a scope
+             * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteGroupScope: (groupId, scopeId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes/${scopeId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name GetGroupMembers2
+             * @summary Get Group Members
+             * @request GET:/api/user-groups/{groupId}/members
+             * @originalName getGroupMembers
+             * @duplicate
+             * @secure
+             * @response `200` `(UserGroupMember)[]` Success
+             */
+            getGroupMembers2: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name CreateGroupMember
+             * @summary Create Group Member
+             * @request POST:/api/user-groups/{groupId}/members
+             * @secure
+             * @response `200` `UserGroupMember` Success
+             */
+            createGroupMember: (groupId, data, query, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroupMembers
+             * @name RemoveGroupMember
+             * @summary Remove Group Member
+             * @request DELETE:/api/user-groups/{groupId}/members/{userId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            removeGroupMember: (groupId, userId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members/${userId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name SearchUserGroups
+             * @summary Search User Groups
+             * @request POST:/api/user-groups/search
+             * @secure
+             * @response `200` `UserGroupPaginated` Success
+             */
+            searchUserGroups: (query, params = {}) => this.request(Object.assign({ path: `/api/user-groups/search`, method: "POST", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name GetUserGroup
+             * @summary Get User Group by ID
+             * @request GET:/api/user-groups/{groupId}
+             * @secure
+             * @response `200` `UserGroup` Success
+             */
+            getUserGroup: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name UpdateUserGroup
+             * @summary Update User Group
+             * @request PUT:/api/user-groups/{groupId}
+             * @secure
+             * @response `200` `UserGroup` Success
+             */
+            updateUserGroup: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name DeleteUserGroup
+             * @summary Delete (soft) User Group
+             * @request DELETE:/api/user-groups/{groupId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteUserGroup: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags UserGroups
+             * @name CreateUserGroup
+             * @summary Create User Group
+             * @request POST:/api/user-groups
+             * @secure
+             * @response `201` `UserGroup` Created
+             */
+            createUserGroup: (data, params = {}) => this.request(Object.assign({ path: `/api/user-groups`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
