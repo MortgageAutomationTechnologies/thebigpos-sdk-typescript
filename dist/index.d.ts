@@ -359,6 +359,12 @@ export interface BranchSearchCriteria {
     brands?: string[] | null;
     type?: string | null;
 }
+export interface BranchSummary {
+    /** @format uuid */
+    id: string;
+    name: string;
+    type: string;
+}
 export interface BranchUser {
     /** @format date-time */
     createdAt?: string | null;
@@ -2521,18 +2527,6 @@ export interface SendNotificationForLoanRequest {
     phone?: string | null;
     attachments: Attachment[];
 }
-export interface SimpleBranch {
-    /** @format uuid */
-    id: string;
-    name: string;
-    type: string;
-}
-export interface SimpleUser {
-    /** @format uuid */
-    id: string;
-    name?: string | null;
-    email?: string | null;
-}
 export interface SiteConfiguration {
     /** @format date-time */
     createdAt?: string | null;
@@ -3119,7 +3113,7 @@ export interface SiteConfigurationRequest {
     calendarUrl?: string | null;
     surveysUrl?: string | null;
     enabledServices: EnabledServices;
-    mobileSettings: MobileSettings;
+    mobileSettings?: MobileSettings | null;
     modules?: Module[] | null;
     /** @format uuid */
     userID?: string | null;
@@ -3553,8 +3547,6 @@ export interface UserDraftPaginated {
 export interface UserGroup {
     /** @format uuid */
     id: string;
-    /** @format uuid */
-    accountID: string;
     name: string;
     description?: string | null;
     /** @format date-time */
@@ -3572,8 +3564,8 @@ export interface UserGroupAccessScope {
     userId?: string | null;
     /** @format uuid */
     branchId?: string | null;
-    user?: SimpleUser | null;
-    branch?: SimpleBranch | null;
+    user?: UserSummary | null;
+    branch?: BranchSummary | null;
 }
 export interface UserGroupMember {
     /** @format uuid */
@@ -3583,7 +3575,7 @@ export interface UserGroupMember {
     /** @format uuid */
     userId: string;
     loanRole: string;
-    user: SimpleUser;
+    user: UserSummary;
 }
 export interface UserGroupPaginated {
     rows: UserGroup[];
@@ -3728,6 +3720,12 @@ export interface UserSearchCriteria {
     isActive?: boolean | null;
     roles?: string[] | null;
 }
+export interface UserSummary {
+    /** @format uuid */
+    id: string;
+    name?: string | null;
+    email?: string | null;
+}
 export interface VerifyPasswordRequest {
     /**
      * @format email
@@ -3804,7 +3802,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.22.6
+ * @version v2.23.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -6906,59 +6904,57 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags UserGroupAccessScopes
-         * @name GetGroupMembers
-         * @summary Get scopes
+         * @name GetUserGroupAccessScopes
+         * @summary Get All
          * @request GET:/api/user-groups/{groupId}/scopes
          * @secure
          * @response `200` `(UserGroupAccessScope)[]` Success
          */
-        getGroupMembers: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope[], any>>;
+        getUserGroupAccessScopes: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope[], any>>;
         /**
          * No description
          *
          * @tags UserGroupAccessScopes
-         * @name CreateGroupScope
+         * @name CreateUserGroupAccessScope
          * @summary Create a new scope
          * @request POST:/api/user-groups/{groupId}/scopes
          * @secure
          * @response `200` `UserGroupAccessScope` Success
          */
-        createGroupScope: (groupId: string, data: CreateAccessScopeRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope, any>>;
+        createUserGroupAccessScope: (groupId: string, data: CreateAccessScopeRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope, any>>;
         /**
          * No description
          *
          * @tags UserGroupAccessScopes
-         * @name DeleteGroupScope
+         * @name DeleteUserGroupAccessScope
          * @summary Delete a scope
          * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
          * @secure
          * @response `204` `void` No Content
          */
-        deleteGroupScope: (groupId: string, scopeId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        deleteUserGroupAccessScope: (groupId: string, scopeId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
          * @tags UserGroupMembers
-         * @name GetGroupMembers2
-         * @summary Get Group Members
+         * @name GetUserGroupMembers
+         * @summary Get All
          * @request GET:/api/user-groups/{groupId}/members
-         * @originalName getGroupMembers
-         * @duplicate
          * @secure
          * @response `200` `(UserGroupMember)[]` Success
          */
-        getGroupMembers2: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember[], any>>;
+        getUserGroupMembers: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember[], any>>;
         /**
          * No description
          *
          * @tags UserGroupMembers
-         * @name CreateGroupMember
-         * @summary Create Group Member
+         * @name CreateUserGroupMember
+         * @summary Create User Group Member
          * @request POST:/api/user-groups/{groupId}/members
          * @secure
          * @response `200` `UserGroupMember` Success
          */
-        createGroupMember: (groupId: string, data: CreateGroupMemberRequest, query?: {
+        createUserGroupMember: (groupId: string, data: CreateGroupMemberRequest, query?: {
             /** @format uuid */
             userId?: string;
         }, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember, any>>;
@@ -6966,19 +6962,19 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags UserGroupMembers
-         * @name RemoveGroupMember
-         * @summary Remove Group Member
+         * @name DeleteUserGroupMember
+         * @summary Delete User Group Member
          * @request DELETE:/api/user-groups/{groupId}/members/{userId}
          * @secure
          * @response `204` `void` No Content
          */
-        removeGroupMember: (groupId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        deleteUserGroupMember: (groupId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
          * @tags UserGroups
          * @name SearchUserGroups
-         * @summary Search User Groups
+         * @summary Get All
          * @request POST:/api/user-groups/search
          * @secure
          * @response `200` `UserGroupPaginated` Success
@@ -7019,7 +7015,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          *
          * @tags UserGroups
          * @name DeleteUserGroup
-         * @summary Delete (soft) User Group
+         * @summary Delete User Group
          * @request DELETE:/api/user-groups/{groupId}
          * @secure
          * @response `204` `void` No Content

@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.22.6
+ * @version v2.23.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -2919,76 +2919,74 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags UserGroupAccessScopes
-             * @name GetGroupMembers
-             * @summary Get scopes
+             * @name GetUserGroupAccessScopes
+             * @summary Get All
              * @request GET:/api/user-groups/{groupId}/scopes
              * @secure
              * @response `200` `(UserGroupAccessScope)[]` Success
              */
-            getGroupMembers: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "GET", secure: true, format: "json" }, params)),
+            getUserGroupAccessScopes: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserGroupAccessScopes
-             * @name CreateGroupScope
+             * @name CreateUserGroupAccessScope
              * @summary Create a new scope
              * @request POST:/api/user-groups/{groupId}/scopes
              * @secure
              * @response `200` `UserGroupAccessScope` Success
              */
-            createGroupScope: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createUserGroupAccessScope: (groupId, data, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserGroupAccessScopes
-             * @name DeleteGroupScope
+             * @name DeleteUserGroupAccessScope
              * @summary Delete a scope
              * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
              * @secure
              * @response `204` `void` No Content
              */
-            deleteGroupScope: (groupId, scopeId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes/${scopeId}`, method: "DELETE", secure: true }, params)),
+            deleteUserGroupAccessScope: (groupId, scopeId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/scopes/${scopeId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
              * @tags UserGroupMembers
-             * @name GetGroupMembers2
-             * @summary Get Group Members
+             * @name GetUserGroupMembers
+             * @summary Get All
              * @request GET:/api/user-groups/{groupId}/members
-             * @originalName getGroupMembers
-             * @duplicate
              * @secure
              * @response `200` `(UserGroupMember)[]` Success
              */
-            getGroupMembers2: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "GET", secure: true, format: "json" }, params)),
+            getUserGroupMembers: (groupId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserGroupMembers
-             * @name CreateGroupMember
-             * @summary Create Group Member
+             * @name CreateUserGroupMember
+             * @summary Create User Group Member
              * @request POST:/api/user-groups/{groupId}/members
              * @secure
              * @response `200` `UserGroupMember` Success
              */
-            createGroupMember: (groupId, data, query, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createUserGroupMember: (groupId, data, query, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
              * @tags UserGroupMembers
-             * @name RemoveGroupMember
-             * @summary Remove Group Member
+             * @name DeleteUserGroupMember
+             * @summary Delete User Group Member
              * @request DELETE:/api/user-groups/{groupId}/members/{userId}
              * @secure
              * @response `204` `void` No Content
              */
-            removeGroupMember: (groupId, userId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members/${userId}`, method: "DELETE", secure: true }, params)),
+            deleteUserGroupMember: (groupId, userId, params = {}) => this.request(Object.assign({ path: `/api/user-groups/${groupId}/members/${userId}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *
              * @tags UserGroups
              * @name SearchUserGroups
-             * @summary Search User Groups
+             * @summary Get All
              * @request POST:/api/user-groups/search
              * @secure
              * @response `200` `UserGroupPaginated` Success
@@ -3021,7 +3019,7 @@ export class Api extends HttpClient {
              *
              * @tags UserGroups
              * @name DeleteUserGroup
-             * @summary Delete (soft) User Group
+             * @summary Delete User Group
              * @request DELETE:/api/user-groups/{groupId}
              * @secure
              * @response `204` `void` No Content

@@ -481,6 +481,13 @@ export interface BranchSearchCriteria {
   type?: string | null;
 }
 
+export interface BranchSummary {
+  /** @format uuid */
+  id: string;
+  name: string;
+  type: string;
+}
+
 export interface BranchUser {
   /** @format date-time */
   createdAt?: string | null;
@@ -2879,20 +2886,6 @@ export interface SendNotificationForLoanRequest {
   attachments: Attachment[];
 }
 
-export interface SimpleBranch {
-  /** @format uuid */
-  id: string;
-  name: string;
-  type: string;
-}
-
-export interface SimpleUser {
-  /** @format uuid */
-  id: string;
-  name?: string | null;
-  email?: string | null;
-}
-
 export interface SiteConfiguration {
   /** @format date-time */
   createdAt?: string | null;
@@ -3483,7 +3476,7 @@ export interface SiteConfigurationRequest {
   calendarUrl?: string | null;
   surveysUrl?: string | null;
   enabledServices: EnabledServices;
-  mobileSettings: MobileSettings;
+  mobileSettings?: MobileSettings | null;
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
@@ -3970,8 +3963,6 @@ export interface UserDraftPaginated {
 export interface UserGroup {
   /** @format uuid */
   id: string;
-  /** @format uuid */
-  accountID: string;
   name: string;
   description?: string | null;
   /** @format date-time */
@@ -3990,8 +3981,8 @@ export interface UserGroupAccessScope {
   userId?: string | null;
   /** @format uuid */
   branchId?: string | null;
-  user?: SimpleUser | null;
-  branch?: SimpleBranch | null;
+  user?: UserSummary | null;
+  branch?: BranchSummary | null;
 }
 
 export interface UserGroupMember {
@@ -4002,7 +3993,7 @@ export interface UserGroupMember {
   /** @format uuid */
   userId: string;
   loanRole: string;
-  user: SimpleUser;
+  user: UserSummary;
 }
 
 export interface UserGroupPaginated {
@@ -4172,6 +4163,13 @@ export interface UserSearchCriteria {
   searchText?: string | null;
   isActive?: boolean | null;
   roles?: string[] | null;
+}
+
+export interface UserSummary {
+  /** @format uuid */
+  id: string;
+  name?: string | null;
+  email?: string | null;
 }
 
 export interface VerifyPasswordRequest {
@@ -4385,7 +4383,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.22.6
+ * @version v2.23.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -10270,13 +10268,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupAccessScopes
-     * @name GetGroupMembers
-     * @summary Get scopes
+     * @name GetUserGroupAccessScopes
+     * @summary Get All
      * @request GET:/api/user-groups/{groupId}/scopes
      * @secure
      * @response `200` `(UserGroupAccessScope)[]` Success
      */
-    getGroupMembers: (groupId: string, params: RequestParams = {}) =>
+    getUserGroupAccessScopes: (groupId: string, params: RequestParams = {}) =>
       this.request<UserGroupAccessScope[], any>({
         path: `/api/user-groups/${groupId}/scopes`,
         method: "GET",
@@ -10289,13 +10287,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupAccessScopes
-     * @name CreateGroupScope
+     * @name CreateUserGroupAccessScope
      * @summary Create a new scope
      * @request POST:/api/user-groups/{groupId}/scopes
      * @secure
      * @response `200` `UserGroupAccessScope` Success
      */
-    createGroupScope: (
+    createUserGroupAccessScope: (
       groupId: string,
       data: CreateAccessScopeRequest,
       params: RequestParams = {},
@@ -10314,13 +10312,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupAccessScopes
-     * @name DeleteGroupScope
+     * @name DeleteUserGroupAccessScope
      * @summary Delete a scope
      * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
      * @secure
      * @response `204` `void` No Content
      */
-    deleteGroupScope: (
+    deleteUserGroupAccessScope: (
       groupId: string,
       scopeId: string,
       params: RequestParams = {},
@@ -10336,15 +10334,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupMembers
-     * @name GetGroupMembers2
-     * @summary Get Group Members
+     * @name GetUserGroupMembers
+     * @summary Get All
      * @request GET:/api/user-groups/{groupId}/members
-     * @originalName getGroupMembers
-     * @duplicate
      * @secure
      * @response `200` `(UserGroupMember)[]` Success
      */
-    getGroupMembers2: (groupId: string, params: RequestParams = {}) =>
+    getUserGroupMembers: (groupId: string, params: RequestParams = {}) =>
       this.request<UserGroupMember[], any>({
         path: `/api/user-groups/${groupId}/members`,
         method: "GET",
@@ -10357,13 +10353,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupMembers
-     * @name CreateGroupMember
-     * @summary Create Group Member
+     * @name CreateUserGroupMember
+     * @summary Create User Group Member
      * @request POST:/api/user-groups/{groupId}/members
      * @secure
      * @response `200` `UserGroupMember` Success
      */
-    createGroupMember: (
+    createUserGroupMember: (
       groupId: string,
       data: CreateGroupMemberRequest,
       query?: {
@@ -10387,13 +10383,13 @@ export class Api<
      * No description
      *
      * @tags UserGroupMembers
-     * @name RemoveGroupMember
-     * @summary Remove Group Member
+     * @name DeleteUserGroupMember
+     * @summary Delete User Group Member
      * @request DELETE:/api/user-groups/{groupId}/members/{userId}
      * @secure
      * @response `204` `void` No Content
      */
-    removeGroupMember: (
+    deleteUserGroupMember: (
       groupId: string,
       userId: string,
       params: RequestParams = {},
@@ -10410,7 +10406,7 @@ export class Api<
      *
      * @tags UserGroups
      * @name SearchUserGroups
-     * @summary Search User Groups
+     * @summary Get All
      * @request POST:/api/user-groups/search
      * @secure
      * @response `200` `UserGroupPaginated` Success
@@ -10485,7 +10481,7 @@ export class Api<
      *
      * @tags UserGroups
      * @name DeleteUserGroup
-     * @summary Delete (soft) User Group
+     * @summary Delete User Group
      * @request DELETE:/api/user-groups/{groupId}
      * @secure
      * @response `204` `void` No Content
