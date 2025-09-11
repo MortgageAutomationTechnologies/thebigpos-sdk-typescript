@@ -70,6 +70,17 @@ export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 
 export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
 
+export type LoanImportStatus =
+  | "WaitingProcess"
+  | "InProgress"
+  | "Completed"
+  | "Failed"
+  | "Cancelled";
+
+export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
+
+export type LoanAccessScopeType = "User" | "Branch";
+
 export type LOSStatus =
   | "Unknown"
   | "Pending"
@@ -255,12 +266,133 @@ export interface AdminUser {
   password: string;
 }
 
+export interface AffordabilityCalculator {
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  /** @format double */
+  monthlyTaxes: number;
+  /** @format double */
+  monthlyInsurance: number;
+  /** @format double */
+  monthlyPmi: number;
+  /** @format double */
+  monthlyTotal: number;
+  /** @format double */
+  actualFrontRatio: number;
+  /** @format double */
+  actualBackRatio: number;
+  /** @format double */
+  loanAmount: number;
+  /** @format double */
+  downPayment: number;
+  /** @format double */
+  homeValue: number;
+  amortization: Amortization;
+}
+
+export interface AffordabilityCalculatorRequest {
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  totalMonthlyIncome: number;
+  /**
+   * @format double
+   * @min 0
+   */
+  totalMonthlyExpenses: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 95
+   */
+  downPayment: number;
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 5
+   * @max 60
+   */
+  frontRatio: number;
+  /**
+   * @format double
+   * @min 5
+   * @max 80
+   */
+  backRatio: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  annualTaxes: number;
+  /**
+   * @format double
+   * @min 200
+   * @max 50000
+   */
+  annualInsurance: number;
+}
+
 export interface AllowImpersonationRequest {
   /**
    * @format email
    * @minLength 1
    */
   email: string;
+}
+
+export interface Amortization {
+  /** @format double */
+  balance: number;
+  /** @format double */
+  periodicInterest: number;
+  /** @format int32 */
+  periods: number;
+  /** @format double */
+  periodicPayment: number;
+  /** @format double */
+  totalInterest: number;
+  /** @format double */
+  totalPayment: number;
+  /** @format date-time */
+  startDate: string;
+  /** @format date-time */
+  endDate?: string | null;
+  schedule: AmortizationSchedule[];
+  /** @format int32 */
+  monthsWithPmi: number;
+}
+
+export interface AmortizationSchedule {
+  /** @format double */
+  interest: number;
+  /** @format double */
+  principal: number;
+  /** @format double */
+  balance: number;
+  /** @format date-time */
+  date: string;
+  /** @format double */
+  pmi: number;
 }
 
 export interface ApplicationRowData {
@@ -347,6 +479,13 @@ export interface BranchSearchCriteria {
   isActive?: boolean | null;
   brands?: string[] | null;
   type?: string | null;
+}
+
+export interface BranchSummary {
+  /** @format uuid */
+  id: string;
+  name: string;
+  type: string;
 }
 
 export interface BranchUser {
@@ -471,32 +610,10 @@ export interface ConditionComment {
   createdByName: string;
 }
 
-export interface Contact {
-  /** @format uuid */
-  id: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  name?: string | null;
-  email?: string | null;
-}
-
 export interface ContactInfo {
   phone: string;
   tollFreePhone?: string | null;
   fax?: string | null;
-}
-
-export interface ContactRowData {
-  companyName?: string | null;
-  name?: string | null;
-  license?: string | null;
-  address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zip?: string | null;
-  phone?: string | null;
-  cell?: string | null;
-  email?: string | null;
 }
 
 export interface Corporate {
@@ -546,6 +663,14 @@ export interface CorporateSearchCriteria {
   isActive?: boolean | null;
 }
 
+export interface CreateAccessScopeRequest {
+  scopeType: "User" | "Branch";
+  /** @format uuid */
+  userId?: string | null;
+  /** @format uuid */
+  branchId?: string | null;
+}
+
 export interface CreateAccountRequest {
   /** @minLength 1 */
   name: string;
@@ -592,6 +717,24 @@ export interface CreateDocumentTemplateRequest {
   status: string;
 }
 
+export interface CreateGroupMemberRequest {
+  /** @format uuid */
+  userId: string;
+  loanRole:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
+}
+
 export interface CreateInviteRequest {
   /** @minLength 1 */
   firstName: string;
@@ -608,6 +751,56 @@ export interface CreateInviteRequest {
   siteConfigurationID: string;
   /** @deprecated */
   userRole?: UserRole | null;
+  loanRole?: LoanRole | null;
+}
+
+export interface CreateLoanImportRequest {
+  /** @format uuid */
+  accountID: string;
+  /**
+   * @format date-time
+   * @minLength 1
+   */
+  endDate: string;
+  /**
+   * @format date-time
+   * @minLength 1
+   */
+  startDate: string;
+  importMode: "All" | "NewOnly" | "UpdateOnly";
+}
+
+export interface CreateUserDeviceRequest {
+  token: string;
+}
+
+export interface CreateUserDraft {
+  loanRole:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
+}
+
+export interface CreateUserGroupRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @maxLength 1000 */
+  description?: string | null;
+}
+
+export interface CreateUserLoan {
   loanRole?: LoanRole | null;
 }
 
@@ -754,11 +947,11 @@ export interface DocumentData {
   documentID: string;
   /** @format uuid */
   eSignRecordID: string;
-  documentBucketTitle: string;
-  documentName: string;
+  documentBucketTitle?: string | null;
+  documentName?: string | null;
   /** @format date-time */
   createdAt: string;
-  extension: string;
+  extension?: string | null;
   password: string;
   systemGenerated: boolean;
 }
@@ -980,67 +1173,6 @@ export interface EncompassContact {
 
 export interface Error {
   message: string;
-}
-
-export interface ExtendedLoan {
-  /** @format uuid */
-  id: string;
-  loanID: string;
-  loanNumber?: string | null;
-  /** @format date-time */
-  initialDisclosureProvidedDate?: string | null;
-  /** @format date-time */
-  closingDisclosureSentDate?: string | null;
-  /** @format date-time */
-  underwritingApprovalDate?: string | null;
-  /** @format date-time */
-  closingDate?: string | null;
-  /** @format date-time */
-  fundingOrderDate?: string | null;
-  /** @format date-time */
-  currentStatusDate?: string | null;
-  loanChannel?: string | null;
-  /** @format double */
-  totalLoanAmount?: number | null;
-  currentLoanStatus?: string | null;
-  currentMilestone?: string | null;
-  lastCompletedMilestone?: string | null;
-  /** @format date-time */
-  startDate?: string | null;
-  isInSync: boolean;
-  /** @format date-time */
-  syncDate?: string | null;
-  excludeFromAutoTaskReminders?: boolean | null;
-  fileStarter?: string | null;
-  isPOSLoan?: boolean | null;
-  referenceID: string;
-  /** @format int32 */
-  term?: number | null;
-  loanProgram?: string | null;
-  loanType?: string | null;
-  status?: string | null;
-  loanOfficer?: LoanOfficer | null;
-  propertyAddress?: Address | null;
-  loanSettings?: LoanSettings | null;
-  loanLogs: LoanLog[];
-  isLocked: boolean;
-  isLockedFromEditing: boolean;
-  source?: string | null;
-  userLoans: UserLoan[];
-  contacts: LoanContact[];
-  buyerAgentContact?: Contact | null;
-  sellerAgentContact?: Contact | null;
-  escrowAgentContact?: Contact | null;
-  titleInsuranceAgentContact?: Contact | null;
-  settlementAgentContact?: Contact | null;
-  loanProcessorContact?: Contact | null;
-}
-
-export interface ExtendedLoanPaginated {
-  rows: ExtendedLoan[];
-  pagination: Pagination;
-  /** @format int64 */
-  count: number;
 }
 
 export interface File {
@@ -1271,7 +1403,7 @@ export interface FusionReportFilter {
 
 export interface GenerateDocumentRequest {
   /** @deprecated */
-  loanID: string;
+  loanID?: string | null;
   /**
    * @format uuid
    * @minLength 1
@@ -1280,9 +1412,8 @@ export interface GenerateDocumentRequest {
   /**
    * @deprecated
    * @format uuid
-   * @minLength 1
    */
-  siteConfigurationID: string;
+  siteConfigurationID?: string | null;
   preview: boolean;
   recipients: string[];
 }
@@ -1387,6 +1518,35 @@ export interface GetWorkflowRequest {
 
 export type IContractResolver = object;
 
+export interface ImpersonatedDetailedUser {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  title?: string | null;
+  forcePasswordReset: boolean;
+  mfaEnabled: boolean;
+  phoneVerified: boolean;
+  /** @format int32 */
+  loginsWithoutMFACount: number;
+  canImpersonate: boolean;
+  loanIDs: string[];
+  drafts: Draft[];
+  notificationSettings?: UserNotificationSettings | null;
+  /** @deprecated */
+  impersonatedBy?: string | null;
+  impersonatingUser?: User | null;
+}
+
 export interface ImportUserLoanTaskRequest {
   /**
    * @format uuid
@@ -1438,6 +1598,7 @@ export interface LOSSettings {
   correspondentLoanClosingDateFieldID: string;
   customEConsentBucketTitle?: string | null;
   loanMilestoneNotificationsEnabled: boolean;
+  useLocalPipeline: boolean;
 }
 
 export interface LOSSettingsUpdateRequest {
@@ -1597,6 +1758,80 @@ export interface LoanComparison {
   loanLocked: boolean;
 }
 
+export interface LoanComparisonCalculator {
+  /** @format double */
+  loanAmount: number;
+  loans: LoanComparisonCalculatorLoan[];
+}
+
+export interface LoanComparisonCalculatorLoan {
+  /** @format double */
+  points: number;
+  /** @format double */
+  originationFees: number;
+  /** @format double */
+  closingCosts: number;
+  /** @format double */
+  totalClosingCosts: number;
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  amortization: Amortization;
+}
+
+export interface LoanComparisonCalculatorLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 3
+   */
+  points: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 5
+   */
+  originationFees: number;
+  /**
+   * @format double
+   * @min 500
+   * @max 100000
+   */
+  closingCosts: number;
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+}
+
+export interface LoanComparisonCalculatorRequest {
+  /**
+   * @format double
+   * @min 30000
+   */
+  loanAmount: number;
+  loans: LoanComparisonCalculatorLoanRequest[];
+}
+
 export interface LoanComparisonScenario {
   loanProgram?: string | null;
   /** @minLength 1 */
@@ -1669,6 +1904,18 @@ export interface LoanContact {
     | "SettlementAgent";
 }
 
+export interface LoanContactList {
+  email: string;
+}
+
+export interface LoanCreateRequest {
+  /**
+   * @format uuid
+   * @minLength 1
+   */
+  draftId: string;
+}
+
 export interface LoanDocument {
   /** @format date-time */
   createdAt: string;
@@ -1688,6 +1935,40 @@ export interface LoanDocument {
   failoverDocumentPath?: string | null;
 }
 
+export interface LoanDocumentSearch {
+  /** @format date-time */
+  createdAt?: string | null;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
+  /** @format uuid */
+  id: string;
+  name: string;
+  loanID?: string | null;
+  userID?: string | null;
+  initialBucket?: string | null;
+  losDocumentID?: string | null;
+  losStatus: string;
+  contents?: string | null;
+  failoverDocumentPath?: string | null;
+}
+
+export interface LoanDocumentSearchCriteria {
+  searchText?: string | null;
+  bucket?: string | null;
+  /** @format uuid */
+  userID?: string | null;
+  documentIDs?: string[] | null;
+}
+
+export interface LoanDocumentSearchPaginated {
+  rows: LoanDocumentSearch[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface LoanDraftSearchCriteria {
   searchText?: string | null;
   /** @format uuid */
@@ -1695,6 +1976,76 @@ export interface LoanDraftSearchCriteria {
   /** @format uuid */
   siteConfigurationId?: string | null;
   isUnassigned?: boolean | null;
+}
+
+export interface LoanImport {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  accountID: string;
+  /** @format date-time */
+  endDate: string;
+  /** @format date-time */
+  startDate: string;
+  /** @format int32 */
+  attemptCount: number;
+  /** @format int32 */
+  importedCount: number;
+  statusMessage?: string | null;
+  status:
+    | "WaitingProcess"
+    | "InProgress"
+    | "Completed"
+    | "Failed"
+    | "Cancelled";
+  importMode: "All" | "NewOnly" | "UpdateOnly";
+  /** @format date-time */
+  createdAt?: string | null;
+}
+
+export interface LoanImportLog {
+  level: "None" | "Info" | "Warning" | "Error";
+  message: string;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface LoanImportLogPaginated {
+  rows: LoanImportLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface LoanImportPaginated {
+  rows: LoanImport[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface LoanList {
+  /** @format uuid */
+  id: string;
+  status?: string | null;
+  loanID?: string | null;
+  loanNumber?: string | null;
+  /** @format double */
+  totalLoanAmount?: number | null;
+  /** @format date-time */
+  startDate?: string | null;
+  propertyAddress?: Address | null;
+  loanOfficer?: LoanOfficerList | null;
+  buyerAgentContact?: LoanContactList | null;
+  sellerAgentContact?: LoanContactList | null;
+  userLoans: UserLoan[];
+}
+
+export interface LoanListPaginated {
+  rows: LoanList[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface LoanLog {
@@ -1707,6 +2058,19 @@ export interface LoanLog {
   createdAt: string;
 }
 
+export interface LoanLogPaginated {
+  rows: LoanLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface LoanLogSearchCriteria {
+  searchText?: string | null;
+  types?: LoanLogType[] | null;
+  levels?: LogLevel[] | null;
+}
+
 export interface LoanOfficer {
   /** @format uuid */
   id: string;
@@ -1717,6 +2081,10 @@ export interface LoanOfficer {
   nmlsid: string;
   profilePhotoUrl: string;
   siteConfiguration: SiteConfiguration;
+}
+
+export interface LoanOfficerList {
+  name?: string | null;
 }
 
 export interface LoanOfficerPublic {
@@ -1848,6 +2216,18 @@ export interface LoanUser {
   createdAt: string;
 }
 
+export interface LosLoanCreationRequest {
+  loanOfficerUserName?: string | null;
+  loanTemplate?: string | null;
+  additionalFields: Record<string, string | null>;
+  folder?: string | null;
+  /** @format int32 */
+  borrowerPair: number;
+  applyLoanAssociation: boolean;
+  siteID?: string | null;
+  existingLoanID?: string | null;
+}
+
 export interface MdmUser {
   user_email?: string | null;
   user_id?: string | null;
@@ -1891,6 +2271,17 @@ export interface MilestoneConfigurationRequest {
   notificationsEnabled: boolean;
 }
 
+export interface MobileSettings {
+  /** @format uuid */
+  id: string;
+  hasMobile: boolean;
+  /** @deprecated */
+  downloadLink?: string | null;
+  universalUrl?: string | null;
+  appleStoreUrl?: string | null;
+  googlePlayStoreUrl?: string | null;
+}
+
 export interface Module {
   /** @format uuid */
   id: string;
@@ -1908,6 +2299,66 @@ export interface ModuleParameterValue {
   parameterType: string;
   value?: any;
   isInherited: boolean;
+}
+
+export interface MonthlyPaymentCalculator {
+  /** @format double */
+  monthlyPrincipalAndInterest: number;
+  /** @format double */
+  monthlyTaxes: number;
+  /** @format double */
+  monthlyInsurance: number;
+  /** @format double */
+  loanToValue: number;
+  /** @format double */
+  monthlyPmi: number;
+  /** @format double */
+  monthlyPayment: number;
+  amortization: Amortization;
+}
+
+export interface MonthlyPaymentCalculatorRequest {
+  /**
+   * @format double
+   * @min 30000
+   */
+  loanAmount: number;
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 200000
+   */
+  annualTaxes: number;
+  /**
+   * @format double
+   * @min 200
+   * @max 50000
+   */
+  annualInsurance: number;
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
 }
 
 export interface NotificationTemplate {
@@ -1928,7 +2379,7 @@ export interface NotificationTemplate {
   pushNotificationEnabled: boolean;
   emailEnabled: boolean;
   textBody?: string | null;
-  pushNotificationBody: string;
+  pushNotificationBody?: string | null;
   isDefault: boolean;
   status: string;
   useDefaultHeaderAndFooter: boolean;
@@ -1953,7 +2404,7 @@ export interface NotificationTemplateBase {
   pushNotificationEnabled: boolean;
   emailEnabled: boolean;
   textBody?: string | null;
-  pushNotificationBody: string;
+  pushNotificationBody?: string | null;
   isDefault: boolean;
   status: string;
   useDefaultHeaderAndFooter: boolean;
@@ -1972,7 +2423,7 @@ export interface NotificationTemplateRequest {
   pushNotificationEnabled: boolean;
   emailEnabled: boolean;
   textBody?: string | null;
-  pushNotificationBody: string;
+  pushNotificationBody?: string | null;
   status: string;
   useDefaultHeaderAndFooter: boolean;
 }
@@ -1993,6 +2444,7 @@ export interface NotificationTemplateVersion {
   htmlBody: string;
   plainBody: string;
   textBody?: string | null;
+  pushNotificationBody?: string | null;
   notificationTemplate: NotificationTemplate;
 }
 
@@ -2012,6 +2464,7 @@ export interface NotificationTemplateVersionBase {
   htmlBody: string;
   plainBody: string;
   textBody?: string | null;
+  pushNotificationBody?: string | null;
 }
 
 export interface NotificationTemplateVersionRequest {
@@ -2021,6 +2474,7 @@ export interface NotificationTemplateVersionRequest {
   htmlBody: string;
   plainBody: string;
   textBody?: string | null;
+  pushNotificationBody?: string | null;
 }
 
 export interface NotificationTemplateVersionUpdateRequest {
@@ -2035,6 +2489,7 @@ export interface NotificationTemplateVersionUpdateRequest {
   /** @minLength 1 */
   plainBody: string;
   textBody?: string | null;
+  pushNotificationBody?: string | null;
 }
 
 export interface Operation {
@@ -2122,12 +2577,137 @@ export interface ProblemDetails {
   [key: string]: any;
 }
 
+export interface RefinanceCalculator {
+  currentLoan: RefinanceLoan;
+  refinanceLoan: RefinanceLoan;
+  /** @format double */
+  monthlyPaymentSavings: number;
+  /** @format double */
+  taxSavingsLosses: number;
+  /** @format double */
+  balanceLosses: number;
+  /** @format double */
+  totalLosses: number;
+  /** @format double */
+  totalClosingCosts: number;
+  /** @format double */
+  totalBenefit: number;
+}
+
+export interface RefinanceCalculatorRequest {
+  /**
+   * @format double
+   * @min 25000
+   * @max 10000000
+   */
+  homeValue: number;
+  currentLoan: RefinanceCurrentLoanRequest;
+  refinanceLoan: RefinanceRefinanceLoanRequest;
+  taxRates: TaxRatesRequest;
+}
+
+export interface RefinanceCurrentLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 30000
+   */
+  originalLoanAmount: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 480
+   */
+  monthsPaid: number;
+}
+
+export interface RefinanceLoan {
+  /** @format double */
+  loanAmount: number;
+  /** @format double */
+  monthlyPayment: number;
+  /** @format double */
+  totalMonthlyPayments: number;
+  /** @format double */
+  balanceAtSale: number;
+  /** @format double */
+  interestPaid: number;
+  /** @format double */
+  taxSavings: number;
+  /** @format double */
+  points: number;
+  amortization: Amortization;
+}
+
+export interface RefinanceRefinanceLoanRequest {
+  /**
+   * @format double
+   * @min 1
+   * @max 25
+   */
+  interestRate: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 40
+   */
+  term: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 10
+   */
+  pmi: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 3
+   */
+  points: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 5
+   */
+  originationFees: number;
+  /**
+   * @format double
+   * @min 500
+   * @max 100000
+   */
+  closingCosts: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 30
+   */
+  yearsBeforeSale: number;
+}
+
 export interface RefreshTokenRequest {
   /** @minLength 1 */
   refreshToken: string;
-  /** @minLength 1 */
-  username: string;
-  /** @format uuid */
+  /**
+   * @deprecated
+   * @format uuid
+   */
   siteConfigurationId?: string | null;
 }
 
@@ -2287,6 +2867,12 @@ export interface SendForgotPasswordRequest {
   email: string;
 }
 
+export interface SendLoanDocumentsRequest {
+  documentIDs: string[];
+  loanUserIDs: string[];
+  emailAddresses: string[];
+}
+
 export interface SendNotificationForLoanRequest {
   /** @minLength 1 */
   loanID: string;
@@ -2346,6 +2932,7 @@ export interface SiteConfiguration {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2489,7 +3076,9 @@ export interface SiteConfiguration {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
+  mobileSettings: MobileSettings;
+  losSettings?: LOSSettings | null;
 }
 
 export interface SiteConfigurationByUrl {
@@ -2538,6 +3127,7 @@ export interface SiteConfigurationByUrl {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2681,7 +3271,9 @@ export interface SiteConfigurationByUrl {
   user?: UserPublic | null;
   asoSettings?: ASOSettings | null;
   accountSettings: AccountSettings;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
+  mobileSettings: MobileSettings;
+  losSettings?: LOSSettings | null;
   workflows: Workflow[];
 }
 
@@ -2761,6 +3353,7 @@ export interface SiteConfigurationRequest {
   twitterUrl?: string | null;
   instagramUrl?: string | null;
   linkedInUrl?: string | null;
+  youTubeUrl?: string | null;
   licenses: string[];
   contactUsUrl?: string | null;
   licenseInfoUrl?: string | null;
@@ -2883,10 +3476,11 @@ export interface SiteConfigurationRequest {
   calendarUrl?: string | null;
   surveysUrl?: string | null;
   enabledServices: EnabledServices;
+  mobileSettings?: MobileSettings | null;
   modules?: Module[] | null;
   /** @format uuid */
   userID?: string | null;
-  autoTaskReminderIntervalsInDays: number[];
+  autoTaskReminderIntervalsInDays?: number[] | null;
 }
 
 export interface SiteConfigurationSearchCriteria {
@@ -3068,6 +3662,21 @@ export interface TaskUpdateRequest {
   id: string;
 }
 
+export interface TaxRatesRequest {
+  /**
+   * @format double
+   * @min 0
+   * @max 15
+   */
+  stateTaxRate: number;
+  /**
+   * @format double
+   * @min 0
+   * @max 50
+   */
+  marginalIncomeTaxRate: number;
+}
+
 export interface TestSendNotificationForLoanRequest {
   loanData: Record<string, string>;
   /** @format uuid */
@@ -3247,6 +3856,16 @@ export interface UpdateMobilePhoneRequest {
   phone: string;
 }
 
+export interface UpdateUserGroupRequest {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @maxLength 1000 */
+  description?: string | null;
+}
+
 export interface UpdateUserRequest {
   phone?: string | null;
   /**
@@ -3303,6 +3922,87 @@ export interface UserBase {
   email: string;
 }
 
+export interface UserDevice {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  userID: string;
+  token: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  deletedAt?: string | null;
+}
+
+export interface UserDraft {
+  /** @format uuid */
+  draftID: string;
+  role:
+    | "Borrower"
+    | "CoBorrower"
+    | "NonBorrower"
+    | "LoanOfficer"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "SupportingLoanOfficer"
+    | "BuyerAgent"
+    | "SellerAgent"
+    | "TitleInsuranceAgent"
+    | "EscrowAgent"
+    | "SettlementAgent";
+  user: User;
+}
+
+export interface UserDraftPaginated {
+  rows: UserDraft[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
+export interface UserGroup {
+  /** @format uuid */
+  id: string;
+  name: string;
+  description?: string | null;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+}
+
+export interface UserGroupAccessScope {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  groupId: string;
+  scopeType: "User" | "Branch";
+  /** @format uuid */
+  userId?: string | null;
+  /** @format uuid */
+  branchId?: string | null;
+  user?: UserSummary | null;
+  branch?: BranchSummary | null;
+}
+
+export interface UserGroupMember {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  groupId: string;
+  /** @format uuid */
+  userId: string;
+  loanRole: string;
+  user: UserSummary;
+}
+
+export interface UserGroupPaginated {
+  rows: UserGroup[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
+}
+
 export interface UserLoan {
   /** @format date-time */
   createdAt: string;
@@ -3311,7 +4011,7 @@ export interface UserLoan {
   /** @format date-time */
   deletedAt?: string | null;
   loanID: string;
-  user?: User | null;
+  user: User;
   role:
     | "Borrower"
     | "CoBorrower"
@@ -3377,12 +4077,14 @@ export interface UserNotificationSettings {
   emailEnabled: boolean;
   textEnabled: boolean;
   textOptIn?: boolean | null;
+  pushEnabled: boolean;
 }
 
 export interface UserNotificationSettingsUpdateRequest {
   emailEnabled: boolean;
   textEnabled: boolean;
   textOptIn?: boolean | null;
+  pushEnabled: boolean;
 }
 
 export interface UserPaginated {
@@ -3461,6 +4163,24 @@ export interface UserSearchCriteria {
   searchText?: string | null;
   isActive?: boolean | null;
   roles?: string[] | null;
+}
+
+export interface UserSummary {
+  /** @format uuid */
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role:
+    | "Borrower"
+    | "LoanOfficer"
+    | "Admin"
+    | "SuperAdmin"
+    | "Realtor"
+    | "SettlementAgent"
+    | "LoanProcessor"
+    | "LoanOfficerAssistant"
+    | "BranchManager"
+    | "SystemAdmin";
 }
 
 export interface VerifyPasswordRequest {
@@ -3674,7 +4394,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.18.5
+ * @version v2.23.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5837,7 +6557,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -5873,6 +6593,7 @@ export class Api<
      * @secure
      * @response `200` `string` Success
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoan: (data: any, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
@@ -5895,18 +6616,10 @@ export class Api<
      * @secure
      * @response `200` `(DocumentData)[]` Success
      */
-    getTaskDocumentsByLoan: (
-      loanId: string,
-      query?: {
-        /** @default true */
-        includeBase64?: boolean;
-      },
-      params: RequestParams = {},
-    ) =>
+    getTaskDocumentsByLoan: (loanId: string, params: RequestParams = {}) =>
       this.request<DocumentData[], any>({
         path: `/api/los/loan/tasks/documents/${loanId}`,
         method: "GET",
-        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -5954,25 +6667,6 @@ export class Api<
         path: `/api/los/loan/recipients/${loanId}`,
         method: "GET",
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LegacyLoan
-     * @name GetLoanContactInformation
-     * @summary Get Contact Information
-     * @request GET:/api/los/loan/contacts/{loanID}
-     * @secure
-     * @response `200` `Record<string,ContactRowData>` Success
-     */
-    getLoanContactInformation: (loanId: string, params: RequestParams = {}) =>
-      this.request<Record<string, ContactRowData>, any>({
-        path: `/api/los/loan/contacts/${loanId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
         ...params,
       }),
 
@@ -6119,7 +6813,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6199,7 +6893,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -6486,6 +7180,7 @@ export class Api<
      * @secure
      * @response `200` `RunLOCalculation` Success
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     runLoanCalculator: (
       loanId: string,
@@ -6531,6 +7226,7 @@ export class Api<
      * @secure
      * @response `201` `LoanComparisonScenario` Created
      * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
      */
     createLoanComparison: (
       loanId: string,
@@ -6672,6 +7368,40 @@ export class Api<
      * No description
      *
      * @tags LoanDocuments
+     * @name SearchLoanDocuments
+     * @summary Search loan documents
+     * @request POST:/api/loans/{loanId}/documents/search
+     * @secure
+     * @response `200` `LoanDocumentSearchPaginated` Success
+     */
+    searchLoanDocuments: (
+      loanId: string,
+      data: LoanDocumentSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanDocumentSearchPaginated, any>({
+        path: `/api/loans/${loanId}/documents/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDocuments
      * @name DownloadLoanDocument
      * @summary Download By ID
      * @request GET:/api/loans/{loanId}/documents/{documentId}/download
@@ -6771,6 +7501,32 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanDocuments
+     * @name SendLoanDocuments
+     * @summary Send existing documents to loan users or external emails
+     * @request POST:/api/loans/{loanId}/documents/distribute
+     * @secure
+     * @response `200` `void` Success
+     * @response `400` `ProblemDetails` Bad Request
+     * @response `404` `ProblemDetails` Not Found
+     */
+    sendLoanDocuments: (
+      loanId: string,
+      data: SendLoanDocumentsRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/${loanId}/documents/distribute`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -6937,6 +7693,112 @@ export class Api<
     /**
      * No description
      *
+     * @tags LoanImport
+     * @name GetLoanImports
+     * @summary Get Loan Imports
+     * @request GET:/api/loan-imports
+     * @secure
+     * @response `200` `LoanImportPaginated` Success
+     */
+    getLoanImports: (
+      query?: {
+        status?: LoanImportStatus;
+        searchText?: string;
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImportPaginated, any>({
+        path: `/api/loan-imports`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name CreateLoanImport
+     * @summary Create Loan Import
+     * @request POST:/api/loan-imports
+     * @secure
+     * @response `201` `LoanImport` Created
+     */
+    createLoanImport: (
+      data: CreateLoanImportRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImport, any>({
+        path: `/api/loan-imports`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name GetLoanImport
+     * @summary Get Loan Import
+     * @request GET:/api/loan-imports/{id}
+     * @secure
+     * @response `200` `LoanImport` Success
+     */
+    getLoanImport: (id: string, params: RequestParams = {}) =>
+      this.request<LoanImport, any>({
+        path: `/api/loan-imports/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanImport
+     * @name GetLoanImportLogs
+     * @summary Get Loan Import Logs
+     * @request GET:/api/loan-imports/{id}/logs
+     * @secure
+     * @response `200` `LoanImportLogPaginated` Success
+     */
+    getLoanImportLogs: (
+      id: string,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanImportLogPaginated, any>({
+        path: `/api/loan-imports/${id}/logs`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanInvites
      * @name GetLoanInvites
      * @summary Get Invites
@@ -6973,6 +7835,40 @@ export class Api<
       this.request<Invite[], ProblemDetails>({
         path: `/api/loans/${loanId}/invites`,
         method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanLogs
+     * @name SearchLoanLogs
+     * @summary Search loan logs
+     * @request POST:/api/loans/{loanId}/logs/search
+     * @secure
+     * @response `200` `LoanLogPaginated` Success
+     */
+    searchLoanLogs: (
+      loanId: string,
+      data: LoanLogSearchCriteria,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanLogPaginated, any>({
+        path: `/api/loans/${loanId}/logs/search`,
+        method: "POST",
+        query: query,
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -7057,25 +7953,6 @@ export class Api<
     getLoanOfficer: (id: string, params: RequestParams = {}) =>
       this.request<BranchUser, any>({
         path: `/api/loan-officers/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags LoanOfficers
-     * @name GetLoanOfficerLoans
-     * @summary Get Loans
-     * @request GET:/api/loan-officers/applications
-     * @secure
-     * @response `200` `GetApplications` Success
-     */
-    getLoanOfficerLoans: (params: RequestParams = {}) =>
-      this.request<GetApplications, any>({
-        path: `/api/loan-officers/applications`,
         method: "GET",
         secure: true,
         format: "json",
@@ -7283,6 +8160,31 @@ export class Api<
      * No description
      *
      * @tags Loans
+     * @name CreateLoanByDraftId
+     * @summary Create Loan by DraftId
+     * @request POST:/api/loans
+     * @secure
+     * @response `200` `string` Success
+     * @response `422` `UnprocessableEntity` Client Error
+     */
+    createLoanByDraftId: (
+      data: LoanCreateRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<string, UnprocessableEntity>({
+        path: `/api/loans`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Loans
      * @name GetLoans
      * @summary Get Loans
      * @request GET:/api/loans
@@ -7359,7 +8261,7 @@ export class Api<
      * @summary Search
      * @request POST:/api/loans/search
      * @secure
-     * @response `200` `ExtendedLoanPaginated` Success
+     * @response `200` `LoanListPaginated` Success
      */
     searchLoans: (
       data: LoanSearchCriteria,
@@ -7373,7 +8275,7 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<ExtendedLoanPaginated, any>({
+      this.request<LoanListPaginated, any>({
         path: `/api/loans/search`,
         method: "POST",
         query: query,
@@ -7423,7 +8325,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -7864,10 +8766,40 @@ export class Api<
      * @secure
      * @response `201` `LoanUser` Created
      */
-    addLoanUser: (loanId: string, userId: string, params: RequestParams = {}) =>
+    addLoanUser: (
+      loanId: string,
+      userId: string,
+      data: CreateUserLoan,
+      params: RequestParams = {},
+    ) =>
       this.request<LoanUser, any>({
         path: `/api/loans/${loanId}/users/${userId}`,
         method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LoanUsers
+     * @name RemoveLoanUser
+     * @summary Remove User from Loan
+     * @request DELETE:/api/loans/{loanId}/users/{userId}
+     * @secure
+     * @response `204` `LoanUser` No Content
+     */
+    removeLoanUser: (
+      loanId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanUser, any>({
+        path: `/api/loans/${loanId}/users/${userId}`,
+        method: "DELETE",
         secure: true,
         format: "json",
         ...params,
@@ -8002,6 +8934,106 @@ export class Api<
         path: `/api/milestones/${id}`,
         method: "DELETE",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageMonthlyPayment
+     * @summary Calculate Monthly Payment
+     * @request POST:/api/mortgage-calculators/monthly-payment
+     * @secure
+     * @response `200` `MonthlyPaymentCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageMonthlyPayment: (
+      data: MonthlyPaymentCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<MonthlyPaymentCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/monthly-payment`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageAffordability
+     * @summary Calculate Affordability
+     * @request POST:/api/mortgage-calculators/affordability
+     * @secure
+     * @response `200` `AffordabilityCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageAffordability: (
+      data: AffordabilityCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<AffordabilityCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/affordability`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageLoanComparison
+     * @summary Calculate Loan Comparison
+     * @request POST:/api/mortgage-calculators/loan-comparison
+     * @secure
+     * @response `200` `LoanComparisonCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageLoanComparison: (
+      data: LoanComparisonCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoanComparisonCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/loan-comparison`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MortgageCalculators
+     * @name CalculateMortgageRefinance
+     * @summary Calculate Refinance
+     * @request POST:/api/mortgage-calculators/refinance
+     * @secure
+     * @response `200` `RefinanceCalculator` Success
+     * @response `422` `ProblemDetails` Client Error
+     */
+    calculateMortgageRefinance: (
+      data: RefinanceCalculatorRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<RefinanceCalculator, ProblemDetails>({
+        path: `/api/mortgage-calculators/refinance`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -9079,18 +10111,64 @@ export class Api<
      * No description
      *
      * @tags TheBigPOS
-     * @name IntegrationsLosLoansLockedList
-     * @request GET:/api/integrations/los/loans/{loanID}/locked
+     * @name IntegrationsLosLoansCreate
+     * @request POST:/api/integrations/los/loans
      * @secure
      * @response `200` `void` Success
      */
-    integrationsLosLoansLockedList: (
-      loanId: string,
+    integrationsLosLoansCreate: (
+      data: LosLoanCreationRequest,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/api/integrations/los/loans/${loanId}/locked`,
-        method: "GET",
+        path: `/api/integrations/los/loans`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserDevices
+     * @name CreateUserDevice
+     * @summary Create a new user device
+     * @request POST:/api/userdevices
+     * @secure
+     * @response `201` `UserDevice` Created
+     * @response `400` `ProblemDetails` Bad Request
+     */
+    createUserDevice: (
+      data: CreateUserDeviceRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserDevice, ProblemDetails>({
+        path: `/api/userdevices`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserDevices
+     * @name DeleteUserDevice
+     * @summary Delete user device
+     * @request DELETE:/api/userdevices/{id}
+     * @secure
+     * @response `204` `void` No Content
+     * @response `404` `ProblemDetails` Not Found
+     */
+    deleteUserDevice: (id: string, params: RequestParams = {}) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/userdevices/${id}`,
+        method: "DELETE",
         secure: true,
         ...params,
       }),
@@ -9098,20 +10176,356 @@ export class Api<
     /**
      * No description
      *
-     * @tags TheBigPOS
-     * @name IntegrationsLosLoansBucketsList
-     * @request GET:/api/integrations/los/loans/{loanID}/buckets
+     * @tags UserDraft
+     * @name GetDraftUsers
+     * @summary Get draft users
+     * @request GET:/api/loans/drafts/{draftId}/users
      * @secure
-     * @response `200` `void` Success
+     * @response `200` `UserDraftPaginated` Success
      */
-    integrationsLosLoansBucketsList: (
-      loanId: string,
+    getDraftUsers: (
+      draftId: string,
+      query?: {
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserDraftPaginated, any>({
+        path: `/api/loans/drafts/${draftId}/users`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserDraft
+     * @name GetDraftUser
+     * @summary Get draft user
+     * @request GET:/api/loans/drafts/{draftId}/users/{userId}
+     * @secure
+     * @response `200` `UserDraft` Success
+     */
+    getDraftUser: (
+      draftId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserDraft, any>({
+        path: `/api/loans/drafts/${draftId}/users/${userId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserDraft
+     * @name AddDraftUsers
+     * @summary Add draft user
+     * @request POST:/api/loans/drafts/{draftId}/users/{userId}
+     * @secure
+     * @response `200` `UserDraft` Success
+     */
+    addDraftUsers: (
+      draftId: string,
+      userId: string,
+      data: CreateUserDraft,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserDraft, any>({
+        path: `/api/loans/drafts/${draftId}/users/${userId}`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserDraft
+     * @name DeleteDraftUser
+     * @summary Delete draft user
+     * @request DELETE:/api/loans/drafts/{draftId}/users/{userId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteDraftUser: (
+      draftId: string,
+      userId: string,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/api/integrations/los/loans/${loanId}/buckets`,
+        path: `/api/loans/drafts/${draftId}/users/${userId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name GetUserGroupAccessScopes
+     * @summary Get All
+     * @request GET:/api/user-groups/{groupId}/scopes
+     * @secure
+     * @response `200` `(UserGroupAccessScope)[]` Success
+     */
+    getUserGroupAccessScopes: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroupAccessScope[], any>({
+        path: `/api/user-groups/${groupId}/scopes`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name CreateUserGroupAccessScope
+     * @summary Create a new scope
+     * @request POST:/api/user-groups/{groupId}/scopes
+     * @secure
+     * @response `200` `UserGroupAccessScope` Success
+     */
+    createUserGroupAccessScope: (
+      groupId: string,
+      data: CreateAccessScopeRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupAccessScope, any>({
+        path: `/api/user-groups/${groupId}/scopes`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupAccessScopes
+     * @name DeleteUserGroupAccessScope
+     * @summary Delete a scope
+     * @request DELETE:/api/user-groups/{groupId}/scopes/{scopeId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteUserGroupAccessScope: (
+      groupId: string,
+      scopeId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}/scopes/${scopeId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name GetUserGroupMembers
+     * @summary Get All
+     * @request GET:/api/user-groups/{groupId}/members
+     * @secure
+     * @response `200` `(UserGroupMember)[]` Success
+     */
+    getUserGroupMembers: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroupMember[], any>({
+        path: `/api/user-groups/${groupId}/members`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name CreateUserGroupMember
+     * @summary Create User Group Member
+     * @request POST:/api/user-groups/{groupId}/members
+     * @secure
+     * @response `200` `UserGroupMember` Success
+     */
+    createUserGroupMember: (
+      groupId: string,
+      data: CreateGroupMemberRequest,
+      query?: {
+        /** @format uuid */
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupMember, any>({
+        path: `/api/user-groups/${groupId}/members`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroupMembers
+     * @name DeleteUserGroupMember
+     * @summary Delete User Group Member
+     * @request DELETE:/api/user-groups/{groupId}/members/{userId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteUserGroupMember: (
+      groupId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}/members/${userId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name SearchUserGroups
+     * @summary Get All
+     * @request POST:/api/user-groups/search
+     * @secure
+     * @response `200` `UserGroupPaginated` Success
+     */
+    searchUserGroups: (
+      query?: {
+        searchText?: string;
+        /** @format int32 */
+        pageSize?: number;
+        /** @format int32 */
+        pageNumber?: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroupPaginated, any>({
+        path: `/api/user-groups/search`,
+        method: "POST",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name GetUserGroup
+     * @summary Get User Group by ID
+     * @request GET:/api/user-groups/{groupId}
+     * @secure
+     * @response `200` `UserGroup` Success
+     */
+    getUserGroup: (groupId: string, params: RequestParams = {}) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name UpdateUserGroup
+     * @summary Update User Group
+     * @request PUT:/api/user-groups/{groupId}
+     * @secure
+     * @response `200` `UserGroup` Success
+     */
+    updateUserGroup: (
+      groupId: string,
+      data: UpdateUserGroupRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name DeleteUserGroup
+     * @summary Delete User Group
+     * @request DELETE:/api/user-groups/{groupId}
+     * @secure
+     * @response `204` `void` No Content
+     */
+    deleteUserGroup: (groupId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/user-groups/${groupId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UserGroups
+     * @name CreateUserGroup
+     * @summary Create User Group
+     * @request POST:/api/user-groups
+     * @secure
+     * @response `201` `UserGroup` Created
+     */
+    createUserGroup: (
+      data: CreateUserGroupRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserGroup, any>({
+        path: `/api/user-groups`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -9755,10 +11169,10 @@ export class Api<
      * @summary Get
      * @request GET:/api/users/me
      * @secure
-     * @response `200` `DetailedUser` Success
+     * @response `200` `ImpersonatedDetailedUser` Success
      */
     getMe: (params: RequestParams = {}) =>
-      this.request<DetailedUser, any>({
+      this.request<ImpersonatedDetailedUser, any>({
         path: `/api/users/me`,
         method: "GET",
         secure: true,
