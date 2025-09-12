@@ -1893,6 +1893,7 @@ export interface LoanUser {
     email: string;
     phone?: string | null;
     role: string;
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
     isUser: boolean;
     /** @format date-time */
     createdAt: string;
