@@ -1893,6 +1893,7 @@ export interface LoanUser {
     email: string;
     phone?: string | null;
     role: string;
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
     isUser: boolean;
     /** @format date-time */
     createdAt: string;
@@ -3725,6 +3726,7 @@ export interface UserSummary {
     id: string;
     name?: string | null;
     email?: string | null;
+    role: "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
 }
 export interface VerifyPasswordRequest {
     /**
@@ -3802,7 +3804,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.23.1
+ * @version v2.24.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
