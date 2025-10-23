@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.24.1
+ * @version v2.26.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1156,14 +1156,15 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LegacyLoan
-             * @name UpdateLoanConsent
-             * @summary Update Loan Consent
+             * @name UpdateLoanConsentAndCustomFieldsObsolete
+             * @summary Update Loan Consent and Custom Fields
              * @request PATCH:/api/los/loan/application/{loanID}
+             * @deprecated
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1188,6 +1189,30 @@ export class Api extends HttpClient {
              * @response `423` `UnprocessableEntity` Client Error
              */
             createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name UpdateLoanCustomFields
+             * @summary Update Loan Custom Fields
+             * @request PATCH:/api/los/loan/application/{loanID}/custom-fields
+             * @secure
+             * @response `200` `string` Success
+             * @response `422` `UnprocessableEntity` Client Error
+             */
+            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name UpdateLoanConsent
+             * @summary Update Loan Consent and Custom Fields
+             * @request PATCH:/api/los/loan/application/{loanID}/consent
+             * @secure
+             * @response `200` `string` Success
+             * @response `422` `UnprocessableEntity` Client Error
+             */
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1697,6 +1722,17 @@ export class Api extends HttpClient {
              * @response `200` `Draft` Success
              */
             reassignLoanOfficer: (draftId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/reassign`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDrafts
+             * @name RestoreLoanDraft
+             * @summary Restore deleted draft
+             * @request POST:/api/loans/drafts/{draftId}/restore
+             * @secure
+             * @response `200` `Draft` Success
+             */
+            restoreLoanDraft: (draftId, params = {}) => this.request(Object.assign({ path: `/api/loans/drafts/${draftId}/restore`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2543,42 +2579,6 @@ export class Api extends HttpClient {
              * @response `422` `UnprocessableEntity` Client Error
              */
             replacePartnerSiteConfiguration: (realtorId, siteConfigurationId, data, query, params = {}) => this.request(Object.assign({ path: `/api/partners/${realtorId}/site-configurations/${siteConfigurationId}`, method: "PUT", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags RequestQueue
-             * @name GetRequestQueues
-             * @summary Get All
-             * @request GET:/api/request-queues
-             * @deprecated
-             * @secure
-             * @response `200` `(RequestQueue)[]` Success
-             */
-            getRequestQueues: (params = {}) => this.request(Object.assign({ path: `/api/request-queues`, method: "GET", secure: true, format: "json" }, params)),
-            /**
-             * No description
-             *
-             * @tags RequestQueue
-             * @name RunRequestQueue
-             * @summary Run
-             * @request POST:/api/request-queues/{id}/run
-             * @deprecated
-             * @secure
-             * @response `200` `void` Success
-             */
-            runRequestQueue: (id, query, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}/run`, method: "POST", query: query, secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags RequestQueue
-             * @name DeleteQueueRequest
-             * @summary Delete
-             * @request DELETE:/api/request-queues/{id}
-             * @deprecated
-             * @secure
-             * @response `204` `void` No Content
-             */
-            deleteQueueRequest: (id, params = {}) => this.request(Object.assign({ path: `/api/request-queues/${id}`, method: "DELETE", secure: true }, params)),
             /**
              * No description
              *

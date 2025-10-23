@@ -525,7 +525,7 @@ export interface CorporateSearchCriteria {
     isActive?: boolean | null;
 }
 export interface CreateAccessScopeRequest {
-    scopeType: "User" | "Branch";
+    scopeType: CreateAccessScopeRequestScopeTypeEnum;
     /** @format uuid */
     userId?: string | null;
     /** @format uuid */
@@ -548,7 +548,7 @@ export interface CreateAccountRequest {
      */
     nlmsid: number;
     settings: AccountSettingsRequest;
-    environment: "Development" | "Staging" | "UAT" | "Production";
+    environment: CreateAccountRequestEnvironmentEnum;
     losIntegration: LOSIntegration;
 }
 export interface CreateBranchRequest {
@@ -577,7 +577,7 @@ export interface CreateDocumentTemplateRequest {
 export interface CreateGroupMemberRequest {
     /** @format uuid */
     userId: string;
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: CreateGroupMemberRequestLoanRoleEnum;
 }
 export interface CreateInviteRequest {
     /** @minLength 1 */
@@ -588,7 +588,7 @@ export interface CreateInviteRequest {
     emailAddress: string;
     phoneNumber?: string | null;
     /** @deprecated */
-    relationship: "NotApplicable" | "Spouse" | "NonSpouse";
+    relationship: CreateInviteRequestRelationshipEnum;
     loanID: string;
     route?: string | null;
     /** @format uuid */
@@ -610,13 +610,13 @@ export interface CreateLoanImportRequest {
      * @minLength 1
      */
     startDate: string;
-    importMode: "All" | "NewOnly" | "UpdateOnly";
+    importMode: CreateLoanImportRequestImportModeEnum;
 }
 export interface CreateUserDeviceRequest {
     token: string;
 }
 export interface CreateUserDraft {
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: CreateUserDraftLoanRoleEnum;
 }
 export interface CreateUserGroupRequest {
     /**
@@ -881,6 +881,8 @@ export interface Draft {
     user: UserBase;
     loanOfficer: UserBase;
     siteConfiguration: SiteConfigurationReduced;
+    /** @format uuid */
+    loanID?: string | null;
 }
 export interface DraftContent {
     /** @format date-time */
@@ -895,6 +897,8 @@ export interface DraftContent {
     user: UserBase;
     loanOfficer: UserBase;
     siteConfiguration: SiteConfigurationReduced;
+    /** @format uuid */
+    loanID?: string | null;
     applicationPayload: any;
 }
 export interface DraftContentPaginated {
@@ -1167,7 +1171,7 @@ export interface FusionFieldDisplay {
     fieldValue: string;
 }
 export interface FusionReportFilter {
-    filterType: "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
+    filterType: FusionReportFilterFilterTypeEnum;
     targetField: string;
     targetValue: string;
 }
@@ -1485,6 +1489,7 @@ export interface Loan {
     loanProgram?: string | null;
     loanType?: string | null;
     status?: string | null;
+    isActive: boolean;
     loanOfficer?: LoanOfficer | null;
     propertyAddress?: Address | null;
     loanSettings?: LoanSettings | null;
@@ -1625,7 +1630,7 @@ export interface LoanContact {
     email?: string | null;
     phone?: string | null;
     companyName?: string | null;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: LoanContactRoleEnum;
 }
 export interface LoanContactList {
     email: string;
@@ -1636,6 +1641,9 @@ export interface LoanCreateRequest {
      * @minLength 1
      */
     draftId: string;
+}
+export interface LoanCustomFieldsRequest {
+    additionalFields?: Record<string, string>;
 }
 export interface LoanDocument {
     /** @format date-time */
@@ -1693,12 +1701,13 @@ export interface LoanDraftSearchCriteria {
     /** @format uuid */
     siteConfigurationId?: string | null;
     isUnassigned?: boolean | null;
+    includeDeleted?: boolean | null;
+    excludeLinkedToLoan?: boolean | null;
 }
 export interface LoanImport {
     /** @format uuid */
     id: string;
-    /** @format uuid */
-    accountID: string;
+    account: Account;
     /** @format date-time */
     endDate: string;
     /** @format date-time */
@@ -1708,13 +1717,13 @@ export interface LoanImport {
     /** @format int32 */
     importedCount: number;
     statusMessage?: string | null;
-    status: "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
-    importMode: "All" | "NewOnly" | "UpdateOnly";
+    status: LoanImportStatusEnum;
+    importMode: LoanImportImportModeEnum;
     /** @format date-time */
     createdAt?: string | null;
 }
 export interface LoanImportLog {
-    level: "None" | "Info" | "Warning" | "Error";
+    level: LoanImportLogLevelEnum;
     message: string;
     /** @format date-time */
     createdAt: string;
@@ -1741,11 +1750,13 @@ export interface LoanList {
     totalLoanAmount?: number | null;
     /** @format date-time */
     startDate?: string | null;
+    isActive: boolean;
     propertyAddress?: Address | null;
     loanOfficer?: LoanOfficerList | null;
     buyerAgentContact?: LoanContactList | null;
     sellerAgentContact?: LoanContactList | null;
     userLoans: UserLoan[];
+    contacts: LoanContact[];
 }
 export interface LoanListPaginated {
     rows: LoanList[];
@@ -1756,8 +1767,8 @@ export interface LoanListPaginated {
 export interface LoanLog {
     /** @format uuid */
     id: string;
-    level: "None" | "Info" | "Warning" | "Error";
-    type: "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+    level: LoanLogLevelEnum;
+    type: LoanLogTypeEnum;
     message: string;
     /** @format date-time */
     createdAt: string;
@@ -1879,7 +1890,7 @@ export interface LoanUpdateRequestJsonPatchDocument {
     contractResolver?: IContractResolver | null;
 }
 export interface LoanUpdateRequestOperation {
-    operationType: "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
+    operationType: LoanUpdateRequestOperationOperationTypeEnum;
     path?: string | null;
     op?: string | null;
     from?: string | null;
@@ -1893,7 +1904,7 @@ export interface LoanUser {
     email: string;
     phone?: string | null;
     role: string;
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: LoanUserLoanRoleEnum;
     isUser: boolean;
     /** @format date-time */
     createdAt: string;
@@ -2398,20 +2409,6 @@ export interface RequestImpersonationRequest {
      */
     email: string;
 }
-export interface RequestQueue {
-    /** @format date-time */
-    createdAt?: string | null;
-    /** @format date-time */
-    updatedAt?: string | null;
-    /** @format date-time */
-    deletedAt?: string | null;
-    /** @format uuid */
-    id: string;
-    userEmail?: string | null;
-    endpoint?: string | null;
-    errorMessage?: string | null;
-    status?: string | null;
-}
 export interface RunLOCalculation {
     loanID: string;
     loanAmount?: string | null;
@@ -2502,7 +2499,7 @@ export interface SSOTokenRequest {
     redirectUri: string;
 }
 export interface SamlMetadataRequest {
-    ssoIntegration: "ConsumerConnect" | "TheBigPOS";
+    ssoIntegration: SamlMetadataRequestSsoIntegrationEnum;
 }
 export interface SendForgotPasswordRequest {
     /**
@@ -2537,7 +2534,7 @@ export interface SiteConfiguration {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+    type: SiteConfigurationTypeEnum;
     /** @format uuid */
     entityID: string;
     /** @format int32 */
@@ -2731,7 +2728,7 @@ export interface SiteConfigurationByUrl {
     deletedAt?: string | null;
     /** @format uuid */
     id: string;
-    type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+    type: SiteConfigurationByUrlTypeEnum;
     /** @format uuid */
     entityID: string;
     /** @format int32 */
@@ -2942,7 +2939,7 @@ export interface SiteConfigurationForm {
 export interface SiteConfigurationReduced {
     /** @format uuid */
     id: string;
-    type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+    type: SiteConfigurationReducedTypeEnum;
     url?: string | null;
     name: string;
     /** @format int64 */
@@ -2959,7 +2956,7 @@ export interface SiteConfigurationRequest {
     entityID: string;
     /** @format int32 */
     entityType: number;
-    type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+    type: SiteConfigurationRequestTypeEnum;
     url: string;
     name: string;
     introduction?: string | null;
@@ -3134,7 +3131,7 @@ export interface SiteConfigurationSearchCriteria {
 export interface SiteConfigurationSummary {
     /** @format uuid */
     id: string;
-    type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+    type: SiteConfigurationSummaryTypeEnum;
     url?: string | null;
     name: string;
     /** @format int64 */
@@ -3536,7 +3533,7 @@ export interface UserDevice {
 export interface UserDraft {
     /** @format uuid */
     draftID: string;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: UserDraftRoleEnum;
     user: User;
 }
 export interface UserDraftPaginated {
@@ -3560,7 +3557,7 @@ export interface UserGroupAccessScope {
     id: string;
     /** @format uuid */
     groupId: string;
-    scopeType: "User" | "Branch";
+    scopeType: UserGroupAccessScopeScopeTypeEnum;
     /** @format uuid */
     userId?: string | null;
     /** @format uuid */
@@ -3593,7 +3590,7 @@ export interface UserLoan {
     deletedAt?: string | null;
     loanID: string;
     user: User;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: UserLoanRoleEnum;
     /** @format int32 */
     borrowerPair?: number | null;
     /** @format int32 */
@@ -3726,7 +3723,7 @@ export interface UserSummary {
     id: string;
     name?: string | null;
     email?: string | null;
-    role: "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+    role: UserSummaryRoleEnum;
 }
 export interface VerifyPasswordRequest {
     /**
@@ -3759,6 +3756,38 @@ export interface Workflow {
     tileSubtitle: string;
     icon: string;
 }
+export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
+export type CreateAccountRequestEnvironmentEnum = "Development" | "Staging" | "UAT" | "Production";
+export type CreateGroupMemberRequestLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+/** @deprecated */
+export type CreateInviteRequestRelationshipEnum = "NotApplicable" | "Spouse" | "NonSpouse";
+export type CreateLoanImportRequestImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
+export type CreateUserDraftLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type FusionReportFilterFilterTypeEnum = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
+export type LoanContactRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type LoanImportStatusEnum = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
+export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
+export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+export type LoanUpdateRequestOperationOperationTypeEnum = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
+export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type SamlMetadataRequestSsoIntegrationEnum = "ConsumerConnect" | "TheBigPOS";
+export type SiteConfigurationTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type SiteConfigurationByUrlTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type SiteConfigurationReducedTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type SiteConfigurationRequestTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type SiteConfigurationSummaryTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type UserDraftRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type UserGroupAccessScopeScopeTypeEnum = "User" | "Branch";
+export type UserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type UserSummaryRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+/** @default "Realtor" */
+export type GetPartnersParamsRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+export type GetSamlMetadataParamsSSoIntegrationEnum = "ConsumerConnect" | "TheBigPOS";
+export type GetSamlMetadataParamsEnum = "ConsumerConnect" | "TheBigPOS";
+export type CreateOrReplaceSamlMetadataParamsSSoIntegrationEnum = "ConsumerConnect" | "TheBigPOS";
+export type CreateOrReplaceSamlMetadataParamsEnum = "ConsumerConnect" | "TheBigPOS";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
 export type QueryParamsType = Record<string | number, any>;
 export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
@@ -3804,7 +3833,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.24.1
+ * @version v2.26.1
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4959,14 +4988,15 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * No description
          *
          * @tags LegacyLoan
-         * @name UpdateLoanConsent
-         * @summary Update Loan Consent
+         * @name UpdateLoanConsentAndCustomFieldsObsolete
+         * @summary Update Loan Consent and Custom Fields
          * @request PATCH:/api/los/loan/application/{loanID}
+         * @deprecated
          * @secure
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
          */
-        updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        updateLoanConsentAndCustomFieldsObsolete: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -4991,6 +5021,30 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `423` `UnprocessableEntity` Client Error
          */
         createLoan: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        /**
+         * No description
+         *
+         * @tags LegacyLoan
+         * @name UpdateLoanCustomFields
+         * @summary Update Loan Custom Fields
+         * @request PATCH:/api/los/loan/application/{loanID}/custom-fields
+         * @secure
+         * @response `200` `string` Success
+         * @response `422` `UnprocessableEntity` Client Error
+         */
+        updateLoanCustomFields: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        /**
+         * No description
+         *
+         * @tags LegacyLoan
+         * @name UpdateLoanConsent
+         * @summary Update Loan Consent and Custom Fields
+         * @request PATCH:/api/los/loan/application/{loanID}/consent
+         * @secure
+         * @response `200` `string` Success
+         * @response `422` `UnprocessableEntity` Client Error
+         */
+        updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -5554,6 +5608,17 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `Draft` Success
          */
         reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDrafts
+         * @name RestoreLoanDraft
+         * @summary Restore deleted draft
+         * @request POST:/api/loans/drafts/{draftId}/restore
+         * @secure
+         * @response `200` `Draft` Success
+         */
+        restoreLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -6420,7 +6485,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         getPartners: (query?: {
             showAll?: boolean;
             /** @default "Realtor" */
-            role?: "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+            role?: GetPartnersParamsRoleEnum;
             /** @format int32 */
             pageSize?: number;
             /** @format int32 */
@@ -6494,45 +6559,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         replacePartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
         }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
-        /**
-         * No description
-         *
-         * @tags RequestQueue
-         * @name GetRequestQueues
-         * @summary Get All
-         * @request GET:/api/request-queues
-         * @deprecated
-         * @secure
-         * @response `200` `(RequestQueue)[]` Success
-         */
-        getRequestQueues: (params?: RequestParams) => Promise<AxiosResponse<RequestQueue[], any>>;
-        /**
-         * No description
-         *
-         * @tags RequestQueue
-         * @name RunRequestQueue
-         * @summary Run
-         * @request POST:/api/request-queues/{id}/run
-         * @deprecated
-         * @secure
-         * @response `200` `void` Success
-         */
-        runRequestQueue: (id: string, query?: {
-            /** @default false */
-            force?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
-        /**
-         * No description
-         *
-         * @tags RequestQueue
-         * @name DeleteQueueRequest
-         * @summary Delete
-         * @request DELETE:/api/request-queues/{id}
-         * @deprecated
-         * @secure
-         * @response `204` `void` No Content
-         */
-        deleteQueueRequest: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6637,7 +6663,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `File` Success
          * @response `404` `ProblemDetails` Not Found
          */
-        getSamlMetadata: (sSoIntegration: "ConsumerConnect" | "TheBigPOS", ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
+        getSamlMetadata: (sSoIntegration: GetSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -6648,7 +6674,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `200` `File` Success
          */
-        createOrReplaceSamlMetadata: (sSoIntegration: "ConsumerConnect" | "TheBigPOS", ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
+        createOrReplaceSamlMetadata: (sSoIntegration: CreateOrReplaceSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
