@@ -6,7 +6,7 @@ export type LogLevel = "None" | "Info" | "Warning" | "Error";
 export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded";
 export type LoanImportStatus = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
 export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
 export type LoanAccessScopeType = "User" | "Branch";
@@ -3769,7 +3769,7 @@ export type LoanImportStatusEnum = "WaitingProcess" | "InProgress" | "Completed"
 export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
 export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
 export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
-export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded";
 export type LoanUpdateRequestOperationOperationTypeEnum = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type SamlMetadataRequestSsoIntegrationEnum = "ConsumerConnect" | "TheBigPOS";
@@ -3833,7 +3833,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.26.1
+ * @version v2.27.9
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4043,6 +4043,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `422` `UnprocessableEntity` Client Error
          */
         getSsoToken: (data: SSOTokenRequest, params?: RequestParams) => Promise<AxiosResponse<SSOToken, any>>;
+        /**
+         * No description
+         *
+         * @tags Authentication
+         * @name LogOut
+         * @summary Sign out (clear auth cookies)
+         * @request POST:/api/logout
+         * @secure
+         * @response `204` `void` No Content
+         * @response `422` `UnprocessableEntity` Client Error
+         */
+        logOut: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5015,12 +5027,26 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name CreateLoan
          * @summary Create Loan
          * @request POST:/api/los/loan/application
+         * @deprecated
          * @secure
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
          * @response `423` `UnprocessableEntity` Client Error
          */
         createLoan: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        /**
+         * No description
+         *
+         * @tags LegacyLoan
+         * @name CreateLoanInternal
+         * @summary Create Loan Returning Internal Loan ID
+         * @request POST:/api/los/loan/application/internal
+         * @secure
+         * @response `200` `string` Success
+         * @response `422` `UnprocessableEntity` Client Error
+         * @response `423` `UnprocessableEntity` Client Error
+         */
+        createLoanInternal: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *

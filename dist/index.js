@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.26.1
+ * @version v2.27.9
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -313,6 +313,18 @@ export class Api extends HttpClient {
              * @response `422` `UnprocessableEntity` Client Error
              */
             getSsoToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token/sso`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Authentication
+             * @name LogOut
+             * @summary Sign out (clear auth cookies)
+             * @request POST:/api/logout
+             * @secure
+             * @response `204` `void` No Content
+             * @response `422` `UnprocessableEntity` Client Error
+             */
+            logOut: (params = {}) => this.request(Object.assign({ path: `/api/logout`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
@@ -1183,12 +1195,26 @@ export class Api extends HttpClient {
              * @name CreateLoan
              * @summary Create Loan
              * @request POST:/api/los/loan/application
+             * @deprecated
              * @secure
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              * @response `423` `UnprocessableEntity` Client Error
              */
             createLoan: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LegacyLoan
+             * @name CreateLoanInternal
+             * @summary Create Loan Returning Internal Loan ID
+             * @request POST:/api/los/loan/application/internal
+             * @secure
+             * @response `200` `string` Success
+             * @response `422` `UnprocessableEntity` Client Error
+             * @response `423` `UnprocessableEntity` Client Error
+             */
+            createLoanInternal: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/internal`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *

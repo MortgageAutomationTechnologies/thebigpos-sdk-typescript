@@ -68,7 +68,12 @@ export type LoanQueueType =
 
 export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
 
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification";
+export type LoanLogType =
+  | "Loan"
+  | "Queue"
+  | "POSFlagChanged"
+  | "Verification"
+  | "DocumentUploaded";
 
 export type LoanImportStatus =
   | "WaitingProcess"
@@ -4212,7 +4217,8 @@ export type LoanLogTypeEnum =
   | "Loan"
   | "Queue"
   | "POSFlagChanged"
-  | "Verification";
+  | "Verification"
+  | "DocumentUploaded";
 
 export type LoanUpdateRequestOperationOperationTypeEnum =
   | "Add"
@@ -4528,7 +4534,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.26.1
+ * @version v2.27.9
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -4909,6 +4915,25 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name LogOut
+     * @summary Sign out (clear auth cookies)
+     * @request POST:/api/logout
+     * @secure
+     * @response `204` `void` No Content
+     * @response `422` `UnprocessableEntity` Client Error
+     */
+    logOut: (params: RequestParams = {}) =>
+      this.request<void, UnprocessableEntity>({
+        path: `/api/logout`,
+        method: "POST",
+        secure: true,
         ...params,
       }),
 
@@ -6725,6 +6750,7 @@ export class Api<
      * @name CreateLoan
      * @summary Create Loan
      * @request POST:/api/los/loan/application
+     * @deprecated
      * @secure
      * @response `200` `string` Success
      * @response `422` `UnprocessableEntity` Client Error
@@ -6733,6 +6759,29 @@ export class Api<
     createLoan: (data: any, params: RequestParams = {}) =>
       this.request<string, UnprocessableEntity>({
         path: `/api/los/loan/application`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags LegacyLoan
+     * @name CreateLoanInternal
+     * @summary Create Loan Returning Internal Loan ID
+     * @request POST:/api/los/loan/application/internal
+     * @secure
+     * @response `200` `string` Success
+     * @response `422` `UnprocessableEntity` Client Error
+     * @response `423` `UnprocessableEntity` Client Error
+     */
+    createLoanInternal: (data: any, params: RequestParams = {}) =>
+      this.request<string, UnprocessableEntity>({
+        path: `/api/los/loan/application/internal`,
         method: "POST",
         body: data,
         secure: true,
