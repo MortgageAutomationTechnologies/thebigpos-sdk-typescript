@@ -291,6 +291,8 @@ export interface ApplicationRowData {
     coBorrowerLastName?: string | null;
     loanOfficer?: string | null;
     loanOfficerEmail?: string | null;
+    /** @format uuid */
+    id: string;
     loanID: string;
     /** @format date-time */
     applicationDate?: string | null;
