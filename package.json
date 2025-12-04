@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "mocha -r ts-node/register 'src/api_test.spec.ts' --exit",
-    "browserify": "tsc && browserify -p tinyify dist/index.js -s thebigpos > dist/thebigpos.min.js",
+    "browserify": "tsc && esbuild dist/index.js --bundle --minify --sourcemap --global-name=thebigpos --outfile=dist/thebigpos.min.js",
     "prepare": "husky"
   },
   "repository": {
@@ -27,13 +27,12 @@
   },
   "homepage": "https://github.com/MortgageAutomationTechnologies/thebigpos-sdk-typescript#readme",
   "dependencies": {
-    "axios": "^1.7.7",
-    "browserify": "^17.0.0",
-    "tinyify": "^4.0.0"
+    "axios": "^1.7.7"
   },
   "devDependencies": {
+    "esbuild": "^0.27.0",
     "husky": "^9.1.5",
-    "rimraf": "^6.0.1",
+    "rimraf": "6.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }
