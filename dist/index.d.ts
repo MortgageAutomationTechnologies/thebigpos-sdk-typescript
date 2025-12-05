@@ -3,21 +3,54 @@ export type SiteConfigurationType = "None" | "Account" | "Corporate" | "Branch" 
 export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS";
 export type OperationType = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 export type LogLevel = "None" | "Info" | "Warning" | "Error";
+export type LoanType = "Fha" | "Conventional" | "UsdaRd" | "Va" | "Other";
+export type LoanTrustType = "Living" | "Land" | "Testamentary" | "Other";
+export type LoanTitleHeld = "Self" | "JointlyWithSpouse" | "JointlyWithAnother";
 export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type LoanRealEstateStatus = "Sold" | "Pending" | "Retained";
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded";
+export type LoanPurpose = "Purchase" | "Refinance";
+export type LoanPropertyType = "SingleFamily" | "MultiFamily" | "Condominium" | "Townhouse" | "ManufacturedHome" | "PlannedUnitDevelopment" | "ModularHome" | "Other";
+export type LoanPhoneNumberType = "Home" | "Cell" | "Work" | "Fax" | "Other";
+export type LoanPacificIslanderRace = "NativeHawaiian" | "GuamanianOrChamorro" | "Samoan" | "Other";
+export type LoanOtherLiabilityType = "Alimony" | "ChildSupport" | "SeparateMaintenance" | "JobRelatedExpense" | "Other";
+export type LoanOtherIncomeType = "Alimony" | "AutomobileAllowance" | "BoarderIncome" | "CapitalGains" | "ChildSupport" | "Disability" | "FosterCare" | "Housing" | "InterestAndDividends" | "MortgageCreditCertificate" | "MortgageDifferentialPayments" | "NotesReceivable" | "PublicAssistance" | "Retirement" | "RoyaltyPayments" | "SeparateMaintenance" | "SocialSecurity" | "Trust" | "Unemployment" | "VaCompensation" | "Other";
+export type LoanOtherAssetType = "ProceedsRealEstate" | "ProceedsNonRealEstate" | "SecuredBorrowerFunds" | "UnsecuredBorrowerFunds" | "EarnestMoney" | "EmployerAssistance" | "LotEquity" | "ReAddressFunds" | "RentCredit" | "SweatEquity" | "TradeEquity" | "Other";
+export type LoanOccupancyType = "PrimaryResidence" | "SecondHome" | "InvestmentProperty" | "Other";
+export type LoanNameSuffix = "Jr" | "Sr" | "II" | "III" | "IV" | "V" | "VI" | "VII";
+export type LoanNamePrefix = "Mr" | "Mrs" | "Ms";
+export type LoanMilitaryServiceType = "Current" | "RetiredDischargedSeparated" | "NonActivatedNationalGuard" | "SurvivingSpouse";
+export type LoanMaritalStatus = "Married" | "Separated" | "Unmarried";
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent";
+export type LoanLienPosition = "First" | "Subordinate";
+export type LoanLiabilityType = "Revolving" | "Installment" | "Open30Day" | "Lease" | "Other";
+export type LoanLanguagePreference = "English" | "Chinese" | "Korean" | "Spanish" | "Tagalog" | "Vietnamese" | "Other";
 export type LoanImportStatus = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
 export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
+export type LoanHousingType = "NoExpense" | "Own" | "Rent";
+export type LoanHomeOwnershipType = "Counseling" | "Education" | "Other";
+export type LoanHomeOwnershipFormat = "InPerson" | "Online" | "Telephone";
+export type LoanHispanicEthnicity = "Mexican" | "PuertoRican" | "Cuban" | "Other";
+export type LoanGiftSource = "CommunityNonProfit" | "Employer" | "FederalAgency" | "LocalAgency" | "Relative" | "ReligiousNonProfit" | "StateAgency" | "UnmarriedPartner" | "Lender" | "Other";
+export type LoanGiftAssetType = "Cash" | "Asset" | "Equity";
+export type LoanGenderType = "Male" | "Female";
+export type LoanCitizenship = "Us" | "PermanentResidentAlien" | "NonPermanentResidentAlien";
+export type LoanBankruptcyType = "Chapter7" | "Chapter11" | "Chapter12" | "Chapter13";
+export type LoanAsianRace = "AsianIndian" | "Chinese" | "Filipino" | "Japanese" | "Korean" | "Vietnamese" | "Other";
+export type LoanApplicationResultType = "LoanCreated" | "BorrowerAdded";
+export type LoanAccountAssetType = "Checking" | "Savings" | "MoneyMarket" | "CertificateOfDeposit" | "MutualFund" | "Stocks" | "Bonds" | "Retirement" | "BridgeLoanProceeds" | "IndividualDevelopmentAccount" | "TrustAccount" | "CashValueOfLifeInsurance" | "Other";
 export type LoanAccessScopeType = "User" | "Branch";
 export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently";
 export type FilterType = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
 export type Environment = "Development" | "Staging" | "UAT" | "Production";
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
+export type DraftType = "NewLoan" | "EditLoan";
 export type ConsentType = "Econsent" | "CreditAuthorization" | "Tcpa";
 export type BranchType = "Mortgage" | "RealEstate";
 export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
+export type AddressFamily = "Unspecified" | "Unix" | "InterNetwork" | "ImpLink" | "Pup" | "Chaos" | "NS" | "Ipx" | "Iso" | "Osi" | "Ecma" | "DataKit" | "Ccitt" | "Sna" | "DecNet" | "DataLink" | "Lat" | "HyperChannel" | "AppleTalk" | "NetBios" | "VoiceView" | "FireFox" | "Banyan" | "Atm" | "InterNetworkV6" | "Cluster" | "Ieee12844" | "Irda" | "NetworkDesigners" | "Max" | "Packet" | "ControllerAreaNetwork" | "Unknown";
 export interface ASOSettings {
     enabled: boolean;
     softPull: boolean;
@@ -90,13 +123,23 @@ export interface Address {
     postalCode?: string | null;
 }
 export interface AddressRequest {
-    /** @minLength 1 */
+    /**
+     * @minLength 1
+     * @maxLength 255
+     */
     street: string;
+    /** @maxLength 50 */
     unit?: string | null;
-    /** @minLength 1 */
+    /** @maxLength 50 */
+    unitType?: string | null;
+    /**
+     * @minLength 1
+     * @maxLength 100
+     */
     city: string;
     /** @minLength 1 */
     state: string;
+    /** @maxLength 100 */
     county?: string | null;
     /** @minLength 1 */
     postalCode: string;
@@ -337,6 +380,12 @@ export interface ApplicationRowData {
 export interface Attachment {
     fileName: string;
     base64Data: string;
+}
+export interface BorrowerResult {
+    /** @format uuid */
+    borrowerId: string;
+    role: BorrowerResultRoleEnum;
+    email?: string | null;
 }
 export interface BranchBase {
     /** @format date-time */
@@ -600,6 +649,10 @@ export interface CreateInviteRequest {
     /** @deprecated */
     userRole?: UserRole | null;
     loanRole?: LoanRole | null;
+}
+export interface CreateLoanByDraftRequest {
+    /** @format uuid */
+    draftId: string;
 }
 export interface CreateLoanImportRequest {
     /** @format uuid */
@@ -887,6 +940,8 @@ export interface Draft {
     siteConfiguration: SiteConfigurationReduced;
     /** @format uuid */
     loanID?: string | null;
+    type: DraftTypeEnum;
+    isCoBorrower: boolean;
 }
 export interface DraftContent {
     /** @format date-time */
@@ -903,6 +958,8 @@ export interface DraftContent {
     siteConfiguration: SiteConfigurationReduced;
     /** @format uuid */
     loanID?: string | null;
+    type: DraftContentTypeEnum;
+    isCoBorrower: boolean;
     applicationPayload: any;
 }
 export interface DraftContentPaginated {
@@ -1282,7 +1339,29 @@ export interface GetWorkflowRequest {
     userRole?: string | null;
     language?: string | null;
 }
+export interface GuidPatchOperation {
+    op: string;
+    path: string;
+    value?: any;
+    from?: string | null;
+}
 export type IContractResolver = object;
+export interface IPAddress {
+    addressFamily: IpAddressAddressFamilyEnum;
+    /** @format int64 */
+    scopeId: number;
+    isIPv6Multicast: boolean;
+    isIPv6LinkLocal: boolean;
+    isIPv6SiteLocal: boolean;
+    isIPv6Teredo: boolean;
+    isIPv6UniqueLocal: boolean;
+    isIPv4MappedToIPv6: boolean;
+    /**
+     * @deprecated
+     * @format int64
+     */
+    address: number;
+}
 export interface ImpersonatedDetailedUser {
     /** @format date-time */
     createdAt?: string | null;
@@ -1507,6 +1586,422 @@ export interface Loan {
     userLoans: UserLoan[];
     contacts: LoanContact[];
 }
+export interface LoanApplication {
+    /** @format uuid */
+    loanId: string;
+    resultType: LoanApplicationResultTypeEnum;
+    borrowers: BorrowerResult[];
+}
+export interface LoanApplicationRequest {
+    /** @format uuid */
+    accountID: string;
+    /** @format uuid */
+    userID: string;
+    /** @format uuid */
+    siteConfigurationID: string;
+    /** @format uuid */
+    draftId?: string | null;
+    loanOfficerEmail?: string | null;
+    type?: LoanType | null;
+    purpose?: LoanPurpose | null;
+    lienPosition?: LoanLienPosition | null;
+    /** @maxLength 50 */
+    number?: string | null;
+    /** @maxLength 100 */
+    program?: string | null;
+    /** @maxLength 50 */
+    channel?: string | null;
+    /** @format date-time */
+    startDate?: string | null;
+    property?: LoanPropertyRequest | null;
+    financial?: LoanFinancialRequest | null;
+    /** @minItems 1 */
+    borrowers: LoanBorrowerRequest[];
+    nonOwningBorrowers: LoanNonOwningBorrowerRequest[];
+    /** @format uuid */
+    existingLoanId?: string | null;
+    /** @format uuid */
+    formId?: string | null;
+}
+export interface LoanBorrowerAccountAssetRequest {
+    /** @maxLength 255 */
+    name?: string | null;
+    /** @maxLength 50 */
+    accountNumber?: string | null;
+    /** @maxLength 255 */
+    financialInstitution?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    value?: number | null;
+    type?: LoanAccountAssetType | null;
+}
+export interface LoanBorrowerAddressRequest {
+    /** @maxLength 255 */
+    street?: string | null;
+    /** @maxLength 50 */
+    unit?: string | null;
+    /** @maxLength 50 */
+    unitType?: string | null;
+    /** @maxLength 100 */
+    city?: string | null;
+    state?: string | null;
+    /** @maxLength 100 */
+    county?: string | null;
+    postalCode?: string | null;
+    housing?: LoanHousingType | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    rentAmount?: number | null;
+    isCurrent?: boolean | null;
+    isMailingAddress?: boolean | null;
+    timeAtAddress?: TimeAtAddressRequest | null;
+}
+export interface LoanBorrowerAlternateNameRequest {
+    /** @maxLength 20 */
+    suffix?: string | null;
+    /** @maxLength 100 */
+    lastName?: string | null;
+    /** @maxLength 100 */
+    firstName?: string | null;
+    /** @maxLength 100 */
+    middleName?: string | null;
+}
+export interface LoanBorrowerBankruptcyDeclarationRequest {
+    isAffirmative?: boolean | null;
+    /** @maxLength 1000 */
+    description?: string | null;
+    types?: LoanBankruptcyType[] | null;
+}
+export interface LoanBorrowerConsentRequest {
+    type?: ConsentType | null;
+    providedConsent?: boolean | null;
+    ipAddress?: IPAddress | null;
+}
+export interface LoanBorrowerDeclarationsRequest {
+    borrowingMoney?: LoanBorrowerMoneyDeclarationRequest | null;
+    bankruptcy?: LoanBorrowerBankruptcyDeclarationRequest | null;
+    primaryResidence?: LoanBorrowerPrimaryResidenceDeclarationRequest | null;
+    foreclosure?: LoanBorrowerSimpleDeclarationRequest | null;
+    coSignerOnDebt?: LoanBorrowerSimpleDeclarationRequest | null;
+    partyToLawsuit?: LoanBorrowerSimpleDeclarationRequest | null;
+    outstandingJudgments?: LoanBorrowerSimpleDeclarationRequest | null;
+    applyingForNewCredit?: LoanBorrowerSimpleDeclarationRequest | null;
+    subjectToLienPriority?: LoanBorrowerSimpleDeclarationRequest | null;
+    inDelinquencyOrDefault?: LoanBorrowerSimpleDeclarationRequest | null;
+    relationshipWithSeller?: LoanBorrowerSimpleDeclarationRequest | null;
+    preForeclosureOrShortSale?: LoanBorrowerSimpleDeclarationRequest | null;
+    applyingForAnotherMortgage?: LoanBorrowerSimpleDeclarationRequest | null;
+    conveyedTitleToPropertyForeclosure?: LoanBorrowerSimpleDeclarationRequest | null;
+}
+export interface LoanBorrowerDemographicsEthnicityRequest {
+    isDeclined?: boolean | null;
+    isHispanicOrLatino?: boolean | null;
+    /** @maxLength 255 */
+    otherHispanicOrLatino?: string | null;
+    hispanicOrLatinoEthnicities?: LoanHispanicEthnicity[] | null;
+}
+export interface LoanBorrowerDemographicsGenderRequest {
+    isDeclined?: boolean | null;
+    gender?: LoanGenderType | null;
+}
+export interface LoanBorrowerDemographicsRaceRequest {
+    isAmericanIndianOrAlaskanNative?: boolean | null;
+    /** @maxLength 255 */
+    otherAmericanIndianOrAlaskanNative?: string | null;
+    isAsian?: boolean | null;
+    asianRaces?: LoanAsianRace[] | null;
+    /** @maxLength 255 */
+    otherAsianRace?: string | null;
+    isBlackOrAfrican?: boolean | null;
+    isPacificIslander?: boolean | null;
+    pacificIslanderRace?: LoanPacificIslanderRace[] | null;
+    /** @maxLength 255 */
+    otherPacificIslanderRace?: string | null;
+    isWhite?: boolean | null;
+    isDeclined?: boolean | null;
+}
+export interface LoanBorrowerDemographicsRequest {
+    race?: LoanBorrowerDemographicsRaceRequest | null;
+    gender?: LoanBorrowerDemographicsGenderRequest | null;
+    ethnicity?: LoanBorrowerDemographicsEthnicityRequest | null;
+}
+export interface LoanBorrowerEmploymentCurrentGrossIncomeRequest {
+    /**
+     * @format double
+     * @min 0
+     */
+    base?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    other?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    bonus?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    overtime?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    commission?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    militaryEntitlements?: number | null;
+}
+export interface LoanBorrowerEmploymentCurrentOwnershipRequest {
+    isOwner?: boolean | null;
+    hasOwnershipOver25Percent?: boolean | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyIncome?: number | null;
+}
+export interface LoanBorrowerEmploymentCurrentRequest {
+    /** @maxLength 255 */
+    name?: string | null;
+    /** @maxLength 100 */
+    title?: string | null;
+    phoneNumber?: string | null;
+    /** @format date */
+    startDate?: string | null;
+    isSelfEmployed?: boolean | null;
+    isEmployedByPartyInTransaction?: boolean | null;
+    address?: AddressRequest | null;
+    ownership?: LoanBorrowerEmploymentCurrentOwnershipRequest | null;
+    grossIncome?: LoanBorrowerEmploymentCurrentGrossIncomeRequest | null;
+    timeInLineOfWork?: LoanBorrowerEmploymentCurrentTimeInLineOfWorkRequest | null;
+}
+export interface LoanBorrowerEmploymentCurrentTimeInLineOfWorkRequest {
+    /** @format int32 */
+    years?: number | null;
+    /** @format int32 */
+    months?: number | null;
+}
+export interface LoanBorrowerEmploymentPreviousRequest {
+    /** @maxLength 255 */
+    name?: string | null;
+    /** @maxLength 100 */
+    title?: string | null;
+    phoneNumber?: string | null;
+    /** @format date */
+    startDate?: string | null;
+    /** @format date */
+    endDate?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    grossIncome?: number | null;
+    isSelfEmployed?: boolean | null;
+    address?: AddressRequest | null;
+}
+export interface LoanBorrowerGiftRequest {
+    /**
+     * @format double
+     * @min 0
+     */
+    value?: number | null;
+    isDeposited?: boolean | null;
+    source?: LoanGiftSource | null;
+    assetType?: LoanGiftAssetType | null;
+}
+export interface LoanBorrowerHomeOwnershipProviderRequest {
+    /** @maxLength 255 */
+    name?: string | null;
+    phoneNumber?: string | null;
+    address?: AddressRequest | null;
+}
+export interface LoanBorrowerHomeOwnershipRequest {
+    /** @format date */
+    dateCompleted?: string | null;
+    type?: LoanHomeOwnershipType | null;
+    format?: LoanHomeOwnershipFormat | null;
+    provider?: LoanBorrowerHomeOwnershipProviderRequest | null;
+}
+export interface LoanBorrowerLiabilityRequest {
+    type?: LoanLiabilityType | null;
+    /** @maxLength 255 */
+    name?: string | null;
+    /** @maxLength 50 */
+    accountNumber?: string | null;
+    /** @maxLength 255 */
+    financialInstitution?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    balance?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyPayment?: number | null;
+    /**
+     * @format int32
+     * @min 0
+     */
+    monthsLeftToPay?: number | null;
+    isPaidOffBeforeClosing?: boolean | null;
+}
+export interface LoanBorrowerMilitaryServiceRequest {
+    hasServed?: boolean | null;
+    /** @format date */
+    endDate?: string | null;
+    type?: LoanMilitaryServiceType | null;
+}
+export interface LoanBorrowerMoneyDeclarationRequest {
+    isAffirmative?: boolean | null;
+    /** @maxLength 1000 */
+    description?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    amount?: number | null;
+}
+export interface LoanBorrowerOtherAssetRequest {
+    type?: LoanOtherAssetType | null;
+    /** @maxLength 255 */
+    other?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    value?: number | null;
+}
+export interface LoanBorrowerOtherIncomeRequest {
+    /**
+     * @format double
+     * @min 0
+     */
+    value?: number | null;
+    type?: LoanOtherIncomeType | null;
+}
+export interface LoanBorrowerOtherLiabilityRequest {
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyPayment?: number | null;
+    type?: LoanOtherLiabilityType | null;
+}
+export interface LoanBorrowerPhoneNumberRequest {
+    /** @maxLength 10 */
+    ext?: string | null;
+    number?: string | null;
+    type?: LoanPhoneNumberType | null;
+}
+export interface LoanBorrowerPrimaryResidenceDeclarationRequest {
+    isAffirmative?: boolean | null;
+    /** @maxLength 1000 */
+    description?: string | null;
+    hasInterestInLastThreeYears?: boolean | null;
+    titleHeld?: LoanTitleHeld | null;
+    propertyType?: LoanOccupancyType | null;
+}
+export interface LoanBorrowerRealEstateAssetMortgageRequest {
+    /** @maxLength 255 */
+    creditor?: string | null;
+    /** @maxLength 50 */
+    accountNumber?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    balance?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    creditLimit?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyMortgagePayment?: number | null;
+    isBalancePaidBeforeClosing?: boolean | null;
+    loanType?: LoanType | null;
+}
+export interface LoanBorrowerRealEstateAssetRequest {
+    status?: LoanRealEstateStatus | null;
+    occupancy?: LoanOccupancyType | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    marketValue?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyInsTaxDues?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyRentalIncome?: number | null;
+    address?: AddressRequest | null;
+    mortgages?: LoanBorrowerRealEstateAssetMortgageRequest[] | null;
+}
+export interface LoanBorrowerRequest {
+    ssn?: string | null;
+    email?: string | null;
+    /** @maxLength 100 */
+    lastName?: string | null;
+    /** @maxLength 100 */
+    firstName?: string | null;
+    /** @maxLength 100 */
+    middleName?: string | null;
+    prefix?: LoanNamePrefix | null;
+    suffix?: LoanNameSuffix | null;
+    /** @format date */
+    birthDate?: string | null;
+    citizenship?: LoanCitizenship | null;
+    maritalStatus?: LoanMaritalStatus | null;
+    languagePreference?: LoanLanguagePreference | null;
+    /** @format int32 */
+    numberOfDependents?: number | null;
+    isPrimaryBorrower: boolean;
+    isFirstTimeHomeBuyer?: boolean | null;
+    hasJointAssetsAndLiabilities?: boolean | null;
+    dependentAges?: number[] | null;
+    demographics?: LoanBorrowerDemographicsRequest | null;
+    declarations?: LoanBorrowerDeclarationsRequest | null;
+    militaryService?: LoanBorrowerMilitaryServiceRequest | null;
+    gifts: LoanBorrowerGiftRequest[];
+    addresses: LoanBorrowerAddressRequest[];
+    consents: LoanBorrowerConsentRequest[];
+    liabilities: LoanBorrowerLiabilityRequest[];
+    otherAssets: LoanBorrowerOtherAssetRequest[];
+    otherIncome: LoanBorrowerOtherIncomeRequest[];
+    phoneNumbers: LoanBorrowerPhoneNumberRequest[];
+    accountAssets: LoanBorrowerAccountAssetRequest[];
+    homeOwnership: LoanBorrowerHomeOwnershipRequest[];
+    alternateNames: LoanBorrowerAlternateNameRequest[];
+    otherLiabilities: LoanBorrowerOtherLiabilityRequest[];
+    realEstateAssets: LoanBorrowerRealEstateAssetRequest[];
+    currentEmployment: LoanBorrowerEmploymentCurrentRequest[];
+    previousEmployment: LoanBorrowerEmploymentPreviousRequest[];
+}
+export interface LoanBorrowerSimpleDeclarationRequest {
+    isAffirmative?: boolean | null;
+    /** @maxLength 1000 */
+    description?: string | null;
+}
 export interface LoanComparison {
     loanID: string;
     scenarios: LoanComparisonScenario[];
@@ -1642,13 +2137,6 @@ export interface LoanContact {
 export interface LoanContactList {
     email: string;
 }
-export interface LoanCreateRequest {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
-    draftId: string;
-}
 export interface LoanCustomFieldsRequest {
     additionalFields?: Record<string, string>;
 }
@@ -1710,6 +2198,25 @@ export interface LoanDraftSearchCriteria {
     isUnassigned?: boolean | null;
     includeDeleted?: boolean | null;
     excludeLinkedToLoan?: boolean | null;
+    draftTypes?: DraftType[] | null;
+}
+export interface LoanFinancialRequest {
+    isDebtsAssetsReviewed?: boolean | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    cashToClose?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    cashDownPayment?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    maximumPurchasePrice?: number | null;
 }
 export interface LoanIdentifier {
     /** @format uuid */
@@ -1796,6 +2303,18 @@ export interface LoanLogSearchCriteria {
     types?: LoanLogType[] | null;
     levels?: LogLevel[] | null;
 }
+export interface LoanNonOwningBorrowerRequest {
+    email?: string | null;
+    /** @maxLength 100 */
+    lastName?: string | null;
+    /** @maxLength 100 */
+    firstName?: string | null;
+    /** @maxLength 100 */
+    middleName?: string | null;
+    prefix?: LoanNamePrefix | null;
+    suffix?: LoanNameSuffix | null;
+    consents: LoanBorrowerConsentRequest[];
+}
 export interface LoanOfficer {
     /** @format uuid */
     id: string;
@@ -1826,6 +2345,80 @@ export interface LoanOfficerSearchCriteria {
     branch?: string | null;
     /** @format uuid */
     brand?: string | null;
+}
+export interface LoanPatchRequestGuidPatchDocument {
+    operations: GuidPatchOperation[];
+}
+export interface LoanPropertyMortgageRequest {
+    /** @maxLength 255 */
+    creditor?: string | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    loanAmount?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    creditLimit?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyPayment?: number | null;
+    lienType?: LoanLienPosition | null;
+}
+export interface LoanPropertyRequest {
+    trustType?: LoanTrustType | null;
+    occupancy?: LoanOccupancyType | null;
+    propertyType?: LoanPropertyType | null;
+    /** @maxLength 100 */
+    referenceId?: string | null;
+    /**
+     * @format int32
+     * @min 1800
+     * @max 2035
+     */
+    yearBuilt?: number | null;
+    /**
+     * @format int32
+     * @min 1900
+     * @max 2035
+     */
+    yearAcquired?: number | null;
+    /** @format int32 */
+    numberOfUnits?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    salePrice?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    propertyValue?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    purchasePrice?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    estimatedValue?: number | null;
+    /**
+     * @format double
+     * @min 0
+     */
+    monthlyRentalIncome?: number | null;
+    isMixedUseProperty?: boolean | null;
+    isManufacturedHome?: boolean | null;
+    isFhaSecondaryResidence?: boolean | null;
+    address?: AddressRequest | null;
+    mortgages: LoanPropertyMortgageRequest[];
 }
 export interface LoanQueue {
     /** @format date-time */
@@ -3323,6 +3916,12 @@ export interface Theme {
     textColor?: string | null;
     iconColor?: string | null;
 }
+export interface TimeAtAddressRequest {
+    /** @format int32 */
+    years?: number | null;
+    /** @format int32 */
+    months?: number | null;
+}
 export interface Token {
     token_type: string;
     /** @format int32 */
@@ -3781,6 +4380,7 @@ export interface Workflow {
     tileSubtitle: string;
     icon: string;
 }
+export type BorrowerResultRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
 export type CreateAccountRequestEnvironmentEnum = "Development" | "Staging" | "UAT" | "Production";
 export type CreateGroupMemberRequestLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
@@ -3788,13 +4388,17 @@ export type CreateGroupMemberRequestLoanRoleEnum = "Borrower" | "CoBorrower" | "
 export type CreateInviteRequestRelationshipEnum = "NotApplicable" | "Spouse" | "NonSpouse";
 export type CreateLoanImportRequestImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
 export type CreateUserDraftLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type DraftTypeEnum = "NewLoan" | "EditLoan";
+export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
 export type FusionReportFilterFilterTypeEnum = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
+export type IpAddressAddressFamilyEnum = "Unspecified" | "Unix" | "InterNetwork" | "ImpLink" | "Pup" | "Chaos" | "NS" | "Ipx" | "Iso" | "Osi" | "Ecma" | "DataKit" | "Ccitt" | "Sna" | "DecNet" | "DataLink" | "Lat" | "HyperChannel" | "AppleTalk" | "NetBios" | "VoiceView" | "FireFox" | "Banyan" | "Atm" | "InterNetworkV6" | "Cluster" | "Ieee12844" | "Irda" | "NetworkDesigners" | "Max" | "Packet" | "ControllerAreaNetwork" | "Unknown";
+export type LoanApplicationResultTypeEnum = "LoanCreated" | "BorrowerAdded";
 export type LoanContactRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type LoanImportStatusEnum = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
 export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
 export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
 export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
-export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded";
+export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent";
 export type LoanUpdateRequestOperationOperationTypeEnum = "Add" | "Remove" | "Replace" | "Move" | "Copy" | "Test" | "Invalid";
 export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type SamlMetadataRequestSsoIntegrationEnum = "ConsumerConnect" | "TheBigPOS";
@@ -3859,7 +4463,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.28.4
+ * @version v2.28.5
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5059,7 +5663,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `422` `UnprocessableEntity` Client Error
          * @response `423` `UnprocessableEntity` Client Error
          */
-        createLoan: (data: any, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        createLoan: (data: any, query?: {
+            /** @default false */
+            isPatch?: boolean;
+        }, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -5178,6 +5785,21 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `DocumentDataRequest` Success
          */
         createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
+        /**
+         * No description
+         *
+         * @tags LegacyLoan
+         * @name CreateEditDraftForLoan
+         * @summary Create Edit Draft for Loan
+         * @request PUT:/api/los/loan/{loanID}/edit
+         * @secure
+         * @response `200` `Draft` Success
+         * @response `422` `UnprocessableEntity` Client Error
+         */
+        createEditDraftForLoan: (loanId: string, query?: {
+            /** @default false */
+            isCoBorrower?: boolean;
+        }, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -5935,7 +6557,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `string` Success
          * @response `422` `UnprocessableEntity` Client Error
          */
-        createLoanByDraftId: (data: LoanCreateRequest, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
+        createLoanByDraftId: (data: CreateLoanByDraftRequest, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6017,6 +6639,37 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `Loan` Success
          */
         updateLoan: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
+        /**
+         * @description Creates a new loan or adds borrowers to an existing loan based on the presence of LoanID
+         *
+         * @tags Loans V3
+         * @name SubmitLoanApplication
+         * @summary Submit Loan Application
+         * @request POST:/api/v3/loans/applications
+         * @secure
+         * @response `201` `LoanApplication` Created
+         * @response `400` `any` Bad Request
+         * @response `401` `ProblemDetails` Unauthorized
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        submitLoanApplication: (data: LoanApplicationRequest, params?: RequestParams) => Promise<AxiosResponse<LoanApplication, any>>;
+        /**
+         * @description Partially update a loan using GUID-based patch operations. Supports GUID lookups in collections, eliminating index ordering issues.
+         *
+         * @tags Loans V3
+         * @name PatchLoan
+         * @summary Patch Loan (GUID-based)
+         * @request PATCH:/api/v3/loans/{id}
+         * @secure
+         * @response `200` `Loan` Success
+         * @response `400` `any` Bad Request
+         * @response `401` `ProblemDetails` Unauthorized
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `any` Conflict
+         */
+        patchLoan: (id: string, data: any, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
         /**
          * No description
          *
@@ -7481,6 +8134,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/users/me
          * @secure
          * @response `200` `ImpersonatedDetailedUser` Success
+         * @response `401` `ProblemDetails` Unauthorized
          */
         getMe: (params?: RequestParams) => Promise<AxiosResponse<ImpersonatedDetailedUser, any>>;
         /**
