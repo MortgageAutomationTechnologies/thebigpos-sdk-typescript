@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.28.5
+ * @version v2.28.6
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1326,7 +1326,8 @@ export class Api extends HttpClient {
              * @request PUT:/api/los/loan/{loanID}/edit
              * @secure
              * @response `200` `Draft` Success
-             * @response `422` `UnprocessableEntity` Client Error
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
              */
             createEditDraftForLoan: (loanId, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/${loanId}/edit`, method: "PUT", query: query, secure: true, format: "json" }, params)),
             /**
@@ -2079,7 +2080,7 @@ export class Api extends HttpClient {
              * @summary Patch Loan (GUID-based)
              * @request PATCH:/api/v3/loans/{id}
              * @secure
-             * @response `200` `Loan` Success
+             * @response `200` `LoanApplication` Success
              * @response `400` `any` Bad Request
              * @response `401` `ProblemDetails` Unauthorized
              * @response `403` `ProblemDetails` Forbidden

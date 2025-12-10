@@ -255,8 +255,6 @@ export type LoanAsianRace =
   | "Vietnamese"
   | "Other";
 
-export type LoanApplicationResultType = "LoanCreated" | "BorrowerAdded";
-
 export type LoanAccountAssetType =
   | "Checking"
   | "Savings"
@@ -449,6 +447,18 @@ export interface AddressRequest {
   county?: string | null;
   /** @minLength 1 */
   postalCode: string;
+}
+
+export interface AddressV3 {
+  /** @format uuid */
+  id?: string | null;
+  street?: string | null;
+  unit?: string | null;
+  unitType?: string | null;
+  city?: string | null;
+  state?: string | null;
+  county?: string | null;
+  postalCode?: string | null;
 }
 
 export interface AdminAccessGetForms {
@@ -696,13 +706,6 @@ export interface ApplicationRowData {
 export interface Attachment {
   fileName: string;
   base64Data: string;
-}
-
-export interface BorrowerResult {
-  /** @format uuid */
-  borrowerId: string;
-  role: BorrowerResultRoleEnum;
-  email?: string | null;
 }
 
 export interface BranchBase {
@@ -2010,9 +2013,20 @@ export interface Loan {
 
 export interface LoanApplication {
   /** @format uuid */
-  loanId: string;
-  resultType: LoanApplicationResultTypeEnum;
-  borrowers: BorrowerResult[];
+  id?: string | null;
+  loanOfficerEmail?: string | null;
+  type?: LoanType | null;
+  purpose?: LoanPurpose | null;
+  lienPosition?: LoanLienPosition | null;
+  number?: string | null;
+  program?: string | null;
+  channel?: string | null;
+  /** @format date-time */
+  startDate?: string | null;
+  property?: LoanProperty | null;
+  financial?: LoanFinancial | null;
+  borrowers: LoanBorrower[];
+  nonOwningBorrowers: LoanNonOwningBorrower[];
 }
 
 export interface LoanApplicationRequest {
@@ -2047,6 +2061,57 @@ export interface LoanApplicationRequest {
   formId?: string | null;
 }
 
+export interface LoanBorrower {
+  /** @format uuid */
+  id?: string | null;
+  ssn?: string | null;
+  email?: string | null;
+  lastName?: string | null;
+  firstName?: string | null;
+  middleName?: string | null;
+  prefix?: LoanNamePrefix | null;
+  suffix?: LoanNameSuffix | null;
+  /** @format date */
+  birthDate?: string | null;
+  citizenship?: LoanCitizenship | null;
+  maritalStatus?: LoanMaritalStatus | null;
+  languagePreference?: LoanLanguagePreference | null;
+  /** @format int32 */
+  numberOfDependents?: number | null;
+  isPrimaryBorrower: boolean;
+  isFirstTimeHomeBuyer?: boolean | null;
+  hasJointAssetsAndLiabilities?: boolean | null;
+  dependentAges?: number[] | null;
+  demographics?: LoanBorrowerDemographics | null;
+  declarations?: LoanBorrowerDeclarations | null;
+  militaryService?: LoanBorrowerMilitaryService | null;
+  gifts: LoanBorrowerGift[];
+  addresses: LoanBorrowerAddress[];
+  consents: LoanBorrowerConsent[];
+  liabilities: LoanBorrowerLiability[];
+  otherAssets: LoanBorrowerOtherAsset[];
+  otherIncome: LoanBorrowerOtherIncome[];
+  phoneNumbers: LoanBorrowerPhoneNumber[];
+  accountAssets: LoanBorrowerAccountAsset[];
+  homeOwnership: LoanBorrowerHomeOwnership[];
+  alternateNames: LoanBorrowerAlternateName[];
+  otherLiabilities: LoanBorrowerOtherLiability[];
+  realEstateAssets: LoanBorrowerRealEstateAsset[];
+  currentEmployment: LoanBorrowerEmploymentCurrent[];
+  previousEmployment: LoanBorrowerEmploymentPrevious[];
+}
+
+export interface LoanBorrowerAccountAsset {
+  /** @format uuid */
+  id?: string | null;
+  name?: string | null;
+  accountNumber?: string | null;
+  financialInstitution?: string | null;
+  /** @format double */
+  value?: number | null;
+  type?: LoanAccountAssetType | null;
+}
+
 export interface LoanBorrowerAccountAssetRequest {
   /** @maxLength 255 */
   name?: string | null;
@@ -2060,6 +2125,24 @@ export interface LoanBorrowerAccountAssetRequest {
    */
   value?: number | null;
   type?: LoanAccountAssetType | null;
+}
+
+export interface LoanBorrowerAddress {
+  /** @format uuid */
+  id?: string | null;
+  street?: string | null;
+  unit?: string | null;
+  unitType?: string | null;
+  city?: string | null;
+  state?: string | null;
+  county?: string | null;
+  postalCode?: string | null;
+  housing?: LoanHousingType | null;
+  /** @format double */
+  rentAmount?: number | null;
+  isCurrent?: boolean | null;
+  isMailingAddress?: boolean | null;
+  timeAtAddress?: TimeAtAddress | null;
 }
 
 export interface LoanBorrowerAddressRequest {
@@ -2086,6 +2169,15 @@ export interface LoanBorrowerAddressRequest {
   timeAtAddress?: TimeAtAddressRequest | null;
 }
 
+export interface LoanBorrowerAlternateName {
+  /** @format uuid */
+  id?: string | null;
+  suffix?: string | null;
+  lastName?: string | null;
+  firstName?: string | null;
+  middleName?: string | null;
+}
+
 export interface LoanBorrowerAlternateNameRequest {
   /** @maxLength 20 */
   suffix?: string | null;
@@ -2097,6 +2189,14 @@ export interface LoanBorrowerAlternateNameRequest {
   middleName?: string | null;
 }
 
+export interface LoanBorrowerBankruptcyDeclaration {
+  /** @format uuid */
+  id?: string | null;
+  isAffirmative?: boolean | null;
+  description?: string | null;
+  types?: LoanBankruptcyType[] | null;
+}
+
 export interface LoanBorrowerBankruptcyDeclarationRequest {
   isAffirmative?: boolean | null;
   /** @maxLength 1000 */
@@ -2104,10 +2204,37 @@ export interface LoanBorrowerBankruptcyDeclarationRequest {
   types?: LoanBankruptcyType[] | null;
 }
 
+export interface LoanBorrowerConsent {
+  /** @format uuid */
+  id?: string | null;
+  type?: ConsentType | null;
+  providedConsent?: boolean | null;
+  ipAddress?: IPAddress | null;
+}
+
 export interface LoanBorrowerConsentRequest {
   type?: ConsentType | null;
   providedConsent?: boolean | null;
   ipAddress?: IPAddress | null;
+}
+
+export interface LoanBorrowerDeclarations {
+  /** @format uuid */
+  id?: string | null;
+  borrowingMoney?: LoanBorrowerMoneyDeclaration | null;
+  bankruptcy?: LoanBorrowerBankruptcyDeclaration | null;
+  primaryResidence?: LoanBorrowerPrimaryResidenceDeclaration | null;
+  foreclosure?: LoanBorrowerSimpleDeclaration | null;
+  coSignerOnDebt?: LoanBorrowerSimpleDeclaration | null;
+  partyToLawsuit?: LoanBorrowerSimpleDeclaration | null;
+  outstandingJudgments?: LoanBorrowerSimpleDeclaration | null;
+  applyingForNewCredit?: LoanBorrowerSimpleDeclaration | null;
+  subjectToLienPriority?: LoanBorrowerSimpleDeclaration | null;
+  inDelinquencyOrDefault?: LoanBorrowerSimpleDeclaration | null;
+  relationshipWithSeller?: LoanBorrowerSimpleDeclaration | null;
+  preForeclosureOrShortSale?: LoanBorrowerSimpleDeclaration | null;
+  applyingForAnotherMortgage?: LoanBorrowerSimpleDeclaration | null;
+  conveyedTitleToPropertyForeclosure?: LoanBorrowerSimpleDeclaration | null;
 }
 
 export interface LoanBorrowerDeclarationsRequest {
@@ -2127,6 +2254,23 @@ export interface LoanBorrowerDeclarationsRequest {
   conveyedTitleToPropertyForeclosure?: LoanBorrowerSimpleDeclarationRequest | null;
 }
 
+export interface LoanBorrowerDemographics {
+  /** @format uuid */
+  id?: string | null;
+  race?: LoanBorrowerDemographicsRace | null;
+  gender?: LoanBorrowerDemographicsGender | null;
+  ethnicity?: LoanBorrowerDemographicsEthnicity | null;
+}
+
+export interface LoanBorrowerDemographicsEthnicity {
+  /** @format uuid */
+  id?: string | null;
+  isDeclined?: boolean | null;
+  isHispanicOrLatino?: boolean | null;
+  otherHispanicOrLatino?: string | null;
+  hispanicOrLatinoEthnicities?: LoanHispanicEthnicity[] | null;
+}
+
 export interface LoanBorrowerDemographicsEthnicityRequest {
   isDeclined?: boolean | null;
   isHispanicOrLatino?: boolean | null;
@@ -2135,9 +2279,32 @@ export interface LoanBorrowerDemographicsEthnicityRequest {
   hispanicOrLatinoEthnicities?: LoanHispanicEthnicity[] | null;
 }
 
+export interface LoanBorrowerDemographicsGender {
+  /** @format uuid */
+  id?: string | null;
+  isDeclined?: boolean | null;
+  gender?: LoanGenderType | null;
+}
+
 export interface LoanBorrowerDemographicsGenderRequest {
   isDeclined?: boolean | null;
   gender?: LoanGenderType | null;
+}
+
+export interface LoanBorrowerDemographicsRace {
+  /** @format uuid */
+  id?: string | null;
+  isAmericanIndianOrAlaskanNative?: boolean | null;
+  otherAmericanIndianOrAlaskanNative?: string | null;
+  isAsian?: boolean | null;
+  asianRaces?: LoanAsianRace[] | null;
+  otherAsianRace?: string | null;
+  isBlackOrAfrican?: boolean | null;
+  isPacificIslander?: boolean | null;
+  pacificIslanderRace?: LoanPacificIslanderRace[] | null;
+  otherPacificIslanderRace?: string | null;
+  isWhite?: boolean | null;
+  isDeclined?: boolean | null;
 }
 
 export interface LoanBorrowerDemographicsRaceRequest {
@@ -2161,6 +2328,39 @@ export interface LoanBorrowerDemographicsRequest {
   race?: LoanBorrowerDemographicsRaceRequest | null;
   gender?: LoanBorrowerDemographicsGenderRequest | null;
   ethnicity?: LoanBorrowerDemographicsEthnicityRequest | null;
+}
+
+export interface LoanBorrowerEmploymentCurrent {
+  /** @format uuid */
+  id?: string | null;
+  name?: string | null;
+  title?: string | null;
+  phoneNumber?: string | null;
+  /** @format date */
+  startDate?: string | null;
+  isSelfEmployed?: boolean | null;
+  isEmployedByPartyInTransaction?: boolean | null;
+  address?: AddressV3 | null;
+  ownership?: LoanBorrowerEmploymentCurrentOwnership | null;
+  grossIncome?: LoanBorrowerEmploymentCurrentGrossIncome | null;
+  timeInLineOfWork?: LoanBorrowerEmploymentCurrentTimeInLineOfWork | null;
+}
+
+export interface LoanBorrowerEmploymentCurrentGrossIncome {
+  /** @format uuid */
+  id?: string | null;
+  /** @format double */
+  base?: number | null;
+  /** @format double */
+  other?: number | null;
+  /** @format double */
+  bonus?: number | null;
+  /** @format double */
+  overtime?: number | null;
+  /** @format double */
+  commission?: number | null;
+  /** @format double */
+  militaryEntitlements?: number | null;
 }
 
 export interface LoanBorrowerEmploymentCurrentGrossIncomeRequest {
@@ -2196,6 +2396,15 @@ export interface LoanBorrowerEmploymentCurrentGrossIncomeRequest {
   militaryEntitlements?: number | null;
 }
 
+export interface LoanBorrowerEmploymentCurrentOwnership {
+  /** @format uuid */
+  id?: string | null;
+  isOwner?: boolean | null;
+  hasOwnershipOver25Percent?: boolean | null;
+  /** @format double */
+  monthlyIncome?: number | null;
+}
+
 export interface LoanBorrowerEmploymentCurrentOwnershipRequest {
   isOwner?: boolean | null;
   hasOwnershipOver25Percent?: boolean | null;
@@ -2222,11 +2431,36 @@ export interface LoanBorrowerEmploymentCurrentRequest {
   timeInLineOfWork?: LoanBorrowerEmploymentCurrentTimeInLineOfWorkRequest | null;
 }
 
+export interface LoanBorrowerEmploymentCurrentTimeInLineOfWork {
+  /** @format uuid */
+  id?: string | null;
+  /** @format int32 */
+  years?: number | null;
+  /** @format int32 */
+  months?: number | null;
+}
+
 export interface LoanBorrowerEmploymentCurrentTimeInLineOfWorkRequest {
   /** @format int32 */
   years?: number | null;
   /** @format int32 */
   months?: number | null;
+}
+
+export interface LoanBorrowerEmploymentPrevious {
+  /** @format uuid */
+  id?: string | null;
+  name?: string | null;
+  title?: string | null;
+  phoneNumber?: string | null;
+  /** @format date */
+  startDate?: string | null;
+  /** @format date */
+  endDate?: string | null;
+  /** @format double */
+  grossIncome?: number | null;
+  isSelfEmployed?: boolean | null;
+  address?: AddressV3 | null;
 }
 
 export interface LoanBorrowerEmploymentPreviousRequest {
@@ -2248,6 +2482,16 @@ export interface LoanBorrowerEmploymentPreviousRequest {
   address?: AddressRequest | null;
 }
 
+export interface LoanBorrowerGift {
+  /** @format uuid */
+  id?: string | null;
+  /** @format double */
+  value?: number | null;
+  isDeposited?: boolean | null;
+  source?: LoanGiftSource | null;
+  assetType?: LoanGiftAssetType | null;
+}
+
 export interface LoanBorrowerGiftRequest {
   /**
    * @format double
@@ -2257,6 +2501,24 @@ export interface LoanBorrowerGiftRequest {
   isDeposited?: boolean | null;
   source?: LoanGiftSource | null;
   assetType?: LoanGiftAssetType | null;
+}
+
+export interface LoanBorrowerHomeOwnership {
+  /** @format uuid */
+  id?: string | null;
+  /** @format date */
+  dateCompleted?: string | null;
+  type?: LoanHomeOwnershipType | null;
+  format?: LoanHomeOwnershipFormat | null;
+  provider?: LoanBorrowerHomeOwnershipProvider | null;
+}
+
+export interface LoanBorrowerHomeOwnershipProvider {
+  /** @format uuid */
+  id?: string | null;
+  name?: string | null;
+  phoneNumber?: string | null;
+  address?: AddressV3 | null;
 }
 
 export interface LoanBorrowerHomeOwnershipProviderRequest {
@@ -2272,6 +2534,22 @@ export interface LoanBorrowerHomeOwnershipRequest {
   type?: LoanHomeOwnershipType | null;
   format?: LoanHomeOwnershipFormat | null;
   provider?: LoanBorrowerHomeOwnershipProviderRequest | null;
+}
+
+export interface LoanBorrowerLiability {
+  /** @format uuid */
+  id?: string | null;
+  type?: LoanLiabilityType | null;
+  name?: string | null;
+  accountNumber?: string | null;
+  financialInstitution?: string | null;
+  /** @format double */
+  balance?: number | null;
+  /** @format double */
+  monthlyPayment?: number | null;
+  /** @format int32 */
+  monthsLeftToPay?: number | null;
+  isPaidOffBeforeClosing?: boolean | null;
 }
 
 export interface LoanBorrowerLiabilityRequest {
@@ -2300,11 +2578,29 @@ export interface LoanBorrowerLiabilityRequest {
   isPaidOffBeforeClosing?: boolean | null;
 }
 
+export interface LoanBorrowerMilitaryService {
+  /** @format uuid */
+  id?: string | null;
+  hasServed?: boolean | null;
+  /** @format date */
+  endDate?: string | null;
+  type?: LoanMilitaryServiceType | null;
+}
+
 export interface LoanBorrowerMilitaryServiceRequest {
   hasServed?: boolean | null;
   /** @format date */
   endDate?: string | null;
   type?: LoanMilitaryServiceType | null;
+}
+
+export interface LoanBorrowerMoneyDeclaration {
+  /** @format uuid */
+  id?: string | null;
+  isAffirmative?: boolean | null;
+  description?: string | null;
+  /** @format double */
+  amount?: number | null;
 }
 
 export interface LoanBorrowerMoneyDeclarationRequest {
@@ -2318,6 +2614,15 @@ export interface LoanBorrowerMoneyDeclarationRequest {
   amount?: number | null;
 }
 
+export interface LoanBorrowerOtherAsset {
+  /** @format uuid */
+  id?: string | null;
+  type?: LoanOtherAssetType | null;
+  other?: string | null;
+  /** @format double */
+  value?: number | null;
+}
+
 export interface LoanBorrowerOtherAssetRequest {
   type?: LoanOtherAssetType | null;
   /** @maxLength 255 */
@@ -2329,6 +2634,14 @@ export interface LoanBorrowerOtherAssetRequest {
   value?: number | null;
 }
 
+export interface LoanBorrowerOtherIncome {
+  /** @format uuid */
+  id?: string | null;
+  /** @format double */
+  value?: number | null;
+  type?: LoanOtherIncomeType | null;
+}
+
 export interface LoanBorrowerOtherIncomeRequest {
   /**
    * @format double
@@ -2336,6 +2649,14 @@ export interface LoanBorrowerOtherIncomeRequest {
    */
   value?: number | null;
   type?: LoanOtherIncomeType | null;
+}
+
+export interface LoanBorrowerOtherLiability {
+  /** @format uuid */
+  id?: string | null;
+  /** @format double */
+  monthlyPayment?: number | null;
+  type?: LoanOtherLiabilityType | null;
 }
 
 export interface LoanBorrowerOtherLiabilityRequest {
@@ -2347,11 +2668,29 @@ export interface LoanBorrowerOtherLiabilityRequest {
   type?: LoanOtherLiabilityType | null;
 }
 
+export interface LoanBorrowerPhoneNumber {
+  /** @format uuid */
+  id?: string | null;
+  ext?: string | null;
+  number?: string | null;
+  type?: LoanPhoneNumberType | null;
+}
+
 export interface LoanBorrowerPhoneNumberRequest {
   /** @maxLength 10 */
   ext?: string | null;
   number?: string | null;
   type?: LoanPhoneNumberType | null;
+}
+
+export interface LoanBorrowerPrimaryResidenceDeclaration {
+  /** @format uuid */
+  id?: string | null;
+  isAffirmative?: boolean | null;
+  description?: string | null;
+  hasInterestInLastThreeYears?: boolean | null;
+  titleHeld?: LoanTitleHeld | null;
+  propertyType?: LoanOccupancyType | null;
 }
 
 export interface LoanBorrowerPrimaryResidenceDeclarationRequest {
@@ -2361,6 +2700,36 @@ export interface LoanBorrowerPrimaryResidenceDeclarationRequest {
   hasInterestInLastThreeYears?: boolean | null;
   titleHeld?: LoanTitleHeld | null;
   propertyType?: LoanOccupancyType | null;
+}
+
+export interface LoanBorrowerRealEstateAsset {
+  /** @format uuid */
+  id?: string | null;
+  status?: LoanRealEstateStatus | null;
+  occupancy?: LoanOccupancyType | null;
+  /** @format double */
+  marketValue?: number | null;
+  /** @format double */
+  monthlyInsTaxDues?: number | null;
+  /** @format double */
+  monthlyRentalIncome?: number | null;
+  address?: AddressV3 | null;
+  mortgages?: LoanBorrowerRealEstateAssetMortgage[] | null;
+}
+
+export interface LoanBorrowerRealEstateAssetMortgage {
+  /** @format uuid */
+  id?: string | null;
+  creditor?: string | null;
+  accountNumber?: string | null;
+  /** @format double */
+  balance?: number | null;
+  /** @format double */
+  creditLimit?: number | null;
+  /** @format double */
+  monthlyMortgagePayment?: number | null;
+  isBalancePaidBeforeClosing?: boolean | null;
+  loanType?: LoanType | null;
 }
 
 export interface LoanBorrowerRealEstateAssetMortgageRequest {
@@ -2448,6 +2817,13 @@ export interface LoanBorrowerRequest {
   realEstateAssets: LoanBorrowerRealEstateAssetRequest[];
   currentEmployment: LoanBorrowerEmploymentCurrentRequest[];
   previousEmployment: LoanBorrowerEmploymentPreviousRequest[];
+}
+
+export interface LoanBorrowerSimpleDeclaration {
+  /** @format uuid */
+  id?: string | null;
+  isAffirmative?: boolean | null;
+  description?: string | null;
 }
 
 export interface LoanBorrowerSimpleDeclarationRequest {
@@ -2669,6 +3045,18 @@ export interface LoanDraftSearchCriteria {
   draftTypes?: DraftType[] | null;
 }
 
+export interface LoanFinancial {
+  /** @format uuid */
+  id?: string | null;
+  isDebtsAssetsReviewed?: boolean | null;
+  /** @format double */
+  cashToClose?: number | null;
+  /** @format double */
+  cashDownPayment?: number | null;
+  /** @format double */
+  maximumPurchasePrice?: number | null;
+}
+
 export interface LoanFinancialRequest {
   isDebtsAssetsReviewed?: boolean | null;
   /**
@@ -2783,6 +3171,18 @@ export interface LoanLogSearchCriteria {
   levels?: LogLevel[] | null;
 }
 
+export interface LoanNonOwningBorrower {
+  /** @format uuid */
+  id?: string | null;
+  email?: string | null;
+  lastName?: string | null;
+  firstName?: string | null;
+  middleName?: string | null;
+  prefix?: LoanNamePrefix | null;
+  suffix?: LoanNameSuffix | null;
+  consents: LoanBorrowerConsent[];
+}
+
 export interface LoanNonOwningBorrowerRequest {
   email?: string | null;
   /** @maxLength 100 */
@@ -2833,6 +3233,49 @@ export interface LoanOfficerSearchCriteria {
 
 export interface LoanPatchRequestGuidPatchDocument {
   operations: GuidPatchOperation[];
+}
+
+export interface LoanProperty {
+  /** @format uuid */
+  id?: string | null;
+  trustType?: LoanTrustType | null;
+  occupancy?: LoanOccupancyType | null;
+  propertyType?: LoanPropertyType | null;
+  referenceId?: string | null;
+  /** @format int32 */
+  yearBuilt?: number | null;
+  /** @format int32 */
+  yearAcquired?: number | null;
+  /** @format int32 */
+  numberOfUnits?: number | null;
+  /** @format double */
+  salePrice?: number | null;
+  /** @format double */
+  propertyValue?: number | null;
+  /** @format double */
+  purchasePrice?: number | null;
+  /** @format double */
+  estimatedValue?: number | null;
+  /** @format double */
+  monthlyRentalIncome?: number | null;
+  isMixedUseProperty?: boolean | null;
+  isManufacturedHome?: boolean | null;
+  isFhaSecondaryResidence?: boolean | null;
+  address?: AddressV3 | null;
+  mortgages: LoanPropertyMortgage[];
+}
+
+export interface LoanPropertyMortgage {
+  /** @format uuid */
+  id?: string | null;
+  creditor?: string | null;
+  /** @format double */
+  loanAmount?: number | null;
+  /** @format double */
+  creditLimit?: number | null;
+  /** @format double */
+  monthlyPayment?: number | null;
+  lienType?: LoanLienPosition | null;
 }
 
 export interface LoanPropertyMortgageRequest {
@@ -4477,6 +4920,15 @@ export interface Theme {
   iconColor?: string | null;
 }
 
+export interface TimeAtAddress {
+  /** @format uuid */
+  id?: string | null;
+  /** @format int32 */
+  years?: number | null;
+  /** @format int32 */
+  months?: number | null;
+}
+
 export interface TimeAtAddressRequest {
   /** @format int32 */
   years?: number | null;
@@ -4984,20 +5436,6 @@ export interface Workflow {
   icon: string;
 }
 
-export type BorrowerResultRoleEnum =
-  | "Borrower"
-  | "CoBorrower"
-  | "NonBorrower"
-  | "LoanOfficer"
-  | "LoanProcessor"
-  | "LoanOfficerAssistant"
-  | "SupportingLoanOfficer"
-  | "BuyerAgent"
-  | "SellerAgent"
-  | "TitleInsuranceAgent"
-  | "EscrowAgent"
-  | "SettlementAgent";
-
 export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
 
 export type CreateAccountRequestEnvironmentEnum =
@@ -5098,8 +5536,6 @@ export type IpAddressAddressFamilyEnum =
   | "Packet"
   | "ControllerAreaNetwork"
   | "Unknown";
-
-export type LoanApplicationResultTypeEnum = "LoanCreated" | "BorrowerAdded";
 
 export type LoanContactRoleEnum =
   | "Borrower"
@@ -5461,7 +5897,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.28.5
+ * @version v2.28.6
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -7943,7 +8379,8 @@ export class Api<
      * @request PUT:/api/los/loan/{loanID}/edit
      * @secure
      * @response `200` `Draft` Success
-     * @response `422` `UnprocessableEntity` Client Error
+     * @response `400` `ProblemDetails` Bad Request
+     * @response `404` `ProblemDetails` Not Found
      */
     createEditDraftForLoan: (
       loanId: string,
@@ -7953,7 +8390,7 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<Draft, UnprocessableEntity>({
+      this.request<Draft, ProblemDetails>({
         path: `/api/los/loan/${loanId}/edit`,
         method: "PUT",
         query: query,
@@ -9584,7 +10021,7 @@ export class Api<
      * @summary Patch Loan (GUID-based)
      * @request PATCH:/api/v3/loans/{id}
      * @secure
-     * @response `200` `Loan` Success
+     * @response `200` `LoanApplication` Success
      * @response `400` `any` Bad Request
      * @response `401` `ProblemDetails` Unauthorized
      * @response `403` `ProblemDetails` Forbidden
@@ -9592,7 +10029,7 @@ export class Api<
      * @response `409` `any` Conflict
      */
     patchLoan: (id: string, data: any, params: RequestParams = {}) =>
-      this.request<Loan, ProblemDetails>({
+      this.request<LoanApplication, ProblemDetails>({
         path: `/api/v3/loans/${id}`,
         method: "PATCH",
         body: data,
