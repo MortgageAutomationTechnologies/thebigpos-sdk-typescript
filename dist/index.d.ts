@@ -3330,7 +3330,7 @@ export interface NotificationTemplateVersionUpdateRequest {
 }
 export interface Operation {
     op?: string;
-    value?: object | null;
+    value?: string | number | boolean | null | object;
     path?: string;
 }
 export interface OverridePasswordRequest {
@@ -4965,6 +4965,7 @@ export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequest
     format?: ResponseType;
 }
 export declare enum ContentType {
+    JsonPatch = "application/json-patch+json",
     Json = "application/json",
     JsonApi = "application/vnd.api+json",
     FormData = "multipart/form-data",

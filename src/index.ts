@@ -4027,7 +4027,7 @@ export interface NotificationTemplateVersionUpdateRequest {
 
 export interface Operation {
   op?: string;
-  value?: object | null;
+  value?: string | number | boolean | null | object;
   path?: string;
 }
 
@@ -5806,6 +5806,7 @@ export interface ApiConfig<SecurityDataType = unknown>
 }
 
 export enum ContentType {
+  JsonPatch = "application/json-patch+json",
   Json = "application/json",
   JsonApi = "application/vnd.api+json",
   FormData = "multipart/form-data",
@@ -8170,7 +8171,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8280,7 +8281,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8307,7 +8308,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8548,7 +8549,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8628,7 +8629,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -10093,7 +10094,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -10168,7 +10169,7 @@ export class Api<
         method: "POST",
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
