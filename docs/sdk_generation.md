@@ -37,7 +37,20 @@ npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/{versio
 
 > **Note:** If generating locally, use `http://localhost:5212/swagger/{version}/swagger.json` due to self-signed cert issues with https.
 
-## Step 3: Update the version
+## Step 3: Apply post-generation fixes
+
+Run the script to fix PATCH methods content type and Operation interface:
+
+```bash
+node scripts/apply-json-patch-content-type.js
+```
+
+This script:
+- Sets all PATCH methods to use `ContentType.JsonPatch`
+- Adds `JsonPatch` to the `ContentType` enum
+- Fixes the `Operation` interface to allow any value type
+
+## Step 4: Update the version
 
 Use npm's version command to update the version in `package.json`:
 
@@ -52,7 +65,7 @@ npm version X.Y.Z
 - For patch increments: `npm version patch`
 - For minor increments: `npm version minor`
 
-## Step 4: Build the SDK
+## Step 5: Build the SDK
 
 ```bash
 npm run build
@@ -60,7 +73,7 @@ npm run build
 
 Ensure there are no TypeScript compilation errors.
 
-## Step 5: Merge develop (if needed)
+## Step 6: Merge develop (if needed)
 
 If there are changes in develop that need to be included:
 
@@ -69,9 +82,9 @@ git fetch origin develop
 git merge origin/develop
 ```
 
-If there are conflicts in `src/index.ts` or `dist/*`, regenerate the SDK (Step 2) and rebuild (Step 4) to resolve them.
+If there are conflicts in `src/index.ts` or `dist/*`, regenerate the SDK (Step 2), apply fixes (Step 3), and rebuild (Step 5) to resolve them.
 
-## Step 6: Commit and push
+## Step 7: Commit and push
 
 ```bash
 git add .
@@ -79,7 +92,7 @@ git commit -m "X.Y.Z"
 git push -u origin release/X.Y.Z
 ```
 
-## Step 7: Publish to NPM
+## Step 8: Publish to NPM
 
 ### Authentication
 
@@ -129,7 +142,7 @@ yarn add @matech/thebigpos-sdk@next
 yarn add @matech/thebigpos-sdk@X.Y.Z
 ```
 
-## Step 8: Clean up
+## Step 9: Clean up
 
 1. **Revoke the NPM token** after publishing for security
 2. **Create a Pull Request** from `release/X.Y.Z` to `develop` and `main`

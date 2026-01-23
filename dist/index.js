@@ -1191,7 +1191,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1241,7 +1241,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1254,7 +1254,7 @@ export class Api extends HttpClient {
              * @response `202` `string` Accepted
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1367,7 +1367,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `ListingFile` Success
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1400,7 +1400,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `(ListingPhoto)[]` Success
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2086,7 +2086,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `Loan` Success
              */
-            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            updateLoan: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * @description Retrieves a loan by its unique identifier
              *
@@ -2131,7 +2131,7 @@ export class Api extends HttpClient {
              * @response `403` `ProblemDetails` Forbidden
              * @response `404` `ProblemDetails` Not Found
              */
-            submitLoanApplication: (data, params = {}) => this.request(Object.assign({ path: `/api/v3/loans/applications`, method: "POST", body: data, secure: true, type: ContentType.JsonPatchPatchPatch, format: "json" }, params)),
+            submitLoanApplication: (data, params = {}) => this.request(Object.assign({ path: `/api/v3/loans/applications`, method: "POST", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * @description Returns a paginated list of loans based on search criteria
              *
