@@ -322,6 +322,8 @@ export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
 
+export type BillingType = "ClosedLoan" | "LoanOfficer";
+
 export type AddressFamily =
   | "Unspecified"
   | "Unix"
@@ -399,13 +401,23 @@ export interface Account {
   losSettings: LOSSettings;
   asoSettings?: ASOSettings | null;
   settings: AccountSettings;
+  billingSettings?: AccountBilling | null;
 }
 
-export interface AccountReportFailure {
-  /** @format uuid */
-  accountID: string;
-  accountName: string;
-  errorMessage: string;
+export interface AccountBilling {
+  billingType: string;
+  /** @format double */
+  contractedRate: number;
+}
+
+export interface AccountBillingRequest {
+  billingType: AccountBillingRequestBillingTypeEnum;
+  /**
+   * @format double
+   * @min 0
+   * @exclusiveMin true
+   */
+  contractedRate: number;
 }
 
 export interface AccountSettings {
@@ -522,6 +534,7 @@ export interface AdminAccessUser {
   /** @format int32 */
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
+  preferredLoanOfficer?: PreferredLoanOfficer | null;
   loanIDs: string[];
   drafts: Draft[];
   notificationSettings?: UserNotificationSettings | null;
@@ -782,6 +795,7 @@ export interface BranchUser {
   /** @format int32 */
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
+  preferredLoanOfficer?: PreferredLoanOfficer | null;
   loanIDs: string[];
   drafts: Draft[];
   notificationSettings?: UserNotificationSettings | null;
@@ -972,7 +986,7 @@ export interface CorporateSearchCriteria {
 }
 
 export interface CreateAccessScopeRequest {
-  scopeType: "User" | "Branch";
+  scopeType: CreateAccessScopeRequestScopeTypeEnum;
   /** @format uuid */
   userId?: string | null;
   /** @format uuid */
@@ -996,8 +1010,9 @@ export interface CreateAccountRequest {
    */
   nlmsid: number;
   settings: AccountSettingsRequest;
-  environment: "Development" | "Staging" | "UAT" | "Production";
+  environment: CreateAccountRequestEnvironmentEnum;
   losIntegration: LOSIntegration;
+  billingSettings: AccountBillingRequest;
 }
 
 export interface CreateBranchRequest {
@@ -1028,19 +1043,7 @@ export interface CreateDocumentTemplateRequest {
 export interface CreateGroupMemberRequest {
   /** @format uuid */
   userId: string;
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  loanRole: CreateGroupMemberRequestLoanRoleEnum;
 }
 
 export interface CreateInviteRequest {
@@ -1052,7 +1055,7 @@ export interface CreateInviteRequest {
   emailAddress: string;
   phoneNumber?: string | null;
   /** @deprecated */
-  relationship: "NotApplicable" | "Spouse" | "NonSpouse";
+  relationship: CreateInviteRequestRelationshipEnum;
   loanID: string;
   route?: string | null;
   /** @format uuid */
@@ -1075,7 +1078,7 @@ export interface CreateLoanImportRequest {
    * @minLength 1
    */
   startDate: string;
-  importMode: "All" | "NewOnly" | "UpdateOnly";
+  importMode: CreateLoanImportRequestImportModeEnum;
 }
 
 export interface CreateSession {
@@ -1097,19 +1100,7 @@ export interface CreateUserDeviceRequest {
 }
 
 export interface CreateUserDraft {
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  loanRole: CreateUserDraftLoanRoleEnum;
 }
 
 export interface CreateUserGroupRequest {
@@ -1190,6 +1181,7 @@ export interface DetailedUser {
   /** @format int32 */
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
+  preferredLoanOfficer?: PreferredLoanOfficer | null;
   loanIDs: string[];
   drafts: Draft[];
   notificationSettings?: UserNotificationSettings | null;
@@ -1306,9 +1298,18 @@ export interface DocumentFolder {
   files: DocumentFile[];
 }
 
+export interface DocumentFoldersRequest {
+  searchText?: string | null;
+  losStatuses?: LOSStatus[] | null;
+  sortBy?: string | null;
+  sortDirection?: string | null;
+}
+
 export interface DocumentSync {
   /** @format int32 */
   syncedCount: number;
+  /** @format date-time */
+  lastLosDocumentsSyncDate?: string | null;
 }
 
 export interface DocumentTemplate {
@@ -1415,7 +1416,7 @@ export interface Draft {
   siteConfiguration: SiteConfigurationReduced;
   /** @format uuid */
   loanID?: string | null;
-  type: "NewLoan" | "EditLoan";
+  type: DraftTypeEnum;
   isCoBorrower: boolean;
 }
 
@@ -1434,7 +1435,7 @@ export interface DraftContent {
   siteConfiguration: SiteConfigurationReduced;
   /** @format uuid */
   loanID?: string | null;
-  type: "NewLoan" | "EditLoan";
+  type: DraftContentTypeEnum;
   isCoBorrower: boolean;
   applicationPayload: any;
 }
@@ -1758,20 +1759,7 @@ export interface FusionFieldDisplay {
 }
 
 export interface FusionReportFilter {
-  filterType:
-    | "DateGreaterThanOrEqualTo"
-    | "DateGreaterThan"
-    | "DateLessThan"
-    | "DateLessThanOrEqualTo"
-    | "DateEquals"
-    | "DateDoesntEqual"
-    | "DateNonEmpty"
-    | "DateEmpty"
-    | "StringContains"
-    | "StringEquals"
-    | "StringNotEmpty"
-    | "StringNotEquals"
-    | "StringNotContains";
+  filterType: FusionReportFilterFilterTypeEnum;
   targetField: string;
   targetValue: string;
 }
@@ -1899,40 +1887,7 @@ export interface GuidPatchOperation {
 }
 
 export interface IPAddress {
-  addressFamily:
-    | "Unspecified"
-    | "Unix"
-    | "InterNetwork"
-    | "ImpLink"
-    | "Pup"
-    | "Chaos"
-    | "NS"
-    | "Ipx"
-    | "Iso"
-    | "Osi"
-    | "Ecma"
-    | "DataKit"
-    | "Ccitt"
-    | "Sna"
-    | "DecNet"
-    | "DataLink"
-    | "Lat"
-    | "HyperChannel"
-    | "AppleTalk"
-    | "NetBios"
-    | "VoiceView"
-    | "FireFox"
-    | "Banyan"
-    | "Atm"
-    | "InterNetworkV6"
-    | "Cluster"
-    | "Ieee12844"
-    | "Irda"
-    | "NetworkDesigners"
-    | "Max"
-    | "Packet"
-    | "ControllerAreaNetwork"
-    | "Unknown";
+  addressFamily: IpAddressAddressFamilyEnum;
   /** @format int64 */
   scopeId: number;
   isIPv6Multicast: boolean;
@@ -1969,6 +1924,7 @@ export interface ImpersonatedDetailedUser {
   /** @format int32 */
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
+  preferredLoanOfficer?: PreferredLoanOfficer | null;
   loanIDs: string[];
   drafts: Draft[];
   notificationSettings?: UserNotificationSettings | null;
@@ -2180,6 +2136,8 @@ export interface Loan {
   isInSync: boolean;
   /** @format date-time */
   syncDate?: string | null;
+  /** @format date-time */
+  lastLosDocumentsSyncDate?: string | null;
   isLocked: boolean;
   isLockedFromEditing: boolean;
   excludeFromAutoTaskReminders?: boolean | null;
@@ -2229,6 +2187,8 @@ export interface LoanApplicationRequest {
   /** @minItems 1 */
   borrowers: LoanBorrowerRequest[];
   nonOwningBorrowers: LoanNonOwningBorrowerRequest[];
+  /** @format uuid */
+  draftId?: string | null;
   /** @format uuid */
   existingLoanId?: string | null;
 }
@@ -3172,19 +3132,7 @@ export interface LoanContact {
   email?: string | null;
   phone?: string | null;
   companyName?: string | null;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  role: LoanContactRoleEnum;
 }
 
 export interface LoanContactList {
@@ -3316,19 +3264,14 @@ export interface LoanImport {
   /** @format int32 */
   importedCount: number;
   statusMessage?: string | null;
-  status:
-    | "WaitingProcess"
-    | "InProgress"
-    | "Completed"
-    | "Failed"
-    | "Cancelled";
-  importMode: "All" | "NewOnly" | "UpdateOnly";
+  status: LoanImportStatusEnum;
+  importMode: LoanImportImportModeEnum;
   /** @format date-time */
   createdAt?: string | null;
 }
 
 export interface LoanImportLog {
-  level: "None" | "Info" | "Warning" | "Error";
+  level: LoanImportLogLevelEnum;
   message: string;
   /** @format date-time */
   createdAt: string;
@@ -3389,20 +3332,8 @@ export interface LoanListPaginated {
 export interface LoanLog {
   /** @format uuid */
   id: string;
-  level: "None" | "Info" | "Warning" | "Error";
-  type:
-    | "Loan"
-    | "Queue"
-    | "POSFlagChanged"
-    | "Verification"
-    | "DocumentUploaded"
-    | "LoanCreated"
-    | "WorkflowSubmitted"
-    | "UserInvitationSent"
-    | "CoBorrowerAdded"
-    | "TaskCompleted"
-    | "LoanStatusChanged"
-    | "EConsent";
+  level: LoanLogLevelEnum;
+  type: LoanLogTypeEnum;
   message: string;
   /** @format date-time */
   createdAt: string;
@@ -3686,19 +3617,7 @@ export interface LoanUser {
   email: string;
   phone?: string | null;
   role: string;
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  loanRole: LoanUserLoanRoleEnum;
   isUser: boolean;
   /** @format date-time */
   createdAt: string;
@@ -4018,6 +3937,15 @@ export interface PostLoanComparisonPdfRequest {
   siteConfigurationID: string;
 }
 
+export interface PreferredLoanOfficer {
+  /** @format uuid */
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+}
+
 export interface PreliminaryCondition {
   /** @format uuid */
   id: string;
@@ -4334,7 +4262,7 @@ export interface SSOTokenRequest {
 }
 
 export interface SamlMetadataRequest {
-  ssoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF";
+  ssoIntegration: SamlMetadataRequestSsoIntegrationEnum;
 }
 
 export interface SendForgotPasswordRequest {
@@ -4373,7 +4301,7 @@ export interface SiteConfiguration {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationTypeEnum;
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -4568,7 +4496,7 @@ export interface SiteConfigurationByUrl {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationByUrlTypeEnum;
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -4781,7 +4709,7 @@ export interface SiteConfigurationForm {
 export interface SiteConfigurationReduced {
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationReducedTypeEnum;
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -4799,7 +4727,7 @@ export interface SiteConfigurationRequest {
   entityID: string;
   /** @format int32 */
   entityType: number;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationRequestTypeEnum;
   url: string;
   name: string;
   introduction?: string | null;
@@ -4976,7 +4904,7 @@ export interface SiteConfigurationSearchCriteria {
 export interface SiteConfigurationSummary {
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationSummaryTypeEnum;
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -5344,6 +5272,8 @@ export interface UpdateMeRequest {
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
   notificationSettings: UserNotificationSettingsUpdateRequest;
+  /** @format uuid */
+  preferredLoanOfficerId?: string | null;
 }
 
 export interface UpdateMobilePhoneRequest {
@@ -5378,6 +5308,8 @@ export interface UpdateUserRequest {
   branchId?: string | null;
   forcePasswordReset: boolean;
   mfaEnabled: boolean;
+  /** @format uuid */
+  preferredLoanOfficerId?: string | null;
 }
 
 export interface UsageReport {
@@ -5408,15 +5340,142 @@ export interface UsageReport {
   createdAt: string;
 }
 
-export interface UsageReportGenerationResult {
-  fileKey: string;
-  fileUrl: string;
+export interface UsageReportAccountBrief {
+  /** @format uuid */
+  accountId: string;
+  accountName: string;
+  hasDiscrepancy: boolean;
+  errorMessage?: string | null;
+  currentStep?: string | null;
+}
+
+export interface UsageReportAccountExecution {
+  /** @format uuid */
+  accountId: string;
+  accountName: string;
+  status: string;
+  hasDiscrepancy: boolean;
+  excelFileUrl?: string | null;
+  errorMessage?: string | null;
+  /** @format date-time */
+  validationStartedAt?: string | null;
+  /** @format date-time */
+  validationCompletedAt?: string | null;
+  /** @format date-time */
+  processingStartedAt?: string | null;
+  /** @format date-time */
+  processingCompletedAt?: string | null;
+}
+
+export interface UsageReportAccountStatus {
+  status: string;
   /** @format int32 */
-  successCount: number;
+  count: number;
+  accounts: UsageReportAccountBrief[];
+}
+
+export interface UsageReportActiveExecution {
+  /** @format uuid */
+  correlationId: string;
+  currentState: string;
   /** @format int32 */
-  failureCount: number;
-  reports: UsageReport[];
-  failures: AccountReportFailure[];
+  month: number;
+  /** @format int32 */
+  year: number;
+  /** @format date-time */
+  startedAt?: string | null;
+  elapsedTime: string;
+  progress: UsageReportProgress;
+  accountsByStatus: UsageReportAccountStatus[];
+}
+
+export interface UsageReportDashboard {
+  activeExecution?: UsageReportActiveExecution | null;
+  recentExecutions: UsageReportExecutionSummary[];
+  statistics: UsageReportStatistics;
+}
+
+export interface UsageReportExecution {
+  /** @format uuid */
+  correlationId: string;
+  currentState: string;
+  /** @format int32 */
+  month: number;
+  /** @format int32 */
+  year: number;
+  /** @format int32 */
+  totalAccounts: number;
+  /** @format int32 */
+  validatedAccounts: number;
+  /** @format int32 */
+  processedAccounts: number;
+  /** @format int32 */
+  failedAccounts: number;
+  /** @format date-time */
+  startedAt?: string | null;
+  /** @format date-time */
+  completedAt?: string | null;
+  finalZipUrl?: string | null;
+  errorMessage?: string | null;
+  accounts: UsageReportAccountExecution[];
+}
+
+export interface UsageReportExecutionSummary {
+  /** @format uuid */
+  correlationId: string;
+  currentState: string;
+  /** @format int32 */
+  month: number;
+  /** @format int32 */
+  year: number;
+  period: string;
+  /** @format date-time */
+  startedAt?: string | null;
+  /** @format date-time */
+  completedAt?: string | null;
+  duration?: string | null;
+  /** @format int32 */
+  totalAccounts: number;
+  /** @format int32 */
+  processedAccounts: number;
+  /** @format int32 */
+  failedAccounts: number;
+  finalZipUrl?: string | null;
+  errorMessage?: string | null;
+}
+
+export interface UsageReportProgress {
+  /** @format int32 */
+  totalAccounts: number;
+  /** @format int32 */
+  validatedAccounts: number;
+  /** @format int32 */
+  processedAccounts: number;
+  /** @format int32 */
+  failedAccounts: number;
+  /** @format int32 */
+  pendingAccounts: number;
+  /** @format double */
+  validationPercentage: number;
+  /** @format double */
+  processingPercentage: number;
+  /** @format double */
+  overallPercentage: number;
+}
+
+export interface UsageReportStatistics {
+  /** @format int32 */
+  totalExecutionsThisYear: number;
+  /** @format int32 */
+  successfulExecutions: number;
+  /** @format int32 */
+  failedExecutions: number;
+  /** @format int32 */
+  partialExecutions: number;
+  /** @format date-time */
+  lastSuccessfulExecution?: string | null;
+  /** @format date-time */
+  lastFailedExecution?: string | null;
 }
 
 export interface User {
@@ -5440,6 +5499,7 @@ export interface User {
   /** @format int32 */
   loginsWithoutMFACount: number;
   canImpersonate: boolean;
+  preferredLoanOfficer?: PreferredLoanOfficer | null;
 }
 
 export interface UserAccountDeletionRequest {
@@ -5470,19 +5530,7 @@ export interface UserDevice {
 export interface UserDraft {
   /** @format uuid */
   draftID: string;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  role: UserDraftRoleEnum;
   user: User;
 }
 
@@ -5509,7 +5557,7 @@ export interface UserGroupAccessScope {
   id: string;
   /** @format uuid */
   groupId: string;
-  scopeType: "User" | "Branch";
+  scopeType: UserGroupAccessScopeScopeTypeEnum;
   /** @format uuid */
   userId?: string | null;
   /** @format uuid */
@@ -5545,19 +5593,7 @@ export interface UserLoan {
   deletedAt?: string | null;
   loanID: string;
   user: User;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent";
+  role: UserLoanRoleEnum;
   /** @format int32 */
   borrowerPair?: number | null;
   /** @format int32 */
@@ -5570,7 +5606,7 @@ export interface UserLoanConsent {
   id: string;
   /** @format uuid */
   userLoanID: string;
-  type: "Econsent" | "CreditAuthorization" | "Tcpa";
+  type: UserLoanConsentTypeEnum;
   providedConsent: boolean;
   ipAddress?: string | null;
   /** @format date-time */
@@ -5717,17 +5753,7 @@ export interface UserSummary {
   id: string;
   name?: string | null;
   email?: string | null;
-  role:
-    | "Borrower"
-    | "LoanOfficer"
-    | "Admin"
-    | "SuperAdmin"
-    | "Realtor"
-    | "SettlementAgent"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "BranchManager"
-    | "SystemAdmin";
+  role: UserSummaryRoleEnum;
 }
 
 export interface VerifyPasswordRequest {
@@ -5762,6 +5788,289 @@ export interface Workflow {
   tileSubtitle: string;
   icon: string;
 }
+
+export type AccountBillingRequestBillingTypeEnum = "ClosedLoan" | "LoanOfficer";
+
+export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
+
+export type CreateAccountRequestEnvironmentEnum =
+  | "Development"
+  | "Staging"
+  | "UAT"
+  | "Production";
+
+export type CreateGroupMemberRequestLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+/** @deprecated */
+export type CreateInviteRequestRelationshipEnum =
+  | "NotApplicable"
+  | "Spouse"
+  | "NonSpouse";
+
+export type CreateLoanImportRequestImportModeEnum =
+  | "All"
+  | "NewOnly"
+  | "UpdateOnly";
+
+export type CreateUserDraftLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+export type DraftTypeEnum = "NewLoan" | "EditLoan";
+
+export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
+
+export type FusionReportFilterFilterTypeEnum =
+  | "DateGreaterThanOrEqualTo"
+  | "DateGreaterThan"
+  | "DateLessThan"
+  | "DateLessThanOrEqualTo"
+  | "DateEquals"
+  | "DateDoesntEqual"
+  | "DateNonEmpty"
+  | "DateEmpty"
+  | "StringContains"
+  | "StringEquals"
+  | "StringNotEmpty"
+  | "StringNotEquals"
+  | "StringNotContains";
+
+export type IpAddressAddressFamilyEnum =
+  | "Unspecified"
+  | "Unix"
+  | "InterNetwork"
+  | "ImpLink"
+  | "Pup"
+  | "Chaos"
+  | "NS"
+  | "Ipx"
+  | "Iso"
+  | "Osi"
+  | "Ecma"
+  | "DataKit"
+  | "Ccitt"
+  | "Sna"
+  | "DecNet"
+  | "DataLink"
+  | "Lat"
+  | "HyperChannel"
+  | "AppleTalk"
+  | "NetBios"
+  | "VoiceView"
+  | "FireFox"
+  | "Banyan"
+  | "Atm"
+  | "InterNetworkV6"
+  | "Cluster"
+  | "Ieee12844"
+  | "Irda"
+  | "NetworkDesigners"
+  | "Max"
+  | "Packet"
+  | "ControllerAreaNetwork"
+  | "Unknown";
+
+export type LoanContactRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+export type LoanImportStatusEnum =
+  | "WaitingProcess"
+  | "InProgress"
+  | "Completed"
+  | "Failed"
+  | "Cancelled";
+
+export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
+
+export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+
+export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+
+export type LoanLogTypeEnum =
+  | "Loan"
+  | "Queue"
+  | "POSFlagChanged"
+  | "Verification"
+  | "DocumentUploaded"
+  | "LoanCreated"
+  | "WorkflowSubmitted"
+  | "UserInvitationSent"
+  | "CoBorrowerAdded"
+  | "TaskCompleted"
+  | "LoanStatusChanged"
+  | "EConsent";
+
+export type LoanUserLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+export type SamlMetadataRequestSsoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type SiteConfigurationTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationByUrlTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationReducedTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationRequestTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationSummaryTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type UserDraftRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+export type UserGroupAccessScopeScopeTypeEnum = "User" | "Branch";
+
+export type UserLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent";
+
+export type UserLoanConsentTypeEnum =
+  | "Econsent"
+  | "CreditAuthorization"
+  | "Tcpa";
+
+export type UserSummaryRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "BranchManager"
+  | "SystemAdmin";
+
+/** @default "Realtor" */
+export type GetPartnersParamsRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "BranchManager"
+  | "SystemAdmin";
+
+export type GetSamlMetadataParamsSSoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type GetSamlMetadataParamsEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type CreateOrReplaceSamlMetadataParamsSSoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type CreateOrReplaceSamlMetadataParamsEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
 
 import type {
   AxiosInstance,
@@ -5941,7 +6250,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.34.0
+ * @version v2.36.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -6159,6 +6468,33 @@ export class Api<
         method: "DELETE",
         query: query,
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Accounts
+     * @name UpdateAccountBilling
+     * @summary Update billing configuration
+     * @request PUT:/api/accounts/{id}/billing
+     * @secure
+     * @response `200` `AccountBilling` Success
+     * @response `404` `ProblemDetails` Not Found
+     * @response `422` `ProblemDetails` Client Error
+     */
+    updateAccountBilling: (
+      id: string,
+      data: AccountBillingRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<AccountBilling, ProblemDetails>({
+        path: `/api/accounts/${id}/billing`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -8170,7 +8506,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8280,7 +8616,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8307,7 +8643,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8549,7 +8885,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -8629,7 +8965,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -9135,20 +9471,31 @@ export class Api<
       }),
 
     /**
-     * @description Returns all documents grouped by folder for sidebar display
+     * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
      *
      * @tags LoanDocuments
      * @name GetLoanDocumentFolders
      * @summary Get document folder hierarchy
-     * @request GET:/api/loans/{loanId}/documents/folders
+     * @request POST:/api/loans/{loanId}/documents/folders
      * @secure
      * @response `200` `(DocumentFolder)[]` Success
      */
-    getLoanDocumentFolders: (loanId: string, params: RequestParams = {}) =>
+    getLoanDocumentFolders: (
+      loanId: string,
+      data: DocumentFoldersRequest,
+      query?: {
+        /** @default false */
+        folderNamesOnly?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<DocumentFolder[], any>({
         path: `/api/loans/${loanId}/documents/folders`,
-        method: "GET",
+        method: "POST",
+        query: query,
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -9289,17 +9636,14 @@ export class Api<
      * @description Fetches all documents from Encompass that don't exist locally and stores them in S3
      *
      * @tags LoanDocuments
-     * @name SyncLoanDocumentsFromEncompass
-     * @summary Sync documents from Encompass
+     * @name SyncLoanDocumentsFromLos
+     * @summary Sync documents from LOS
      * @request POST:/api/loans/{loanId}/documents/sync
      * @secure
      * @response `200` `DocumentSync` Success
      * @response `404` `ProblemDetails` Not Found
      */
-    syncLoanDocumentsFromEncompass: (
-      loanId: string,
-      params: RequestParams = {},
-    ) =>
+    syncLoanDocumentsFromLos: (loanId: string, params: RequestParams = {}) =>
       this.request<DocumentSync, ProblemDetails>({
         path: `/api/loans/${loanId}/documents/sync`,
         method: "POST",
@@ -9309,18 +9653,18 @@ export class Api<
       }),
 
     /**
-     * @description Re-attempts to push a failed document to Encompass
+     * @description Re-attempts to push a failed document to LOS
      *
      * @tags LoanDocuments
-     * @name RetrySyncLoanDocumentToEncompass
-     * @summary Retry syncing a document to Encompass
+     * @name RetrySyncLoanDocumentToLos
+     * @summary Retry syncing a document to LOS
      * @request POST:/api/loans/{loanId}/documents/{documentId}/sync/retry
      * @secure
      * @response `200` `void` Success
      * @response `404` `ProblemDetails` Not Found
      * @response `423` `ProblemDetails` Client Error
      */
-    retrySyncLoanDocumentToEncompass: (
+    retrySyncLoanDocumentToLos: (
       loanId: string,
       documentId: string,
       params: RequestParams = {},
@@ -10004,7 +10348,6 @@ export class Api<
      * @name GetLoans
      * @summary Get Loans
      * @request GET:/api/loans
-     * @deprecated
      * @secure
      * @response `200` `GetApplications` Success
      */
@@ -10173,7 +10516,7 @@ export class Api<
         query: query,
         body: data,
         secure: true,
-        type: ContentType.JsonPatchPatch,
+        type: ContentType.JsonPatch,
         format: "json",
         ...params,
       }),
@@ -11185,17 +11528,7 @@ export class Api<
       query?: {
         showAll?: boolean;
         /** @default "Realtor" */
-        role?:
-          | "Borrower"
-          | "LoanOfficer"
-          | "Admin"
-          | "SuperAdmin"
-          | "Realtor"
-          | "SettlementAgent"
-          | "LoanProcessor"
-          | "LoanOfficerAssistant"
-          | "BranchManager"
-          | "SystemAdmin";
+        role?: GetPartnersParamsRoleEnum;
         /** @format int32 */
         pageSize?: number;
         /** @format int32 */
@@ -11531,7 +11864,7 @@ export class Api<
      * @response `404` `ProblemDetails` Not Found
      */
     getSamlMetadata: (
-      sSoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF",
+      sSoIntegration: GetSamlMetadataParamsEnum,
       ssoIntegration: string,
       params: RequestParams = {},
     ) =>
@@ -11553,7 +11886,7 @@ export class Api<
      * @response `200` `File` Success
      */
     createOrReplaceSamlMetadata: (
-      sSoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF",
+      sSoIntegration: CreateOrReplaceSamlMetadataParamsEnum,
       ssoIntegration: string,
       params: RequestParams = {},
     ) =>
@@ -11902,26 +12235,17 @@ export class Api<
      * No description
      *
      * @tags UsageReports
-     * @name GenerateUsageReports
-     * @summary Generate usage reports for all active production accounts
-     * @request POST:/api/usage-reports
+     * @name GetUsageReportById
+     * @summary Get usage report by ID
+     * @request GET:/api/usage-reports/{id}
      * @secure
-     * @response `200` `UsageReportGenerationResult` Success
-     * @response `400` `ProblemDetails` Bad Request
+     * @response `200` `UsageReport` Success
+     * @response `404` `ProblemDetails` Not Found
      */
-    generateUsageReports: (
-      query?: {
-        /** @format int32 */
-        month?: number;
-        /** @format int32 */
-        year?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UsageReportGenerationResult, ProblemDetails>({
-        path: `/api/usage-reports`,
-        method: "POST",
-        query: query,
+    getUsageReportById: (id: string, params: RequestParams = {}) =>
+      this.request<UsageReport, ProblemDetails>({
+        path: `/api/usage-reports/${id}`,
+        method: "GET",
         secure: true,
         format: "json",
         ...params,
@@ -11960,14 +12284,14 @@ export class Api<
      * No description
      *
      * @tags UsageReports
-     * @name GenerateAndSendUsageReport
-     * @summary Generate and send monthly usage report email
-     * @request POST:/api/usage-reports/generate-and-send
+     * @name StartUsageReportExecution
+     * @summary Start a new usage report execution (async)
+     * @request POST:/api/usage-reports
      * @secure
-     * @response `204` `void` No Content
-     * @response `500` `void` Server Error
+     * @response `202` `any` Accepted
+     * @response `400` `ProblemDetails` Bad Request
      */
-    generateAndSendUsageReport: (
+    startUsageReportExecution: (
       query?: {
         /** @format int32 */
         month?: number;
@@ -11976,11 +12300,12 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<void, void>({
-        path: `/api/usage-reports/generate-and-send`,
+      this.request<any, ProblemDetails>({
+        path: `/api/usage-reports`,
         method: "POST",
         query: query,
         secure: true,
+        format: "json",
         ...params,
       }),
 
@@ -11988,17 +12313,68 @@ export class Api<
      * No description
      *
      * @tags UsageReports
-     * @name GetUsageReportById
-     * @summary Get usage report by ID
-     * @request GET:/api/usage-reports/{id}
+     * @name GetUsageReportDashboard
+     * @summary Get usage report execution dashboard with active execution, recent history, and statistics
+     * @request GET:/api/usage-reports/dashboard
      * @secure
-     * @response `200` `UsageReport` Success
+     * @response `200` `UsageReportDashboard` Success
+     */
+    getUsageReportDashboard: (params: RequestParams = {}) =>
+      this.request<UsageReportDashboard, any>({
+        path: `/api/usage-reports/dashboard`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UsageReports
+     * @name GetUsageReportExecution
+     * @summary Get usage report execution status by correlation ID
+     * @request GET:/api/usage-reports/executions/{correlationId}
+     * @secure
+     * @response `200` `UsageReportExecution` Success
      * @response `404` `ProblemDetails` Not Found
      */
-    getUsageReportById: (id: string, params: RequestParams = {}) =>
-      this.request<UsageReport, ProblemDetails>({
-        path: `/api/usage-reports/${id}`,
+    getUsageReportExecution: (
+      correlationId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<UsageReportExecution, ProblemDetails>({
+        path: `/api/usage-reports/executions/${correlationId}`,
         method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UsageReports
+     * @name GetUsageReportExecutionsByPeriod
+     * @summary Get usage report executions by month and year
+     * @request GET:/api/usage-reports/executions
+     * @secure
+     * @response `200` `(UsageReportExecution)[]` Success
+     * @response `400` `ProblemDetails` Bad Request
+     */
+    getUsageReportExecutionsByPeriod: (
+      query?: {
+        /** @format int32 */
+        month?: number;
+        /** @format int32 */
+        year?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UsageReportExecution[], ProblemDetails>({
+        path: `/api/usage-reports/executions`,
+        method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,
