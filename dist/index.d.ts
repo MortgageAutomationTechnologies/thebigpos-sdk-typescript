@@ -22,7 +22,7 @@ export type LoanNameSuffix = "Jr" | "Sr" | "II" | "III" | "IV" | "V" | "VI" | "V
 export type LoanNamePrefix = "Mr" | "Mrs" | "Ms";
 export type LoanMilitaryServiceType = "Current" | "RetiredDischargedSeparated" | "NonActivatedNationalGuard" | "SurvivingSpouse";
 export type LoanMaritalStatus = "Married" | "Separated" | "Unmarried";
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent";
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent" | "SensitiveDataPurge";
 export type LoanLienPosition = "First" | "Subordinate";
 export type LoanLiabilityType = "Revolving" | "Installment" | "Open30Day" | "Lease" | "Other";
 export type LoanLanguagePreference = "English" | "Chinese" | "Korean" | "Spanish" | "Tagalog" | "Vietnamese" | "Other";
@@ -44,6 +44,8 @@ export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Fai
 export type FilterType = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
 export type Environment = "Development" | "Staging" | "UAT" | "Production";
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
+export type EncompassLogOutcome = "Success" | "Failure" | "PartialSuccess";
+export type EncompassLogOperationType = "FieldUpdate" | "EConsentUpdate" | "DocumentSync" | "ApiError" | "LoanCreation" | "SlotCreation" | "MilestoneUpdate";
 export type DraftType = "NewLoan" | "EditLoan";
 export type ConsentType = "Econsent" | "CreditAuthorization" | "Tcpa";
 export type BranchType = "Mortgage" | "RealEstate";
@@ -1133,6 +1135,17 @@ export interface EncompassError {
     message: string;
     details?: string[] | null;
 }
+export interface EncompassLogSearchCriteria {
+    searchText?: string | null;
+    operationTypes?: EncompassLogOperationType[] | null;
+    outcomes?: EncompassLogOutcome[] | null;
+    /** @format date-time */
+    createdFrom?: string | null;
+    /** @format date-time */
+    createdTo?: string | null;
+    /** @format int32 */
+    httpStatusCode?: number | null;
+}
 export interface EncompassPackageItem {
     packageId: string;
     status: string;
@@ -1150,6 +1163,31 @@ export interface EncompassPackageList {
     pageSize: number;
     /** @format int32 */
     totalPages: number;
+}
+export interface EncompassRequestLog {
+    /** @format uuid */
+    id: string;
+    losId?: string | null;
+    /** @format uuid */
+    accountId: string;
+    operationType: EncompassRequestLogOperationTypeEnum;
+    outcome: EncompassRequestLogOutcomeEnum;
+    message: string;
+    endpoint?: string | null;
+    httpMethod?: string | null;
+    /** @format int32 */
+    httpStatusCode?: number | null;
+    /** @format int64 */
+    durationMs?: number | null;
+    context?: any;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface EncompassRequestLogPaginated {
+    rows: EncompassRequestLog[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
 }
 export interface Error {
     message: string;
@@ -5128,6 +5166,8 @@ export type CreateLoanImportRequestImportModeEnum = "All" | "NewOnly" | "UpdateO
 export type CreateUserDraftLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type DraftTypeEnum = "NewLoan" | "EditLoan";
 export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
+export type EncompassRequestLogOperationTypeEnum = "FieldUpdate" | "EConsentUpdate" | "DocumentSync" | "ApiError" | "LoanCreation" | "SlotCreation" | "MilestoneUpdate";
+export type EncompassRequestLogOutcomeEnum = "Success" | "Failure" | "PartialSuccess";
 export type FusionReportFilterFilterTypeEnum = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
 export type IpAddressAddressFamilyEnum = "Unspecified" | "Unix" | "InterNetwork" | "ImpLink" | "Pup" | "Chaos" | "NS" | "Ipx" | "Iso" | "Osi" | "Ecma" | "DataKit" | "Ccitt" | "Sna" | "DecNet" | "DataLink" | "Lat" | "HyperChannel" | "AppleTalk" | "NetBios" | "VoiceView" | "FireFox" | "Banyan" | "Atm" | "InterNetworkV6" | "Cluster" | "Ieee12844" | "Irda" | "NetworkDesigners" | "Max" | "Packet" | "ControllerAreaNetwork" | "Unknown";
 export type LoanContactRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
@@ -5135,7 +5175,7 @@ export type LoanImportStatusEnum = "WaitingProcess" | "InProgress" | "Completed"
 export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
 export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
 export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
-export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent";
+export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent" | "SensitiveDataPurge";
 export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
 export type SamlMetadataRequestSsoIntegrationEnum = "ConsumerConnect" | "TheBigPOS" | "POSF";
 export type SiteConfigurationTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
@@ -5199,7 +5239,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.36.0
+ * @version v2.36.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -7466,6 +7506,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanSensitiveDataPurge
+         * @name PurgeSensitiveLoanData
+         * @summary Manually trigger sensitive data purge for a specific loan
+         * @request POST:/api/loans/sensitive-data-purge/{loanId}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        purgeSensitiveLoanData: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        /**
+         * No description
+         *
          * @tags LoanTaskComments
          * @name SearchLoanTaskComments
          * @summary Search
@@ -8362,6 +8414,23 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `200` `void` Success
          */
         integrationsLosLoansCreate: (data: LosLoanCreationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name SearchEncompassLogs
+         * @request POST:/api/los/encompass/logs/{losId}/search
+         * @secure
+         * @response `200` `EncompassRequestLogPaginated` Success
+         */
+        searchEncompassLogs: (losId: string, query: {
+            /** @format int32 */
+            pageSize: number;
+            /** @format int32 */
+            pageNumber: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, data: EncompassLogSearchCriteria, params?: RequestParams) => Promise<AxiosResponse<EncompassRequestLogPaginated, any, {}>>;
         /**
          * No description
          *

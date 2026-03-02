@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.36.0
+ * @version v2.36.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1204,7 +1204,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1254,7 +1254,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1267,7 +1267,7 @@ export class Api extends HttpClient {
              * @response `202` `string` Accepted
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1381,7 +1381,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `ListingFile` Success
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1414,7 +1414,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `(ListingPhoto)[]` Success
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2135,6 +2135,18 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanSensitiveDataPurge
+             * @name PurgeSensitiveLoanData
+             * @summary Manually trigger sensitive data purge for a specific loan
+             * @request POST:/api/loans/sensitive-data-purge/{loanId}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            purgeSensitiveLoanData: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/sensitive-data-purge/${loanId}`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags LoanTaskComments
              * @name SearchLoanTaskComments
              * @summary Search
@@ -2143,7 +2155,7 @@ export class Api extends HttpClient {
              * @response `200` `TaskCommentPaginated` Success
              * @response `404` `ProblemDetails` Not Found
              */
-            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
+            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2972,6 +2984,16 @@ export class Api extends HttpClient {
              * @response `200` `void` Success
              */
             integrationsLosLoansCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name SearchEncompassLogs
+             * @request POST:/api/los/encompass/logs/{losId}/search
+             * @secure
+             * @response `200` `EncompassRequestLogPaginated` Success
+             */
+            searchEncompassLogs: (losId, query, data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/logs/${losId}/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
