@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.36.0
+ * @version v2.36.15
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -262,7 +262,7 @@ export class Api extends HttpClient {
              * @summary Get Token
              * @request POST:/api/token
              * @secure
-             * @response `200` `Token` Success
+             * @response `200` `ForcePasswordReset` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
             getToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -274,7 +274,7 @@ export class Api extends HttpClient {
              * @summary Get Token From Challenge Code
              * @request POST:/api/token/code
              * @secure
-             * @response `200` `Token` Success
+             * @response `200` `ForcePasswordReset` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
             getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/api/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -437,7 +437,7 @@ export class Api extends HttpClient {
              * @summary Get Branch Loan Officers
              * @request GET:/api/branches/{branchId}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `(LoanOfficerPublic)[]` Success
              */
             getLoanOfficersByBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -652,7 +652,7 @@ export class Api extends HttpClient {
              * @summary Get Loan Officers
              * @request GET:/api/corporates/{id}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `(LoanOfficerPublic)[]` Success
              */
             getLoanOfficersByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -1920,6 +1920,18 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanLogs
+             * @name GetLoanLogById
+             * @summary Get loan log by ID
+             * @request GET:/api/loans/{loanId}/logs/{loanLogId}
+             * @secure
+             * @response `200` `LoanLogDetail` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getLoanLogById: (loanId, loanLogId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/logs/${loanLogId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -2972,6 +2984,16 @@ export class Api extends HttpClient {
              * @response `200` `void` Success
              */
             integrationsLosLoansCreate: (data, params = {}) => this.request(Object.assign({ path: `/api/integrations/los/loans`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name SearchEncompassLogs
+             * @request POST:/api/los/encompass/logs/{losId}/search
+             * @secure
+             * @response `200` `EncompassRequestLogPaginated` Success
+             */
+            searchEncompassLogs: (losId, query, data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/logs/${losId}/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
