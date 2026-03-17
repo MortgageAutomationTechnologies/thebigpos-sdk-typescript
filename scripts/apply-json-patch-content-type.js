@@ -26,8 +26,8 @@ try {
 
 // Update PATCH methods to use ContentType.JsonPatch
 content = content.replace(
-	/(method:\s*"PATCH"[\s\S]+?)type:\s*ContentType\.Json/g,
-	(match) => match.replace('ContentType.Json', 'ContentType.JsonPatch')
+	/(method:\s*"PATCH",[\s\S]*?type:\s*)ContentType\.Json\b(?!Patch)/g,
+	'$1ContentType.JsonPatch'
 )
 
 // Ensure JsonPatch is included in the ContentType enum
