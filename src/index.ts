@@ -184,7 +184,8 @@ export type LoanLogType =
   | "CoBorrowerAdded"
   | "TaskCompleted"
   | "LoanStatusChanged"
-  | "EConsent";
+  | "EConsent"
+  | "SensitiveDataPurge";
 
 export type LoanLienPosition = "First" | "Subordinate";
 
@@ -311,6 +312,17 @@ export type EntityType =
   | "Branch"
   | "LoanOfficer"
   | "Realtor";
+
+export type EncompassLogOutcome = "Success" | "Failure" | "PartialSuccess";
+
+export type EncompassLogOperationType =
+  | "FieldUpdate"
+  | "EConsentUpdate"
+  | "DocumentSync"
+  | "ApiError"
+  | "LoanCreation"
+  | "SlotCreation"
+  | "MilestoneUpdate";
 
 export type DraftType = "NewLoan" | "EditLoan";
 
@@ -1527,6 +1539,18 @@ export interface EncompassError {
   details?: string[] | null;
 }
 
+export interface EncompassLogSearchCriteria {
+  searchText?: string | null;
+  operationTypes?: EncompassLogOperationType[] | null;
+  outcomes?: EncompassLogOutcome[] | null;
+  /** @format date-time */
+  createdFrom?: string | null;
+  /** @format date-time */
+  createdTo?: string | null;
+  /** @format int32 */
+  httpStatusCode?: number | null;
+}
+
 export interface EncompassPackageItem {
   packageId: string;
   status: string;
@@ -1545,6 +1569,33 @@ export interface EncompassPackageList {
   pageSize: number;
   /** @format int32 */
   totalPages: number;
+}
+
+export interface EncompassRequestLog {
+  /** @format uuid */
+  id: string;
+  losId?: string | null;
+  /** @format uuid */
+  accountId: string;
+  operationType: EncompassRequestLogOperationTypeEnum;
+  outcome: EncompassRequestLogOutcomeEnum;
+  message: string;
+  endpoint?: string | null;
+  httpMethod?: string | null;
+  /** @format int32 */
+  httpStatusCode?: number | null;
+  /** @format int64 */
+  durationMs?: number | null;
+  context?: any;
+  /** @format date-time */
+  createdAt: string;
+}
+
+export interface EncompassRequestLogPaginated {
+  rows: EncompassRequestLog[];
+  pagination: Pagination;
+  /** @format int64 */
+  count: number;
 }
 
 export interface Error {
@@ -5842,6 +5893,20 @@ export type DraftTypeEnum = "NewLoan" | "EditLoan";
 
 export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
 
+export type EncompassRequestLogOperationTypeEnum =
+  | "FieldUpdate"
+  | "EConsentUpdate"
+  | "DocumentSync"
+  | "ApiError"
+  | "LoanCreation"
+  | "SlotCreation"
+  | "MilestoneUpdate";
+
+export type EncompassRequestLogOutcomeEnum =
+  | "Success"
+  | "Failure"
+  | "PartialSuccess";
+
 export type FusionReportFilterFilterTypeEnum =
   | "DateGreaterThanOrEqualTo"
   | "DateGreaterThan"
@@ -5931,7 +5996,8 @@ export type LoanLogTypeEnum =
   | "CoBorrowerAdded"
   | "TaskCompleted"
   | "LoanStatusChanged"
-  | "EConsent";
+  | "EConsent"
+  | "SensitiveDataPurge";
 
 export type LoanUserLoanRoleEnum =
   | "Borrower"
@@ -6250,7 +6316,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.36.0
+ * @version v2.36.4
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -8506,7 +8572,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -8616,7 +8682,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -8643,7 +8709,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -8885,7 +8951,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -8965,7 +9031,7 @@ export class Api<
         method: "PATCH",
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -10488,6 +10554,25 @@ export class Api<
     /**
      * No description
      *
+     * @tags LoanSensitiveDataPurge
+     * @name PurgeSensitiveLoanData
+     * @summary Manually trigger sensitive data purge for a specific loan
+     * @request POST:/api/loans/sensitive-data-purge/{loanId}
+     * @secure
+     * @response `204` `void` No Content
+     * @response `404` `ProblemDetails` Not Found
+     */
+    purgeSensitiveLoanData: (loanId: string, params: RequestParams = {}) =>
+      this.request<void, ProblemDetails>({
+        path: `/api/loans/sensitive-data-purge/${loanId}`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags LoanTaskComments
      * @name SearchLoanTaskComments
      * @summary Search
@@ -10516,7 +10601,7 @@ export class Api<
         query: query,
         body: data,
         secure: true,
-        type: ContentType.JsonPatch,
+        type: ContentType.JsonPatchPatch,
         format: "json",
         ...params,
       }),
@@ -12228,6 +12313,39 @@ export class Api<
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags TheBigPOS
+     * @name SearchEncompassLogs
+     * @request POST:/api/los/encompass/logs/{losId}/search
+     * @secure
+     * @response `200` `EncompassRequestLogPaginated` Success
+     */
+    searchEncompassLogs: (
+      losId: string,
+      query: {
+        /** @format int32 */
+        pageSize: number;
+        /** @format int32 */
+        pageNumber: number;
+        sortBy?: string;
+        sortDirection?: string;
+      },
+      data: EncompassLogSearchCriteria,
+      params: RequestParams = {},
+    ) =>
+      this.request<EncompassRequestLogPaginated, any>({
+        path: `/api/los/encompass/logs/${losId}/search`,
+        method: "POST",
+        query: query,
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
