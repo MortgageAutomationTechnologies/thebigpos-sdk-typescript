@@ -4,7 +4,8 @@
       "Bash(npx swagger-typescript-api:*)",
       "Bash(node:*)",
       "Bash(npm version:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run:*)"
     ]
   }
 }
