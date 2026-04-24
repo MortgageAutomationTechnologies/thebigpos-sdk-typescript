@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.36.4
+ * @version v2.39.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -244,6 +244,40 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags AuditLog
+             * @name SearchAuditLogs
+             * @summary Search
+             * @request POST:/api/audit-logs/search
+             * @secure
+             * @response `200` `AuditLogEntryPaginated` Success
+             */
+            searchAuditLogs: (data, query, params = {}) => this.request(Object.assign({ path: `/api/audit-logs/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags AuditLog
+             * @name GetAuditLogEntityTypes
+             * @summary Get entity types
+             * @request GET:/api/audit-logs/entity-types
+             * @secure
+             * @response `200` `(AuditEntityType)[]` Success
+             */
+            getAuditLogEntityTypes: (params = {}) => this.request(Object.assign({ path: `/api/audit-logs/entity-types`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags AuditLog
+             * @name GetAuditLogById
+             * @summary Get by ID
+             * @request GET:/api/audit-logs/{id}
+             * @secure
+             * @response `200` `AuditLogEntry` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getAuditLogById: (id, params = {}) => this.request(Object.assign({ path: `/api/audit-logs/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags Authentication
              * @name GetTokenFromRefreshToken
              * @summary Generate Token From Refresh Token
@@ -262,7 +296,7 @@ export class Api extends HttpClient {
              * @summary Get Token
              * @request POST:/api/token
              * @secure
-             * @response `200` `Token` Success
+             * @response `200` `ForcePasswordReset` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
             getToken: (data, params = {}) => this.request(Object.assign({ path: `/api/token`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -274,7 +308,7 @@ export class Api extends HttpClient {
              * @summary Get Token From Challenge Code
              * @request POST:/api/token/code
              * @secure
-             * @response `200` `Token` Success
+             * @response `200` `ForcePasswordReset` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
             getTokenFromChallengeCode: (data, params = {}) => this.request(Object.assign({ path: `/api/token/code`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
@@ -437,7 +471,7 @@ export class Api extends HttpClient {
              * @summary Get Branch Loan Officers
              * @request GET:/api/branches/{branchId}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `(LoanOfficerPublic)[]` Success
              */
             getLoanOfficersByBranch: (branchId, params = {}) => this.request(Object.assign({ path: `/api/branches/${branchId}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -519,6 +553,28 @@ export class Api extends HttpClient {
              * @response `200` `ClosedLoansReport` Success
              */
             getClosedLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/loans/reports/closed-loans`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ConsumerConnect
+             * @name GetConsumerConnectStatus
+             * @summary Get Consumer Connect association status for all borrowers on a loan
+             * @request GET:/api/loans/{loanId}/consumer-connect/status
+             * @secure
+             * @response `200` `(ConsumerConnectStatus)[]` Success
+             */
+            getConsumerConnectStatus: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/consumer-connect/status`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags ConsumerConnect
+             * @name RetryConsumerConnectAssociation
+             * @summary Manually retry Consumer Connect association for failed borrowers on a loan. Returns per-borrower results; check individual Success fields for partial failures.
+             * @request POST:/api/loans/{loanId}/consumer-connect/retry
+             * @secure
+             * @response `200` `(ConsumerConnectRetry)[]` Success
+             */
+            retryConsumerConnectAssociation: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/consumer-connect/retry`, method: "POST", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -652,9 +708,97 @@ export class Api extends HttpClient {
              * @summary Get Loan Officers
              * @request GET:/api/corporates/{id}/loan-officers
              * @secure
-             * @response `200` `LoanOfficerPublic` Success
+             * @response `200` `(LoanOfficerPublic)[]` Success
              */
             getLoanOfficersByCorporate: (id, params = {}) => this.request(Object.assign({ path: `/api/corporates/${id}/loan-officers`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name GetCustomFieldDefinitions
+             * @summary Get all custom field definitions by entity type
+             * @request GET:/api/custom-field-definitions
+             * @secure
+             * @response `200` `(CustomFieldDefinition)[]` Success
+             */
+            getCustomFieldDefinitions: (query, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name CreateCustomFieldDefinition
+             * @summary Create a custom field definition
+             * @request POST:/api/custom-field-definitions
+             * @secure
+             * @response `201` `CustomFieldDefinition` Created
+             * @response `409` `ProblemDetails` Conflict
+             * @response `422` `ProblemDetails` Client Error
+             */
+            createCustomFieldDefinition: (data, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name GetCustomFieldDefinitionById
+             * @summary Get a custom field definition by ID
+             * @request GET:/api/custom-field-definitions/{id}
+             * @secure
+             * @response `200` `CustomFieldDefinition` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getCustomFieldDefinitionById: (id, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name UpdateCustomFieldDefinition
+             * @summary Update a custom field definition
+             * @request PUT:/api/custom-field-definitions/{id}
+             * @secure
+             * @response `200` `CustomFieldDefinition` Success
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             * @response `409` `ProblemDetails` Conflict
+             * @response `422` `ProblemDetails` Client Error
+             */
+            updateCustomFieldDefinition: (id, data, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name DeleteCustomFieldDefinition
+             * @summary Delete a custom field definition
+             * @request DELETE:/api/custom-field-definitions/{id}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             * @response `409` `ProblemDetails` Conflict
+             */
+            deleteCustomFieldDefinition: (id, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name DisableCustomFieldDefinition
+             * @summary Disable a custom field definition
+             * @request POST:/api/custom-field-definitions/{id}/disable
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            disableCustomFieldDefinition: (id, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions/${id}/disable`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags CustomFieldDefinitions
+             * @name EnableCustomFieldDefinition
+             * @summary Enable a custom field definition
+             * @request POST:/api/custom-field-definitions/{id}/enable
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            enableCustomFieldDefinition: (id, params = {}) => this.request(Object.assign({ path: `/api/custom-field-definitions/${id}/enable`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
@@ -876,6 +1020,18 @@ export class Api extends HttpClient {
              * @response `500` `EncompassError` Server Error
              */
             getUserPackages: (query, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/eclose/packages`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags Encompass Recipients
+             * @name GetUserRecipients
+             * @request GET:/api/los/encompass/eclose/recipients
+             * @secure
+             * @response `200` `(EncompassRecipientItem)[]` Success
+             * @response `401` `EncompassError` Unauthorized
+             * @response `500` `EncompassError` Server Error
+             */
+            getUserRecipients: (params = {}) => this.request(Object.assign({ path: `/api/los/encompass/eclose/recipients`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -1204,7 +1360,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateLoanConsentAndCustomFieldsObsolete: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1215,7 +1371,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `GetReport` Success
              */
-            getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1254,7 +1410,7 @@ export class Api extends HttpClient {
              * @response `200` `string` Success
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateLoanCustomFields: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/custom-fields`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1267,7 +1423,7 @@ export class Api extends HttpClient {
              * @response `202` `string` Accepted
              * @response `422` `UnprocessableEntity` Client Error
              */
-            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateLoanConsent: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application/${loanId}/consent`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1345,7 +1501,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `DocumentDataRequest` Success
              */
-            createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1381,7 +1537,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `ListingFile` Success
              */
-            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateListingFiles: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/files`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1414,7 +1570,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `(ListingPhoto)[]` Success
              */
-            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            updateListingPhotos: (listingId, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${listingId}/photos`, method: "PATCH", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1447,7 +1603,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `Listing` Created
              */
-            createListing: (data, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createListing: (data, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1610,6 +1766,56 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanCustomFieldValues
+             * @name GetLoanCustomFieldValues
+             * @summary Get all custom field values for a loan
+             * @request GET:/api/loans/{loanId}/custom-fields
+             * @secure
+             * @response `200` `(CustomFieldValue)[]` Success
+             */
+            getLoanCustomFieldValues: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/custom-fields`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanCustomFieldValues
+             * @name BulkSetLoanCustomFieldValues
+             * @summary Bulk set custom field values for a loan
+             * @request PUT:/api/loans/{loanId}/custom-fields
+             * @secure
+             * @response `204` `void` No Content
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `422` `ProblemDetails` Client Error
+             */
+            bulkSetLoanCustomFieldValues: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/custom-fields`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanCustomFieldValues
+             * @name SetLoanCustomFieldValue
+             * @summary Set a single custom field value
+             * @request PUT:/api/loans/{loanId}/custom-fields/{definitionId}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             * @response `422` `ProblemDetails` Client Error
+             */
+            setLoanCustomFieldValue: (loanId, definitionId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/custom-fields/${definitionId}`, method: "PUT", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanCustomFieldValues
+             * @name DeleteLoanCustomFieldValue
+             * @summary Remove a custom field value
+             * @request DELETE:/api/loans/{loanId}/custom-fields/{definitionId}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            deleteLoanCustomFieldValue: (loanId, definitionId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/custom-fields/${definitionId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags LoanDocumentBuckets
              * @name GetLoanDocumentBuckets
              * @summary Get All
@@ -1641,6 +1847,18 @@ export class Api extends HttpClient {
              * @response `404` `ProblemDetails` Not Found
              */
             getLoanDocument: (loanId, documentId, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/${documentId}`, method: "GET", query: query, secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocuments
+             * @name GetLoanDocumentPreviews
+             * @summary Get document previews in batch
+             * @request POST:/api/loans/{loanId}/documents/previews
+             * @secure
+             * @response `200` `Record<string,string>` Success
+             * @response `400` `ProblemDetails` Bad Request
+             */
+            getLoanDocumentPreviews: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/previews`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -1920,6 +2138,18 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanLogs
+             * @name GetLoanLogById
+             * @summary Get loan log by ID
+             * @request GET:/api/loans/{loanId}/logs/{loanLogId}
+             * @secure
+             * @response `200` `LoanLogDetail` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getLoanLogById: (loanId, loanLogId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/logs/${loanLogId}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanOfficers
              * @name GetLoanOfficers
              * @summary Get All
@@ -2135,15 +2365,28 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanSensitiveDataPurge
-             * @name PurgeSensitiveLoanData
-             * @summary Manually trigger sensitive data purge for a specific loan
-             * @request POST:/api/loans/sensitive-data-purge/{loanId}
+             * @tags Loans
+             * @name SyncLoanToLos
+             * @summary Sync loan to LOS
+             * @request POST:/api/loans/{loanId}/sync-to-los
              * @secure
-             * @response `204` `void` No Content
+             * @response `202` `void` Accepted
              * @response `404` `ProblemDetails` Not Found
              */
-            purgeSensitiveLoanData: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/sensitive-data-purge/${loanId}`, method: "POST", secure: true }, params)),
+            syncLoanToLos: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/sync-to-los`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags Loans
+             * @name TriggerAso
+             * @summary Trigger ASO services
+             * @request POST:/api/loans/{loanId}/aso
+             * @secure
+             * @response `200` `AutomatedService` Success
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            triggerAso: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/aso`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2155,7 +2398,7 @@ export class Api extends HttpClient {
              * @response `200` `TaskCommentPaginated` Success
              * @response `404` `ProblemDetails` Not Found
              */
-            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.JsonPatchPatch, format: "json" }, params)),
+            searchLoanTaskComments: (loanId, userLoanTaskId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2232,7 +2475,55 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanTaskNotifications
+             * @name SendOutstandingLoanTaskNotification
+             * @summary Send Outstanding Task Notification
+             * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            sendOutstandingLoanTaskNotification: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/reminders/outstanding`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTaskNotifications
+             * @name SendLoanTaskReminder
+             * @summary Send Loan Task Reminder
+             * @request POST:/api/loans/{loanID}/tasks/reminders
+             * @secure
+             * @response `204` `void` No Content
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            sendLoanTaskReminder: (loanId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/reminders`, method: "POST", body: data, secure: true, type: ContentType.Json }, params)),
+            /**
+             * @description Search tasks across all loans
+             *
              * @tags LoanTasks
+             * @name SearchLoanTasks
+             * @summary Search
+             * @request POST:/api/loans/tasks/search
+             * @secure
+             * @response `200` `UserLoanTaskPaginated` Success
+             */
+            searchLoanTasks: (data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/tasks/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * @description Returns task counts grouped by status for loans accessible to the current user based on their role
+             *
+             * @tags LoanTasks
+             * @name SearchLoanTasksSummary
+             * @summary Search Summary
+             * @request POST:/api/loans/tasks/search/summary
+             * @secure
+             * @response `200` `(LoanTaskStatusSummary)[]` Success
+             * @response `422` `UnprocessableEntity` Client Error
+             */
+            searchLoanTasksSummary: (data, params = {}) => this.request(Object.assign({ path: `/api/loans/tasks/search/summary`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanTasksForSingleLoan
              * @name GetLoanTasks
              * @summary Get All
              * @request GET:/api/loans/{loanID}/tasks
@@ -2244,7 +2535,7 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name GetLoanTask
              * @summary Get by ID
              * @request GET:/api/loans/{loanID}/tasks/{id}
@@ -2256,7 +2547,7 @@ export class Api extends HttpClient {
             /**
              * @description Get the difference between the current loan tasks and the tasks generated by business rules
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name GetLoanTaskDifference
              * @summary Get Difference
              * @request GET:/api/loans/{loanID}/tasks/diff
@@ -2268,7 +2559,7 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name CreateLoanTask
              * @summary Create
              * @request POST:/api/loans/{loanID}/tasks/{taskID}
@@ -2280,7 +2571,7 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name ImportLoanTask
              * @summary Import
              * @request POST:/api/loans/{loanID}/tasks/import
@@ -2292,7 +2583,7 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name ReplaceLoanTask
              * @summary Replace
              * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
@@ -2304,7 +2595,7 @@ export class Api extends HttpClient {
             /**
              * No description
              *
-             * @tags LoanTasks
+             * @tags LoanTasksForSingleLoan
              * @name DeleteLoanTask
              * @summary Delete
              * @request DELETE:/api/loans/{loanID}/tasks/{userLoanTaskID}
@@ -2313,18 +2604,6 @@ export class Api extends HttpClient {
              * @response `404` `ProblemDetails` Not Found
              */
             deleteLoanTask: (loanId, userLoanTaskId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}`, method: "DELETE", secure: true }, params)),
-            /**
-             * No description
-             *
-             * @tags LoanTasks
-             * @name SendOutstandingLoanTaskNotification
-             * @summary Send Outstanding Task Notification
-             * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
-             * @secure
-             * @response `204` `void` No Content
-             * @response `404` `ProblemDetails` Not Found
-             */
-            sendOutstandingLoanTaskNotification: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/reminders/outstanding`, method: "POST", secure: true }, params)),
             /**
              * No description
              *
@@ -2347,6 +2626,7 @@ export class Api extends HttpClient {
              * @request GET:/api/loans/{loanId}/users/{userId}/consents
              * @secure
              * @response `200` `(UserLoanConsent)[]` Success
+             * @response `403` `ProblemDetails` Forbidden
              */
             getLoanUserConsents: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}/consents`, method: "GET", secure: true, format: "json" }, params)),
             /**
@@ -2393,6 +2673,17 @@ export class Api extends HttpClient {
              * @response `204` `void` No Content
              */
             sendLoanUserInviteReminderNotification: (loanId, userId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/users/${userId}/invite-reminder`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LosOperationTracking
+             * @name SearchLosOperationTracking
+             * @summary Search LOS operation tracking
+             * @request POST:/api/los-operation-tracking/search
+             * @secure
+             * @response `200` `LosOperationTrackingPaginated` Success
+             */
+            searchLosOperationTracking: (data, query, params = {}) => this.request(Object.assign({ path: `/api/los-operation-tracking/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -2548,6 +2839,17 @@ export class Api extends HttpClient {
              * @response `422` `UnprocessableEntity` Client Error
              */
             createNotificationTemplate: (data, params = {}) => this.request(Object.assign({ path: `/api/notification-templates`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags NotificationTemplates
+             * @name SearchNotificationTemplates
+             * @summary Search
+             * @request POST:/api/notification-templates/search
+             * @secure
+             * @response `200` `NotificationTemplateBasePaginated` Success
+             */
+            searchNotificationTemplates: (data, query, params = {}) => this.request(Object.assign({ path: `/api/notification-templates/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
@@ -2994,6 +3296,77 @@ export class Api extends HttpClient {
              * @response `200` `EncompassRequestLogPaginated` Success
              */
             searchEncompassLogs: (losId, query, data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/logs/${losId}/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name GetEncompassCredentials
+             * @request GET:/api/los/encompass/credentials
+             * @secure
+             * @response `200` `EncompassCredentialsDetail` Success
+             * @response `204` `void` No Content
+             */
+            getEncompassCredentials: (params = {}) => this.request(Object.assign({ path: `/api/los/encompass/credentials`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name CreateEncompassCredentials
+             * @request POST:/api/los/encompass/credentials
+             * @secure
+             * @response `201` `LosCredentials` Created
+             */
+            createEncompassCredentials: (data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/credentials`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name UpdateEncompassCredentials
+             * @request PUT:/api/los/encompass/credentials
+             * @secure
+             * @response `200` `EncompassCredentialsDetail` Success
+             */
+            updateEncompassCredentials: (data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/credentials`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name GetEncompassWebhooks
+             * @request GET:/api/los/encompass/webhooks
+             * @secure
+             * @response `200` `(LosWebhook)[]` Success
+             */
+            getEncompassWebhooks: (params = {}) => this.request(Object.assign({ path: `/api/los/encompass/webhooks`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name CreateEncompassWebhook
+             * @request POST:/api/los/encompass/webhooks
+             * @secure
+             * @response `201` `LosWebhook` Created
+             */
+            createEncompassWebhook: (data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/webhooks`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name DeleteEncompassWebhook
+             * @request DELETE:/api/los/encompass/webhooks/{webhookId}
+             * @secure
+             * @response `204` `void` No Content
+             */
+            deleteEncompassWebhook: (webhookId, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/webhooks/${webhookId}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags TheBigPOS
+             * @name SearchLosSyncs
+             * @request POST:/api/los/encompass/syncs/{loanId}/search
+             * @secure
+             * @response `200` `LosSyncPaginated` Success
+             */
+            searchLosSyncs: (loanId, query, data, params = {}) => this.request(Object.assign({ path: `/api/los/encompass/syncs/${loanId}/search`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
