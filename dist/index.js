@@ -1385,7 +1385,7 @@ export class Api extends HttpClient {
              * @response `422` `UnprocessableEntity` Client Error
              * @response `423` `UnprocessableEntity` Client Error
              */
-            createLoan: (data, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLoan: (data, query, params = {}) => this.request(Object.assign({ path: `/api/los/loan/application`, method: "POST", query: query, body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1636,7 +1636,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `Listing` Success
              */
-            replaceListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            replaceListing: (id, data, params = {}) => this.request(Object.assign({ path: `/api/listings/${id}`, method: "PUT", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2422,7 +2422,7 @@ export class Api extends HttpClient {
              * @response `201` `TaskComment` Created
              * @response `404` `ProblemDetails` Not Found
              */
-            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
