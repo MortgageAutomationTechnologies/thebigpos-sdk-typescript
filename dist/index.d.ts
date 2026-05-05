@@ -4,13 +4,14 @@ export type TaskStatus = "Outstanding" | "Pending" | "Completed" | "Rejected" | 
 export type SiteConfigurationType = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 export type SigningMethod = "ConsumerConnect" | "POSF";
 export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS" | "POSF";
+export type LosSyncStepSeverity = "Success" | "Info" | "Warning" | "Error";
 export type LosOperationStatus = "Pending" | "Success" | "Failed" | "ConfigurationError" | "PermanentFailure" | "Locked";
 export type LogLevel = "None" | "Info" | "Warning" | "Error";
 export type LoanType = "Fha" | "Conventional" | "UsdaRd" | "Va" | "Other";
 export type LoanTrustType = "Living" | "Land" | "Testamentary" | "Other";
 export type LoanTitleHeld = "Sole" | "JointWithSpouse" | "JointWithOtherThanSpouse";
 export type LoanTaskActivityFilter = "Active" | "Inactive" | "All";
-export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 export type LoanRealEstateStatus = "Keep" | "Rent" | "Sell";
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
@@ -46,6 +47,7 @@ export type LoanAsianRace = "AsianIndian" | "Chinese" | "Filipino" | "Japanese" 
 export type LoanAccountAssetType = "Checking" | "Savings" | "MoneyMarket" | "CertificateOfDeposit" | "MutualFund" | "Stocks" | "Bonds" | "Retirement" | "BridgeLoanProceeds" | "IndividualDevelopmentAccount" | "TrustAccount" | "CashValueOfLifeInsurance" | "Other";
 export type LoanAccessScopeType = "User" | "Branch";
 export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently" | "Uploaded" | "PendingSync";
+export type FolderPermissionLevel = "None" | "Read" | "Write" | "Manage";
 export type FilterType = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
 export type Environment = "Development" | "Staging" | "UAT" | "Production";
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
@@ -797,7 +799,7 @@ export interface CreateDocumentTemplateRequest {
 export interface CreateGroupMemberRequest {
     /** @format uuid */
     userId: string;
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 }
 export interface CreateInviteRequest {
     /** @minLength 1 */
@@ -816,6 +818,14 @@ export interface CreateInviteRequest {
     /** @deprecated */
     userRole?: UserRole | null;
     loanRole?: LoanRole | null;
+}
+export interface CreateLoanDocumentFolderRequest {
+    /**
+     * @minLength 1
+     * @maxLength 250
+     */
+    name: string;
+    permissions: LoanDocumentFolderPermissionRequest[];
 }
 export interface CreateLoanImportRequest {
     /** @format uuid */
@@ -848,7 +858,7 @@ export interface CreateUserDeviceRequest {
     token: string;
 }
 export interface CreateUserDraft {
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 }
 export interface CreateUserGroupRequest {
     /**
@@ -1278,7 +1288,6 @@ export interface EnabledServices {
     fullApp?: boolean | null;
     mobileApp?: boolean | null;
     ringCentral?: boolean | null;
-    rates?: boolean | null;
     socialSurvey?: boolean | null;
     borrowerTasks?: boolean | null;
     docusign?: boolean | null;
@@ -2930,7 +2939,7 @@ export interface LoanContact {
     email?: string | null;
     phone?: string | null;
     companyName?: string | null;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 }
 export interface LoanContactList {
     email: string;
@@ -2957,6 +2966,39 @@ export interface LoanDocument {
     failoverDocumentPath?: string | null;
     /** @format date-time */
     sensitiveDataPurgedOn?: string | null;
+}
+export interface LoanDocumentFolder {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    name: string;
+    isSystemDefault: boolean;
+    isActive: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    permissions: LoanDocumentFolderPermission[];
+}
+export interface LoanDocumentFolderPermission {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    loanDocumentFolderID: string;
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+    level: "None" | "Read" | "Write" | "Manage";
+}
+export interface LoanDocumentFolderPermissionRequest {
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+    level: "None" | "Read" | "Write" | "Manage";
+}
+export interface LoanDocumentFolderUsage {
+    /** @format uuid */
+    folderID: string;
+    hasEverBeenReferenced: boolean;
 }
 export interface LoanDocumentPreviewsRequest {
     documentIds: string[];
@@ -3408,7 +3450,7 @@ export interface LoanUser {
     email: string;
     phone?: string | null;
     role: string;
-    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    loanRole: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
     isUser: boolean;
     /** @format date-time */
     createdAt: string;
@@ -3468,6 +3510,7 @@ export interface LosSync {
     /** @format uuid */
     loanId?: string | null;
     direction: string;
+    eventType?: string | null;
     currentState: string;
     encompassLoanId?: string | null;
     encompassLoanNumber?: string | null;
@@ -3498,12 +3541,13 @@ export interface LosSyncSearchCriteria {
     dateTo?: string | null;
 }
 export interface LosSyncStep {
-    name: string;
-    completed: boolean;
-    /** @format date-time */
-    completedAtUtc?: string | null;
     /** @format int32 */
     order: number;
+    name: string;
+    severity: "Success" | "Info" | "Warning" | "Error";
+    message: string;
+    /** @format date-time */
+    atUtc: string;
 }
 export interface LosWebhook {
     /** @format uuid */
@@ -5118,6 +5162,14 @@ export interface UpdateListingPhotoRequest {
     /** @format int32 */
     weight: number;
 }
+export interface UpdateLoanDocumentFolderRequest {
+    /**
+     * @minLength 1
+     * @maxLength 250
+     */
+    name: string;
+    permissions: LoanDocumentFolderPermissionRequest[];
+}
 export interface UpdateLoanQueueRequest {
     data: any;
 }
@@ -5380,7 +5432,7 @@ export interface UserDevice {
 export interface UserDraft {
     /** @format uuid */
     draftID: string;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
     user: User;
 }
 export interface UserDraftPaginated {
@@ -5437,7 +5489,7 @@ export interface UserLoan {
     deletedAt?: string | null;
     loanID: string;
     user: User;
-    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+    role: "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
     /** @format int32 */
     borrowerPair?: number | null;
     /** @format int32 */
@@ -5667,7 +5719,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.39.0
+ * @version v2.39.2
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -7567,6 +7619,19 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanConsents
+         * @name ResyncLoanConsents
+         * @summary Resync loan consents to LOS
+         * @request POST:/api/loans/{loanId}/consents/resync
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `ProblemDetails` Client Error
+         */
+        resyncLoanConsents: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
          * @tags LoanCustomFieldValues
          * @name GetLoanCustomFieldValues
          * @summary Get all custom field values for a loan
@@ -7639,6 +7704,108 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         /**
          * No description
          *
+         * @tags LoanDocumentFolders
+         * @name GetLoanDocumentFolders
+         * @summary Get all loan document folders for the current account
+         * @request GET:/api/loan-document-folders
+         * @secure
+         * @response `200` `(LoanDocumentFolder)[]` Success
+         */
+        getLoanDocumentFolders: (params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name CreateLoanDocumentFolder
+         * @summary Create a loan document folder
+         * @request POST:/api/loan-document-folders
+         * @secure
+         * @response `201` `LoanDocumentFolder` Created
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Client Error
+         */
+        createLoanDocumentFolder: (data: CreateLoanDocumentFolderRequest, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name GetLoanDocumentFolderById
+         * @summary Get a loan document folder by ID
+         * @request GET:/api/loan-document-folders/{id}
+         * @secure
+         * @response `200` `LoanDocumentFolder` Success
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getLoanDocumentFolderById: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name UpdateLoanDocumentFolder
+         * @summary Update a loan document folder. Blocked when folder has ever been referenced, except for permission edits on the system-default Unassigned folder.
+         * @request PUT:/api/loan-document-folders/{id}
+         * @secure
+         * @response `200` `LoanDocumentFolder` Success
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Client Error
+         */
+        updateLoanDocumentFolder: (id: string, data: UpdateLoanDocumentFolderRequest, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name DeleteLoanDocumentFolder
+         * @summary Delete a loan document folder. Allowed only when the folder has never been referenced and is not the system-default Unassigned folder.
+         * @request DELETE:/api/loan-document-folders/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         */
+        deleteLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name DeactivateLoanDocumentFolder
+         * @summary Deactivate a loan document folder. Rejected for the system-default Unassigned folder.
+         * @request POST:/api/loan-document-folders/{id}/deactivate
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deactivateLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name ReactivateLoanDocumentFolder
+         * @summary Reactivate a loan document folder.
+         * @request POST:/api/loan-document-folders/{id}/reactivate
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        reactivateLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name GetLoanDocumentFolderUsage
+         * @summary Get folder usage. Returns HasEverBeenReferenced including soft-deleted documents and tasks.
+         * @request GET:/api/loan-document-folders/{id}/usage
+         * @secure
+         * @response `200` `LoanDocumentFolderUsage` Success
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getLoanDocumentFolderUsage: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolderUsage, any>>;
+        /**
+         * No description
+         *
          * @tags LoanDocuments
          * @name GetLoanDocument
          * @summary Get By ID
@@ -7685,13 +7852,15 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
          *
          * @tags LoanDocuments
-         * @name GetLoanDocumentFolders
+         * @name GetLoanDocumentFolders2
          * @summary Get document folder hierarchy
          * @request POST:/api/loans/{loanId}/documents/folders
+         * @originalName getLoanDocumentFolders
+         * @duplicate
          * @secure
          * @response `200` `(DocumentFolder)[]` Success
          */
-        getLoanDocumentFolders: (loanId: string, data: DocumentFoldersRequest, query?: {
+        getLoanDocumentFolders2: (loanId: string, data: DocumentFoldersRequest, query?: {
             /** @default false */
             folderNamesOnly?: boolean;
         }, params?: RequestParams) => Promise<AxiosResponse<DocumentFolder[], any>>;

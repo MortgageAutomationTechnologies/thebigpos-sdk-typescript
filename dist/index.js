@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.39.0
+ * @version v2.39.2
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1836,6 +1836,19 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanConsents
+             * @name ResyncLoanConsents
+             * @summary Resync loan consents to LOS
+             * @request POST:/api/loans/{loanId}/consents/resync
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             * @response `422` `ProblemDetails` Client Error
+             */
+            resyncLoanConsents: (loanId, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/consents/resync`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
              * @tags LoanCustomFieldValues
              * @name GetLoanCustomFieldValues
              * @summary Get all custom field values for a loan
@@ -1908,6 +1921,108 @@ export class Api extends HttpClient {
             /**
              * No description
              *
+             * @tags LoanDocumentFolders
+             * @name GetLoanDocumentFolders
+             * @summary Get all loan document folders for the current account
+             * @request GET:/api/loan-document-folders
+             * @secure
+             * @response `200` `(LoanDocumentFolder)[]` Success
+             */
+            getLoanDocumentFolders: (params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name CreateLoanDocumentFolder
+             * @summary Create a loan document folder
+             * @request POST:/api/loan-document-folders
+             * @secure
+             * @response `201` `LoanDocumentFolder` Created
+             * @response `409` `ProblemDetails` Conflict
+             * @response `422` `ProblemDetails` Client Error
+             */
+            createLoanDocumentFolder: (data, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name GetLoanDocumentFolderById
+             * @summary Get a loan document folder by ID
+             * @request GET:/api/loan-document-folders/{id}
+             * @secure
+             * @response `200` `LoanDocumentFolder` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getLoanDocumentFolderById: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name UpdateLoanDocumentFolder
+             * @summary Update a loan document folder. Blocked when folder has ever been referenced, except for permission edits on the system-default Unassigned folder.
+             * @request PUT:/api/loan-document-folders/{id}
+             * @secure
+             * @response `200` `LoanDocumentFolder` Success
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             * @response `409` `ProblemDetails` Conflict
+             * @response `422` `ProblemDetails` Client Error
+             */
+            updateLoanDocumentFolder: (id, data, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}`, method: "PUT", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name DeleteLoanDocumentFolder
+             * @summary Delete a loan document folder. Allowed only when the folder has never been referenced and is not the system-default Unassigned folder.
+             * @request DELETE:/api/loan-document-folders/{id}
+             * @secure
+             * @response `204` `void` No Content
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             * @response `409` `ProblemDetails` Conflict
+             */
+            deleteLoanDocumentFolder: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}`, method: "DELETE", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name DeactivateLoanDocumentFolder
+             * @summary Deactivate a loan document folder. Rejected for the system-default Unassigned folder.
+             * @request POST:/api/loan-document-folders/{id}/deactivate
+             * @secure
+             * @response `204` `void` No Content
+             * @response `400` `ProblemDetails` Bad Request
+             * @response `404` `ProblemDetails` Not Found
+             */
+            deactivateLoanDocumentFolder: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}/deactivate`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name ReactivateLoanDocumentFolder
+             * @summary Reactivate a loan document folder.
+             * @request POST:/api/loan-document-folders/{id}/reactivate
+             * @secure
+             * @response `204` `void` No Content
+             * @response `404` `ProblemDetails` Not Found
+             */
+            reactivateLoanDocumentFolder: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}/reactivate`, method: "POST", secure: true }, params)),
+            /**
+             * No description
+             *
+             * @tags LoanDocumentFolders
+             * @name GetLoanDocumentFolderUsage
+             * @summary Get folder usage. Returns HasEverBeenReferenced including soft-deleted documents and tasks.
+             * @request GET:/api/loan-document-folders/{id}/usage
+             * @secure
+             * @response `200` `LoanDocumentFolderUsage` Success
+             * @response `404` `ProblemDetails` Not Found
+             */
+            getLoanDocumentFolderUsage: (id, params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders/${id}/usage`, method: "GET", secure: true, format: "json" }, params)),
+            /**
+             * No description
+             *
              * @tags LoanDocuments
              * @name GetLoanDocument
              * @summary Get By ID
@@ -1944,13 +2059,15 @@ export class Api extends HttpClient {
              * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
              *
              * @tags LoanDocuments
-             * @name GetLoanDocumentFolders
+             * @name GetLoanDocumentFolders2
              * @summary Get document folder hierarchy
              * @request POST:/api/loans/{loanId}/documents/folders
+             * @originalName getLoanDocumentFolders
+             * @duplicate
              * @secure
              * @response `200` `(DocumentFolder)[]` Success
              */
-            getLoanDocumentFolders: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/folders`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            getLoanDocumentFolders2: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/folders`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
