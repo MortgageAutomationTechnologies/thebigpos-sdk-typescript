@@ -268,6 +268,12 @@ export type LoanGiftAssetType = "Cash" | "Asset" | "Equity";
 
 export type LoanGenderType = "Male" | "Female";
 
+export type LoanDocumentFolderPermissionLevel =
+  | "None"
+  | "Read"
+  | "Write"
+  | "Manage";
+
 export type LoanCitizenship =
   | "USCitizen"
   | "PermanentResidentAlien"
@@ -314,8 +320,6 @@ export type LOSStatus =
   | "FailedPermanently"
   | "Uploaded"
   | "PendingSync";
-
-export type FolderPermissionLevel = "None" | "Read" | "Write" | "Manage";
 
 export type FilterType =
   | "DateGreaterThanOrEqualTo"
@@ -475,7 +479,7 @@ export interface AccountBilling {
 }
 
 export interface AccountBillingRequest {
-  billingType: "ClosedLoan" | "LoanOfficer";
+  billingType: AccountBillingRequestBillingTypeEnum;
   /**
    * @format double
    * @min 0
@@ -813,12 +817,7 @@ export interface AuditLogEntry {
   /** @format uuid */
   id: string;
   entityType: string;
-  changeType:
-    | "Created"
-    | "Modified"
-    | "SoftDeleted"
-    | "HardDeleted"
-    | "Restored";
+  changeType: AuditLogEntryChangeTypeEnum;
   /** @format uuid */
   entityId: string;
   performedBy?: AuditLogUser | null;
@@ -1132,7 +1131,7 @@ export interface CorporateSearchCriteria {
 }
 
 export interface CreateAccessScopeRequest {
-  scopeType: "User" | "Branch";
+  scopeType: CreateAccessScopeRequestScopeTypeEnum;
   /** @format uuid */
   userId?: string | null;
   /** @format uuid */
@@ -1156,7 +1155,7 @@ export interface CreateAccountRequest {
    */
   nlmsid: number;
   settings: AccountSettingsRequest;
-  environment: "Development" | "Staging" | "UAT" | "Production";
+  environment: CreateAccountRequestEnvironmentEnum;
   losIntegration: LOSIntegration;
   billingSettings: AccountBillingRequest;
 }
@@ -1194,15 +1193,8 @@ export interface CreateCustomFieldDefinitionRequest {
   name: string;
   defaultValue?: string | null;
   regexPattern?: string | null;
-  dataType:
-    | "String"
-    | "Number"
-    | "Decimal"
-    | "Boolean"
-    | "Date"
-    | "SingleSelect"
-    | "MultiSelect";
-  entityType: "Loan";
+  dataType: CreateCustomFieldDefinitionRequestDataTypeEnum;
+  entityType: CreateCustomFieldDefinitionRequestEntityTypeEnum;
   options?: CustomFieldOptionRequest[] | null;
   permissions?: CustomFieldPermissionRequest[] | null;
 }
@@ -1224,20 +1216,7 @@ export interface CreateDocumentTemplateRequest {
 export interface CreateGroupMemberRequest {
   /** @format uuid */
   userId: string;
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  loanRole: CreateGroupMemberRequestLoanRoleEnum;
 }
 
 export interface CreateInviteRequest {
@@ -1249,7 +1228,7 @@ export interface CreateInviteRequest {
   emailAddress: string;
   phoneNumber?: string | null;
   /** @deprecated */
-  relationship: "NotApplicable" | "Spouse" | "NonSpouse";
+  relationship: CreateInviteRequestRelationshipEnum;
   loanID: string;
   route?: string | null;
   /** @format uuid */
@@ -1281,7 +1260,7 @@ export interface CreateLoanImportRequest {
    * @minLength 1
    */
   startDate: string;
-  importMode: "All" | "NewOnly" | "UpdateOnly";
+  importMode: CreateLoanImportRequestImportModeEnum;
 }
 
 export interface CreateSession {
@@ -1303,20 +1282,7 @@ export interface CreateUserDeviceRequest {
 }
 
 export interface CreateUserDraft {
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  loanRole: CreateUserDraftLoanRoleEnum;
 }
 
 export interface CreateUserGroupRequest {
@@ -1403,15 +1369,8 @@ export interface CustomFieldDefinition {
   name: string;
   defaultValue?: string | null;
   regexPattern?: string | null;
-  dataType:
-    | "String"
-    | "Number"
-    | "Decimal"
-    | "Boolean"
-    | "Date"
-    | "SingleSelect"
-    | "MultiSelect";
-  entityType: "Loan";
+  dataType: CustomFieldDefinitionDataTypeEnum;
+  entityType: CustomFieldDefinitionEntityTypeEnum;
   options: CustomFieldOption[];
   permissions: CustomFieldPermission[];
   encompassMapping?: EncompassMapping | null;
@@ -1426,14 +1385,7 @@ export interface CustomFieldEntry {
   displayOrder: number;
   name: string;
   value: string;
-  dataType:
-    | "String"
-    | "Number"
-    | "Decimal"
-    | "Boolean"
-    | "Date"
-    | "SingleSelect"
-    | "MultiSelect";
+  dataType: CustomFieldEntryDataTypeEnum;
 }
 
 export interface CustomFieldOption {
@@ -1453,31 +1405,13 @@ export interface CustomFieldOptionRequest {
 export interface CustomFieldPermission {
   /** @format uuid */
   id: string;
-  role:
-    | "Borrower"
-    | "LoanOfficer"
-    | "Admin"
-    | "SuperAdmin"
-    | "Realtor"
-    | "SettlementAgent"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SystemAdmin";
-  accessLevel: "NoAccess" | "ReadOnly" | "ReadWrite";
+  role: CustomFieldPermissionRoleEnum;
+  accessLevel: CustomFieldPermissionAccessLevelEnum;
 }
 
 export interface CustomFieldPermissionRequest {
-  role:
-    | "Borrower"
-    | "LoanOfficer"
-    | "Admin"
-    | "SuperAdmin"
-    | "Realtor"
-    | "SettlementAgent"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SystemAdmin";
-  accessLevel: "NoAccess" | "ReadOnly" | "ReadWrite";
+  role: CustomFieldPermissionRequestRoleEnum;
+  accessLevel: CustomFieldPermissionRequestAccessLevelEnum;
 }
 
 export interface CustomFieldValue {
@@ -1489,14 +1423,7 @@ export interface CustomFieldValue {
   customFieldDefinitionID: string;
   value: string;
   definitionName: string;
-  dataType:
-    | "String"
-    | "Number"
-    | "Decimal"
-    | "Boolean"
-    | "Date"
-    | "SingleSelect"
-    | "MultiSelect";
+  dataType: CustomFieldValueDataTypeEnum;
 }
 
 export interface CustomLoanData {
@@ -1760,7 +1687,7 @@ export interface Draft {
   siteConfiguration: SiteConfigurationReduced;
   /** @format uuid */
   loanID?: string | null;
-  type: "NewLoan" | "EditLoan";
+  type: DraftTypeEnum;
   isCoBorrower: boolean;
 }
 
@@ -1779,7 +1706,7 @@ export interface DraftContent {
   siteConfiguration: SiteConfigurationReduced;
   /** @format uuid */
   loanID?: string | null;
-  type: "NewLoan" | "EditLoan";
+  type: DraftContentTypeEnum;
   isCoBorrower: boolean;
   applicationPayload: any;
 }
@@ -1877,7 +1804,7 @@ export interface EncompassCredentialsDetail {
   defaultLoanOfficerUserName?: string | null;
   clearStateIfUnlicensed: boolean;
   baseUrl?: string | null;
-  signingMethod: "ConsumerConnect" | "POSF";
+  signingMethod: EncompassCredentialsDetailSigningMethodEnum;
   subscriptionId?: string | null;
   environment?: string | null;
 }
@@ -1893,7 +1820,7 @@ export interface EncompassCredentialsRequest {
   defaultLoanOfficerUserName?: string | null;
   clearStateIfUnlicensed: boolean;
   baseUrl?: string | null;
-  signingMethod: "ConsumerConnect" | "POSF";
+  signingMethod: EncompassCredentialsRequestSigningMethodEnum;
   subscriptionId?: string | null;
   environment?: string | null;
   clientID?: string | null;
@@ -1988,15 +1915,8 @@ export interface EncompassRequestLog {
   losId?: string | null;
   /** @format uuid */
   accountId: string;
-  operationType:
-    | "FieldUpdate"
-    | "ConsentUpdate"
-    | "DocumentSync"
-    | "MilestoneUpdate"
-    | "DocumentAttachment"
-    | "General"
-    | "FieldReader";
-  outcome: "Success" | "Failure" | "PartialSuccess";
+  operationType: EncompassRequestLogOperationTypeEnum;
+  outcome: EncompassRequestLogOutcomeEnum;
   message: string;
   endpoint?: string | null;
   httpMethod?: string | null;
@@ -2233,20 +2153,7 @@ export interface FusionFieldDisplay {
 }
 
 export interface FusionReportFilter {
-  filterType:
-    | "DateGreaterThanOrEqualTo"
-    | "DateGreaterThan"
-    | "DateLessThan"
-    | "DateLessThanOrEqualTo"
-    | "DateEquals"
-    | "DateDoesntEqual"
-    | "DateNonEmpty"
-    | "DateEmpty"
-    | "StringContains"
-    | "StringEquals"
-    | "StringNotEmpty"
-    | "StringNotEquals"
-    | "StringNotContains";
+  filterType: FusionReportFilterFilterTypeEnum;
   targetField: string;
   targetValue: string;
 }
@@ -2374,40 +2281,7 @@ export interface GuidPatchOperation {
 }
 
 export interface IPAddress {
-  addressFamily:
-    | "Unspecified"
-    | "Unix"
-    | "InterNetwork"
-    | "ImpLink"
-    | "Pup"
-    | "Chaos"
-    | "NS"
-    | "Ipx"
-    | "Iso"
-    | "Osi"
-    | "Ecma"
-    | "DataKit"
-    | "Ccitt"
-    | "Sna"
-    | "DecNet"
-    | "DataLink"
-    | "Lat"
-    | "HyperChannel"
-    | "AppleTalk"
-    | "NetBios"
-    | "VoiceView"
-    | "FireFox"
-    | "Banyan"
-    | "Atm"
-    | "InterNetworkV6"
-    | "Cluster"
-    | "Ieee12844"
-    | "Irda"
-    | "NetworkDesigners"
-    | "Max"
-    | "Packet"
-    | "ControllerAreaNetwork"
-    | "Unknown";
+  addressFamily: IpAddressAddressFamilyEnum;
   /** @format int64 */
   scopeId: number;
   isIPv6Multicast: boolean;
@@ -2675,7 +2549,7 @@ export interface Loan {
   userLoans: UserLoan[];
   contacts: LoanContact[];
   customFields: CustomFieldEntry[];
-  signingMethod: "ConsumerConnect" | "POSF";
+  signingMethod: LoanSigningMethodEnum;
 }
 
 export interface LoanApplication {
@@ -2734,7 +2608,7 @@ export interface LoanBorrower {
   citizenship?: LoanCitizenship | null;
   maritalStatus?: LoanMaritalStatus | null;
   languagePreference?: LoanLanguagePreference | null;
-  applicationStatus: "Draft" | "Complete";
+  applicationStatus: LoanBorrowerApplicationStatusEnum;
   /** @format int32 */
   numberOfDependents?: number | null;
   isPrimaryBorrower: boolean;
@@ -3659,20 +3533,7 @@ export interface LoanContact {
   email?: string | null;
   phone?: string | null;
   companyName?: string | null;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  role: LoanContactRoleEnum;
 }
 
 export interface LoanContactList {
@@ -3726,39 +3587,13 @@ export interface LoanDocumentFolderPermission {
   id: string;
   /** @format uuid */
   loanDocumentFolderID: string;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
-  level: "None" | "Read" | "Write" | "Manage";
+  role: LoanDocumentFolderPermissionRoleEnum;
+  level: LoanDocumentFolderPermissionLevelEnum;
 }
 
 export interface LoanDocumentFolderPermissionRequest {
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
-  level: "None" | "Read" | "Write" | "Manage";
+  role: LoanDocumentFolderPermissionRequestRoleEnum;
+  level: LoanDocumentFolderPermissionRequestLevelEnum;
 }
 
 export interface LoanDocumentFolderUsage {
@@ -3876,19 +3711,14 @@ export interface LoanImport {
   /** @format int32 */
   importedCount: number;
   statusMessage?: string | null;
-  status:
-    | "WaitingProcess"
-    | "InProgress"
-    | "Completed"
-    | "Failed"
-    | "Cancelled";
-  importMode: "All" | "NewOnly" | "UpdateOnly";
+  status: LoanImportStatusEnum;
+  importMode: LoanImportImportModeEnum;
   /** @format date-time */
   createdAt?: string | null;
 }
 
 export interface LoanImportLog {
-  level: "None" | "Info" | "Warning" | "Error";
+  level: LoanImportLogLevelEnum;
   message: string;
   /** @format date-time */
   createdAt: string;
@@ -3949,24 +3779,8 @@ export interface LoanListPaginated {
 export interface LoanLog {
   /** @format uuid */
   id: string;
-  level: "None" | "Info" | "Warning" | "Error";
-  type:
-    | "Loan"
-    | "Queue"
-    | "POSFlagChanged"
-    | "Verification"
-    | "DocumentUploaded"
-    | "LoanCreated"
-    | "WorkflowSubmitted"
-    | "UserInvitationSent"
-    | "CoBorrowerAdded"
-    | "TaskCompleted"
-    | "LoanStatusChanged"
-    | "Consent"
-    | "SensitiveDataPurge"
-    | "ClosingDateUpdated"
-    | "ConsumerConnectAssociation"
-    | "TaskReminderSent";
+  level: LoanLogLevelEnum;
+  type: LoanLogTypeEnum;
   message: string;
   /** @format date-time */
   createdAt: string;
@@ -3975,24 +3789,8 @@ export interface LoanLog {
 export interface LoanLogDetail {
   /** @format uuid */
   id: string;
-  level: "None" | "Info" | "Warning" | "Error";
-  type:
-    | "Loan"
-    | "Queue"
-    | "POSFlagChanged"
-    | "Verification"
-    | "DocumentUploaded"
-    | "LoanCreated"
-    | "WorkflowSubmitted"
-    | "UserInvitationSent"
-    | "CoBorrowerAdded"
-    | "TaskCompleted"
-    | "LoanStatusChanged"
-    | "Consent"
-    | "SensitiveDataPurge"
-    | "ClosingDateUpdated"
-    | "ConsumerConnectAssociation"
-    | "TaskReminderSent";
+  level: LoanLogDetailLevelEnum;
+  type: LoanLogDetailTypeEnum;
   message: string;
   /** @format date-time */
   createdAt: string;
@@ -4280,7 +4078,7 @@ export interface LoanTaskSearchRequest {
 }
 
 export interface LoanTaskStatusSummary {
-  status: "Outstanding" | "Pending" | "Completed" | "Rejected" | "Unknown";
+  status: LoanTaskStatusSummaryStatusEnum;
   /** @format int32 */
   count: number;
 }
@@ -4293,20 +4091,7 @@ export interface LoanUser {
   email: string;
   phone?: string | null;
   role: string;
-  loanRole:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  loanRole: LoanUserLoanRoleEnum;
   isUser: boolean;
   /** @format date-time */
   createdAt: string;
@@ -4342,13 +4127,7 @@ export interface LosOperationTracking {
   operationType: string;
   correlationKey: string;
   lastTriggerSource?: string | null;
-  status:
-    | "Pending"
-    | "Success"
-    | "Failed"
-    | "ConfigurationError"
-    | "PermanentFailure"
-    | "Locked";
+  status: LosOperationTrackingStatusEnum;
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -4415,7 +4194,7 @@ export interface LosSyncStep {
   /** @format int32 */
   order: number;
   name: string;
-  severity: "Success" | "Info" | "Warning" | "Error";
+  severity: LosSyncStepSeverityEnum;
   message: string;
   /** @format date-time */
   atUtc: string;
@@ -5079,7 +4858,7 @@ export interface SSOTokenRequest {
 }
 
 export interface SamlMetadataRequest {
-  ssoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF";
+  ssoIntegration: SamlMetadataRequestSsoIntegrationEnum;
 }
 
 export interface SendForgotPasswordRequest {
@@ -5137,7 +4916,7 @@ export interface SiteConfiguration {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationTypeEnum;
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -5332,7 +5111,7 @@ export interface SiteConfigurationByUrl {
   deletedAt?: string | null;
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationByUrlTypeEnum;
   /** @format uuid */
   entityID: string;
   /** @format int32 */
@@ -5545,7 +5324,7 @@ export interface SiteConfigurationForm {
 export interface SiteConfigurationReduced {
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationReducedTypeEnum;
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -5563,7 +5342,7 @@ export interface SiteConfigurationRequest {
   entityID: string;
   /** @format int32 */
   entityType: number;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationRequestTypeEnum;
   url: string;
   name: string;
   introduction?: string | null;
@@ -5740,7 +5519,7 @@ export interface SiteConfigurationSearchCriteria {
 export interface SiteConfigurationSummary {
   /** @format uuid */
   id: string;
-  type: "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+  type: SiteConfigurationSummaryTypeEnum;
   url?: string | null;
   name: string;
   /** @format int64 */
@@ -6408,20 +6187,7 @@ export interface UserDevice {
 export interface UserDraft {
   /** @format uuid */
   draftID: string;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  role: UserDraftRoleEnum;
   user: User;
 }
 
@@ -6448,7 +6214,7 @@ export interface UserGroupAccessScope {
   id: string;
   /** @format uuid */
   groupId: string;
-  scopeType: "User" | "Branch";
+  scopeType: UserGroupAccessScopeScopeTypeEnum;
   /** @format uuid */
   userId?: string | null;
   /** @format uuid */
@@ -6484,25 +6250,13 @@ export interface UserLoan {
   deletedAt?: string | null;
   loanID: string;
   user: User;
-  role:
-    | "Borrower"
-    | "CoBorrower"
-    | "NonBorrower"
-    | "LoanOfficer"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SupportingLoanOfficer"
-    | "BuyerAgent"
-    | "SellerAgent"
-    | "TitleInsuranceAgent"
-    | "EscrowAgent"
-    | "SettlementAgent"
-    | "Admin";
+  role: UserLoanRoleEnum;
   /** @format int32 */
   borrowerPair?: number | null;
   /** @format int32 */
   borrowerPosition?: number | null;
   customLoanData?: CustomLoanData | null;
+  consents: UserLoanConsent[];
 }
 
 export interface UserLoanConsent {
@@ -6510,12 +6264,16 @@ export interface UserLoanConsent {
   id: string;
   /** @format uuid */
   userLoanID: string;
-  type: "Econsent" | "CreditAuthorization" | "Tcpa";
+  type: UserLoanConsentTypeEnum;
   providedConsent: boolean;
   ipAddress?: string | null;
-  losSyncStatus: "NotStarted" | "Failed" | "Success";
+  losSyncStatus: UserLoanConsentLosSyncStatusEnum;
   /** @format date-time */
   createdAt: string;
+  /** @format date-time */
+  updatedAt?: string | null;
+  /** @format date-time */
+  deletedAt?: string | null;
 }
 
 export interface UserLoanTask {
@@ -6664,16 +6422,7 @@ export interface UserSummary {
   id: string;
   name?: string | null;
   email?: string | null;
-  role:
-    | "Borrower"
-    | "LoanOfficer"
-    | "Admin"
-    | "SuperAdmin"
-    | "Realtor"
-    | "SettlementAgent"
-    | "LoanProcessor"
-    | "LoanOfficerAssistant"
-    | "SystemAdmin";
+  role: UserSummaryRoleEnum;
 }
 
 export interface VerifyPasswordRequest {
@@ -6708,6 +6457,488 @@ export interface Workflow {
   tileSubtitle: string;
   icon: string;
 }
+
+export type AccountBillingRequestBillingTypeEnum = "ClosedLoan" | "LoanOfficer";
+
+export type AuditLogEntryChangeTypeEnum =
+  | "Created"
+  | "Modified"
+  | "SoftDeleted"
+  | "HardDeleted"
+  | "Restored";
+
+export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
+
+export type CreateAccountRequestEnvironmentEnum =
+  | "Development"
+  | "Staging"
+  | "UAT"
+  | "Production";
+
+export type CreateCustomFieldDefinitionRequestDataTypeEnum =
+  | "String"
+  | "Number"
+  | "Decimal"
+  | "Boolean"
+  | "Date"
+  | "SingleSelect"
+  | "MultiSelect";
+
+export type CreateCustomFieldDefinitionRequestEntityTypeEnum = "Loan";
+
+export type CreateGroupMemberRequestLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+/** @deprecated */
+export type CreateInviteRequestRelationshipEnum =
+  | "NotApplicable"
+  | "Spouse"
+  | "NonSpouse";
+
+export type CreateLoanImportRequestImportModeEnum =
+  | "All"
+  | "NewOnly"
+  | "UpdateOnly";
+
+export type CreateUserDraftLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type CustomFieldDefinitionDataTypeEnum =
+  | "String"
+  | "Number"
+  | "Decimal"
+  | "Boolean"
+  | "Date"
+  | "SingleSelect"
+  | "MultiSelect";
+
+export type CustomFieldDefinitionEntityTypeEnum = "Loan";
+
+export type CustomFieldEntryDataTypeEnum =
+  | "String"
+  | "Number"
+  | "Decimal"
+  | "Boolean"
+  | "Date"
+  | "SingleSelect"
+  | "MultiSelect";
+
+export type CustomFieldPermissionRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SystemAdmin";
+
+export type CustomFieldPermissionAccessLevelEnum =
+  | "NoAccess"
+  | "ReadOnly"
+  | "ReadWrite";
+
+export type CustomFieldPermissionRequestRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SystemAdmin";
+
+export type CustomFieldPermissionRequestAccessLevelEnum =
+  | "NoAccess"
+  | "ReadOnly"
+  | "ReadWrite";
+
+export type CustomFieldValueDataTypeEnum =
+  | "String"
+  | "Number"
+  | "Decimal"
+  | "Boolean"
+  | "Date"
+  | "SingleSelect"
+  | "MultiSelect";
+
+export type DraftTypeEnum = "NewLoan" | "EditLoan";
+
+export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
+
+export type EncompassCredentialsDetailSigningMethodEnum =
+  | "ConsumerConnect"
+  | "POSF";
+
+export type EncompassCredentialsRequestSigningMethodEnum =
+  | "ConsumerConnect"
+  | "POSF";
+
+export type EncompassRequestLogOperationTypeEnum =
+  | "FieldUpdate"
+  | "ConsentUpdate"
+  | "DocumentSync"
+  | "MilestoneUpdate"
+  | "DocumentAttachment"
+  | "General"
+  | "FieldReader";
+
+export type EncompassRequestLogOutcomeEnum =
+  | "Success"
+  | "Failure"
+  | "PartialSuccess";
+
+export type FusionReportFilterFilterTypeEnum =
+  | "DateGreaterThanOrEqualTo"
+  | "DateGreaterThan"
+  | "DateLessThan"
+  | "DateLessThanOrEqualTo"
+  | "DateEquals"
+  | "DateDoesntEqual"
+  | "DateNonEmpty"
+  | "DateEmpty"
+  | "StringContains"
+  | "StringEquals"
+  | "StringNotEmpty"
+  | "StringNotEquals"
+  | "StringNotContains";
+
+export type IpAddressAddressFamilyEnum =
+  | "Unspecified"
+  | "Unix"
+  | "InterNetwork"
+  | "ImpLink"
+  | "Pup"
+  | "Chaos"
+  | "NS"
+  | "Ipx"
+  | "Iso"
+  | "Osi"
+  | "Ecma"
+  | "DataKit"
+  | "Ccitt"
+  | "Sna"
+  | "DecNet"
+  | "DataLink"
+  | "Lat"
+  | "HyperChannel"
+  | "AppleTalk"
+  | "NetBios"
+  | "VoiceView"
+  | "FireFox"
+  | "Banyan"
+  | "Atm"
+  | "InterNetworkV6"
+  | "Cluster"
+  | "Ieee12844"
+  | "Irda"
+  | "NetworkDesigners"
+  | "Max"
+  | "Packet"
+  | "ControllerAreaNetwork"
+  | "Unknown";
+
+export type LoanSigningMethodEnum = "ConsumerConnect" | "POSF";
+
+export type LoanBorrowerApplicationStatusEnum = "Draft" | "Complete";
+
+export type LoanContactRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type LoanDocumentFolderPermissionRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type LoanDocumentFolderPermissionLevelEnum =
+  | "None"
+  | "Read"
+  | "Write"
+  | "Manage";
+
+export type LoanDocumentFolderPermissionRequestRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type LoanDocumentFolderPermissionRequestLevelEnum =
+  | "None"
+  | "Read"
+  | "Write"
+  | "Manage";
+
+export type LoanImportStatusEnum =
+  | "WaitingProcess"
+  | "InProgress"
+  | "Completed"
+  | "Failed"
+  | "Cancelled";
+
+export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
+
+export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+
+export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
+
+export type LoanLogTypeEnum =
+  | "Loan"
+  | "Queue"
+  | "POSFlagChanged"
+  | "Verification"
+  | "DocumentUploaded"
+  | "LoanCreated"
+  | "WorkflowSubmitted"
+  | "UserInvitationSent"
+  | "CoBorrowerAdded"
+  | "TaskCompleted"
+  | "LoanStatusChanged"
+  | "Consent"
+  | "SensitiveDataPurge"
+  | "ClosingDateUpdated"
+  | "ConsumerConnectAssociation"
+  | "TaskReminderSent";
+
+export type LoanLogDetailLevelEnum = "None" | "Info" | "Warning" | "Error";
+
+export type LoanLogDetailTypeEnum =
+  | "Loan"
+  | "Queue"
+  | "POSFlagChanged"
+  | "Verification"
+  | "DocumentUploaded"
+  | "LoanCreated"
+  | "WorkflowSubmitted"
+  | "UserInvitationSent"
+  | "CoBorrowerAdded"
+  | "TaskCompleted"
+  | "LoanStatusChanged"
+  | "Consent"
+  | "SensitiveDataPurge"
+  | "ClosingDateUpdated"
+  | "ConsumerConnectAssociation"
+  | "TaskReminderSent";
+
+export type LoanTaskStatusSummaryStatusEnum =
+  | "Outstanding"
+  | "Pending"
+  | "Completed"
+  | "Rejected"
+  | "Unknown";
+
+export type LoanUserLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type LosOperationTrackingStatusEnum =
+  | "Pending"
+  | "Success"
+  | "Failed"
+  | "ConfigurationError"
+  | "PermanentFailure"
+  | "Locked";
+
+export type LosSyncStepSeverityEnum = "Success" | "Info" | "Warning" | "Error";
+
+export type SamlMetadataRequestSsoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type SiteConfigurationTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationByUrlTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationReducedTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationRequestTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type SiteConfigurationSummaryTypeEnum =
+  | "None"
+  | "Account"
+  | "Corporate"
+  | "Branch"
+  | "LoanOfficer"
+  | "Partner";
+
+export type UserDraftRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type UserGroupAccessScopeScopeTypeEnum = "User" | "Branch";
+
+export type UserLoanRoleEnum =
+  | "Borrower"
+  | "CoBorrower"
+  | "NonBorrower"
+  | "LoanOfficer"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SupportingLoanOfficer"
+  | "BuyerAgent"
+  | "SellerAgent"
+  | "TitleInsuranceAgent"
+  | "EscrowAgent"
+  | "SettlementAgent"
+  | "Admin";
+
+export type UserLoanConsentTypeEnum =
+  | "Econsent"
+  | "CreditAuthorization"
+  | "Tcpa";
+
+export type UserLoanConsentLosSyncStatusEnum =
+  | "NotStarted"
+  | "Failed"
+  | "Success";
+
+export type UserSummaryRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SystemAdmin";
+
+export type GetCustomFieldDefinitionsParamsEntityTypeEnum = "Loan";
+
+/** @default "Realtor" */
+export type GetPartnersParamsRoleEnum =
+  | "Borrower"
+  | "LoanOfficer"
+  | "Admin"
+  | "SuperAdmin"
+  | "Realtor"
+  | "SettlementAgent"
+  | "LoanProcessor"
+  | "LoanOfficerAssistant"
+  | "SystemAdmin";
+
+export type GetSamlMetadataParamsSSoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type GetSamlMetadataParamsEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type CreateOrReplaceSamlMetadataParamsSSoIntegrationEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
+
+export type CreateOrReplaceSamlMetadataParamsEnum =
+  | "ConsumerConnect"
+  | "TheBigPOS"
+  | "POSF";
 
 import type {
   AxiosInstance,
@@ -6887,7 +7118,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title The Big POS API
- * @version v2.39.2
+ * @version v2.40.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -8106,7 +8337,7 @@ export class Api<
      */
     getCustomFieldDefinitions: (
       query?: {
-        entityType?: "Loan";
+        entityType?: GetCustomFieldDefinitionsParamsEntityTypeEnum;
       },
       params: RequestParams = {},
     ) =>
@@ -10590,13 +10821,13 @@ export class Api<
      * No description
      *
      * @tags LoanDocumentFolders
-     * @name GetLoanDocumentFolders
+     * @name GetAllLoanDocumentFolders
      * @summary Get all loan document folders for the current account
      * @request GET:/api/loan-document-folders
      * @secure
      * @response `200` `(LoanDocumentFolder)[]` Success
      */
-    getLoanDocumentFolders: (params: RequestParams = {}) =>
+    getAllLoanDocumentFolders: (params: RequestParams = {}) =>
       this.request<LoanDocumentFolder[], any>({
         path: `/api/loan-document-folders`,
         method: "GET",
@@ -10853,15 +11084,13 @@ export class Api<
      * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
      *
      * @tags LoanDocuments
-     * @name GetLoanDocumentFolders2
+     * @name GetLoanDocumentFolders
      * @summary Get document folder hierarchy
      * @request POST:/api/loans/{loanId}/documents/folders
-     * @originalName getLoanDocumentFolders
-     * @duplicate
      * @secure
      * @response `200` `(DocumentFolder)[]` Success
      */
-    getLoanDocumentFolders2: (
+    getLoanDocumentFolders: (
       loanId: string,
       data: DocumentFoldersRequest,
       query?: {
@@ -10924,6 +11153,8 @@ export class Api<
         /** @format binary */
         file?: File;
         bucket?: string;
+        /** @format uuid */
+        folderID?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -12096,6 +12327,8 @@ export class Api<
         /** @format binary */
         file?: File;
         bucket?: string;
+        /** @format uuid */
+        folderID?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -13130,16 +13363,7 @@ export class Api<
       query?: {
         showAll?: boolean;
         /** @default "Realtor" */
-        role?:
-          | "Borrower"
-          | "LoanOfficer"
-          | "Admin"
-          | "SuperAdmin"
-          | "Realtor"
-          | "SettlementAgent"
-          | "LoanProcessor"
-          | "LoanOfficerAssistant"
-          | "SystemAdmin";
+        role?: GetPartnersParamsRoleEnum;
         /** @format int32 */
         pageSize?: number;
         /** @format int32 */
@@ -13475,7 +13699,7 @@ export class Api<
      * @response `404` `ProblemDetails` Not Found
      */
     getSamlMetadata: (
-      sSoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF",
+      sSoIntegration: GetSamlMetadataParamsEnum,
       ssoIntegration: string,
       params: RequestParams = {},
     ) =>
@@ -13497,7 +13721,7 @@ export class Api<
      * @response `200` `File` Success
      */
     createOrReplaceSamlMetadata: (
-      sSoIntegration: "ConsumerConnect" | "TheBigPOS" | "POSF",
+      sSoIntegration: CreateOrReplaceSamlMetadataParamsEnum,
       ssoIntegration: string,
       params: RequestParams = {},
     ) =>

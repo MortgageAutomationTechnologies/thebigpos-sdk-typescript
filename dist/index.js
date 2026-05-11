@@ -104,7 +104,7 @@ export class HttpClient {
 }
 /**
  * @title The Big POS API
- * @version v2.39.2
+ * @version v2.40.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -1922,13 +1922,13 @@ export class Api extends HttpClient {
              * No description
              *
              * @tags LoanDocumentFolders
-             * @name GetLoanDocumentFolders
+             * @name GetAllLoanDocumentFolders
              * @summary Get all loan document folders for the current account
              * @request GET:/api/loan-document-folders
              * @secure
              * @response `200` `(LoanDocumentFolder)[]` Success
              */
-            getLoanDocumentFolders: (params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders`, method: "GET", secure: true, format: "json" }, params)),
+            getAllLoanDocumentFolders: (params = {}) => this.request(Object.assign({ path: `/api/loan-document-folders`, method: "GET", secure: true, format: "json" }, params)),
             /**
              * No description
              *
@@ -2059,15 +2059,13 @@ export class Api extends HttpClient {
              * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
              *
              * @tags LoanDocuments
-             * @name GetLoanDocumentFolders2
+             * @name GetLoanDocumentFolders
              * @summary Get document folder hierarchy
              * @request POST:/api/loans/{loanId}/documents/folders
-             * @originalName getLoanDocumentFolders
-             * @duplicate
              * @secure
              * @response `200` `(DocumentFolder)[]` Success
              */
-            getLoanDocumentFolders2: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/folders`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            getLoanDocumentFolders: (loanId, data, query, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/documents/folders`, method: "POST", query: query, body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
             /**
              * No description
              *
