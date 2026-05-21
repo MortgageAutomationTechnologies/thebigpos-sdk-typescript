@@ -1215,7 +1215,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `GetReport` Success
              */
-            getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            getLoansReport: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/reports`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1345,7 +1345,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `200` `DocumentDataRequest` Success
              */
-            createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLegacyLoanDocument: (data, params = {}) => this.request(Object.assign({ path: `/api/los/loan/generatedocument`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -1447,7 +1447,7 @@ export class Api extends HttpClient {
              * @secure
              * @response `201` `Listing` Created
              */
-            createListing: (data, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createListing: (data, params = {}) => this.request(Object.assign({ path: `/api/listings`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
@@ -2179,7 +2179,7 @@ export class Api extends HttpClient {
              * @response `201` `TaskComment` Created
              * @response `404` `ProblemDetails` Not Found
              */
-            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.Json, format: "json" }, params)),
+            createLoanTaskComment: (loanId, userLoanTaskId, data, params = {}) => this.request(Object.assign({ path: `/api/loans/${loanId}/tasks/${userLoanTaskId}/comments`, method: "POST", body: data, secure: true, type: ContentType.JsonPatch, format: "json" }, params)),
             /**
              * No description
              *
