@@ -45,13 +45,13 @@ apiClient.api.getSiteConfiguration().then((response) => {
 To regenerate the SDK from a specific API version, run:
 
 ```bash
-npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/{version}/swagger.json -o ./src -n index.ts -r true --axios --enum-names-as-values --generate-union-enums
+npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/{version}/swagger.json -o ./src -n index.ts -r true --axios --enum-names-as-values --enum-style union
 ```
 
 Replace `{version}` with the target API version (e.g. `v2.34.0`):
 
 ```bash
-npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/v2.34.0/swagger.json -o ./src -n index.ts -r true --axios --enum-names-as-values --generate-union-enums
+npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/v2.34.0/swagger.json -o ./src -n index.ts -r true --axios --enum-names-as-values --enum-style union
 ```
 
 ## Publishing
