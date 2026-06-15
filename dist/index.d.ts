@@ -7478,7 +7478,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `404` `ProblemDetails` Not Found
          * @response `409` `any` Conflict
          */
-        updateLoan: (loanId: string, data: any, params?: RequestParams) => Promise<AxiosResponse<Loan, any, {}>>;
+        updateLoan: (loanId: string, data: LoanPatchRequestGuidPatchDocument, params?: RequestParams) => Promise<AxiosResponse<Loan, any, {}>>;
         /**
          * No description
          *
