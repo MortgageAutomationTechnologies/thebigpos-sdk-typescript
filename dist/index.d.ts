@@ -1,11 +1,17 @@
-export type UserRole = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+export type VersionStatusType = "Draft" | "Published";
+export type UserRole = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "SystemAdmin";
+export type TaskStatus = "Outstanding" | "Pending" | "Completed" | "Rejected" | "Unknown";
 export type SiteConfigurationType = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
+export type SigningMethod = "ConsumerConnect" | "POSF";
 export type SSOIntegrationType = "ConsumerConnect" | "TheBigPOS" | "POSF";
+export type LosSyncStepSeverity = "Success" | "Info" | "Warning" | "Error";
+export type LosOperationStatus = "Pending" | "Success" | "Failed" | "ConfigurationError" | "PermanentFailure" | "Locked";
 export type LogLevel = "None" | "Info" | "Warning" | "Error";
 export type LoanType = "Fha" | "Conventional" | "UsdaRd" | "Va" | "Other";
 export type LoanTrustType = "Living" | "Land" | "Testamentary" | "Other";
 export type LoanTitleHeld = "Sole" | "JointWithSpouse" | "JointWithOtherThanSpouse";
-export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type LoanTaskActivityFilter = "Active" | "Inactive" | "All";
+export type LoanRole = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 export type LoanRealEstateStatus = "Keep" | "Rent" | "Sell";
 export type LoanQueueType = "Unknown" | "New" | "Append" | "Update" | "FieldUpdates" | "Document" | "Buckets";
 export type LoanQueueReason = "Unknown" | "Locked" | "LOSError" | "Exception";
@@ -22,22 +28,25 @@ export type LoanNameSuffix = "Jr" | "Sr" | "II" | "III" | "IV" | "V" | "VI" | "V
 export type LoanNamePrefix = "Mr" | "Mrs" | "Ms";
 export type LoanMilitaryServiceType = "Current" | "RetiredDischargedSeparated" | "NonActivatedNationalGuard" | "SurvivingSpouse";
 export type LoanMaritalStatus = "Married" | "Separated" | "Unmarried";
-export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent" | "SensitiveDataPurge";
+export type LoanLogType = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "Consent" | "SensitiveDataPurge" | "ClosingDateUpdated" | "ConsumerConnectAssociation" | "TaskReminderSent" | "DocumentClassified";
 export type LoanLienPosition = "First" | "Subordinate";
 export type LoanLiabilityType = "Revolving" | "Installment" | "Open30Day" | "Lease" | "Other";
-export type LoanLanguagePreference = "English" | "Chinese" | "Korean" | "Spanish" | "Tagalog" | "Vietnamese" | "Other";
+export type LoanLanguagePreference = "English" | "Chinese" | "Korean" | "Spanish" | "Tagalog" | "Vietnamese" | "Other" | "DoNotWishToRespond";
 export type LoanImportStatus = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
 export type LoanImportMode = "All" | "NewOnly" | "UpdateOnly";
 export type LoanHousingType = "NoExpense" | "Own" | "Rent";
 export type LoanHomeOwnershipType = "Counseling" | "Education" | "Other";
 export type LoanHomeOwnershipFormat = "InPerson" | "Online" | "Telephone";
 export type LoanHispanicEthnicity = "Mexican" | "PuertoRican" | "Cuban" | "Other";
-export type LoanGiftSource = "CommunityNonProfit" | "Employer" | "FederalAgency" | "LocalAgency" | "Relative" | "ReligiousNonProfit" | "StateAgency" | "UnmarriedPartner" | "Lender" | "Other";
+export type LoanGiftSource = "CommunityNonProfit" | "Employer" | "FederalAgency" | "LocalAgency" | "Relative" | "ReligiousNonProfit" | "StateAgency" | "UnmarriedPartner" | "Lender" | "Other" | "Institutional" | "Borrower";
 export type LoanGiftAssetType = "Cash" | "Asset" | "Equity";
 export type LoanGenderType = "Male" | "Female";
+export type LoanDocumentType = "W2" | "Paystub" | "Form1099" | "Form1099Int" | "Form1099Misc" | "Form1099Nec" | "Form1099R" | "Form1099G" | "Form1099Div" | "Form1099Ssa" | "FederalTaxReturn1040" | "TaxReturnScheduleC" | "TaxReturnScheduleD" | "TaxReturnScheduleE" | "Form1065" | "Form1120" | "Form1120S" | "ProfitAndLossStatement" | "VerificationOfEmployment" | "BankStatement" | "InvestmentStatement" | "CreditCardStatement" | "MortgageStatement" | "PayoffStatement" | "HoaDocuments" | "UtilityBill" | "IdentityDocument" | "DemographicAddendum" | "Ssa89" | "Vba260551" | "Hud92900B" | "Check" | "Invoice" | "Receipt" | "LoanApplication1003" | "UnderwritingTransmittal1008" | "Other" | "SalesContract" | "TitleCommitment" | "DriversLicense" | "VerificationOfIncome" | "VerificationOfAssets" | "FloodCertificate" | "FraudReport" | "AddendumToSalesContract" | "GiftLetter" | "CpaLetter" | "TaxBill" | "CondoQuestionnaire" | "CondoBudget" | "CondoBylaws" | "RentalAgreements" | "Lease" | "HazardInsurance" | "VaCertificateOfEligibility" | "Appraisal" | "CreditReport" | "CondoMasterPolicy";
+export type LoanDocumentFolderPermissionLevel = "None" | "Read" | "Write" | "Manage";
 export type LoanCitizenship = "USCitizen" | "PermanentResidentAlien" | "NonPermanentResidentAlien";
 export type LoanBankruptcyType = "Chapter7" | "Chapter11" | "Chapter12" | "Chapter13";
 export type LoanAsianRace = "AsianIndian" | "Chinese" | "Filipino" | "Japanese" | "Korean" | "Vietnamese" | "Other";
+export type LoanAmortizationType = "Fixed" | "Arm" | "Balloon" | "Other";
 export type LoanAccountAssetType = "Checking" | "Savings" | "MoneyMarket" | "CertificateOfDeposit" | "MutualFund" | "Stocks" | "Bonds" | "Retirement" | "BridgeLoanProceeds" | "IndividualDevelopmentAccount" | "TrustAccount" | "CashValueOfLifeInsurance" | "Other";
 export type LoanAccessScopeType = "User" | "Branch";
 export type LOSStatus = "Unknown" | "Pending" | "Retrying" | "Successful" | "Failed" | "FailedPermanently" | "Uploaded" | "PendingSync";
@@ -45,13 +54,32 @@ export type FilterType = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateL
 export type Environment = "Development" | "Staging" | "UAT" | "Production";
 export type EntityType = "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Realtor";
 export type EncompassLogOutcome = "Success" | "Failure" | "PartialSuccess";
-export type EncompassLogOperationType = "FieldUpdate" | "EConsentUpdate" | "DocumentSync" | "ApiError" | "LoanCreation" | "SlotCreation" | "MilestoneUpdate";
+export type EncompassLogOperationType = "FieldUpdate" | "ConsentUpdate" | "DocumentSync" | "MilestoneUpdate" | "DocumentAttachment" | "General" | "FieldReader";
+export type EncompassEnvironment = "Production" | "UAT";
 export type DraftType = "NewLoan" | "EditLoan";
+export type CustomFieldEntityType = "Loan";
+export type CustomFieldDataType = "String" | "Number" | "Decimal" | "Boolean" | "Date" | "SingleSelect" | "MultiSelect";
+export type CustomFieldAccessLevel = "NoAccess" | "ReadOnly" | "ReadWrite";
 export type ConsentType = "Econsent" | "CreditAuthorization" | "Tcpa";
+export type ConsentSource = "TheBigPOS" | "ConsumerConnect";
+export type ConsentLosSyncStatus = "NotStarted" | "Failed" | "Success";
+export type ClassificationSource = "Textract" | "Llm" | "Manual";
 export type BranchType = "Mortgage" | "RealEstate";
 export type BorrowerType = "Borrower" | "CoBorrower" | "Unknown";
 export type BorrowerRelationship = "NotApplicable" | "Spouse" | "NonSpouse";
+export type BorrowerApplicationStatus = "Draft" | "Complete";
 export type BillingType = "ClosedLoan" | "LoanOfficer";
+export type AuditChangeType = "Created" | "Modified" | "SoftDeleted" | "HardDeleted" | "Restored" | "Deactivated" | "Reactivated";
+export type AiUrlSourceScope = "FullDomain" | "SpecificPath";
+export type AiUrlSourceCategory = "Regulatory" | "Guidelines" | "MarketData" | "Custom";
+export type AiStructuredDataType = "Table" | "DocumentAnalysis" | "DocumentList" | "GeneratedDocument";
+export type AiQueryTemplateName = "PipelineSummary" | "LoanDetail" | "LoansClosing" | "StaleLoans" | "LoansByType" | "LoansByOfficer" | "AverageLoanAmount" | "LockedVsUnlocked" | "LoansByPurpose" | "LoansByPropertyState" | "LoansByRate" | "DtiLtvRisk" | "DisclosureTracking" | "NewLoans" | "ExpiringLocks" | "ClosedLoans" | "VerificationGaps" | "CreditScoreDistribution" | "OccupancyMix" | "PropertyTypeMix" | "FirstTimeHomebuyer" | "SelfEmployed" | "ReferralSourcePerformance" | "AmortizationMix" | "TimeToClose" | "ConversionFunnel" | "MonthlyProduction" | "PaymentAffordability" | "DownPaymentCashToClose" | "ApprovalExpirations" | "ApplicationCompleteness" | "LosSyncHealth" | "DeclarationsRisk" | "MilitaryEligibility" | "OutstandingTasks" | "ConsentTracking";
+export type AiPromptCategory = "DocumentAnalysis" | "DataQuery" | "General" | "Action";
+export type AiOutputType = "Text" | "Document";
+export type AiIntent = "Greeting" | "Invalid" | "Relevant" | "LoanSpecific" | "DocumentList" | "GeneralKnowledge" | "Blocked" | "Action" | "ConversationMeta" | "Capabilities" | "UsageReport";
+export type AiGuardrailCategory = "ContentSafety" | "PromptInjection" | "Privacy" | "Legal";
+export type AiDisplayHint = "Table" | "SummaryCards" | "RankedList" | "Comparison" | "ExecutiveBrief";
+export type AiAuditEventType = "Error" | "GuardrailBlockedPre" | "GuardrailPassedPre" | "IntentClassified" | "LoanResolvedFromMessage" | "DocumentNotFound" | "GuardrailBlockedPost" | "GuardrailPassedPost" | "DocumentAnalyzed" | "DocumentList" | "DocumentResolutionAmbiguous" | "ResponseGenerated" | "ParametersExtracted" | "QueryExecuted" | "LoanContextNotFound" | "LoanContextLoaded" | "GuardrailBlockedBedrock" | "PromptMatched" | "QueryCondensed" | "IntentParseFailed" | "LoanSearchTermDiscarded" | "CanonicalFieldsSelected";
 export type AddressFamily = "Unspecified" | "Unix" | "InterNetwork" | "ImpLink" | "Pup" | "Chaos" | "NS" | "Ipx" | "Iso" | "Osi" | "Ecma" | "DataKit" | "Ccitt" | "Sna" | "DecNet" | "DataLink" | "Lat" | "HyperChannel" | "AppleTalk" | "NetBios" | "VoiceView" | "FireFox" | "Banyan" | "Atm" | "InterNetworkV6" | "Cluster" | "Ieee12844" | "Irda" | "NetworkDesigners" | "Max" | "Packet" | "ControllerAreaNetwork" | "Unknown";
 export interface ASOSettings {
     enabled: boolean;
@@ -103,12 +131,27 @@ export interface AccountBilling {
 }
 export interface AccountBillingRequest {
     billingType: AccountBillingRequestBillingTypeEnum;
-    /**
-     * @format double
-     * @min 0
-     * @exclusiveMin true
-     */
+    /** @format double */
     contractedRate: number;
+}
+export interface AccountDeactivated {
+    accountDeactivated: boolean;
+    email: string;
+}
+export interface AccountReactivationCompleteRequest {
+    /** @format uuid */
+    token: string;
+    /** @minLength 8 */
+    newPassword: string;
+}
+export interface AccountReactivationRequest {
+    /**
+     * @format email
+     * @minLength 1
+     */
+    email: string;
+    /** @format uuid */
+    siteConfigurationId: string;
 }
 export interface AccountSettings {
     isSmsEnabled: boolean;
@@ -129,7 +172,7 @@ export interface Action {
     comments?: string | null;
     /** @format uuid */
     siteConfigurationID: string;
-    applicationSettings?: any;
+    applicationSettings?: any | null;
     surveysToken?: string | null;
 }
 export interface Address {
@@ -143,26 +186,13 @@ export interface Address {
     postalCode?: string | null;
 }
 export interface AddressRequest {
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
-    street: string;
-    /** @maxLength 50 */
+    street?: string | null;
     unit?: string | null;
-    /** @maxLength 50 */
     unitType?: string | null;
-    /**
-     * @minLength 1
-     * @maxLength 100
-     */
-    city: string;
-    /** @minLength 1 */
-    state: string;
-    /** @maxLength 100 */
+    city?: string | null;
+    state?: string | null;
     county?: string | null;
-    /** @minLength 1 */
-    postalCode: string;
+    postalCode?: string | null;
 }
 export interface AddressV3 {
     /** @format uuid */
@@ -177,7 +207,7 @@ export interface AddressV3 {
 }
 export interface AdminAccessGetForms {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -198,7 +228,7 @@ export interface AdminAccessGetForms {
 }
 export interface AdminAccessUser {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -217,6 +247,7 @@ export interface AdminAccessUser {
     /** @format int32 */
     loginsWithoutMFACount: number;
     canImpersonate: boolean;
+    isInternal: boolean;
     preferredLoanOfficer?: PreferredLoanOfficer | null;
     loanIDs: string[];
     drafts: Draft[];
@@ -255,71 +286,407 @@ export interface AffordabilityCalculator {
     amortization: Amortization;
 }
 export interface AffordabilityCalculatorRequest {
-    /**
-     * @format double
-     * @min 0
-     * @max 200000
-     */
+    /** @format double */
     totalMonthlyIncome: number;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     totalMonthlyExpenses: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 95
-     */
+    /** @format double */
     downPayment: number;
-    /**
-     * @format double
-     * @min 1
-     * @max 25
-     */
+    /** @format double */
     interestRate: number;
-    /**
-     * @format int32
-     * @min 1
-     * @max 40
-     */
+    /** @format int32 */
     term: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 10
-     */
+    /** @format double */
     pmi: number;
-    /**
-     * @format double
-     * @min 5
-     * @max 60
-     */
+    /** @format double */
     frontRatio: number;
-    /**
-     * @format double
-     * @min 5
-     * @max 80
-     */
+    /** @format double */
     backRatio: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 200000
-     */
+    /** @format double */
     annualTaxes: number;
-    /**
-     * @format double
-     * @min 200
-     * @max 50000
-     */
+    /** @format double */
     annualInsurance: number;
 }
+export interface AiAccountSettings {
+    bedrockModelId: string;
+    isUsingAppDefault: boolean;
+}
+export interface AiAccountSettingsRequest {
+    bedrockModelId?: string | null;
+}
+export interface AiAccountUsageOverview {
+    /** @format uuid */
+    accountId: string;
+    accountName: string;
+    /** @format int32 */
+    limit: number;
+    /** @format int64 */
+    used: number;
+    /** @format int64 */
+    remaining: number;
+    /** @format double */
+    percentUsed: number;
+    limitReached: boolean;
+    /** @format date-time */
+    windowStart: string;
+    /** @format date-time */
+    windowEnd: string;
+}
+export interface AiAccountUsageOverviewPaginated {
+    rows: AiAccountUsageOverview[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiAdminSettings {
+    bedrockModelId: string;
+    /** @format int32 */
+    maxTokens: number;
+    /** @format double */
+    temperature: number;
+    /** @format int32 */
+    conversationContextTurns: number;
+    /** @format int32 */
+    requestTimeoutSeconds: number;
+    /** @format int32 */
+    defaultTokenLimit: number;
+    bedrockRegion: string;
+}
+export interface AiAdminSettingsRequest {
+    bedrockModelId?: string | null;
+    /** @format int32 */
+    maxTokens?: number | null;
+    /** @format double */
+    temperature?: number | null;
+    /** @format int32 */
+    conversationContextTurns?: number | null;
+    /** @format int32 */
+    requestTimeoutSeconds?: number | null;
+    /** @format int32 */
+    defaultTokenLimit?: number | null;
+}
+export interface AiAdminStats {
+    /** @format int32 */
+    totalRequests: number;
+    /** @format int32 */
+    blockedRequests: number;
+    /** @format double */
+    averageResponseTimeMs: number;
+    /** @format int32 */
+    totalInputTokens: number;
+    /** @format int32 */
+    totalOutputTokens: number;
+    /** @format int32 */
+    totalTokens: number;
+    intentDistribution: Record<string, number>;
+    topQueryTemplates: Record<string, number>;
+    period: string;
+}
+export interface AiAuditLog {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    requestId: string;
+    /** @format uuid */
+    userId: string;
+    /** @format uuid */
+    conversationId?: string | null;
+    /** @format uuid */
+    messageId?: string | null;
+    eventType: AiAuditLogEventTypeEnum;
+    modelId?: string | null;
+    /** @format int32 */
+    inputTokens?: number | null;
+    /** @format int32 */
+    outputTokens?: number | null;
+    /** @format int32 */
+    latencyMs?: number | null;
+    bedrockRequestId?: string | null;
+    guardrailName?: string | null;
+    guardrailCategory?: string | null;
+    rawRequest?: string | null;
+    rawResponse?: string | null;
+    details?: any | null;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface AiAuditLogPaginated {
+    rows: AiAuditLog[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiCanonicalField {
+    /** @format uuid */
+    id: string;
+    canonicalName: string;
+    displayName: string;
+    description: string;
+    allowedRoles: string[];
+    efPath?: string | null;
+    isPii: boolean;
+    isActive: boolean;
+    dataSource: string;
+    isDefault: boolean;
+    category?: string | null;
+    jsonPropertyName?: string | null;
+    textractKey?: string | null;
+    textractKeyAliases: string[];
+    hasAccountOverride: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+}
+export interface AiChat {
+    /** @format uuid */
+    conversationId: string;
+    /** @format uuid */
+    messageId: string;
+    response: AiChatBody;
+    metadata: AiChatMetadata;
+}
+export interface AiChatBody {
+    text: string;
+    data?: AiChatStructuredData | null;
+}
+export interface AiChatMessage {
+    /** @format uuid */
+    id: string;
+    userMessage: string;
+    assistantResponse: string;
+    intent?: AiIntent | null;
+    fieldsAccessed?: string[] | null;
+    data?: AiChatStructuredData | null;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface AiChatMessagePaginated {
+    rows: AiChatMessage[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiChatMetadata {
+    intent: AiChatMetadataIntentEnum;
+    fieldsAccessed: string[];
+    /** @format int64 */
+    queryTimeMs: number;
+    /** @format int64 */
+    llmTimeMs: number;
+    /** @format int32 */
+    inputTokens: number;
+    /** @format int32 */
+    outputTokens: number;
+    modelId?: string | null;
+    wasBlocked: boolean;
+    blockedReason?: string | null;
+    tokenBudget?: AiTokenBudgetStatus | null;
+}
+export interface AiChatRequest {
+    message: string;
+    /** @format uuid */
+    conversationId?: string | null;
+    /** @format uuid */
+    loanId?: string | null;
+    documentIds?: string[] | null;
+    /** @format uuid */
+    promptId?: string | null;
+}
+export interface AiChatStructuredData {
+    type: AiChatStructuredDataTypeEnum;
+    displayHint?: AiDisplayHint | null;
+    detectedDocumentType?: string | null;
+    columns: string[];
+    rows: string[][];
+    /** @format uuid */
+    generatedDocumentId?: string | null;
+    generatedFileName?: string | null;
+}
+export interface AiConversationAuditSummary {
+    /** @format uuid */
+    conversationId: string;
+    /** @format uuid */
+    userId: string;
+    userName?: string | null;
+    userRole?: string | null;
+    name?: string | null;
+    /** @format int32 */
+    turnCount: number;
+    /** @format int32 */
+    completedCount: number;
+    /** @format int32 */
+    blockedCount: number;
+    /** @format int32 */
+    errorCount: number;
+    /** @format int32 */
+    totalTokens: number;
+    /** @format date-time */
+    lastActivityAt: string;
+}
+export interface AiConversationAuditSummaryPaginated {
+    rows: AiConversationAuditSummary[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiConversationDetail {
+    /** @format uuid */
+    id: string;
+    name?: string | null;
+    isPinned: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format int32 */
+    messageCount: number;
+}
+export interface AiConversationListItem {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userId: string;
+    name?: string | null;
+    preview: string;
+    /** @format int32 */
+    messageCount: number;
+    isPinned: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+}
+export interface AiConversationListItemPaginated {
+    rows: AiConversationListItem[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiEnabled {
+    isEnabled: boolean;
+}
+export interface AiGuardrail {
+    /** @format uuid */
+    id: string;
+    name: string;
+    category: AiGuardrailCategoryEnum;
+    description?: string | null;
+    keywords: string[];
+    responseTemplate: string;
+    isDefault: boolean;
+    isEnabled: boolean;
+    hasAccountOverride: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+}
+export interface AiPrompt {
+    /** @format uuid */
+    id: string;
+    title: string;
+    slug?: string | null;
+    description: string;
+    documentTypes: string[];
+    applicableUrlSourceIds: string[];
+    allowedRoles: string[];
+    systemPrompt: string;
+    /** @format int32 */
+    sortOrder: number;
+    isDefault: boolean;
+    /** @format uuid */
+    accountId?: string | null;
+    isActive: boolean;
+    category?: AiPromptCategory | null;
+    queryTemplateName?: AiQueryTemplateName | null;
+    displayHint?: AiDisplayHint | null;
+    bedrockModelId?: string | null;
+    requiredDataSources?: string[] | null;
+    outputType?: AiOutputType | null;
+    hasAccountOverride: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+}
+export interface AiPromptSummary {
+    /** @format uuid */
+    id: string;
+    title: string;
+    slug?: string | null;
+    description: string;
+    documentTypes: string[];
+    applicableUrlSourceIds: string[];
+    /** @format int32 */
+    sortOrder: number;
+    category?: AiPromptCategory | null;
+    queryTemplateName?: AiQueryTemplateName | null;
+    displayHint?: AiDisplayHint | null;
+    bedrockModelId?: string | null;
+    requiredDataSources?: string[] | null;
+    outputType?: AiOutputType | null;
+}
+export interface AiTokenBudgetStatus {
+    /** @format int32 */
+    limit: number;
+    /** @format int64 */
+    used: number;
+    /** @format int64 */
+    inputTokens: number;
+    /** @format int64 */
+    outputTokens: number;
+    /** @format int64 */
+    remaining: number;
+    /** @format double */
+    percentUsed: number;
+    /** @format date-time */
+    windowStart: string;
+    /** @format date-time */
+    windowEnd: string;
+    limitReached: boolean;
+}
+export interface AiTokenUsageWindow {
+    /** @format date-time */
+    windowStart: string;
+    /** @format date-time */
+    windowEnd: string;
+    /** @format int32 */
+    limit: number;
+    /** @format int64 */
+    used: number;
+    /** @format int64 */
+    inputTokens: number;
+    /** @format int64 */
+    outputTokens: number;
+    /** @format double */
+    percentUsed: number;
+    limitReached: boolean;
+}
+export interface AiTokenUsageWindowPaginated {
+    rows: AiTokenUsageWindow[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AiUrlSource {
+    /** @format uuid */
+    id: string;
+    slug?: string | null;
+    name: string;
+    url: string;
+    description?: string | null;
+    category: AiUrlSourceCategoryEnum;
+    scope: AiUrlSourceScopeEnum;
+    isActive: boolean;
+    isDefault: boolean;
+    hasAccountOverride: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+}
 export interface AllowImpersonationRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
 }
 export interface Amortization {
@@ -379,17 +746,17 @@ export interface ApplicationRowData {
     loanNumber?: string | null;
     /** @deprecated */
     role?: string | null;
-    /** @format date-time */
+    /** @format date */
     initialDisclosureDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     closingDisclosureDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     underwritingApprovalDate?: string | null;
     /** @format date-time */
     closedDate?: string | null;
     /** @format date-time */
     fundingDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     currentStatusDate?: string | null;
     channel?: string | null;
     currentMilestone?: string | null;
@@ -409,9 +776,77 @@ export interface ApplicationRowData {
     escrowAgent?: EncompassContact | null;
     titleInsuranceAgent?: EncompassContact | null;
 }
-export interface Attachment {
-    fileName: string;
-    base64Data: string;
+export interface AuditEntityType {
+    entityType: string;
+    rootEntityType?: string | null;
+}
+export interface AuditLogEntry {
+    /** @format uuid */
+    id: string;
+    entityType: string;
+    changeType: AuditLogEntryChangeTypeEnum;
+    /** @format uuid */
+    entityId: string;
+    performedBy?: AuditLogUser | null;
+    rootEntityType?: string | null;
+    /** @format uuid */
+    rootEntityId?: string | null;
+    changes?: any | null;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface AuditLogEntryPaginated {
+    rows: AuditLogEntry[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface AuditLogSearchCriteria {
+    entityType?: string | null;
+    changeType?: AuditChangeType | null;
+    /** @format uuid */
+    entityId?: string | null;
+    /** @format uuid */
+    performedById?: string | null;
+    /** @format date-time */
+    startDate?: string | null;
+    /** @format date-time */
+    endDate?: string | null;
+}
+export interface AuditLogUser {
+    /** @format uuid */
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+export interface AutomatedService {
+    triggered: string[];
+    skipped: string[];
+    rateLimited: string[];
+}
+export interface BorrowerCount {
+    /** @format uuid */
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: BorrowerCountRoleEnum;
+    /** @format int32 */
+    count: number;
+}
+export interface BorrowerIdentity {
+    /** @format uuid */
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: BorrowerIdentityRoleEnum;
+}
+export interface BorrowersNotUsingPosSummary {
+    /** @format int32 */
+    total: number;
+    borrowers: UnregisteredBorrower[];
 }
 export interface BranchBase {
     /** @format date-time */
@@ -446,7 +881,7 @@ export interface BranchSummary {
 }
 export interface BranchUser {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -465,6 +900,7 @@ export interface BranchUser {
     /** @format int32 */
     loginsWithoutMFACount: number;
     canImpersonate: boolean;
+    isInternal: boolean;
     preferredLoanOfficer?: PreferredLoanOfficer | null;
     loanIDs: string[];
     drafts: Draft[];
@@ -505,10 +941,6 @@ export interface BusinessRuleCondition {
     targetFieldValue: string;
 }
 export interface BusinessRuleRequest {
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
     description?: string | null;
     tasks: TaskUpdateRequest[];
@@ -516,9 +948,7 @@ export interface BusinessRuleRequest {
     applyToAllBorrowerPairs: boolean;
 }
 export interface ChangePasswordRequest {
-    /** @minLength 1 */
     oldPassword: string;
-    /** @minLength 8 */
     newPassword: string;
 }
 export interface ClosedLoansReport {
@@ -542,15 +972,9 @@ export interface ClosedLoansReportAccount {
     utilization: number;
 }
 export interface ClosedLoansReportRequest {
-    /**
-     * @format date
-     * @minLength 1
-     */
+    /** @format date */
     startDate: string;
-    /**
-     * @format date
-     * @minLength 1
-     */
+    /** @format date */
     endDate: string;
 }
 export interface CommentUserInformation {
@@ -589,6 +1013,24 @@ export interface ConditionComment {
     createdBy: string;
     createdByName: string;
 }
+export interface ConsumerConnectRetry {
+    correlationKey: string;
+    email: string;
+    status?: LosOperationStatus | null;
+    success: boolean;
+}
+export interface ConsumerConnectStatus {
+    correlationKey: string;
+    email: string;
+    status?: LosOperationStatus | null;
+    /** @format int32 */
+    attemptCount: number;
+    /** @format date-time */
+    lastAttemptAt?: string | null;
+    /** @format date-time */
+    nextRetryAt?: string | null;
+    lastTriggerSource?: string | null;
+}
 export interface ContactInfo {
     phone: string;
     tollFreePhone?: string | null;
@@ -596,7 +1038,7 @@ export interface ContactInfo {
 }
 export interface Corporate {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -626,10 +1068,6 @@ export interface CorporatePaginated {
     count: number;
 }
 export interface CorporateRequest {
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
 }
 export interface CorporateSearchCriteria {
@@ -644,9 +1082,7 @@ export interface CreateAccessScopeRequest {
     branchId?: string | null;
 }
 export interface CreateAccountRequest {
-    /** @minLength 1 */
     name: string;
-    /** @minLength 1 */
     domain: string;
     eConsentBucket?: string | null;
     ignoreCoBorrowerRelationship: boolean;
@@ -654,33 +1090,80 @@ export interface CreateAccountRequest {
     companyAddress: CompanyAddress;
     contactInfo: ContactInfo;
     theme: Theme;
-    /**
-     * @format int64
-     * @min 0
-     */
+    /** @format int64 */
     nlmsid: number;
     settings: AccountSettingsRequest;
     environment: CreateAccountRequestEnvironmentEnum;
     losIntegration: LOSIntegration;
     billingSettings: AccountBillingRequest;
 }
+export interface CreateAiCanonicalFieldRequest {
+    displayName: string;
+    description: string;
+    allowedRoles: string[];
+    isPii: boolean;
+    dataSource: string;
+    category?: string | null;
+}
+export interface CreateAiGuardrailRequest {
+    name: string;
+    category: CreateAiGuardrailRequestCategoryEnum;
+    description?: string | null;
+    keywords: string[];
+    responseTemplate: string;
+}
+export interface CreateAiPromptRequest {
+    title: string;
+    slug?: string | null;
+    description: string;
+    documentTypes: string[];
+    applicableUrlSourceIds: string[];
+    allowedRoles: string[];
+    systemPrompt: string;
+    /** @format int32 */
+    sortOrder: number;
+    category?: AiPromptCategory | null;
+    queryTemplateName?: AiQueryTemplateName | null;
+    displayHint?: AiDisplayHint | null;
+    bedrockModelId?: string | null;
+    requiredDataSources?: string[] | null;
+    outputType?: AiOutputType | null;
+}
+export interface CreateAiUrlSourceRequest {
+    name: string;
+    url: string;
+    description?: string | null;
+    category: CreateAiUrlSourceRequestCategoryEnum;
+    scope: CreateAiUrlSourceRequestScopeEnum;
+}
 export interface CreateBranchRequest {
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
     /** @format uuid */
     corporateID: string;
     type: string;
 }
+export interface CreateCustomFieldDefinitionRequest {
+    isRequired: boolean;
+    /** @format int32 */
+    displayOrder: number;
+    /** @format int32 */
+    minLength?: number | null;
+    /** @format int32 */
+    maxLength?: number | null;
+    /** @format double */
+    minValue?: number | null;
+    /** @format double */
+    maxValue?: number | null;
+    name: string;
+    defaultValue?: string | null;
+    regexPattern?: string | null;
+    dataType: CreateCustomFieldDefinitionRequestDataTypeEnum;
+    entityType: CreateCustomFieldDefinitionRequestEntityTypeEnum;
+    options?: CustomFieldOptionRequest[] | null;
+    permissions?: CustomFieldPermissionRequest[] | null;
+}
 export interface CreateDocumentTemplateRequest {
-    /** @minLength 1 */
     htmlBody: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     name: string;
     type: string;
     description?: string | null;
@@ -693,11 +1176,8 @@ export interface CreateGroupMemberRequest {
     loanRole: CreateGroupMemberRequestLoanRoleEnum;
 }
 export interface CreateInviteRequest {
-    /** @minLength 1 */
     firstName: string;
-    /** @minLength 1 */
     lastName: string;
-    /** @format email */
     emailAddress: string;
     phoneNumber?: string | null;
     /** @deprecated */
@@ -710,18 +1190,16 @@ export interface CreateInviteRequest {
     userRole?: UserRole | null;
     loanRole?: LoanRole | null;
 }
+export interface CreateLoanDocumentFolderRequest {
+    name: string;
+    permissions: LoanDocumentFolderPermissionRequest[];
+}
 export interface CreateLoanImportRequest {
     /** @format uuid */
     accountID: string;
-    /**
-     * @format date-time
-     * @minLength 1
-     */
+    /** @format date-time */
     endDate: string;
-    /**
-     * @format date-time
-     * @minLength 1
-     */
+    /** @format date-time */
     startDate: string;
     importMode: CreateLoanImportRequestImportModeEnum;
 }
@@ -744,60 +1222,117 @@ export interface CreateUserDraft {
     loanRole: CreateUserDraftLoanRoleEnum;
 }
 export interface CreateUserGroupRequest {
-    /**
-     * @minLength 1
-     * @maxLength 200
-     */
     name: string;
-    /** @maxLength 1000 */
     description?: string | null;
 }
 export interface CreateUserLoan {
     loanRole?: LoanRole | null;
 }
 export interface CreateUserRelationRequest {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userId1: string;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userId2: string;
-    /** @minLength 1 */
     relationType: string;
 }
 export interface CreateUserRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
     phone?: string | null;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     firstName: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     lastName: string;
     title?: string | null;
     /** @format uuid */
     branchId?: string | null;
-    /** @minLength 1 */
     userRole: string;
+    isInternal?: boolean | null;
 }
-export interface CustomLoanData {
-    eConsentInformation?: EConsentInformation | null;
+export interface CreateWebhookRequest {
+    webhookPath: string;
+}
+export interface CreditAuthPendingSummary {
+    /** @format int32 */
+    total: number;
+    borrowers: BorrowerIdentity[];
+}
+export interface CustomFieldDefinition {
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    isActive: boolean;
+    isRequired: boolean;
+    /** @format int32 */
+    displayOrder: number;
+    /** @format int32 */
+    minLength?: number | null;
+    /** @format int32 */
+    maxLength?: number | null;
+    /** @format double */
+    minValue?: number | null;
+    /** @format double */
+    maxValue?: number | null;
+    name: string;
+    defaultValue?: string | null;
+    regexPattern?: string | null;
+    dataType: CustomFieldDefinitionDataTypeEnum;
+    entityType: CustomFieldDefinitionEntityTypeEnum;
+    options: CustomFieldOption[];
+    permissions: CustomFieldPermission[];
+    encompassMapping?: EncompassMapping | null;
+}
+export interface CustomFieldEntry {
+    /** @format uuid */
+    definitionId: string;
+    isActive: boolean;
+    isReadOnly: boolean;
+    /** @format int32 */
+    displayOrder: number;
+    name: string;
+    value: string;
+    dataType: CustomFieldEntryDataTypeEnum;
+}
+export interface CustomFieldOption {
+    /** @format uuid */
+    id: string;
+    /** @format int32 */
+    displayOrder: number;
+    value: string;
+}
+export interface CustomFieldOptionRequest {
+    /** @format int32 */
+    displayOrder: number;
+    value: string;
+}
+export interface CustomFieldPermission {
+    /** @format uuid */
+    id: string;
+    role: CustomFieldPermissionRoleEnum;
+    accessLevel: CustomFieldPermissionAccessLevelEnum;
+}
+export interface CustomFieldPermissionRequest {
+    role: CustomFieldPermissionRequestRoleEnum;
+    accessLevel: CustomFieldPermissionRequestAccessLevelEnum;
+}
+export interface CustomFieldValue {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    entityID: string;
+    /** @format uuid */
+    customFieldDefinitionID: string;
+    value: string;
+    definitionName: string;
+    dataType: CustomFieldValueDataTypeEnum;
 }
 export interface DetailedUser {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -816,6 +1351,7 @@ export interface DetailedUser {
     /** @format int32 */
     loginsWithoutMFACount: number;
     canImpersonate: boolean;
+    isInternal: boolean;
     preferredLoanOfficer?: PreferredLoanOfficer | null;
     loanIDs: string[];
     drafts: Draft[];
@@ -937,7 +1473,7 @@ export interface DocumentSync {
 }
 export interface DocumentTemplate {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -957,7 +1493,7 @@ export interface DocumentTemplate {
 }
 export interface DocumentTemplateBase {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -1006,16 +1542,13 @@ export interface DocumentTemplateVersionBase {
     htmlBody: string;
 }
 export interface DocumentTemplateVersionRequest {
-    /** @maxLength 255 */
     name?: string | null;
     isActive: boolean;
     htmlBody: string;
 }
 export interface DocumentTemplateVersionUpdateRequest {
-    /** @maxLength 255 */
-    name: string;
+    name?: string | null;
     isActive: boolean;
-    /** @minLength 1 */
     htmlBody: string;
 }
 export interface Draft {
@@ -1067,18 +1600,17 @@ export interface DraftLoanOfficerReassignRequest {
 }
 export interface DraftRequest {
     applicationPayload: any;
-    customData?: any;
+    customData?: any | null;
+    isCoBorrower: boolean;
 }
-export interface EConsentInformation {
-    status: string;
-    /** @format date-time */
-    acceptedDate?: string | null;
-    ipAddress?: string | null;
-    source?: string | null;
+export interface EconsentPendingSummary {
+    /** @format int32 */
+    total: number;
+    borrowers: BorrowerIdentity[];
 }
 export interface EnabledServices {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -1089,7 +1621,6 @@ export interface EnabledServices {
     fullApp?: boolean | null;
     mobileApp?: boolean | null;
     ringCentral?: boolean | null;
-    rates?: boolean | null;
     socialSurvey?: boolean | null;
     borrowerTasks?: boolean | null;
     docusign?: boolean | null;
@@ -1123,6 +1654,7 @@ export interface EnabledServices {
     listings?: boolean | null;
     addCoBorrower?: boolean | null;
     autoNameTaskDocuments?: boolean | null;
+    genericCalculatorsEnabled?: boolean | null;
 }
 export interface EncompassContact {
     name?: string | null;
@@ -1130,10 +1662,74 @@ export interface EncompassContact {
     phone?: string | null;
     company?: string | null;
 }
+export interface EncompassCredentialsDetail {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    instanceID: string;
+    loanAssignmentRole?: string | null;
+    loanTemplate?: string | null;
+    defaultLoanOfficerUserName?: string | null;
+    clearStateIfUnlicensed: boolean;
+    /** @deprecated */
+    baseUrl?: string | null;
+    encompassEnvironment: EncompassCredentialsDetailEncompassEnvironmentEnum;
+    consumerConnectWidgetHost?: string | null;
+    signingMethod: EncompassCredentialsDetailSigningMethodEnum;
+    subscriptionId?: string | null;
+    environment?: string | null;
+}
+export interface EncompassCredentialsRequest {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    instanceID: string;
+    loanAssignmentRole?: string | null;
+    loanTemplate?: string | null;
+    defaultLoanOfficerUserName?: string | null;
+    clearStateIfUnlicensed: boolean;
+    /** @deprecated */
+    baseUrl?: string | null;
+    encompassEnvironment: EncompassCredentialsRequestEncompassEnvironmentEnum;
+    consumerConnectWidgetHost?: string | null;
+    signingMethod: EncompassCredentialsRequestSigningMethodEnum;
+    subscriptionId?: string | null;
+    environment?: string | null;
+    clientID?: string | null;
+    clientSecret?: string | null;
+    signingKeyId?: string | null;
+    signingKey?: string | null;
+}
+export interface EncompassCustomFieldMapping {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    customFieldDefinitionId: string;
+    encompassFieldId: string;
+    encompassFieldType: string;
+    isActive: boolean;
+    /** @format date-time */
+    createdAt: string;
+}
+export interface EncompassCustomFieldMappingRequest {
+    encompassFieldId: string;
+    encompassFieldType: string;
+}
 export interface EncompassError {
     errorCode: string;
     message: string;
     details?: string[] | null;
+}
+export interface EncompassFieldListItem {
+    fieldId: string;
+    description: string;
+    fieldType: string;
+    inUse: boolean;
+}
+export interface EncompassIntegrationSettings {
+    consumerConnectWidgetHost?: string | null;
 }
 export interface EncompassLogSearchCriteria {
     searchText?: string | null;
@@ -1146,12 +1742,40 @@ export interface EncompassLogSearchCriteria {
     /** @format int32 */
     httpStatusCode?: number | null;
 }
+export interface EncompassMapping {
+    /** @format uuid */
+    id: string;
+    encompassFieldId: string;
+    status: string;
+}
+export interface EncompassPackageDocumentStatus {
+    documentId: string;
+    title: string;
+    type?: string | null;
+    signatureType?: string | null;
+    isSigned: boolean;
+    /** @format date-time */
+    viewedAt?: string | null;
+    /** @format date-time */
+    completedAt?: string | null;
+}
 export interface EncompassPackageItem {
     packageId: string;
     status: string;
     /** @format date-time */
     createdAt: string;
     recipientId: string;
+    borrowerName?: string | null;
+    title?: string | null;
+    /** @format date-time */
+    issuedAt?: string | null;
+    /** @format date-time */
+    expiresAt?: string | null;
+    /** @format int32 */
+    totalDocuments: number;
+    /** @format int32 */
+    signedDocuments: number;
+    documents: EncompassPackageDocumentStatus[];
 }
 export interface EncompassPackageList {
     packages: EncompassPackageItem[];
@@ -1163,6 +1787,16 @@ export interface EncompassPackageList {
     pageSize: number;
     /** @format int32 */
     totalPages: number;
+}
+export interface EncompassRecipientItem {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    packageId: string;
+    recipientId: string;
+    status: string;
+    /** @format date-time */
+    createdAt: string;
 }
 export interface EncompassRequestLog {
     /** @format uuid */
@@ -1179,7 +1813,7 @@ export interface EncompassRequestLog {
     httpStatusCode?: number | null;
     /** @format int64 */
     durationMs?: number | null;
-    context?: any;
+    context?: any | null;
     /** @format date-time */
     createdAt: string;
 }
@@ -1209,10 +1843,6 @@ export interface FilePaginated {
     count: number;
 }
 export interface FileRequest {
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
 }
 export interface FileSearchCriteria {
@@ -1222,14 +1852,14 @@ export interface FileSearchCriteria {
 export interface FileWithBytes {
     name: string;
     /** @format byte */
-    data: string;
+    data: Blob;
     fileName: string;
     mimeType?: string | null;
     extension?: string | null;
 }
 export interface Form {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -1298,7 +1928,7 @@ export interface FormSubmission {
     subjectPropertyAddressCounty?: string | null;
     subjectPropertyAddressState?: string | null;
     subjectPropertyAddressZip?: string | null;
-    data?: any;
+    data?: any | null;
     /** @format uuid */
     listingID?: string | null;
     listing?: Listing | null;
@@ -1333,7 +1963,7 @@ export interface FormSubmissionRequest {
     subjectPropertyAddressCounty?: string | null;
     subjectPropertyAddressState?: string | null;
     subjectPropertyAddressZip?: string | null;
-    data?: any;
+    data?: any | null;
     /** @format uuid */
     listingID?: string | null;
 }
@@ -1367,13 +1997,11 @@ export interface FormVersion {
     form: GetForm;
 }
 export interface FormVersionRequest {
-    /** @maxLength 255 */
     name?: string | null;
     isActive: boolean;
     formJSON: any;
 }
 export interface FormVersionUpdateRequest {
-    /** @maxLength 255 */
     name?: string | null;
     isActive: boolean;
     formJSON: any;
@@ -1389,12 +2017,7 @@ export interface FusionReportFilter {
     targetValue: string;
 }
 export interface GenerateDocumentRequest {
-    /** @deprecated */
-    loanID?: string | null;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     templateID: string;
     /**
      * @deprecated
@@ -1404,12 +2027,19 @@ export interface GenerateDocumentRequest {
     preview: boolean;
     recipients: string[];
 }
+export interface GenerateSystemPrompt {
+    systemPrompt: string;
+}
+export interface GenerateSystemPromptRequest {
+    description: string;
+    category: GenerateSystemPromptRequestCategoryEnum;
+}
 export interface GetApplications {
     applications: ApplicationRowData[];
 }
 export interface GetBranch {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -1468,24 +2098,16 @@ export interface GetSiteConfigurationRequest {
     url: string;
 }
 export interface GetSiteFormRequest {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     siteConfigurationId: string;
     /** @format int32 */
     formType: number;
     slug?: string | null;
 }
 export interface GetUserByEmailRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
 }
 export interface GetWorkflowRequest {
-    /** @minLength 1 */
     formType: string;
     borrowerType?: string | null;
     userRole?: string | null;
@@ -1494,7 +2116,7 @@ export interface GetWorkflowRequest {
 export interface GuidPatchOperation {
     op: string;
     path: string;
-    value?: any;
+    value?: any | null;
     from?: string | null;
 }
 export interface IPAddress {
@@ -1515,7 +2137,7 @@ export interface IPAddress {
 }
 export interface ImpersonatedDetailedUser {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -1534,6 +2156,7 @@ export interface ImpersonatedDetailedUser {
     /** @format int32 */
     loginsWithoutMFACount: number;
     canImpersonate: boolean;
+    isInternal: boolean;
     preferredLoanOfficer?: PreferredLoanOfficer | null;
     loanIDs: string[];
     drafts: Draft[];
@@ -1543,16 +2166,13 @@ export interface ImpersonatedDetailedUser {
     impersonatingUser?: User | null;
 }
 export interface ImportUserLoanTaskRequest {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     taskID: string;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userID: string;
+}
+export interface IntegrationSettings {
+    encompass?: EncompassIntegrationSettings | null;
 }
 export interface Invite {
     /** @format uuid */
@@ -1664,16 +2284,9 @@ export interface ListingRequest {
     description?: string | null;
     mlsNumber?: string | null;
     address: AddressRequest;
-    /**
-     * @format int32
-     * @min 0
-     * @exclusiveMin true
-     */
+    /** @format int32 */
     salePrice?: number | null;
-    /**
-     * @format date-time
-     * @minLength 1
-     */
+    /** @format date-time */
     activeDate: string;
     /** @format date-time */
     expirationDate?: string | null;
@@ -1705,7 +2318,7 @@ export interface Loan {
     currentLoanStatus?: string | null;
     currentMilestone?: string | null;
     lastCompletedMilestone?: string | null;
-    /** @format date-time */
+    /** @format date */
     currentStatusDate?: string | null;
     isActive: boolean;
     loanChannel?: string | null;
@@ -1718,17 +2331,18 @@ export interface Loan {
     fileStarter?: string | null;
     source?: string | null;
     isPOSLoan?: boolean | null;
-    /** @format date-time */
+    version?: string | null;
+    /** @format date */
     startDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     initialDisclosureProvidedDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     closingDisclosureSentDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     underwritingApprovalDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     closingDate?: string | null;
-    /** @format date-time */
+    /** @format date */
     fundingOrderDate?: string | null;
     isInSync: boolean;
     /** @format date-time */
@@ -1737,17 +2351,25 @@ export interface Loan {
     lastLosDocumentsSyncDate?: string | null;
     isLocked: boolean;
     isLockedFromEditing: boolean;
+    /** @format date-time */
+    sensitiveDataPurgedOn?: string | null;
     excludeFromAutoTaskReminders?: boolean | null;
     loanSettings?: LoanSettings | null;
     loanOfficer?: LoanOfficer | null;
     propertyAddress?: Address | null;
     property?: LoanProperty | null;
     financial?: LoanFinancial | null;
+    financialTerms?: LoanFinancialTerms | null;
+    monthlyPayment?: LoanMonthlyPayment | null;
+    costDetails?: LoanCostDetails | null;
+    metrics?: LoanMetrics | null;
     borrowers: LoanBorrower[];
     nonOwningBorrowers: LoanNonOwningBorrower[];
-    loanLogs: LoanLog[];
     userLoans: UserLoan[];
     contacts: LoanContact[];
+    customFields: CustomFieldEntry[];
+    milestones: LoanMilestone[];
+    signingMethod: LoanSigningMethodEnum;
 }
 export interface LoanApplication {
     /** @format uuid */
@@ -1759,7 +2381,7 @@ export interface LoanApplication {
     number?: string | null;
     program?: string | null;
     channel?: string | null;
-    /** @format date-time */
+    /** @format date */
     startDate?: string | null;
     property?: LoanProperty | null;
     financial?: LoanFinancial | null;
@@ -1779,17 +2401,19 @@ export interface LoanApplicationRequest {
     companyName?: string | null;
     property?: LoanPropertyRequest | null;
     financial?: LoanFinancialRequest | null;
-    /** @minItems 1 */
+    financialTerms?: LoanFinancialTermsRequest | null;
+    monthlyPayment?: LoanMonthlyPaymentRequest | null;
     borrowers: LoanBorrowerRequest[];
     nonOwningBorrowers: LoanNonOwningBorrowerRequest[];
     /** @format uuid */
     draftId?: string | null;
+    additionalFields?: Record<string, any> | null;
     /** @format uuid */
     existingLoanId?: string | null;
 }
 export interface LoanBorrower {
     /** @format uuid */
-    id?: string | null;
+    id: string;
     ssn?: string | null;
     email?: string | null;
     lastName?: string | null;
@@ -1802,8 +2426,11 @@ export interface LoanBorrower {
     citizenship?: LoanCitizenship | null;
     maritalStatus?: LoanMaritalStatus | null;
     languagePreference?: LoanLanguagePreference | null;
+    applicationStatus: LoanBorrowerApplicationStatusEnum;
     /** @format int32 */
     numberOfDependents?: number | null;
+    /** @format int32 */
+    creditDecisionScore?: number | null;
     isPrimaryBorrower: boolean;
     isFirstTimeHomeBuyer?: boolean | null;
     hasJointAssetsAndLiabilities?: boolean | null;
@@ -1837,12 +2464,8 @@ export interface LoanBorrowerAccountAsset {
     type?: LoanAccountAssetType | null;
 }
 export interface LoanBorrowerAccountAssetRequest {
-    /** @maxLength 255 */
     financialInstitution?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     value?: number | null;
     type?: LoanAccountAssetType | null;
 }
@@ -1864,23 +2487,15 @@ export interface LoanBorrowerAddress {
     timeAtAddress?: TimeAtAddress | null;
 }
 export interface LoanBorrowerAddressRequest {
-    /** @maxLength 255 */
     street?: string | null;
-    /** @maxLength 50 */
     unit?: string | null;
-    /** @maxLength 50 */
     unitType?: string | null;
-    /** @maxLength 100 */
     city?: string | null;
     state?: string | null;
-    /** @maxLength 100 */
     county?: string | null;
     postalCode?: string | null;
     housing?: LoanHousingType | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     rentAmount?: number | null;
     isCurrent?: boolean | null;
     isMailingAddress?: boolean | null;
@@ -1895,13 +2510,9 @@ export interface LoanBorrowerAlternateName {
     middleName?: string | null;
 }
 export interface LoanBorrowerAlternateNameRequest {
-    /** @maxLength 20 */
     suffix?: string | null;
-    /** @maxLength 100 */
     lastName?: string | null;
-    /** @maxLength 100 */
     firstName?: string | null;
-    /** @maxLength 100 */
     middleName?: string | null;
 }
 export interface LoanBorrowerBankruptcyChaptersRequest {
@@ -1919,7 +2530,6 @@ export interface LoanBorrowerBankruptcyDeclaration {
 }
 export interface LoanBorrowerBankruptcyDeclarationRequest {
     isAffirmative?: boolean | null;
-    /** @maxLength 1000 */
     description?: string | null;
     chapters?: LoanBorrowerBankruptcyChaptersRequest | null;
     types?: LoanBankruptcyType[] | null;
@@ -1929,6 +2539,7 @@ export interface LoanBorrowerConsent {
     id?: string | null;
     type?: ConsentType | null;
     providedConsent?: boolean | null;
+    source?: ConsentSource | null;
     ipAddress?: string | null;
 }
 export interface LoanBorrowerConsentRequest {
@@ -1988,7 +2599,6 @@ export interface LoanBorrowerDemographicsEthnicity {
 export interface LoanBorrowerDemographicsEthnicityRequest {
     OptOut?: boolean | null;
     Hispanic?: boolean | null;
-    /** @maxLength 255 */
     OtherHispanic?: string | null;
     Mexican?: boolean | null;
     PuertoRican?: boolean | null;
@@ -2025,7 +2635,6 @@ export interface LoanBorrowerDemographicsRace {
 }
 export interface LoanBorrowerDemographicsRaceRequest {
     AmericanIndian?: boolean | null;
-    /** @maxLength 255 */
     TribeName?: string | null;
     Asian?: boolean | null;
     AsianIndian?: boolean | null;
@@ -2034,14 +2643,12 @@ export interface LoanBorrowerDemographicsRaceRequest {
     Japanese?: boolean | null;
     Korean?: boolean | null;
     Vietnamese?: boolean | null;
-    /** @maxLength 255 */
     OtherAsian?: string | null;
     Black?: boolean | null;
     NativeIslander?: boolean | null;
     NativeHawaiian?: boolean | null;
     Guamanian?: boolean | null;
     Samoan?: boolean | null;
-    /** @maxLength 255 */
     OtherNativeIslander?: string | null;
     White?: boolean | null;
     OptOut?: boolean | null;
@@ -2085,10 +2692,7 @@ export interface LoanBorrowerEmploymentCurrentGrossIncome {
     militaryEntitlements?: number | null;
 }
 export interface LoanBorrowerEmploymentCurrentGrossIncomeRequest {
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     base?: number | null;
     /** @format double */
     hourlyRate?: number | null;
@@ -2096,30 +2700,15 @@ export interface LoanBorrowerEmploymentCurrentGrossIncomeRequest {
     hoursPerWeek?: number | null;
     /** @format double */
     distributions?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     other?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     bonus?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     overtime?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     commission?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     militaryEntitlements?: number | null;
 }
 export interface LoanBorrowerEmploymentCurrentOwnership {
@@ -2133,16 +2722,11 @@ export interface LoanBorrowerEmploymentCurrentOwnership {
 export interface LoanBorrowerEmploymentCurrentOwnershipRequest {
     isOwner?: boolean | null;
     hasOwnershipOver25Percent?: boolean | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyIncome?: number | null;
 }
 export interface LoanBorrowerEmploymentCurrentRequest {
-    /** @maxLength 255 */
     name?: string | null;
-    /** @maxLength 100 */
     title?: string | null;
     phoneNumber?: string | null;
     /** @format date */
@@ -2184,19 +2768,14 @@ export interface LoanBorrowerEmploymentPrevious {
     address?: AddressV3 | null;
 }
 export interface LoanBorrowerEmploymentPreviousRequest {
-    /** @maxLength 255 */
     name?: string | null;
-    /** @maxLength 100 */
     title?: string | null;
     phoneNumber?: string | null;
     /** @format date */
     startDate?: string | null;
     /** @format date */
     endDate?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     grossIncome?: number | null;
     isSelfEmployed?: boolean | null;
     address?: AddressRequest | null;
@@ -2209,12 +2788,14 @@ export interface LoanBorrowerGift {
     isDeposited?: boolean | null;
     source?: LoanGiftSource | null;
     assetType?: LoanGiftAssetType | null;
+    grantorDonorName?: string | null;
+    /** @format double */
+    amountAppliedToDownPayment?: number | null;
+    /** @format double */
+    amountAppliedToClosingCosts?: number | null;
 }
 export interface LoanBorrowerGiftRequest {
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     value?: number | null;
     isDeposited?: boolean | null;
     source?: LoanGiftSource | null;
@@ -2237,7 +2818,6 @@ export interface LoanBorrowerHomeOwnershipProvider {
     address?: AddressV3 | null;
 }
 export interface LoanBorrowerHomeOwnershipProviderRequest {
-    /** @maxLength 255 */
     name?: string | null;
     phoneNumber?: string | null;
     address?: AddressRequest | null;
@@ -2266,26 +2846,14 @@ export interface LoanBorrowerLiability {
 }
 export interface LoanBorrowerLiabilityRequest {
     type?: LoanLiabilityType | null;
-    /** @maxLength 255 */
     name?: string | null;
-    /** @maxLength 50 */
     accountNumber?: string | null;
-    /** @maxLength 255 */
     financialInstitution?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     balance?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyPayment?: number | null;
-    /**
-     * @format int32
-     * @min 0
-     */
+    /** @format int32 */
     monthsLeftToPay?: number | null;
     isPaidOffBeforeClosing?: boolean | null;
 }
@@ -2313,12 +2881,8 @@ export interface LoanBorrowerMoneyDeclaration {
 }
 export interface LoanBorrowerMoneyDeclarationRequest {
     isAffirmative?: boolean | null;
-    /** @maxLength 1000 */
     description?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     amount?: number | null;
 }
 export interface LoanBorrowerOtherAsset {
@@ -2331,12 +2895,8 @@ export interface LoanBorrowerOtherAsset {
 }
 export interface LoanBorrowerOtherAssetRequest {
     type?: LoanOtherAssetType | null;
-    /** @maxLength 255 */
     other?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     value?: number | null;
 }
 export interface LoanBorrowerOtherIncome {
@@ -2347,10 +2907,7 @@ export interface LoanBorrowerOtherIncome {
     type?: LoanOtherIncomeType | null;
 }
 export interface LoanBorrowerOtherIncomeRequest {
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     value?: number | null;
     type?: LoanOtherIncomeType | null;
 }
@@ -2362,10 +2919,7 @@ export interface LoanBorrowerOtherLiability {
     type?: LoanOtherLiabilityType | null;
 }
 export interface LoanBorrowerOtherLiabilityRequest {
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyPayment?: number | null;
     type?: LoanOtherLiabilityType | null;
 }
@@ -2377,7 +2931,6 @@ export interface LoanBorrowerPhoneNumber {
     type?: LoanPhoneNumberType | null;
 }
 export interface LoanBorrowerPhoneNumberRequest {
-    /** @maxLength 10 */
     ext?: string | null;
     number?: string | null;
     type?: LoanPhoneNumberType | null;
@@ -2393,7 +2946,6 @@ export interface LoanBorrowerPrimaryResidenceDeclaration {
 }
 export interface LoanBorrowerPrimaryResidenceDeclarationRequest {
     isAffirmative?: boolean | null;
-    /** @maxLength 1000 */
     description?: string | null;
     hasInterestInLastThreeYears?: boolean | null;
     titleHeld?: LoanTitleHeld | null;
@@ -2407,9 +2959,26 @@ export interface LoanBorrowerRealEstateAsset {
     /** @format double */
     marketValue?: number | null;
     /** @format double */
+    purchasePrice?: number | null;
+    /** @format int32 */
+    yearBuilt?: number | null;
+    /** @format int32 */
+    numberOfUnits?: number | null;
+    /** @format double */
     monthlyInsTaxDues?: number | null;
     /** @format double */
     monthlyRentalIncome?: number | null;
+    /** @format double */
+    rentalIncomeNetAmount?: number | null;
+    /** @format double */
+    maintenanceExpense?: number | null;
+    /** @format double */
+    percentageOfRental?: number | null;
+    /** @format double */
+    participationPercentage?: number | null;
+    /** @format date */
+    acquiredDate?: string | null;
+    dispositionStatus?: string | null;
     address?: AddressV3 | null;
     mortgages?: LoanBorrowerRealEstateAssetMortgage[] | null;
 }
@@ -2428,24 +2997,13 @@ export interface LoanBorrowerRealEstateAssetMortgage {
     loanType?: LoanType | null;
 }
 export interface LoanBorrowerRealEstateAssetMortgageRequest {
-    /** @maxLength 255 */
     creditor?: string | null;
-    /** @maxLength 50 */
     accountNumber?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     balance?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     creditLimit?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyMortgagePayment?: number | null;
     isBalancePaidBeforeClosing?: boolean | null;
     loanType?: LoanType | null;
@@ -2453,10 +3011,7 @@ export interface LoanBorrowerRealEstateAssetMortgageRequest {
 export interface LoanBorrowerRealEstateAssetRequest {
     status?: LoanRealEstateStatus | null;
     occupancy?: LoanOccupancyType | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     marketValue?: number | null;
     /** @format double */
     purchasePrice?: number | null;
@@ -2464,15 +3019,9 @@ export interface LoanBorrowerRealEstateAssetRequest {
     yearBuilt?: number | null;
     /** @format int32 */
     numberOfUnits?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyRentalIncome?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     maintenanceExpense?: number | null;
     address?: AddressRequest | null;
     mortgages?: LoanBorrowerRealEstateAssetMortgageRequest[] | null;
@@ -2480,11 +3029,8 @@ export interface LoanBorrowerRealEstateAssetRequest {
 export interface LoanBorrowerRequest {
     ssn?: string | null;
     email?: string | null;
-    /** @maxLength 100 */
     lastName?: string | null;
-    /** @maxLength 100 */
     firstName?: string | null;
-    /** @maxLength 100 */
     middleName?: string | null;
     prefix?: LoanNamePrefix | null;
     suffix?: LoanNameSuffix | null;
@@ -2525,7 +3071,6 @@ export interface LoanBorrowerSimpleDeclaration {
 }
 export interface LoanBorrowerSimpleDeclarationRequest {
     isAffirmative?: boolean | null;
-    /** @maxLength 1000 */
     description?: string | null;
 }
 export interface LoanComparison {
@@ -2552,61 +3097,29 @@ export interface LoanComparisonCalculatorLoan {
     amortization: Amortization;
 }
 export interface LoanComparisonCalculatorLoanRequest {
-    /**
-     * @format double
-     * @min 1
-     * @max 25
-     */
+    /** @format double */
     interestRate: number;
-    /**
-     * @format int32
-     * @min 1
-     * @max 40
-     */
+    /** @format int32 */
     term: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 3
-     */
+    /** @format double */
     points: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 5
-     */
+    /** @format double */
     originationFees: number;
-    /**
-     * @format double
-     * @min 500
-     * @max 100000
-     */
+    /** @format double */
     closingCosts: number;
-    /**
-     * @format double
-     * @min 25000
-     * @max 10000000
-     */
+    /** @format double */
     homeValue: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 10
-     */
+    /** @format double */
     pmi: number;
 }
 export interface LoanComparisonCalculatorRequest {
-    /**
-     * @format double
-     * @min 30000
-     */
+    /** @format double */
     loanAmount: number;
     loans: LoanComparisonCalculatorLoanRequest[];
 }
 export interface LoanComparisonScenario {
     loanProgram?: string | null;
-    /** @minLength 1 */
-    loanType: string;
+    loanType?: string | null;
     propertyValue?: string | null;
     purchasePrice?: string | null;
     downpaymentAmount?: string | null;
@@ -2635,12 +3148,11 @@ export interface LoanComparisonScenario {
     fundingFee?: string | null;
 }
 export interface LoanConsentRequest {
-    /** @format email */
     borrowerEmail?: string | null;
     borrowerEConsent?: boolean | null;
     borrowerCreditAuth?: boolean | null;
     borrowerTCPAOptIn?: boolean | null;
-    additionalFields?: Record<string, string>;
+    additionalFields?: Record<string, string> | null;
 }
 export interface LoanContact {
     /** @format date-time */
@@ -2663,8 +3175,24 @@ export interface LoanContact {
 export interface LoanContactList {
     email: string;
 }
+export interface LoanCostDetails {
+    /** @format uuid */
+    id?: string | null;
+    /** @format double */
+    closingCosts?: number | null;
+    /** @format double */
+    prepaidCharges?: number | null;
+    /** @format double */
+    discount?: number | null;
+    /** @format double */
+    lenderCredit?: number | null;
+    /** @format double */
+    totalCost?: number | null;
+    /** @format double */
+    totalFinancing?: number | null;
+}
 export interface LoanCustomFieldsRequest {
-    additionalFields?: Record<string, string>;
+    additionalFields?: Record<string, string> | null;
 }
 export interface LoanDocument {
     /** @format date-time */
@@ -2683,10 +3211,55 @@ export interface LoanDocument {
     losStatus: string;
     contents?: string | null;
     failoverDocumentPath?: string | null;
+    /** @format date-time */
+    sensitiveDataPurgedOn?: string | null;
+    observedDocumentType?: LoanDocumentType | null;
+    classificationSource?: ClassificationSource | null;
+    verified: boolean;
+    /** @format date-time */
+    classifiedAt?: string | null;
+    classificationMismatch: boolean;
+    classificationMismatchReason?: string | null;
+}
+export interface LoanDocumentFolder {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    name: string;
+    isSystemDefault: boolean;
+    isActive: boolean;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
+    permissions: LoanDocumentFolderPermission[];
+}
+export interface LoanDocumentFolderPermission {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    loanDocumentFolderID: string;
+    role: LoanDocumentFolderPermissionRoleEnum;
+    level: LoanDocumentFolderPermissionLevelEnum;
+}
+export interface LoanDocumentFolderPermissionRequest {
+    role: LoanDocumentFolderPermissionRequestRoleEnum;
+    level: LoanDocumentFolderPermissionRequestLevelEnum;
+}
+export interface LoanDocumentFolderUsage {
+    /** @format uuid */
+    folderID: string;
+    hasEverBeenReferenced: boolean;
+}
+export interface LoanDocumentPreviewsRequest {
+    documentIds: string[];
 }
 export interface LoanDocumentSearch {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -2701,6 +3274,8 @@ export interface LoanDocumentSearch {
     losStatus: string;
     contents?: string | null;
     failoverDocumentPath?: string | null;
+    /** @format date-time */
+    sensitiveDataPurgedOn?: string | null;
 }
 export interface LoanDocumentSearchCriteria {
     searchText?: string | null;
@@ -2740,20 +3315,11 @@ export interface LoanFinancial {
 }
 export interface LoanFinancialRequest {
     isDebtsAssetsReviewed?: boolean | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     cashToClose?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     cashDownPayment?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     maximumPurchasePrice?: number | null;
     isDownPaymentGift?: boolean | null;
     /** @format double */
@@ -2761,10 +3327,46 @@ export interface LoanFinancialRequest {
     /** @format int32 */
     loanTermYears?: number | null;
 }
+export interface LoanFinancialTerms {
+    /** @format uuid */
+    id?: string | null;
+    /** @format int32 */
+    loanTermMonths?: number | null;
+    amortizationType?: LoanAmortizationType | null;
+    /** @format double */
+    apr?: number | null;
+    /** @format double */
+    interestRate?: number | null;
+    /** @format double */
+    downPayment?: number | null;
+    /** @format double */
+    baseLoanAmount?: number | null;
+    /** @format double */
+    totalLoanAmount?: number | null;
+    /** @format double */
+    mortgageInsuranceFactor?: number | null;
+    isEscrowWaived?: boolean | null;
+}
+export interface LoanFinancialTermsRequest {
+    /** @format int32 */
+    loanTermMonths?: number | null;
+    amortizationType?: LoanAmortizationType | null;
+    /** @format double */
+    apr?: number | null;
+    /** @format double */
+    interestRate?: number | null;
+    /** @format double */
+    downPayment?: number | null;
+    /** @format double */
+    baseLoanAmount?: number | null;
+    /** @format double */
+    totalLoanAmount?: number | null;
+}
 export interface LoanIdentifier {
     /** @format uuid */
     id: string;
     losLoanID: string;
+    number?: string | null;
 }
 export interface LoanImport {
     /** @format uuid */
@@ -2812,7 +3414,7 @@ export interface LoanList {
     purpose?: LoanPurpose | null;
     /** @format double */
     totalLoanAmount?: number | null;
-    /** @format date-time */
+    /** @format date */
     startDate?: string | null;
     isActive: boolean;
     propertyAddress?: Address | null;
@@ -2846,6 +3448,16 @@ export interface LoanLog {
     /** @format date-time */
     createdAt: string;
 }
+export interface LoanLogDetail {
+    /** @format uuid */
+    id: string;
+    level: LoanLogDetailLevelEnum;
+    type: LoanLogDetailTypeEnum;
+    message: string;
+    /** @format date-time */
+    createdAt: string;
+    context?: string | null;
+}
 export interface LoanLogPaginated {
     rows: LoanLog[];
     pagination: Pagination;
@@ -2856,6 +3468,60 @@ export interface LoanLogSearchCriteria {
     searchText?: string | null;
     types?: LoanLogType[] | null;
     levels?: LogLevel[] | null;
+}
+export interface LoanMetrics {
+    /** @format uuid */
+    id?: string | null;
+    /** @format double */
+    ltv?: number | null;
+    /** @format double */
+    cltv?: number | null;
+    /** @format double */
+    frontDti?: number | null;
+    /** @format double */
+    backDti?: number | null;
+}
+export interface LoanMilestone {
+    /** @format uuid */
+    id: string;
+    name: string;
+    /** @format date */
+    date?: string | null;
+    isCompleted: boolean;
+}
+export interface LoanMonthlyPayment {
+    /** @format uuid */
+    id?: string | null;
+    /** @format double */
+    principalAndInterest?: number | null;
+    /** @format double */
+    taxes?: number | null;
+    /** @format double */
+    insurance?: number | null;
+    /** @format double */
+    mortgageInsurance?: number | null;
+    /** @format double */
+    floodInsurance?: number | null;
+    /** @format double */
+    hoa?: number | null;
+    /** @format double */
+    other?: number | null;
+}
+export interface LoanMonthlyPaymentRequest {
+    /** @format double */
+    principalAndInterest?: number | null;
+    /** @format double */
+    taxes?: number | null;
+    /** @format double */
+    insurance?: number | null;
+    /** @format double */
+    mortgageInsurance?: number | null;
+    /** @format double */
+    floodInsurance?: number | null;
+    /** @format double */
+    hoa?: number | null;
+    /** @format double */
+    other?: number | null;
 }
 export interface LoanNonOwningBorrower {
     /** @format uuid */
@@ -2870,11 +3536,8 @@ export interface LoanNonOwningBorrower {
 }
 export interface LoanNonOwningBorrowerRequest {
     email?: string | null;
-    /** @maxLength 100 */
     lastName?: string | null;
-    /** @maxLength 100 */
     firstName?: string | null;
-    /** @maxLength 100 */
     middleName?: string | null;
     prefix?: LoanNamePrefix | null;
     suffix?: LoanNameSuffix | null;
@@ -2898,7 +3561,6 @@ export interface LoanOfficerPublic {
     firstName: string;
     lastName: string;
     email: string;
-    phone?: string | null;
     /** @format uuid */
     corporateID?: string | null;
     siteConfigurationIDs: string[];
@@ -2910,6 +3572,16 @@ export interface LoanOfficerSearchCriteria {
     branch?: string | null;
     /** @format uuid */
     brand?: string | null;
+}
+export interface LoanOutstandingItems {
+    /** @format int32 */
+    pendingSignaturePackages: number;
+    pendingTasks: PendingTasksSummary;
+    pendingSignatures: PendingSignaturesSummary;
+    pendingInvites: PendingInvitesSummary;
+    creditAuthPending: CreditAuthPendingSummary;
+    econsentPending: EconsentPendingSummary;
+    borrowersNotUsingPos: BorrowersNotUsingPosSummary;
 }
 export interface LoanPatchRequestGuidPatchDocument {
     operations: GuidPatchOperation[];
@@ -2956,22 +3628,12 @@ export interface LoanPropertyMortgage {
     lienType?: LoanLienPosition | null;
 }
 export interface LoanPropertyMortgageRequest {
-    /** @maxLength 255 */
     creditor?: string | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     loanAmount?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     creditLimit?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyPayment?: number | null;
     lienType?: LoanLienPosition | null;
 }
@@ -2979,46 +3641,22 @@ export interface LoanPropertyRequest {
     trustType?: LoanTrustType | null;
     occupancy?: LoanOccupancyType | null;
     propertyType?: LoanPropertyType | null;
-    /** @maxLength 100 */
     referenceId?: string | null;
-    /**
-     * @format int32
-     * @min 1800
-     * @max 2036
-     */
+    /** @format int32 */
     yearBuilt?: number | null;
-    /**
-     * @format int32
-     * @min 1900
-     * @max 2036
-     */
+    /** @format int32 */
     yearAcquired?: number | null;
     /** @format int32 */
     numberOfUnits?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     salePrice?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     propertyValue?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     purchasePrice?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     estimatedValue?: number | null;
-    /**
-     * @format double
-     * @min 0
-     */
+    /** @format double */
     monthlyRentalIncome?: number | null;
     isMixedUseProperty?: boolean | null;
     isManufacturedHome?: boolean | null;
@@ -3076,7 +3714,7 @@ export interface LoanQueueWithData {
     user: UserPublic;
     loanOfficer: LoanOfficerPublic;
     siteConfiguration: SiteConfigurationReduced;
-    data?: any;
+    data?: any | null;
 }
 export interface LoanRecord {
     loanGuid: string;
@@ -3096,6 +3734,21 @@ export interface LoanSearchCriteria {
 export interface LoanSettings {
     excludeFromAutoTaskReminders: boolean;
 }
+export interface LoanTaskSearchRequest {
+    searchText?: string | null;
+    statuses?: TaskStatus[] | null;
+    loanNumber?: string | null;
+    /** @format uuid */
+    borrowerId?: string | null;
+    /** @format uuid */
+    loanId?: string | null;
+    loanStatus?: LoanTaskActivityFilter | null;
+}
+export interface LoanTaskStatusSummary {
+    status: LoanTaskStatusSummaryStatusEnum;
+    /** @format int32 */
+    count: number;
+}
 export interface LoanUser {
     /** @format uuid */
     id: string;
@@ -3109,16 +3762,110 @@ export interface LoanUser {
     /** @format date-time */
     createdAt: string;
 }
+export interface LosCredentials {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    accountID: string;
+    instanceID: string;
+}
 export interface LosLoanCreationRequest {
     loanOfficerUserName?: string | null;
     loanTemplate?: string | null;
-    additionalFields: Record<string, string | null>;
+    additionalFields: Record<string, string>;
     folder?: string | null;
     /** @format int32 */
     borrowerPair: number;
     applyLoanAssociation: boolean;
     siteID?: string | null;
     existingLoanID?: string | null;
+}
+export interface LosOperationTracking {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    loanId: string;
+    /** @format int32 */
+    attemptCount: number;
+    operationType: string;
+    correlationKey: string;
+    lastTriggerSource?: string | null;
+    status: LosOperationTrackingStatusEnum;
+    /** @format date-time */
+    createdAt: string;
+    /** @format date-time */
+    lastAttemptAt?: string | null;
+    /** @format date-time */
+    nextRetryAt?: string | null;
+}
+export interface LosOperationTrackingPaginated {
+    rows: LosOperationTracking[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface LosOperationTrackingSearchCriteria {
+    searchText?: string | null;
+    /** @format uuid */
+    loanId?: string | null;
+    operationType?: string | null;
+    status?: LosOperationStatus | null;
+}
+export interface LosSync {
+    /** @format uuid */
+    correlationId: string;
+    /** @format uuid */
+    loanId?: string | null;
+    direction: string;
+    eventType?: string | null;
+    currentState: string;
+    encompassLoanId?: string | null;
+    encompassLoanNumber?: string | null;
+    /** @format int32 */
+    retryCount: number;
+    /** @format date-time */
+    requestedAtUtc?: string | null;
+    /** @format date-time */
+    completedAtUtc?: string | null;
+    /** @format date-time */
+    failedAtUtc?: string | null;
+    errors: string[];
+    steps: LosSyncStep[];
+}
+export interface LosSyncPaginated {
+    rows: LosSync[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
+export interface LosSyncSearchCriteria {
+    searchText?: string | null;
+    syncDirection?: string | null;
+    status?: string | null;
+    /** @format date-time */
+    dateFrom?: string | null;
+    /** @format date-time */
+    dateTo?: string | null;
+}
+export interface LosSyncStep {
+    /** @format int32 */
+    order: number;
+    name: string;
+    severity: LosSyncStepSeverityEnum;
+    message: string;
+    /** @format date-time */
+    atUtc: string;
+}
+export interface LosWebhook {
+    /** @format uuid */
+    id: string;
+    endpoint: string;
+    resource: string;
+    events: string[];
+    enableSubscription: boolean;
+}
+export interface ManualDocumentClassificationRequest {
+    documentType: ManualDocumentClassificationRequestDocumentTypeEnum;
 }
 export interface MdmUser {
     user_email?: string | null;
@@ -3145,24 +3892,37 @@ export interface MilestoneConfiguration {
     notificationsEnabled: boolean;
 }
 export interface MilestoneConfigurationRequest {
-    /** @minLength 1 */
     name: string;
     description?: string | null;
-    /** @minLength 1 */
     fieldID: string;
-    /**
-     * @format int32
-     * @min -1000
-     * @max 1000
-     */
+    /** @format int32 */
     weight?: number | null;
-    /** @minLength 1 */
     loanType: string;
     notificationsEnabled: boolean;
 }
+export interface MobileAppReviewSeed {
+    /** @format uuid */
+    userID: string;
+    userCreated: boolean;
+    /** @format uuid */
+    siteConfigurationID: string;
+    siteConfigurationCreated: boolean;
+    /** @format uuid */
+    loanID: string;
+    loanCreated: boolean;
+    /** @format uuid */
+    borrowerID: string;
+    borrowerCompleted: boolean;
+}
+export interface MobileAppReviewSeedRequest {
+    /** @format uuid */
+    accountID: string;
+    /** @format uuid */
+    branchID?: string | null;
+}
 export interface MobileSettings {
     /** @format uuid */
-    id: string;
+    id?: string | null;
     hasMobile: boolean;
     /** @deprecated */
     downloadLink?: string | null;
@@ -3184,7 +3944,7 @@ export interface ModuleParameterValue {
     parameterID: string;
     parameterName: string;
     parameterType: string;
-    value?: any;
+    value?: any | null;
     isInherited: boolean;
 }
 export interface MonthlyPaymentCalculator {
@@ -3203,46 +3963,19 @@ export interface MonthlyPaymentCalculator {
     amortization: Amortization;
 }
 export interface MonthlyPaymentCalculatorRequest {
-    /**
-     * @format double
-     * @min 30000
-     */
+    /** @format double */
     loanAmount: number;
-    /**
-     * @format double
-     * @min 25000
-     * @max 10000000
-     */
+    /** @format double */
     homeValue: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 10
-     */
+    /** @format double */
     pmi: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 200000
-     */
+    /** @format double */
     annualTaxes: number;
-    /**
-     * @format double
-     * @min 200
-     * @max 50000
-     */
+    /** @format double */
     annualInsurance: number;
-    /**
-     * @format double
-     * @min 1
-     * @max 25
-     */
+    /** @format double */
     interestRate: number;
-    /**
-     * @format int32
-     * @min 1
-     * @max 40
-     */
+    /** @format int32 */
     term: number;
 }
 export interface NoContentResult {
@@ -3251,7 +3984,7 @@ export interface NoContentResult {
 }
 export interface NotificationTemplate {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -3259,6 +3992,7 @@ export interface NotificationTemplate {
     /** @format uuid */
     id: string;
     htmlBody: string;
+    key: string;
     name: string;
     plainBody: string;
     description?: string | null;
@@ -3271,11 +4005,13 @@ export interface NotificationTemplate {
     isDefault: boolean;
     status: string;
     useDefaultHeaderAndFooter: boolean;
+    multipleCustomTemplates: boolean;
+    allowedRoles?: string[] | null;
     versions: NotificationTemplateVersionBase[];
 }
 export interface NotificationTemplateBase {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -3283,6 +4019,7 @@ export interface NotificationTemplateBase {
     /** @format uuid */
     id: string;
     htmlBody: string;
+    key: string;
     name: string;
     plainBody: string;
     description?: string | null;
@@ -3295,15 +4032,21 @@ export interface NotificationTemplateBase {
     isDefault: boolean;
     status: string;
     useDefaultHeaderAndFooter: boolean;
+    multipleCustomTemplates: boolean;
+    allowedRoles?: string[] | null;
+}
+export interface NotificationTemplateBasePaginated {
+    rows: NotificationTemplateBase[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
 }
 export interface NotificationTemplateRequest {
-    /** @minLength 1 */
     htmlBody: string;
-    /** @minLength 1 */
+    key: string;
     name: string;
     plainBody: string;
     description?: string | null;
-    /** @minLength 1 */
     subject: string;
     textEnabled: boolean;
     pushNotificationEnabled: boolean;
@@ -3312,6 +4055,12 @@ export interface NotificationTemplateRequest {
     pushNotificationBody?: string | null;
     status: string;
     useDefaultHeaderAndFooter: boolean;
+}
+export interface NotificationTemplateSearchCriteria {
+    searchText?: string | null;
+    key?: string | null;
+    status?: VersionStatusType | null;
+    includeDefaults: boolean;
 }
 export interface NotificationTemplateVersion {
     /** @format date-time */
@@ -3351,7 +4100,6 @@ export interface NotificationTemplateVersionBase {
     pushNotificationBody?: string | null;
 }
 export interface NotificationTemplateVersionRequest {
-    /** @maxLength 255 */
     name?: string | null;
     isActive: boolean;
     htmlBody: string;
@@ -3360,15 +4108,9 @@ export interface NotificationTemplateVersionRequest {
     pushNotificationBody?: string | null;
 }
 export interface NotificationTemplateVersionUpdateRequest {
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
-    name: string;
+    name?: string | null;
     isActive: boolean;
-    /** @minLength 1 */
     htmlBody: string;
-    /** @minLength 1 */
     plainBody: string;
     textBody?: string | null;
     pushNotificationBody?: string | null;
@@ -3379,7 +4121,6 @@ export interface Operation {
     path?: string;
 }
 export interface OverridePasswordRequest {
-    /** @minLength 8 */
     password: string;
 }
 export interface Pagination {
@@ -3394,11 +4135,38 @@ export interface PartnerSearchCriteria {
     brands?: string[] | null;
     roles?: UserRole[] | null;
 }
+export interface PendingInvite {
+    /** @format uuid */
+    inviteId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string | null;
+    role?: LoanRole | null;
+    /** @format date-time */
+    createdAt: string;
+    url: string;
+}
+export interface PendingInvitesSummary {
+    /** @format int32 */
+    total: number;
+    invites: PendingInvite[];
+}
+export interface PendingSignaturesSummary {
+    /** @format int32 */
+    total: number;
+    borrowers: BorrowerCount[];
+}
+export interface PendingTasksSummary {
+    /** @format int32 */
+    total: number;
+    borrowers: BorrowerCount[];
+}
+export interface PinAiConversationRequest {
+    isPinned: boolean;
+}
 export interface PostLoanComparisonPdfRequest {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     siteConfigurationID: string;
 }
 export interface PreferredLoanOfficer {
@@ -3476,45 +4244,22 @@ export interface RefinanceCalculator {
     totalBenefit: number;
 }
 export interface RefinanceCalculatorRequest {
-    /**
-     * @format double
-     * @min 25000
-     * @max 10000000
-     */
+    /** @format double */
     homeValue: number;
     currentLoan: RefinanceCurrentLoanRequest;
     refinanceLoan: RefinanceRefinanceLoanRequest;
     taxRates: TaxRatesRequest;
 }
 export interface RefinanceCurrentLoanRequest {
-    /**
-     * @format double
-     * @min 1
-     * @max 25
-     */
+    /** @format double */
     interestRate: number;
-    /**
-     * @format int32
-     * @min 1
-     * @max 40
-     */
+    /** @format int32 */
     term: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 10
-     */
+    /** @format double */
     pmi: number;
-    /**
-     * @format double
-     * @min 30000
-     */
+    /** @format double */
     originalLoanAmount: number;
-    /**
-     * @format int32
-     * @min 0
-     * @max 480
-     */
+    /** @format int32 */
     monthsPaid: number;
 }
 export interface RefinanceLoan {
@@ -3535,51 +4280,22 @@ export interface RefinanceLoan {
     amortization: Amortization;
 }
 export interface RefinanceRefinanceLoanRequest {
-    /**
-     * @format double
-     * @min 1
-     * @max 25
-     */
+    /** @format double */
     interestRate: number;
-    /**
-     * @format int32
-     * @min 1
-     * @max 40
-     */
+    /** @format int32 */
     term: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 10
-     */
+    /** @format double */
     pmi: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 3
-     */
+    /** @format double */
     points: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 5
-     */
+    /** @format double */
     originationFees: number;
-    /**
-     * @format double
-     * @min 500
-     * @max 100000
-     */
+    /** @format double */
     closingCosts: number;
-    /**
-     * @format int32
-     * @min 0
-     * @max 30
-     */
+    /** @format int32 */
     yearsBeforeSale: number;
 }
 export interface RefreshTokenRequest {
-    /** @minLength 1 */
     refreshToken: string;
     /**
      * @deprecated
@@ -3588,37 +4304,20 @@ export interface RefreshTokenRequest {
     siteConfigurationId?: string | null;
 }
 export interface RegisterUserRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
-    /** @minLength 8 */
     password: string;
     phone?: string | null;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     firstName: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     lastName: string;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     siteConfigurationId: string;
     /** @format uuid */
     inviteCode?: string | null;
 }
+export interface RenameAiConversationRequest {
+    name: string;
+}
 export interface RequestImpersonationRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
 }
 export interface RunLOCalculation {
@@ -3664,34 +4363,26 @@ export interface RunLOCalculation {
     lienType?: string | null;
 }
 export interface RunLOCalculationRequest {
-    /** @minLength 1 */
     loanID: string;
-    /** @minLength 1 */
     loanAmount: string;
-    /** @minLength 1 */
     propertyValue: string;
     propertyType?: string | null;
     zipCode?: string | null;
     county?: string | null;
-    /** @minLength 1 */
     loanPurpose: string;
     propertyOccupancy?: string | null;
     escrow?: string | null;
-    /** @minLength 1 */
     loanTerm1: string;
-    /** @minLength 1 */
     loanTerm2: string;
     creditScore?: string | null;
     taxes?: string | null;
     insurance?: string | null;
     rate?: string | null;
-    /** @minLength 1 */
     loanType: string;
     flood?: string | null;
     hoa?: string | null;
     miFactor?: string | null;
     downpaymentAmount?: string | null;
-    /** @minLength 1 */
     lienType: string;
     preApprovalNotes?: string | null;
     additionalPreApprovalNotes?: string | null;
@@ -3702,22 +4393,17 @@ export interface SSOToken {
     ssoRedirectUriForSignIn: string;
 }
 export interface SSOTokenRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
-    /** @minLength 1 */
-    redirectUri: string;
+    redirectUri?: string | null;
 }
-export interface SamlMetadataRequest {
-    ssoIntegration: SamlMetadataRequestSsoIntegrationEnum;
+export interface SearchCriteria {
+    searchText?: string | null;
+}
+export interface SendESignatureReminderRequest {
+    /** @format uuid */
+    userId: string;
 }
 export interface SendForgotPasswordRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
 }
 export interface SendLoanDocumentsRequest {
@@ -3725,21 +4411,32 @@ export interface SendLoanDocumentsRequest {
     loanUserIDs: string[];
     emailAddresses: string[];
 }
-export interface SendNotificationForLoanRequest {
-    /** @minLength 1 */
-    loanID: string;
-    templateName: string;
-    loanOfficerEmail?: string | null;
+export interface SendLoanOptInReminderRequest {
+    templateKey: string;
+    userIds?: string[] | null;
+}
+export interface SendLoanTaskReminderRequest {
     /** @format uuid */
-    siteConfigurationId?: string | null;
-    /** @minLength 1 */
-    email: string;
-    phone?: string | null;
-    attachments: Attachment[];
+    templateId: string;
+    userIds?: string[] | null;
+}
+export interface SendOutstandingTaskReminderRequest {
+    userIds?: string[] | null;
+}
+export interface SetAiEnabledRequest {
+    isEnabled: boolean;
+}
+export interface SetCustomFieldValueRequest {
+    /** @format uuid */
+    definitionId: string;
+    value?: string | null;
+}
+export interface SetSingleCustomFieldValueRequest {
+    value?: string | null;
 }
 export interface SiteConfiguration {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -3751,7 +4448,6 @@ export interface SiteConfiguration {
     entityID: string;
     /** @format int32 */
     entityType: number;
-    /** @minLength 1 */
     url: string;
     name: string;
     introduction?: string | null;
@@ -3933,7 +4629,7 @@ export interface SiteConfiguration {
 }
 export interface SiteConfigurationByUrl {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -3945,7 +4641,6 @@ export interface SiteConfigurationByUrl {
     entityID: string;
     /** @format int32 */
     entityType: number;
-    /** @minLength 1 */
     url: string;
     name: string;
     introduction?: string | null;
@@ -4372,7 +5067,7 @@ export interface SiteConfigurationWithInherited {
 }
 export interface SocialSurveyRecord {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -4387,14 +5082,18 @@ export interface SocialSurveyRecord {
     /** @format date-time */
     reviewCompletedTimeStamp?: string | null;
 }
+export interface SupportedModel {
+    modelId: string;
+    displayName: string;
+    provider: string;
+    description?: string | null;
+    isDefault: boolean;
+}
 export interface SurveyEmailRequest {
-    /** @minLength 1 */
     loanOfficerEmailAddress: string;
 }
 export interface SystemTokenRequest {
-    /** @minLength 1 */
     clientId: string;
-    /** @minLength 1 */
     clientSecret: string;
 }
 export interface Task {
@@ -4449,16 +5148,12 @@ export interface TaskPaginated {
     count: number;
 }
 export interface TaskRequest {
-    /** @minLength 1 */
     name: string;
     description?: string | null;
     losTarget?: string | null;
     type: string;
     targetUserRole?: string | null;
-    /**
-     * @format int32
-     * @min 0
-     */
+    /** @format int32 */
     daysDueFromApplication?: number | null;
     /** @format int32 */
     weight: number;
@@ -4473,16 +5168,12 @@ export interface TaskSearchCriteria {
     excludedIds?: string[] | null;
 }
 export interface TaskUpdateRequest {
-    /** @minLength 1 */
     name: string;
     description?: string | null;
     losTarget?: string | null;
     type: string;
     targetUserRole?: string | null;
-    /**
-     * @format int32
-     * @min 0
-     */
+    /** @format int32 */
     daysDueFromApplication?: number | null;
     /** @format int32 */
     weight: number;
@@ -4493,27 +5184,10 @@ export interface TaskUpdateRequest {
     id: string;
 }
 export interface TaxRatesRequest {
-    /**
-     * @format double
-     * @min 0
-     * @max 15
-     */
+    /** @format double */
     stateTaxRate: number;
-    /**
-     * @format double
-     * @min 0
-     * @max 50
-     */
+    /** @format double */
     marginalIncomeTaxRate: number;
-}
-export interface TestSendNotificationForLoanRequest {
-    loanData: Record<string, string>;
-    /** @format uuid */
-    siteConfigurationId: string;
-    toAddress?: string | null;
-    toPhoneNumber?: string | null;
-    templateName?: string | null;
-    attachments: Attachment[];
 }
 export interface Theme {
     logoURL: string;
@@ -4546,27 +5220,23 @@ export interface Token {
     scope: string;
 }
 export interface TokenChallengeRequest {
-    /** @format email */
     username: string;
-    /** @minLength 1 */
     sessionId: string;
-    /** @minLength 1 */
     code: string;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     siteConfigurationId: string;
     isSupport: boolean;
 }
 export interface TokenRequest {
-    /** @format email */
     username: string;
-    /** @minLength 1 */
     password: string;
     /** @format uuid */
     siteConfigurationId?: string | null;
     isSupport: boolean;
+}
+export interface TriggerAsoRequest {
+    /** @maxItems 23 */
+    serviceKeys: string[];
 }
 export interface UnderwritingCondition {
     /** @format uuid */
@@ -4615,6 +5285,15 @@ export interface UnprocessableEntityError {
     error: string;
     property: string;
 }
+export interface UnregisteredBorrower {
+    /** @format uuid */
+    contactId: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    fullName?: string | null;
+    email?: string | null;
+    role: UnregisteredBorrowerRoleEnum;
+}
 export interface UpdateAccountRequest {
     name: string;
     mfaPreference: string;
@@ -4624,13 +5303,67 @@ export interface UpdateAccountRequest {
     asoSettings?: ASOSettings | null;
     settings: AccountSettingsRequest;
 }
+export interface UpdateAiAccountTokenLimitRequest {
+    /** @format int32 */
+    tokenLimit: number;
+}
+export interface UpdateAiCanonicalFieldRequest {
+    displayName: string;
+    description: string;
+    allowedRoles: string[];
+    isPii: boolean;
+    category?: string | null;
+}
+export interface UpdateAiGuardrailRequest {
+    name: string;
+    category: UpdateAiGuardrailRequestCategoryEnum;
+    description?: string | null;
+    keywords: string[];
+    responseTemplate: string;
+}
+export interface UpdateAiPromptRequest {
+    title: string;
+    description: string;
+    documentTypes: string[];
+    applicableUrlSourceIds: string[];
+    allowedRoles: string[];
+    systemPrompt: string;
+    /** @format int32 */
+    sortOrder: number;
+    category?: AiPromptCategory | null;
+    queryTemplateName?: AiQueryTemplateName | null;
+    displayHint?: AiDisplayHint | null;
+    bedrockModelId?: string | null;
+    requiredDataSources?: string[] | null;
+    outputType?: AiOutputType | null;
+}
+export interface UpdateAiUrlSourceRequest {
+    name: string;
+    url: string;
+    description?: string | null;
+    category: UpdateAiUrlSourceRequestCategoryEnum;
+    scope: UpdateAiUrlSourceRequestScopeEnum;
+}
+export interface UpdateCustomFieldDefinitionRequest {
+    isRequired: boolean;
+    /** @format int32 */
+    displayOrder: number;
+    /** @format int32 */
+    minLength?: number | null;
+    /** @format int32 */
+    maxLength?: number | null;
+    /** @format double */
+    minValue?: number | null;
+    /** @format double */
+    maxValue?: number | null;
+    name: string;
+    defaultValue?: string | null;
+    regexPattern?: string | null;
+    options?: CustomFieldOptionRequest[] | null;
+    permissions?: CustomFieldPermissionRequest[] | null;
+}
 export interface UpdateDocumentTemplateRequest {
-    /** @minLength 1 */
     htmlBody: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     name: string;
     description?: string | null;
     destinationBucket?: string | null;
@@ -4641,44 +5374,31 @@ export interface UpdateListingFileRequest {
     id: string;
     /** @format int32 */
     weight: number;
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
 }
 export interface UpdateListingPhotoRequest {
     /** @format uuid */
     id: string;
-    /**
-     * @minLength 1
-     * @maxLength 250
-     */
     name: string;
-    /** @maxLength 500 */
     description?: string | null;
     /** @format int32 */
     weight: number;
+}
+export interface UpdateLoanDocumentFolderRequest {
+    name: string;
+    permissions: LoanDocumentFolderPermissionRequest[];
 }
 export interface UpdateLoanQueueRequest {
     data: any;
 }
 export interface UpdateMeRequest {
     phone?: string | null;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     firstName: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     lastName: string;
     email: string;
     title?: string | null;
     forcePasswordReset: boolean;
-    mfaEnabled: boolean;
+    mfaEnabled?: boolean | null;
     notificationSettings: UserNotificationSettingsUpdateRequest;
     /** @format uuid */
     preferredLoanOfficerId?: string | null;
@@ -4687,34 +5407,22 @@ export interface UpdateMobilePhoneRequest {
     phone: string;
 }
 export interface UpdateUserGroupRequest {
-    /**
-     * @minLength 1
-     * @maxLength 200
-     */
     name: string;
-    /** @maxLength 1000 */
     description?: string | null;
 }
 export interface UpdateUserRequest {
     phone?: string | null;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     firstName: string;
-    /**
-     * @minLength 1
-     * @maxLength 255
-     */
     lastName: string;
     email: string;
     title?: string | null;
     /** @format uuid */
     branchId?: string | null;
     forcePasswordReset: boolean;
-    mfaEnabled: boolean;
+    mfaEnabled?: boolean | null;
     /** @format uuid */
     preferredLoanOfficerId?: string | null;
+    isInternal?: boolean | null;
 }
 export interface UsageReport {
     /** @format uuid */
@@ -4874,7 +5582,7 @@ export interface UsageReportStatistics {
 }
 export interface User {
     /** @format date-time */
-    createdAt?: string | null;
+    createdAt: string;
     /** @format date-time */
     updatedAt?: string | null;
     /** @format date-time */
@@ -4893,6 +5601,7 @@ export interface User {
     /** @format int32 */
     loginsWithoutMFACount: number;
     canImpersonate: boolean;
+    isInternal: boolean;
     preferredLoanOfficer?: PreferredLoanOfficer | null;
 }
 export interface UserAccountDeletionRequest {
@@ -4982,7 +5691,7 @@ export interface UserLoan {
     borrowerPair?: number | null;
     /** @format int32 */
     borrowerPosition?: number | null;
-    customLoanData?: CustomLoanData | null;
+    consents: UserLoanConsent[];
 }
 export interface UserLoanConsent {
     /** @format uuid */
@@ -4991,9 +5700,15 @@ export interface UserLoanConsent {
     userLoanID: string;
     type: UserLoanConsentTypeEnum;
     providedConsent: boolean;
+    source?: ConsentSource | null;
     ipAddress?: string | null;
+    losSyncStatus: UserLoanConsentLosSyncStatusEnum;
     /** @format date-time */
     createdAt: string;
+    /** @format date-time */
+    updatedAt?: string | null;
+    /** @format date-time */
+    deletedAt?: string | null;
 }
 export interface UserLoanTask {
     /** @format uuid */
@@ -5006,7 +5721,6 @@ export interface UserLoanTask {
     value?: string | null;
     documents: LoanDocument[];
     loan: LoanIdentifier;
-    /** @deprecated */
     loanID: string;
     /** @format date-time */
     completedDate?: string | null;
@@ -5018,12 +5732,15 @@ export interface UserLoanTask {
     /** @format int32 */
     commentsCount: number;
 }
+export interface UserLoanTaskPaginated {
+    rows: UserLoanTask[];
+    pagination: Pagination;
+    /** @format int64 */
+    count: number;
+}
 export interface UserLoanTaskRequest {
     value?: string | null;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userID: string;
 }
 export interface UserLoanTaskUpdateRequest {
@@ -5031,7 +5748,6 @@ export interface UserLoanTaskUpdateRequest {
     value?: string | null;
 }
 export interface UserMobilePhoneVerificationRequest {
-    /** @minLength 1 */
     code: string;
 }
 export interface UserNotificationSettings {
@@ -5063,17 +5779,10 @@ export interface UserPublic {
     title?: string | null;
 }
 export interface UserRelation {
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userId1: string;
-    /**
-     * @format uuid
-     * @minLength 1
-     */
+    /** @format uuid */
     userId2: string;
-    /** @minLength 1 */
     relationType: string;
     /** @format uuid */
     id: string;
@@ -5126,14 +5835,8 @@ export interface UserSummary {
     role: UserSummaryRoleEnum;
 }
 export interface VerifyPasswordRequest {
-    /**
-     * @format email
-     * @minLength 1
-     */
     email: string;
-    /** @minLength 1 */
     code: string;
-    /** @minLength 8 */
     password: string;
     /** @format uuid */
     siteConfigurationId?: string | null;
@@ -5157,39 +5860,83 @@ export interface Workflow {
     icon: string;
 }
 export type AccountBillingRequestBillingTypeEnum = "ClosedLoan" | "LoanOfficer";
+export type AiAuditLogEventTypeEnum = "Error" | "GuardrailBlockedPre" | "GuardrailPassedPre" | "IntentClassified" | "LoanResolvedFromMessage" | "DocumentNotFound" | "GuardrailBlockedPost" | "GuardrailPassedPost" | "DocumentAnalyzed" | "DocumentList" | "DocumentResolutionAmbiguous" | "ResponseGenerated" | "ParametersExtracted" | "QueryExecuted" | "LoanContextNotFound" | "LoanContextLoaded" | "GuardrailBlockedBedrock" | "PromptMatched" | "QueryCondensed" | "IntentParseFailed" | "LoanSearchTermDiscarded" | "CanonicalFieldsSelected";
+export type AiChatMetadataIntentEnum = "Greeting" | "Invalid" | "Relevant" | "LoanSpecific" | "DocumentList" | "GeneralKnowledge" | "Blocked" | "Action" | "ConversationMeta" | "Capabilities" | "UsageReport";
+export type AiChatStructuredDataTypeEnum = "Table" | "DocumentAnalysis" | "DocumentList" | "GeneratedDocument";
+export type AiGuardrailCategoryEnum = "ContentSafety" | "PromptInjection" | "Privacy" | "Legal";
+export type AiUrlSourceCategoryEnum = "Regulatory" | "Guidelines" | "MarketData" | "Custom";
+export type AiUrlSourceScopeEnum = "FullDomain" | "SpecificPath";
+export type AuditLogEntryChangeTypeEnum = "Created" | "Modified" | "SoftDeleted" | "HardDeleted" | "Restored" | "Deactivated" | "Reactivated";
+export type BorrowerCountRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type BorrowerIdentityRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 export type CreateAccessScopeRequestScopeTypeEnum = "User" | "Branch";
 export type CreateAccountRequestEnvironmentEnum = "Development" | "Staging" | "UAT" | "Production";
-export type CreateGroupMemberRequestLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type CreateAiGuardrailRequestCategoryEnum = "ContentSafety" | "PromptInjection" | "Privacy" | "Legal";
+export type CreateAiUrlSourceRequestCategoryEnum = "Regulatory" | "Guidelines" | "MarketData" | "Custom";
+export type CreateAiUrlSourceRequestScopeEnum = "FullDomain" | "SpecificPath";
+export type CreateCustomFieldDefinitionRequestDataTypeEnum = "String" | "Number" | "Decimal" | "Boolean" | "Date" | "SingleSelect" | "MultiSelect";
+export type CreateCustomFieldDefinitionRequestEntityTypeEnum = "Loan";
+export type CreateGroupMemberRequestLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 /** @deprecated */
 export type CreateInviteRequestRelationshipEnum = "NotApplicable" | "Spouse" | "NonSpouse";
 export type CreateLoanImportRequestImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
-export type CreateUserDraftLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type CreateUserDraftLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type CustomFieldDefinitionDataTypeEnum = "String" | "Number" | "Decimal" | "Boolean" | "Date" | "SingleSelect" | "MultiSelect";
+export type CustomFieldDefinitionEntityTypeEnum = "Loan";
+export type CustomFieldEntryDataTypeEnum = "String" | "Number" | "Decimal" | "Boolean" | "Date" | "SingleSelect" | "MultiSelect";
+export type CustomFieldPermissionRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "SystemAdmin";
+export type CustomFieldPermissionAccessLevelEnum = "NoAccess" | "ReadOnly" | "ReadWrite";
+export type CustomFieldPermissionRequestRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "SystemAdmin";
+export type CustomFieldPermissionRequestAccessLevelEnum = "NoAccess" | "ReadOnly" | "ReadWrite";
+export type CustomFieldValueDataTypeEnum = "String" | "Number" | "Decimal" | "Boolean" | "Date" | "SingleSelect" | "MultiSelect";
 export type DraftTypeEnum = "NewLoan" | "EditLoan";
 export type DraftContentTypeEnum = "NewLoan" | "EditLoan";
-export type EncompassRequestLogOperationTypeEnum = "FieldUpdate" | "EConsentUpdate" | "DocumentSync" | "ApiError" | "LoanCreation" | "SlotCreation" | "MilestoneUpdate";
+export type EncompassCredentialsDetailEncompassEnvironmentEnum = "Production" | "UAT";
+export type EncompassCredentialsDetailSigningMethodEnum = "ConsumerConnect" | "POSF";
+export type EncompassCredentialsRequestEncompassEnvironmentEnum = "Production" | "UAT";
+export type EncompassCredentialsRequestSigningMethodEnum = "ConsumerConnect" | "POSF";
+export type EncompassRequestLogOperationTypeEnum = "FieldUpdate" | "ConsentUpdate" | "DocumentSync" | "MilestoneUpdate" | "DocumentAttachment" | "General" | "FieldReader";
 export type EncompassRequestLogOutcomeEnum = "Success" | "Failure" | "PartialSuccess";
 export type FusionReportFilterFilterTypeEnum = "DateGreaterThanOrEqualTo" | "DateGreaterThan" | "DateLessThan" | "DateLessThanOrEqualTo" | "DateEquals" | "DateDoesntEqual" | "DateNonEmpty" | "DateEmpty" | "StringContains" | "StringEquals" | "StringNotEmpty" | "StringNotEquals" | "StringNotContains";
+export type GenerateSystemPromptRequestCategoryEnum = "DocumentAnalysis" | "DataQuery" | "General" | "Action";
 export type IpAddressAddressFamilyEnum = "Unspecified" | "Unix" | "InterNetwork" | "ImpLink" | "Pup" | "Chaos" | "NS" | "Ipx" | "Iso" | "Osi" | "Ecma" | "DataKit" | "Ccitt" | "Sna" | "DecNet" | "DataLink" | "Lat" | "HyperChannel" | "AppleTalk" | "NetBios" | "VoiceView" | "FireFox" | "Banyan" | "Atm" | "InterNetworkV6" | "Cluster" | "Ieee12844" | "Irda" | "NetworkDesigners" | "Max" | "Packet" | "ControllerAreaNetwork" | "Unknown";
-export type LoanContactRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type LoanSigningMethodEnum = "ConsumerConnect" | "POSF";
+export type LoanBorrowerApplicationStatusEnum = "Draft" | "Complete";
+export type LoanContactRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type LoanDocumentFolderPermissionRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type LoanDocumentFolderPermissionLevelEnum = "None" | "Read" | "Write" | "Manage";
+export type LoanDocumentFolderPermissionRequestRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type LoanDocumentFolderPermissionRequestLevelEnum = "None" | "Read" | "Write" | "Manage";
 export type LoanImportStatusEnum = "WaitingProcess" | "InProgress" | "Completed" | "Failed" | "Cancelled";
 export type LoanImportImportModeEnum = "All" | "NewOnly" | "UpdateOnly";
 export type LoanImportLogLevelEnum = "None" | "Info" | "Warning" | "Error";
 export type LoanLogLevelEnum = "None" | "Info" | "Warning" | "Error";
-export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "EConsent" | "SensitiveDataPurge";
-export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
-export type SamlMetadataRequestSsoIntegrationEnum = "ConsumerConnect" | "TheBigPOS" | "POSF";
+export type LoanLogTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "Consent" | "SensitiveDataPurge" | "ClosingDateUpdated" | "ConsumerConnectAssociation" | "TaskReminderSent" | "DocumentClassified";
+export type LoanLogDetailLevelEnum = "None" | "Info" | "Warning" | "Error";
+export type LoanLogDetailTypeEnum = "Loan" | "Queue" | "POSFlagChanged" | "Verification" | "DocumentUploaded" | "LoanCreated" | "WorkflowSubmitted" | "UserInvitationSent" | "CoBorrowerAdded" | "TaskCompleted" | "LoanStatusChanged" | "Consent" | "SensitiveDataPurge" | "ClosingDateUpdated" | "ConsumerConnectAssociation" | "TaskReminderSent" | "DocumentClassified";
+export type LoanTaskStatusSummaryStatusEnum = "Outstanding" | "Pending" | "Completed" | "Rejected" | "Unknown";
+export type LoanUserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type LosOperationTrackingStatusEnum = "Pending" | "Success" | "Failed" | "ConfigurationError" | "PermanentFailure" | "Locked";
+export type LosSyncStepSeverityEnum = "Success" | "Info" | "Warning" | "Error";
+export type ManualDocumentClassificationRequestDocumentTypeEnum = "W2" | "Paystub" | "Form1099" | "Form1099Int" | "Form1099Misc" | "Form1099Nec" | "Form1099R" | "Form1099G" | "Form1099Div" | "Form1099Ssa" | "FederalTaxReturn1040" | "TaxReturnScheduleC" | "TaxReturnScheduleD" | "TaxReturnScheduleE" | "Form1065" | "Form1120" | "Form1120S" | "ProfitAndLossStatement" | "VerificationOfEmployment" | "BankStatement" | "InvestmentStatement" | "CreditCardStatement" | "MortgageStatement" | "PayoffStatement" | "HoaDocuments" | "UtilityBill" | "IdentityDocument" | "DemographicAddendum" | "Ssa89" | "Vba260551" | "Hud92900B" | "Check" | "Invoice" | "Receipt" | "LoanApplication1003" | "UnderwritingTransmittal1008" | "Other" | "SalesContract" | "TitleCommitment" | "DriversLicense" | "VerificationOfIncome" | "VerificationOfAssets" | "FloodCertificate" | "FraudReport" | "AddendumToSalesContract" | "GiftLetter" | "CpaLetter" | "TaxBill" | "CondoQuestionnaire" | "CondoBudget" | "CondoBylaws" | "RentalAgreements" | "Lease" | "HazardInsurance" | "VaCertificateOfEligibility" | "Appraisal" | "CreditReport" | "CondoMasterPolicy";
 export type SiteConfigurationTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 export type SiteConfigurationByUrlTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 export type SiteConfigurationReducedTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 export type SiteConfigurationRequestTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
 export type SiteConfigurationSummaryTypeEnum = "None" | "Account" | "Corporate" | "Branch" | "LoanOfficer" | "Partner";
-export type UserDraftRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type UnregisteredBorrowerRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
+export type UpdateAiGuardrailRequestCategoryEnum = "ContentSafety" | "PromptInjection" | "Privacy" | "Legal";
+export type UpdateAiUrlSourceRequestCategoryEnum = "Regulatory" | "Guidelines" | "MarketData" | "Custom";
+export type UpdateAiUrlSourceRequestScopeEnum = "FullDomain" | "SpecificPath";
+export type UserDraftRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 export type UserGroupAccessScopeScopeTypeEnum = "User" | "Branch";
-export type UserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent";
+export type UserLoanRoleEnum = "Borrower" | "CoBorrower" | "NonBorrower" | "LoanOfficer" | "LoanProcessor" | "LoanOfficerAssistant" | "SupportingLoanOfficer" | "BuyerAgent" | "SellerAgent" | "TitleInsuranceAgent" | "EscrowAgent" | "SettlementAgent" | "Admin";
 export type UserLoanConsentTypeEnum = "Econsent" | "CreditAuthorization" | "Tcpa";
-export type UserSummaryRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+export type UserLoanConsentLosSyncStatusEnum = "NotStarted" | "Failed" | "Success";
+export type UserSummaryRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "SystemAdmin";
+export type GetCustomFieldDefinitionsParamsEntityTypeEnum = "Loan";
 /** @default "Realtor" */
-export type GetPartnersParamsRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "BranchManager" | "SystemAdmin";
+export type GetPartnersParamsRoleEnum = "Borrower" | "LoanOfficer" | "Admin" | "SuperAdmin" | "Realtor" | "SettlementAgent" | "LoanProcessor" | "LoanOfficerAssistant" | "SystemAdmin";
 export type GetSamlMetadataParamsSSoIntegrationEnum = "ConsumerConnect" | "TheBigPOS" | "POSF";
 export type GetSamlMetadataParamsEnum = "ConsumerConnect" | "TheBigPOS" | "POSF";
 export type CreateOrReplaceSamlMetadataParamsSSoIntegrationEnum = "ConsumerConnect" | "TheBigPOS" | "POSF";
@@ -5216,14 +5963,7 @@ export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequest
     secure?: boolean;
     format?: ResponseType;
 }
-export declare enum ContentType {
-    JsonPatch = "application/json-patch+json",
-    Json = "application/json",
-    JsonApi = "application/vnd.api+json",
-    FormData = "multipart/form-data",
-    UrlEncoded = "application/x-www-form-urlencoded",
-    Text = "text/plain"
-}
+export type ContentType = "application/json" | "application/vnd.api+json" | "multipart/form-data" | "application/x-www-form-urlencoded" | "text/plain";
 export declare class HttpClient<SecurityDataType = unknown> {
     instance: AxiosInstance;
     private securityData;
@@ -5239,7 +5979,7 @@ export declare class HttpClient<SecurityDataType = unknown> {
 }
 /**
  * @title The Big POS API
- * @version v2.36.4
+ * @version v2.45.0
  * @termsOfService https://www.thebigpos.com/terms-of-use/
  * @contact Mortgage Automation Technologies <support@thebigpos.com> (https://www.thebigpos.com/terms-of-use/)
  */
@@ -5251,9 +5991,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @name PostRoot
      * @request POST:/
      * @secure
-     * @response `200` `void` Success
+     * @response `200` `void` OK
      */
-    postRoot: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+    postRoot: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
     /**
      * No description
      *
@@ -5261,9 +6001,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @name GetRoot
      * @request GET:/
      * @secure
-     * @response `200` `string` Success
+     * @response `200` `string` OK
      */
-    getRoot: (params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+    getRoot: (params?: RequestParams) => Promise<AxiosResponse<string, any>>;
     api: {
         /**
          * No description
@@ -5273,10 +6013,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get
          * @request GET:/api/account
          * @secure
-         * @response `200` `Account` Success
+         * @response `200` `Account` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getMyAccount: (params?: RequestParams) => Promise<AxiosResponse<Account, any, {}>>;
+        getMyAccount: (params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -5285,11 +6025,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/account
          * @secure
-         * @response `200` `Account` Success
+         * @response `200` `Account` OK
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `ProblemDetails` Client Error
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        replaceMyAccount: (data: UpdateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any, {}>>;
+        replaceMyAccount: (data: UpdateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -5298,9 +6038,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Site Configuration
          * @request GET:/api/account/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
+         * @response `200` `SiteConfiguration` OK
          */
-        getSiteConfigurationByAccount: (params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        getSiteConfigurationByAccount: (params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -5309,10 +6049,33 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update Site Configuration
          * @request PUT:/api/account/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        updateSiteConfigurationForAccount: (data: SiteConfiguration, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        updateSiteConfigurationForAccount: (data: SiteConfiguration, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
+        /**
+         * No description
+         *
+         * @tags AccountReactivation
+         * @name RequestAccountReactivation
+         * @summary Request account reactivation
+         * @request POST:/api/account/reactivation/request
+         * @secure
+         * @response `204` `void` No Content
+         */
+        requestAccountReactivation: (data: AccountReactivationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AccountReactivation
+         * @name CompleteAccountReactivation
+         * @summary Complete account reactivation with new password
+         * @request POST:/api/account/reactivation/complete
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        completeAccountReactivation: (data: AccountReactivationCompleteRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5321,9 +6084,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/accounts
          * @secure
-         * @response `200` `(Account)[]` Success
+         * @response `200` `(Account)[]` OK
          */
-        getAccounts: (params?: RequestParams) => Promise<AxiosResponse<Account[], any, {}>>;
+        getAccounts: (params?: RequestParams) => Promise<AxiosResponse<Account[], any>>;
         /**
          * No description
          *
@@ -5333,9 +6096,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/accounts
          * @secure
          * @response `201` `Account` Created
-         * @response `422` `ProblemDetails` Client Error
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        createAccount: (data: CreateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any, {}>>;
+        createAccount: (data: CreateAccountRequest, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -5345,9 +6108,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/api/accounts/{id}
          * @secure
          * @response `201` `Account` Created
-         * @response `422` `ProblemDetails` Client Error
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        getAccount: (id: string, params?: RequestParams) => Promise<AxiosResponse<Account, any, {}>>;
+        getAccount: (id: string, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -5358,12 +6121,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `Account` No Content
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `ProblemDetails` Client Error
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
         deleteAccount: (id: string, query?: {
             /** @default false */
             hardDelete?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<Account, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<Account, any>>;
         /**
          * No description
          *
@@ -5372,11 +6135,832 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update billing configuration
          * @request PUT:/api/accounts/{id}/billing
          * @secure
-         * @response `200` `AccountBilling` Success
+         * @response `200` `AccountBilling` OK
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `ProblemDetails` Client Error
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        updateAccountBilling: (id: string, data: AccountBillingRequest, params?: RequestParams) => Promise<AxiosResponse<AccountBilling, any, {}>>;
+        updateAccountBilling: (id: string, data: AccountBillingRequest, params?: RequestParams) => Promise<AxiosResponse<AccountBilling, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAccess
+         * @name GetAiAccess
+         * @summary Get whether AI is enabled for the current user's account
+         * @request GET:/api/ai/access
+         * @secure
+         * @response `200` `AiEnabled` OK
+         */
+        getAiAccess: (params?: RequestParams) => Promise<AxiosResponse<AiEnabled, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAccount
+         * @name GetAccountAiEnabled
+         * @summary Get whether AI is enabled for an account (SuperAdmin only)
+         * @request GET:/api/ai/accounts/{accountId}/ai-enabled
+         * @secure
+         * @response `200` `AiEnabled` OK
+         */
+        getAccountAiEnabled: (accountId: string, params?: RequestParams) => Promise<AxiosResponse<AiEnabled, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAccount
+         * @name SetAccountAiEnabled
+         * @summary Enable or disable AI for an account (SuperAdmin only)
+         * @request PUT:/api/ai/accounts/{accountId}/ai-enabled
+         * @secure
+         * @response `204` `void` No Content
+         */
+        setAccountAiEnabled: (accountId: string, data: SetAiEnabledRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAccountSettings
+         * @name GetAiAccountSettings
+         * @summary Get account AI settings
+         * @request GET:/api/ai/account-settings
+         * @secure
+         * @response `200` `AiAccountSettings` OK
+         */
+        getAiAccountSettings: (params?: RequestParams) => Promise<AxiosResponse<AiAccountSettings, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAccountSettings
+         * @name UpdateAiAccountSettings
+         * @summary Update account AI settings
+         * @request PUT:/api/ai/account-settings
+         * @secure
+         * @response `200` `AiAccountSettings` OK
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        updateAiAccountSettings: (data: AiAccountSettingsRequest, params?: RequestParams) => Promise<AxiosResponse<AiAccountSettings, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name GetAiPrompts
+         * @summary Get all prompts
+         * @request GET:/api/ai/prompts
+         * @secure
+         * @response `200` `(AiPrompt)[]` OK
+         */
+        getAiPrompts: (params?: RequestParams) => Promise<AxiosResponse<AiPrompt[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name CreateAiPrompt
+         * @summary Create custom prompt
+         * @request POST:/api/ai/prompts
+         * @secure
+         * @response `201` `AiPrompt` Created
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        createAiPrompt: (data: CreateAiPromptRequest, params?: RequestParams) => Promise<AxiosResponse<AiPrompt, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name GetAiPrompt
+         * @summary Get prompt by ID
+         * @request GET:/api/ai/prompts/{id}
+         * @secure
+         * @response `200` `AiPrompt` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiPrompt: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiPrompt, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name UpdateAiPrompt
+         * @summary Update prompt
+         * @request PUT:/api/ai/prompts/{id}
+         * @secure
+         * @response `200` `AiPrompt` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        updateAiPrompt: (id: string, data: UpdateAiPromptRequest, params?: RequestParams) => Promise<AxiosResponse<AiPrompt, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name DeleteAiPrompt
+         * @summary Delete prompt
+         * @request DELETE:/api/ai/prompts/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteAiPrompt: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name ToggleAiPrompt
+         * @summary Toggle prompt active/inactive
+         * @request PATCH:/api/ai/prompts/{id}/toggle
+         * @secure
+         * @response `200` `AiPrompt` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        toggleAiPrompt: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiPrompt, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name GenerateAiSystemPrompt
+         * @summary Generate a system prompt from description
+         * @request POST:/api/ai/prompts/generate
+         * @secure
+         * @response `200` `GenerateSystemPrompt` OK
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        generateAiSystemPrompt: (data: GenerateSystemPromptRequest, params?: RequestParams) => Promise<AxiosResponse<GenerateSystemPrompt, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminPrompt
+         * @name GetAiSupportedModels
+         * @summary Get supported LLM models
+         * @request GET:/api/ai/prompts/supported-models
+         * @secure
+         * @response `200` `(SupportedModel)[]` OK
+         */
+        getAiSupportedModels: (params?: RequestParams) => Promise<AxiosResponse<SupportedModel[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminSettings
+         * @name GetAiAdminSettings
+         * @summary Get global AI settings
+         * @request GET:/api/ai/settings
+         * @secure
+         * @response `200` `AiAdminSettings` OK
+         */
+        getAiAdminSettings: (params?: RequestParams) => Promise<AxiosResponse<AiAdminSettings, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAdminSettings
+         * @name UpdateAiAdminSettings
+         * @summary Update global AI settings
+         * @request PUT:/api/ai/settings
+         * @secure
+         * @response `200` `AiAdminSettings` OK
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        updateAiAdminSettings: (data: AiAdminSettingsRequest, params?: RequestParams) => Promise<AxiosResponse<AiAdminSettings, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAudit
+         * @name GetAiAuditLogs
+         * @summary Get paginated AI audit logs (own account, or any/all accounts for SuperAdmin)
+         * @request GET:/api/ai/audit-logs
+         * @secure
+         * @response `200` `AiAuditLogPaginated` OK
+         */
+        getAiAuditLogs: (query?: {
+            /** @format uuid */
+            accountId?: string;
+            eventType?: AiAuditEventType;
+            /** @format uuid */
+            requestId?: string;
+            /** @format uuid */
+            userId?: string;
+            /** @format uuid */
+            conversationId?: string;
+            blockedOnly?: boolean;
+            /** @format date-time */
+            startDate?: string;
+            /** @format date-time */
+            endDate?: string;
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiAuditLogPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAudit
+         * @name GetAiRequestLifecycle
+         * @summary Get the full event lifecycle of a single AI request
+         * @request GET:/api/ai/audit-logs/request/{requestId}
+         * @secure
+         * @response `200` `(AiAuditLog)[]` OK
+         */
+        getAiRequestLifecycle: (requestId: string, query?: {
+            /** @format uuid */
+            accountId?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiAuditLog[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiAudit
+         * @name GetAiAuditConversations
+         * @summary List conversations with their audit roll-up — origin user, turns, status, tokens
+         * @request GET:/api/ai/audit-conversations
+         * @secure
+         * @response `200` `AiConversationAuditSummaryPaginated` OK
+         */
+        getAiAuditConversations: (query?: {
+            /** @format uuid */
+            accountId?: string;
+            searchText?: string;
+            /** @format date-time */
+            startDate?: string;
+            /** @format date-time */
+            endDate?: string;
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiConversationAuditSummaryPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAudit
+         * @name GetAiStats
+         * @summary Get AI dashboard stats (own account, or any/all accounts for SuperAdmin)
+         * @request GET:/api/ai/stats
+         * @secure
+         * @response `200` `AiAdminStats` OK
+         */
+        getAiStats: (query?: {
+            /** @format uuid */
+            accountId?: string;
+            /** @format date-time */
+            startDate?: string;
+            /** @format date-time */
+            endDate?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiAdminStats, any>>;
+        /**
+         * No description
+         *
+         * @tags AiAudit
+         * @name GetAiConfigChanges
+         * @summary Get the AI configuration change history (who changed prompts, guardrails, fields, sources)
+         * @request GET:/api/ai/config-changes
+         * @secure
+         * @response `200` `AuditLogEntryPaginated` OK
+         */
+        getAiConfigChanges: (query?: {
+            /** @format uuid */
+            accountId?: string;
+            /** @format uuid */
+            entityId?: string;
+            /** @format uuid */
+            actorUserId?: string;
+            /** @format date-time */
+            startDate?: string;
+            /** @format date-time */
+            endDate?: string;
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AuditLogEntryPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name GetAiCanonicalFields
+         * @summary Get all canonical fields
+         * @request GET:/api/ai/canonical-fields
+         * @secure
+         * @response `200` `(AiCanonicalField)[]` OK
+         */
+        getAiCanonicalFields: (params?: RequestParams) => Promise<AxiosResponse<AiCanonicalField[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name CreateAiCanonicalField
+         * @summary Create canonical field
+         * @request POST:/api/ai/canonical-fields
+         * @secure
+         * @response `201` `AiCanonicalField` Created
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        createAiCanonicalField: (data: CreateAiCanonicalFieldRequest, params?: RequestParams) => Promise<AxiosResponse<AiCanonicalField, any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name GetAiCanonicalField
+         * @summary Get canonical field by ID
+         * @request GET:/api/ai/canonical-fields/{id}
+         * @secure
+         * @response `200` `AiCanonicalField` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiCanonicalField: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiCanonicalField, any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name UpdateAiCanonicalField
+         * @summary Update canonical field
+         * @request PUT:/api/ai/canonical-fields/{id}
+         * @secure
+         * @response `200` `AiCanonicalField` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        updateAiCanonicalField: (id: string, data: UpdateAiCanonicalFieldRequest, params?: RequestParams) => Promise<AxiosResponse<AiCanonicalField, any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name DeleteAiCanonicalField
+         * @summary Delete canonical field
+         * @request DELETE:/api/ai/canonical-fields/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteAiCanonicalField: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiCanonicalField
+         * @name ToggleAiCanonicalField
+         * @summary Toggle canonical field active/inactive
+         * @request PATCH:/api/ai/canonical-fields/{id}/toggle
+         * @secure
+         * @response `200` `AiCanonicalField` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        toggleAiCanonicalField: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiCanonicalField, any>>;
+        /**
+         * No description
+         *
+         * @tags AiChat
+         * @name AiChat
+         * @summary Send AI chat message
+         * @request POST:/api/ai/chats
+         * @secure
+         * @response `200` `AiChat` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `401` `ProblemDetails` Unauthorized
+         */
+        aiChat: (data: AiChatRequest, params?: RequestParams) => Promise<AxiosResponse<AiChat, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name GetAiConversations
+         * @summary Get user conversations
+         * @request GET:/api/ai/conversations
+         * @secure
+         * @response `200` `AiConversationListItemPaginated` OK
+         */
+        getAiConversations: (query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiConversationListItemPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name GetAiConversation
+         * @summary Get conversation metadata
+         * @request GET:/api/ai/conversations/{id}
+         * @secure
+         * @response `200` `AiConversationDetail` OK
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiConversation: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiConversationDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name RenameAiConversation
+         * @summary Rename conversation
+         * @request PATCH:/api/ai/conversations/{id}
+         * @secure
+         * @response `200` `AiConversationDetail` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        renameAiConversation: (id: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<AiConversationDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name DeleteAiConversation
+         * @summary Delete conversation
+         * @request DELETE:/api/ai/conversations/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteAiConversation: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name GetAiConversationMessages
+         * @summary Get conversation messages
+         * @request GET:/api/ai/conversations/{id}/messages
+         * @secure
+         * @response `200` `AiChatMessagePaginated` OK
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiConversationMessages: (id: string, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiChatMessagePaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name ClearAiConversationHistory
+         * @summary Clear conversation history
+         * @request DELETE:/api/ai/conversations/{id}/messages
+         * @secure
+         * @response `204` `void` No Content
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        clearAiConversationHistory: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversation
+         * @name PinAiConversation
+         * @summary Pin or unpin conversation
+         * @request PUT:/api/ai/conversations/{id}/pin
+         * @secure
+         * @response `200` `AiConversationDetail` OK
+         * @response `403` `ProblemDetails` Forbidden
+         * @response `404` `ProblemDetails` Not Found
+         */
+        pinAiConversation: (id: string, data: PinAiConversationRequest, params?: RequestParams) => Promise<AxiosResponse<AiConversationDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversationAdmin
+         * @name GetAiAccountConversations
+         * @summary List AI conversations across the account, optionally filtered by user (admin supervision)
+         * @request GET:/api/ai/conversations/all
+         * @secure
+         * @response `200` `AiConversationListItemPaginated` OK
+         */
+        getAiAccountConversations: (query?: {
+            /** @format uuid */
+            userId?: string;
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiConversationListItemPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversationAdmin
+         * @name GetAiAccountConversation
+         * @summary Get an account conversation's detail (admin supervision)
+         * @request GET:/api/ai/conversations/all/{id}
+         * @secure
+         * @response `200` `AiConversationDetail` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiAccountConversation: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiConversationDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiConversationAdmin
+         * @name GetAiAccountConversationMessages
+         * @summary Get an account conversation's messages (admin supervision)
+         * @request GET:/api/ai/conversations/all/{id}/messages
+         * @secure
+         * @response `200` `AiChatMessagePaginated` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiAccountConversationMessages: (id: string, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiChatMessagePaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name GetAiGuardrails
+         * @summary Get all guardrails
+         * @request GET:/api/ai/guardrails
+         * @secure
+         * @response `200` `(AiGuardrail)[]` OK
+         */
+        getAiGuardrails: (params?: RequestParams) => Promise<AxiosResponse<AiGuardrail[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name CreateAiGuardrail
+         * @summary Create custom guardrail
+         * @request POST:/api/ai/guardrails
+         * @secure
+         * @response `201` `AiGuardrail` Created
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        createAiGuardrail: (data: CreateAiGuardrailRequest, params?: RequestParams) => Promise<AxiosResponse<AiGuardrail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name GetAiGuardrail
+         * @summary Get guardrail by ID
+         * @request GET:/api/ai/guardrails/{id}
+         * @secure
+         * @response `200` `AiGuardrail` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiGuardrail: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiGuardrail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name UpdateAiGuardrail
+         * @summary Update guardrail
+         * @request PUT:/api/ai/guardrails/{id}
+         * @secure
+         * @response `200` `AiGuardrail` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        updateAiGuardrail: (id: string, data: UpdateAiGuardrailRequest, params?: RequestParams) => Promise<AxiosResponse<AiGuardrail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name DeleteAiGuardrail
+         * @summary Delete guardrail
+         * @request DELETE:/api/ai/guardrails/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteAiGuardrail: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiGuardrail
+         * @name ToggleAiGuardrail
+         * @summary Toggle guardrail enabled/disabled
+         * @request PATCH:/api/ai/guardrails/{id}/toggle
+         * @secure
+         * @response `200` `AiGuardrail` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        toggleAiGuardrail: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiGuardrail, any>>;
+        /**
+         * No description
+         *
+         * @tags AiPrompt
+         * @name GetAiAvailablePrompts
+         * @summary Get available prompts for current user
+         * @request GET:/api/ai/prompts/available
+         * @secure
+         * @response `200` `(AiPromptSummary)[]` OK
+         */
+        getAiAvailablePrompts: (query?: {
+            documentType?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiPromptSummary[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiTokenUsageAdmin
+         * @name SearchAiAccountTokenUsage
+         * @summary Search accounts by current-month AI token usage and classification
+         * @request POST:/api/ai/token-usage/search
+         * @secure
+         * @response `200` `AiAccountUsageOverviewPaginated` OK
+         */
+        searchAiAccountTokenUsage: (data: SearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiAccountUsageOverviewPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiTokenUsageAdmin
+         * @name GetAiAccountTokenUsage
+         * @summary Get an account's current-month AI token usage
+         * @request GET:/api/ai/token-usage/{accountId}
+         * @secure
+         * @response `200` `AiTokenBudgetStatus` OK
+         */
+        getAiAccountTokenUsage: (accountId: string, params?: RequestParams) => Promise<AxiosResponse<AiTokenBudgetStatus, any>>;
+        /**
+         * No description
+         *
+         * @tags AiTokenUsageAdmin
+         * @name GetAiAccountTokenUsageHistory
+         * @summary Get an account's monthly AI token usage history
+         * @request GET:/api/ai/token-usage/{accountId}/history
+         * @secure
+         * @response `200` `AiTokenUsageWindowPaginated` OK
+         */
+        getAiAccountTokenUsageHistory: (accountId: string, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiTokenUsageWindowPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AiTokenUsageAdmin
+         * @name SetAiAccountTokenLimit
+         * @summary Set or raise an account's monthly AI token limit
+         * @request PUT:/api/ai/token-usage/{accountId}/limit
+         * @secure
+         * @response `200` `AiTokenBudgetStatus` OK
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        setAiAccountTokenLimit: (accountId: string, data: UpdateAiAccountTokenLimitRequest, params?: RequestParams) => Promise<AxiosResponse<AiTokenBudgetStatus, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name GetAiUrlSources
+         * @summary Get all URL sources
+         * @request GET:/api/ai/url-sources
+         * @secure
+         * @response `200` `(AiUrlSource)[]` OK
+         */
+        getAiUrlSources: (params?: RequestParams) => Promise<AxiosResponse<AiUrlSource[], any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name CreateAiUrlSource
+         * @summary Create URL source
+         * @request POST:/api/ai/url-sources
+         * @secure
+         * @response `201` `AiUrlSource` Created
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `409` `ProblemDetails` Conflict
+         */
+        createAiUrlSource: (data: CreateAiUrlSourceRequest, params?: RequestParams) => Promise<AxiosResponse<AiUrlSource, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name GetAiUrlSource
+         * @summary Get URL source by ID
+         * @request GET:/api/ai/url-sources/{id}
+         * @secure
+         * @response `200` `AiUrlSource` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAiUrlSource: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiUrlSource, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name UpdateAiUrlSource
+         * @summary Update URL source
+         * @request PUT:/api/ai/url-sources/{id}
+         * @secure
+         * @response `200` `AiUrlSource` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         */
+        updateAiUrlSource: (id: string, data: UpdateAiUrlSourceRequest, params?: RequestParams) => Promise<AxiosResponse<AiUrlSource, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name DeleteAiUrlSource
+         * @summary Delete URL source
+         * @request DELETE:/api/ai/url-sources/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteAiUrlSource: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUrlSource
+         * @name ToggleAiUrlSource
+         * @summary Toggle URL source active/inactive
+         * @request PATCH:/api/ai/url-sources/{id}/toggle
+         * @secure
+         * @response `200` `AiUrlSource` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        toggleAiUrlSource: (id: string, params?: RequestParams) => Promise<AxiosResponse<AiUrlSource, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUsage
+         * @name GetAiUsage
+         * @summary Get the current account's AI token usage for the active monthly window
+         * @request GET:/api/ai/usage
+         * @secure
+         * @response `200` `AiTokenBudgetStatus` OK
+         */
+        getAiUsage: (params?: RequestParams) => Promise<AxiosResponse<AiTokenBudgetStatus, any>>;
+        /**
+         * No description
+         *
+         * @tags AiUsage
+         * @name GetAiUsageHistory
+         * @summary Get the current account's monthly AI token usage history
+         * @request GET:/api/ai/usage/history
+         * @secure
+         * @response `200` `AiTokenUsageWindowPaginated` OK
+         */
+        getAiUsageHistory: (query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AiTokenUsageWindowPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AuditLog
+         * @name SearchAuditLogs
+         * @summary Search
+         * @request POST:/api/audit-logs/search
+         * @secure
+         * @response `200` `AuditLogEntryPaginated` OK
+         */
+        searchAuditLogs: (data: AuditLogSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<AuditLogEntryPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags AuditLog
+         * @name GetAuditLogEntityTypes
+         * @summary Get entity types
+         * @request GET:/api/audit-logs/entity-types
+         * @secure
+         * @response `200` `(AuditEntityType)[]` OK
+         */
+        getAuditLogEntityTypes: (params?: RequestParams) => Promise<AxiosResponse<AuditEntityType[], any>>;
+        /**
+         * No description
+         *
+         * @tags AuditLog
+         * @name GetAuditLogById
+         * @summary Get by ID
+         * @request GET:/api/audit-logs/{id}
+         * @secure
+         * @response `200` `AuditLogEntry` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getAuditLogById: (id: string, params?: RequestParams) => Promise<AxiosResponse<AuditLogEntry, any>>;
         /**
          * No description
          *
@@ -5385,11 +6969,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Generate Token From Refresh Token
          * @request POST:/api/refresh-token
          * @secure
-         * @response `200` `Token` Success
+         * @response `200` `Token` OK
          * @response `401` `ProblemDetails` Unauthorized
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getTokenFromRefreshToken: (data: RefreshTokenRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any, {}>>;
+        getTokenFromRefreshToken: (data: RefreshTokenRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any>>;
         /**
          * No description
          *
@@ -5398,10 +6982,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Token
          * @request POST:/api/token
          * @secure
-         * @response `200` `Token` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `AccountDeactivated` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getToken: (data: TokenRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any, {}>>;
+        getToken: (data: TokenRequest, params?: RequestParams) => Promise<AxiosResponse<AccountDeactivated, any>>;
         /**
          * No description
          *
@@ -5410,10 +6994,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Token From Challenge Code
          * @request POST:/api/token/code
          * @secure
-         * @response `200` `Token` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `AccountDeactivated` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getTokenFromChallengeCode: (data: TokenChallengeRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any, {}>>;
+        getTokenFromChallengeCode: (data: TokenChallengeRequest, params?: RequestParams) => Promise<AxiosResponse<AccountDeactivated, any>>;
         /**
          * No description
          *
@@ -5422,10 +7006,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get System Token
          * @request POST:/api/oauth2/token
          * @secure
-         * @response `200` `Token` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `Token` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getSystemToken: (data: SystemTokenRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any, {}>>;
+        getSystemToken: (data: SystemTokenRequest, params?: RequestParams) => Promise<AxiosResponse<Token, any>>;
         /**
          * No description
          *
@@ -5434,10 +7018,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get SSO Guid Token
          * @request POST:/api/token/sso
          * @secure
-         * @response `200` `SSOToken` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SSOToken` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getSsoToken: (data: SSOTokenRequest, params?: RequestParams) => Promise<AxiosResponse<SSOToken, any, {}>>;
+        getSsoToken: (data: SSOTokenRequest, params?: RequestParams) => Promise<AxiosResponse<SSOToken, any>>;
         /**
          * No description
          *
@@ -5447,9 +7031,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/logout
          * @secure
          * @response `204` `NoContentResult` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        logOut: (params?: RequestParams) => Promise<AxiosResponse<NoContentResult, any, {}>>;
+        logOut: (params?: RequestParams) => Promise<AxiosResponse<NoContentResult, any>>;
         /**
          * No description
          *
@@ -5458,7 +7042,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/branches
          * @secure
-         * @response `200` `GetBranchPaginated` Success
+         * @response `200` `GetBranchPaginated` OK
          */
         getBranches: (query?: {
             showAll?: boolean;
@@ -5468,7 +7052,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginated, any>>;
         /**
          * No description
          *
@@ -5477,10 +7061,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/branches
          * @secure
-         * @response `200` `GetBranch` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `GetBranch` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createBranch: (data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any, {}>>;
+        createBranch: (data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -5489,7 +7073,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/branches/search
          * @secure
-         * @response `200` `GetBranchPaginated` Success
+         * @response `200` `GetBranchPaginated` OK
          */
         searchBranches: (data: BranchSearchCriteria, query?: {
             /** @format int32 */
@@ -5498,7 +7082,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<GetBranchPaginated, any>>;
         /**
          * No description
          *
@@ -5507,9 +7091,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/branches/{branchId}
          * @secure
-         * @response `200` `GetBranch` Success
+         * @response `200` `GetBranch` OK
          */
-        getBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any, {}>>;
+        getBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -5518,10 +7102,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/branches/{branchId}
          * @secure
-         * @response `200` `GetBranch` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `GetBranch` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any, {}>>;
+        replaceBranch: (branchId: string, data: CreateBranchRequest, params?: RequestParams) => Promise<AxiosResponse<GetBranch, any>>;
         /**
          * No description
          *
@@ -5532,7 +7116,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5544,7 +7128,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `400` `ProblemDetails` Bad Request
          */
-        restoreBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        restoreBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5553,10 +7137,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Branch Site Configuration
          * @request POST:/api/branches/{branchId}/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createBranchSiteConfiguration: (branchId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        createBranchSiteConfiguration: (branchId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -5565,9 +7149,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Branch Site Configuration
          * @request GET:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfigurationWithInherited` Success
+         * @response `200` `SiteConfigurationWithInherited` OK
          */
-        getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any, {}>>;
+        getBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any>>;
         /**
          * No description
          *
@@ -5576,12 +7160,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace Branch Site Configuration
          * @request PUT:/api/branches/{branchId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         replaceBranchSiteConfiguration: (branchId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -5590,9 +7174,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Branch Loan Officers
          * @request GET:/api/branches/{branchId}/loan-officers
          * @secure
-         * @response `200` `LoanOfficerPublic` Success
+         * @response `200` `(LoanOfficerPublic)[]` OK
          */
-        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any, {}>>;
+        getLoanOfficersByBranch: (branchId: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic[], any>>;
         /**
          * No description
          *
@@ -5601,11 +7185,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/business-rules
          * @secure
-         * @response `200` `(BusinessRule)[]` Success
+         * @response `200` `(BusinessRule)[]` OK
          */
         getBusinessRules: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<BusinessRule[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BusinessRule[], any>>;
         /**
          * No description
          *
@@ -5614,10 +7198,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/business-rules
          * @secure
-         * @response `200` `BusinessRule` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `BusinessRule` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createBusinessRule: (data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any, {}>>;
+        createBusinessRule: (data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -5626,9 +7210,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/business-rules/{id}
          * @secure
-         * @response `200` `BusinessRule` Success
+         * @response `200` `BusinessRule` OK
          */
-        getBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any, {}>>;
+        getBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -5637,10 +7221,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/business-rules/{id}
          * @secure
-         * @response `200` `BusinessRule` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `BusinessRule` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any, {}>>;
+        replaceBusinessRule: (id: string, data: BusinessRuleRequest, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * No description
          *
@@ -5651,7 +7235,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5660,9 +7244,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Restore
          * @request POST:/api/business-rules/{id}/restore
          * @secure
-         * @response `200` `BusinessRule` Success
+         * @response `200` `BusinessRule` OK
          */
-        restoreBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any, {}>>;
+        restoreBusinessRule: (id: string, params?: RequestParams) => Promise<AxiosResponse<BusinessRule, any>>;
         /**
          * @description Returns closed loan counts per account within the specified date range, including POS vs non-POS breakdown and utilization ratios.
          *
@@ -5671,9 +7255,31 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Closed Loans Report
          * @request POST:/api/loans/reports/closed-loans
          * @secure
-         * @response `200` `ClosedLoansReport` Success
+         * @response `200` `ClosedLoansReport` OK
          */
-        getClosedLoansReport: (data: ClosedLoansReportRequest, params?: RequestParams) => Promise<AxiosResponse<ClosedLoansReport, any, {}>>;
+        getClosedLoansReport: (data: ClosedLoansReportRequest, params?: RequestParams) => Promise<AxiosResponse<ClosedLoansReport, any>>;
+        /**
+         * No description
+         *
+         * @tags ConsumerConnect
+         * @name GetConsumerConnectStatus
+         * @summary Get Consumer Connect association status for all borrowers on a loan
+         * @request GET:/api/loans/{loanId}/consumer-connect/status
+         * @secure
+         * @response `200` `(ConsumerConnectStatus)[]` OK
+         */
+        getConsumerConnectStatus: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<ConsumerConnectStatus[], any>>;
+        /**
+         * No description
+         *
+         * @tags ConsumerConnect
+         * @name RetryConsumerConnectAssociation
+         * @summary Manually retry Consumer Connect association for failed borrowers on a loan. Returns per-borrower results; check individual Success fields for partial failures.
+         * @request POST:/api/loans/{loanId}/consumer-connect/retry
+         * @secure
+         * @response `200` `(ConsumerConnectRetry)[]` OK
+         */
+        retryConsumerConnectAssociation: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<ConsumerConnectRetry[], any>>;
         /**
          * No description
          *
@@ -5682,7 +7288,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/corporates
          * @secure
-         * @response `200` `CorporatePaginated` Success
+         * @response `200` `CorporatePaginated` OK
          */
         getCorporates: (query?: {
             showAll?: boolean;
@@ -5692,7 +7298,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<CorporatePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<CorporatePaginated, any>>;
         /**
          * No description
          *
@@ -5701,10 +7307,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/corporates
          * @secure
-         * @response `200` `Corporate` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `Corporate` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createCorporate: (data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<Corporate, any, {}>>;
+        createCorporate: (data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<Corporate, any>>;
         /**
          * No description
          *
@@ -5713,7 +7319,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/corporates/search
          * @secure
-         * @response `200` `CorporatePaginated` Success
+         * @response `200` `CorporatePaginated` OK
          */
         searchCorporate: (data: CorporateSearchCriteria, query?: {
             /** @format int32 */
@@ -5722,7 +7328,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<CorporatePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<CorporatePaginated, any>>;
         /**
          * No description
          *
@@ -5731,9 +7337,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/corporates/{id}
          * @secure
-         * @response `200` `Corporate` Success
+         * @response `200` `Corporate` OK
          */
-        getCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<Corporate, any, {}>>;
+        getCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<Corporate, any>>;
         /**
          * No description
          *
@@ -5742,10 +7348,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/corporates/{id}
          * @secure
-         * @response `200` `Corporate` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `Corporate` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<Corporate, any, {}>>;
+        replaceCorporate: (id: string, data: CorporateRequest, params?: RequestParams) => Promise<AxiosResponse<Corporate, any>>;
         /**
          * No description
          *
@@ -5756,7 +7362,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5767,7 +7373,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        restoreCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        restoreCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5776,10 +7382,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Site Configuration
          * @request POST:/api/corporates/{corporateId}/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createCorporateSiteConfiguration: (corporateId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        createCorporateSiteConfiguration: (corporateId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -5788,9 +7394,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Site Configuration
          * @request GET:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfigurationWithInherited` Success
+         * @response `200` `SiteConfigurationWithInherited` OK
          */
-        getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any, {}>>;
+        getCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any>>;
         /**
          * No description
          *
@@ -5799,12 +7405,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace Site Configuration
          * @request PUT:/api/corporates/{corporateId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         replaceCorporateSiteConfiguration: (corporateId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -5813,9 +7419,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Branches
          * @request GET:/api/corporates/{id}/branches
          * @secure
-         * @response `200` `(BranchReduced)[]` Success
+         * @response `200` `(BranchReduced)[]` OK
          */
-        getBranchesByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchReduced[], any, {}>>;
+        getBranchesByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchReduced[], any>>;
         /**
          * No description
          *
@@ -5824,9 +7430,99 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan Officers
          * @request GET:/api/corporates/{id}/loan-officers
          * @secure
-         * @response `200` `LoanOfficerPublic` Success
+         * @response `200` `(LoanOfficerPublic)[]` OK
          */
-        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic, any, {}>>;
+        getLoanOfficersByCorporate: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanOfficerPublic[], any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name GetCustomFieldDefinitions
+         * @summary Get all custom field definitions by entity type
+         * @request GET:/api/custom-field-definitions
+         * @secure
+         * @response `200` `(CustomFieldDefinition)[]` OK
+         */
+        getCustomFieldDefinitions: (query?: {
+            entityType?: GetCustomFieldDefinitionsParamsEntityTypeEnum;
+        }, params?: RequestParams) => Promise<AxiosResponse<CustomFieldDefinition[], any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name CreateCustomFieldDefinition
+         * @summary Create a custom field definition
+         * @request POST:/api/custom-field-definitions
+         * @secure
+         * @response `201` `CustomFieldDefinition` Created
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        createCustomFieldDefinition: (data: CreateCustomFieldDefinitionRequest, params?: RequestParams) => Promise<AxiosResponse<CustomFieldDefinition, any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name GetCustomFieldDefinitionById
+         * @summary Get a custom field definition by ID
+         * @request GET:/api/custom-field-definitions/{id}
+         * @secure
+         * @response `200` `CustomFieldDefinition` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getCustomFieldDefinitionById: (id: string, params?: RequestParams) => Promise<AxiosResponse<CustomFieldDefinition, any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name UpdateCustomFieldDefinition
+         * @summary Update a custom field definition
+         * @request PUT:/api/custom-field-definitions/{id}
+         * @secure
+         * @response `200` `CustomFieldDefinition` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        updateCustomFieldDefinition: (id: string, data: UpdateCustomFieldDefinitionRequest, params?: RequestParams) => Promise<AxiosResponse<CustomFieldDefinition, any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name DeleteCustomFieldDefinition
+         * @summary Delete a custom field definition
+         * @request DELETE:/api/custom-field-definitions/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         */
+        deleteCustomFieldDefinition: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name DisableCustomFieldDefinition
+         * @summary Disable a custom field definition
+         * @request POST:/api/custom-field-definitions/{id}/disable
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        disableCustomFieldDefinition: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags CustomFieldDefinitions
+         * @name EnableCustomFieldDefinition
+         * @summary Enable a custom field definition
+         * @request POST:/api/custom-field-definitions/{id}/enable
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        enableCustomFieldDefinition: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5835,7 +7531,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/devices
          * @secure
-         * @response `200` `DevicePaginated` Success
+         * @response `200` `DevicePaginated` OK
          */
         getDevices: (query?: {
             /** @format uuid */
@@ -5846,7 +7542,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<DevicePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DevicePaginated, any>>;
         /**
          * No description
          *
@@ -5855,9 +7551,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/devices/{id}
          * @secure
-         * @response `200` `Device` Success
+         * @response `200` `Device` OK
          */
-        getDevice: (id: string, params?: RequestParams) => Promise<AxiosResponse<Device, any, {}>>;
+        getDevice: (id: string, params?: RequestParams) => Promise<AxiosResponse<Device, any>>;
         /**
          * No description
          *
@@ -5866,9 +7562,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update
          * @request PUT:/api/devices/{id}
          * @secure
-         * @response `200` `Device` Success
+         * @response `200` `Device` OK
          */
-        updateDevice: (id: string, data: DeviceRequest, params?: RequestParams) => Promise<AxiosResponse<Device, any, {}>>;
+        updateDevice: (id: string, data: DeviceRequest, params?: RequestParams) => Promise<AxiosResponse<Device, any>>;
         /**
          * No description
          *
@@ -5877,9 +7573,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by Serial Number
          * @request GET:/api/devices/{sn}/profile
          * @secure
-         * @response `200` `DeviceMDM` Success
+         * @response `200` `DeviceMDM` OK
          */
-        getDeviceBySerialNumber: (sn: string, params?: RequestParams) => Promise<AxiosResponse<DeviceMDM, any, {}>>;
+        getDeviceBySerialNumber: (sn: string, params?: RequestParams) => Promise<AxiosResponse<DeviceMDM, any>>;
         /**
          * No description
          *
@@ -5888,9 +7584,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Action by Serial Number
          * @request POST:/api/devices/{sn}/actions/{actionName}
          * @secure
-         * @response `200` `Action` Success
+         * @response `200` `Action` OK
          */
-        createDeviceActionBySerialNumber: (sn: string, actionName: string, params?: RequestParams) => Promise<AxiosResponse<Action, any, {}>>;
+        createDeviceActionBySerialNumber: (sn: string, actionName: string, params?: RequestParams) => Promise<AxiosResponse<Action, any>>;
         /**
          * No description
          *
@@ -5899,12 +7595,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/document-buckets
          * @secure
-         * @response `200` `(string)[]` Success
+         * @response `200` `(string)[]` OK
          */
         getDocumentBuckets: (query?: {
             /** @default false */
             includeSystemBuckets?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<string[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
         /**
          * No description
          *
@@ -5913,11 +7609,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/document-templates
          * @secure
-         * @response `200` `(DocumentTemplateBase)[]` Success
+         * @response `200` `(DocumentTemplateBase)[]` OK
          */
         getDocumentTemplates: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase[], any>>;
         /**
          * No description
          *
@@ -5928,9 +7624,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `DocumentTemplateBase` Created
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createDocumentTemplate: (data: CreateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase, any, {}>>;
+        createDocumentTemplate: (data: CreateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase, any>>;
         /**
          * No description
          *
@@ -5939,14 +7635,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Custom
          * @request GET:/api/document-templates/{type}
          * @secure
-         * @response `200` `(DocumentTemplateBase)[]` Success
+         * @response `200` `(DocumentTemplateBase)[]` OK
          */
         getCustomDocumentTemplates: (type: string, query?: {
             /** @default false */
             showAll?: boolean;
             /** @default true */
             publishedOnly?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase[], any>>;
         /**
          * No description
          *
@@ -5955,10 +7651,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/document-templates/{id}
          * @secure
-         * @response `200` `DocumentTemplate` Success
+         * @response `200` `DocumentTemplate` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplate, any, {}>>;
+        getDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplate, any>>;
         /**
          * No description
          *
@@ -5967,12 +7663,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/document-templates/{id}
          * @secure
-         * @response `200` `DocumentTemplateBase` Success
+         * @response `200` `DocumentTemplateBase` OK
          * @response `401` `ProblemDetails` Unauthorized
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase, any, {}>>;
+        replaceDocumentTemplate: (id: string, data: UpdateDocumentTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateBase, any>>;
         /**
          * No description
          *
@@ -5985,7 +7681,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `401` `ProblemDetails` Unauthorized
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -5998,7 +7694,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `401` `ProblemDetails` Unauthorized
          * @response `404` `ProblemDetails` Not Found
          */
-        restoreDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        restoreDocumentTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6007,9 +7703,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/document-templates/{documentId}/versions
          * @secure
-         * @response `200` `(DocumentTemplateVersion)[]` Success
+         * @response `200` `(DocumentTemplateVersion)[]` OK
          */
-        getDocumentTemplateVersions: (documentId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion[], any, {}>>;
+        getDocumentTemplateVersions: (documentId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion[], any>>;
         /**
          * No description
          *
@@ -6018,9 +7714,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/document-templates/{documentId}/versions
          * @secure
-         * @response `200` `DocumentTemplateVersion` Success
+         * @response `200` `DocumentTemplateVersion` OK
          */
-        createDocumentTemplateVersion: (documentId: string, data: DocumentTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any, {}>>;
+        createDocumentTemplateVersion: (documentId: string, data: DocumentTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any>>;
         /**
          * No description
          *
@@ -6029,9 +7725,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/document-templates/{documentId}/versions/{id}
          * @secure
-         * @response `200` `DocumentTemplateVersion` Success
+         * @response `200` `DocumentTemplateVersion` OK
          */
-        getDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any, {}>>;
+        getDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any>>;
         /**
          * No description
          *
@@ -6040,9 +7736,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/document-templates/{documentId}/versions/{id}
          * @secure
-         * @response `200` `DocumentTemplateVersion` Success
+         * @response `200` `DocumentTemplateVersion` OK
          */
-        replaceDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any, {}>>;
+        replaceDocumentTemplateVersion: (documentId: string, id: string, data: DocumentTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any>>;
         /**
          * No description
          *
@@ -6051,9 +7747,85 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Delete
          * @request DELETE:/api/document-templates/{documentId}/versions/{id}
          * @secure
-         * @response `200` `DocumentTemplateVersion` Success
+         * @response `200` `DocumentTemplateVersion` OK
          */
-        deleteDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any, {}>>;
+        deleteDocumentTemplateVersion: (documentId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<DocumentTemplateVersion, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Field Mappings
+         * @name GetEncompassCustomFieldMapping
+         * @summary Get Encompass field mapping for a custom field definition
+         * @request GET:/api/los/encompass/custom-field-mappings/{definitionId}
+         * @secure
+         * @response `200` `EncompassCustomFieldMapping` OK
+         * @response `404` `void` Not Found
+         */
+        getEncompassCustomFieldMapping: (definitionId: string, params?: RequestParams) => Promise<AxiosResponse<EncompassCustomFieldMapping, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Field Mappings
+         * @name AddEncompassCustomFieldMapping
+         * @summary Add an Encompass field mapping to a custom field definition
+         * @request POST:/api/los/encompass/custom-field-mappings/{definitionId}
+         * @secure
+         * @response `201` `EncompassCustomFieldMapping` Created
+         * @response `400` `void` Bad Request
+         * @response `404` `void` Not Found
+         * @response `409` `void` Conflict
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        addEncompassCustomFieldMapping: (definitionId: string, data: EncompassCustomFieldMappingRequest, params?: RequestParams) => Promise<AxiosResponse<EncompassCustomFieldMapping, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Field Mappings
+         * @name DeleteEncompassCustomFieldMapping
+         * @summary Delete the Encompass field mapping (only if no values exist)
+         * @request DELETE:/api/los/encompass/custom-field-mappings/{definitionId}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `void` Not Found
+         * @response `409` `void` Conflict
+         */
+        deleteEncompassCustomFieldMapping: (definitionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Field Mappings
+         * @name DisableEncompassCustomFieldMapping
+         * @summary Disable the Encompass field mapping (stops sync)
+         * @request POST:/api/los/encompass/custom-field-mappings/{definitionId}/disable
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `void` Not Found
+         */
+        disableEncompassCustomFieldMapping: (definitionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Field Mappings
+         * @name EnableEncompassCustomFieldMapping
+         * @summary Re-enable the Encompass field mapping (resumes sync)
+         * @request POST:/api/los/encompass/custom-field-mappings/{definitionId}/enable
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `void` Not Found
+         */
+        enableEncompassCustomFieldMapping: (definitionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Custom Fields
+         * @name GetEncompassFields
+         * @summary Fetch available Encompass custom fields with type metadata
+         * @request GET:/api/los/encompass/custom-fields
+         * @secure
+         * @response `200` `(EncompassFieldListItem)[]` OK
+         * @response `502` `ProblemDetails` Bad Gateway
+         */
+        getEncompassFields: (params?: RequestParams) => Promise<AxiosResponse<EncompassFieldListItem[], any>>;
         /**
          * No description
          *
@@ -6061,13 +7833,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name GetUserPackages
          * @request GET:/api/los/encompass/eclose/packages
          * @secure
-         * @response `200` `EncompassPackageList` Success
+         * @response `200` `EncompassPackageList` OK
          * @response `400` `EncompassError` Bad Request
          * @response `401` `EncompassError` Unauthorized
-         * @response `500` `EncompassError` Server Error
+         * @response `500` `EncompassError` Internal Server Error
          */
         getUserPackages: (query?: {
-            /** @default "all" */
             status?: string;
             /**
              * @format int32
@@ -6079,7 +7850,51 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
              * @default 20
              */
             pageSize?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<EncompassPackageList, any, {}>>;
+            /** @format uuid */
+            loanId?: string;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<EncompassPackageList, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Packages
+         * @name GetLoanPackages
+         * @request GET:/api/los/encompass/eclose/loans/{loanId}/packages
+         * @secure
+         * @response `200` `EncompassPackageList` OK
+         * @response `400` `EncompassError` Bad Request
+         * @response `401` `EncompassError` Unauthorized
+         * @response `403` `EncompassError` Forbidden
+         * @response `500` `EncompassError` Internal Server Error
+         */
+        getLoanPackages: (loanId: string, query?: {
+            status?: string;
+            /**
+             * @format int32
+             * @default 1
+             */
+            page?: number;
+            /**
+             * @format int32
+             * @default 20
+             */
+            pageSize?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<EncompassPackageList, any>>;
+        /**
+         * No description
+         *
+         * @tags Encompass Recipients
+         * @name GetUserRecipients
+         * @request GET:/api/los/encompass/eclose/recipients
+         * @secure
+         * @response `200` `(EncompassRecipientItem)[]` OK
+         * @response `401` `EncompassError` Unauthorized
+         * @response `500` `EncompassError` Internal Server Error
+         */
+        getUserRecipients: (params?: RequestParams) => Promise<AxiosResponse<EncompassRecipientItem[], any>>;
         /**
          * No description
          *
@@ -6087,14 +7902,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name CreateEncompassSession
          * @request POST:/api/los/encompass/eclose/sessions
          * @secure
-         * @response `200` `CreateSession` Success
+         * @response `200` `CreateSession` OK
          * @response `400` `EncompassError` Bad Request
          * @response `401` `EncompassError` Unauthorized
          * @response `403` `EncompassError` Forbidden
          * @response `404` `EncompassError` Not Found
-         * @response `500` `EncompassError` Server Error
+         * @response `500` `EncompassError` Internal Server Error
          */
-        createEncompassSession: (data: CreateSessionRequest, params?: RequestParams) => Promise<AxiosResponse<CreateSession, any, {}>>;
+        createEncompassSession: (data: CreateSessionRequest, params?: RequestParams) => Promise<AxiosResponse<CreateSession, any>>;
         /**
          * No description
          *
@@ -6103,7 +7918,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/files
          * @secure
-         * @response `200` `FilePaginated` Success
+         * @response `200` `FilePaginated` OK
          */
         getAllFiles: (query?: {
             /** @format int32 */
@@ -6114,7 +7929,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             sortDirection?: string;
             /** @default false */
             includeDeleted?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginated, any>>;
         /**
          * No description
          *
@@ -6124,7 +7939,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/files
          * @secure
          * @response `201` `File` Created
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         uploadFile: (data: {
             name?: string;
@@ -6132,7 +7947,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             file?: File;
             isPublic?: boolean;
             bucket?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -6143,7 +7958,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `File` Created
          */
-        getFileById: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        getFileById: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -6152,10 +7967,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/files/{id}
          * @secure
-         * @response `200` `string` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `string` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        replaceFile: (id: string, data: FileRequest, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6166,7 +7981,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteFile: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteFile: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6175,7 +7990,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/files/search
          * @secure
-         * @response `200` `FilePaginated` Success
+         * @response `200` `FilePaginated` OK
          */
         searchFiles: (data: FileSearchCriteria, query?: {
             /** @format int32 */
@@ -6184,7 +7999,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FilePaginated, any>>;
         /**
          * No description
          *
@@ -6193,11 +8008,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/forms
          * @secure
-         * @response `200` `(AdminAccessGetForms)[]` Success
+         * @response `200` `(AdminAccessGetForms)[]` OK
          */
         getForms: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any>>;
         /**
          * No description
          *
@@ -6207,9 +8022,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/forms
          * @secure
          * @response `201` `Form` Created
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<Form, any, {}>>;
+        createForm: (data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<Form, any>>;
         /**
          * No description
          *
@@ -6218,9 +8033,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/forms/{id}
          * @secure
-         * @response `200` `Form` Success
+         * @response `200` `Form` OK
          */
-        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<Form, any, {}>>;
+        getForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<Form, any>>;
         /**
          * No description
          *
@@ -6229,10 +8044,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/forms/{id}
          * @secure
-         * @response `200` `Form` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `Form` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<Form, any, {}>>;
+        replaceForm: (id: string, data: FormRequest, params?: RequestParams) => Promise<AxiosResponse<Form, any>>;
         /**
          * No description
          *
@@ -6243,7 +8058,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6252,9 +8067,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Restore
          * @request POST:/api/forms/{id}/restore
          * @secure
-         * @response `200` `Form` Success
+         * @response `200` `Form` OK
          */
-        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<Form, any, {}>>;
+        restoreForm: (id: string, params?: RequestParams) => Promise<AxiosResponse<Form, any>>;
         /**
          * No description
          *
@@ -6263,13 +8078,13 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Add
          * @request POST:/api/form-submissions/{formSubmissionId}/files
          * @secure
-         * @response `200` `FormSubmissionFile` Success
+         * @response `200` `FormSubmissionFile` OK
          */
         addFormSubmissionFile: (formSubmissionId: string, data: {
             /** @format binary */
             file?: File;
             name?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionFile, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionFile, any>>;
         /**
          * No description
          *
@@ -6280,7 +8095,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6289,12 +8104,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Download by Id
          * @request GET:/api/form-submissions/{formSubmissionId}/files/{formSubmissionFileId}/download
          * @secure
-         * @response `200` `FileWithBytes` Success
+         * @response `200` `FileWithBytes` OK
          */
         downloadFormSubmissionFile: (formSubmissionFileId: string, formSubmissionId: string, query?: {
             /** @format uuid */
             siteConfigurationId?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FileWithBytes, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FileWithBytes, any>>;
         /**
          * No description
          *
@@ -6303,7 +8118,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/form-submissions
          * @secure
-         * @response `200` `FormSubmissionPaginated` Success
+         * @response `200` `FormSubmissionPaginated` OK
          */
         getFormSubmissions: (query?: {
             /** @format int32 */
@@ -6312,7 +8127,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginated, any>>;
         /**
          * No description
          *
@@ -6325,7 +8140,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          */
         createFormSubmission: (data: FormSubmissionRequest, query?: {
             formID?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -6334,9 +8149,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/form-submissions/{id}
          * @secure
-         * @response `200` `FormSubmission` Success
+         * @response `200` `FormSubmission` OK
          */
-        getFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any, {}>>;
+        getFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -6345,9 +8160,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/form-submissions/{id}
          * @secure
-         * @response `200` `FormSubmission` Success
+         * @response `200` `FormSubmission` OK
          */
-        replaceFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any, {}>>;
+        replaceFormSubmission: (id: string, data: FormSubmissionRequest, params?: RequestParams) => Promise<AxiosResponse<FormSubmission, any>>;
         /**
          * No description
          *
@@ -6358,7 +8173,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteFormSubmission: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6367,7 +8182,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/form-submissions/search
          * @secure
-         * @response `200` `FormSubmissionPaginated` Success
+         * @response `200` `FormSubmissionPaginated` OK
          */
         searchFormSubmissions: (data: FormSubmissionSearchCriteria, query?: {
             /** @format int32 */
@@ -6376,7 +8191,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<FormSubmissionPaginated, any>>;
         /**
          * No description
          *
@@ -6385,9 +8200,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/forms/{formId}/versions
          * @secure
-         * @response `200` `(FormVersion)[]` Success
+         * @response `200` `(FormVersion)[]` OK
          */
-        getFormVersions: (formId: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion[], any, {}>>;
+        getFormVersions: (formId: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion[], any>>;
         /**
          * No description
          *
@@ -6396,9 +8211,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/forms/{formId}/versions
          * @secure
-         * @response `200` `FormVersion` Success
+         * @response `200` `FormVersion` OK
          */
-        createFormVersion: (formId: string, data: FormVersionRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any, {}>>;
+        createFormVersion: (formId: string, data: FormVersionRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -6407,9 +8222,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/forms/{formId}/versions/{id}
          * @secure
-         * @response `200` `FormVersion` Success
+         * @response `200` `FormVersion` OK
          */
-        getFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any, {}>>;
+        getFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -6418,9 +8233,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/forms/{formId}/versions/{id}
          * @secure
-         * @response `200` `FormVersion` Success
+         * @response `200` `FormVersion` OK
          */
-        replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any, {}>>;
+        replaceFormVersion: (formId: string, id: string, data: FormVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
         /**
          * No description
          *
@@ -6429,9 +8244,20 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Delete
          * @request DELETE:/api/forms/{formId}/versions/{id}
          * @secure
-         * @response `200` `FormVersion` Success
+         * @response `200` `FormVersion` OK
          */
-        deleteFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any, {}>>;
+        deleteFormVersion: (formId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<FormVersion, any>>;
+        /**
+         * No description
+         *
+         * @tags IntegrationSettings
+         * @name GetIntegrationSettings
+         * @summary Get Integration Settings
+         * @request GET:/api/integrations/settings
+         * @secure
+         * @response `200` `IntegrationSettings` OK
+         */
+        getIntegrationSettings: (params?: RequestParams) => Promise<AxiosResponse<IntegrationSettings, any>>;
         /**
          * No description
          *
@@ -6440,9 +8266,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/los/loan/application/{loanID}
          * @secure
-         * @response `200` `Record<string,any>` Success
+         * @response `200` `Record<string,any>` OK
          */
-        getLoanData: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Record<string, any>, any, {}>>;
+        getLoanData: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Record<string, any>, any>>;
         /**
          * No description
          *
@@ -6452,10 +8278,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PATCH:/api/los/loan/application/{loanID}
          * @deprecated
          * @secure
-         * @response `200` `string` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `string` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        updateLoanConsentAndCustomFieldsObsolete: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        updateLoanConsentAndCustomFieldsObsolete: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6464,9 +8290,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Report
          * @request POST:/api/los/loan/reports
          * @secure
-         * @response `200` `GetReport` Success
+         * @response `200` `GetReport` OK
          */
-        getLoansReport: (data: GetReportRequest, params?: RequestParams) => Promise<AxiosResponse<GetReport, any, {}>>;
+        getLoansReport: (data: GetReportRequest, params?: RequestParams) => Promise<AxiosResponse<GetReport, any>>;
         /**
          * No description
          *
@@ -6476,14 +8302,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/los/loan/application
          * @deprecated
          * @secure
-         * @response `200` `string` Success
-         * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
+         * @response `200` `string` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         * @response `423` `UnprocessableEntity` Locked
          */
         createLoan: (data: any, query?: {
             /** @default false */
             isPatch?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6492,14 +8318,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Loan Returning Internal Loan ID
          * @request POST:/api/los/loan/application/internal
          * @secure
-         * @response `200` `string` Success
-         * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
+         * @response `200` `string` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         * @response `423` `UnprocessableEntity` Locked
          */
         createLoanInternal: (data: any, query?: {
             /** @default false */
             isPatch?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6508,10 +8334,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update Loan Custom Fields
          * @request PATCH:/api/los/loan/application/{loanID}/custom-fields
          * @secure
-         * @response `200` `string` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `string` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        updateLoanCustomFields: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        updateLoanCustomFields: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6520,11 +8346,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update Loan Consent and Custom Fields
          * @request PATCH:/api/los/loan/application/{loanID}/consent
          * @secure
-         * @response `200` `string` Success
+         * @response `200` `string` OK
          * @response `202` `string` Accepted
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        updateLoanConsent: (loanId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6533,9 +8359,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Documents
          * @request GET:/api/los/loan/tasks/documents/{loanID}
          * @secure
-         * @response `200` `(DocumentData)[]` Success
+         * @response `200` `(DocumentData)[]` OK
          */
-        getTaskDocumentsByLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentData[], any, {}>>;
+        getTaskDocumentsByLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentData[], any>>;
         /**
          * No description
          *
@@ -6544,12 +8370,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Document Content
          * @request GET:/api/los/loan/{loanID}/document/{documentId}/content
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          */
         getLoanDocumentContent: (loanId: string, documentId: string, query?: {
             /** @default "base64" */
             contentType?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6560,7 +8386,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        getLoanRecipients: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        getLoanRecipients: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6569,9 +8395,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Preliminary Conditions
          * @request GET:/api/los/loan/{loanID}/conditions/preliminary
          * @secure
-         * @response `200` `(PreliminaryCondition)[]` Success
+         * @response `200` `(PreliminaryCondition)[]` OK
          */
-        getPreliminaryConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<PreliminaryCondition[], any, {}>>;
+        getPreliminaryConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<PreliminaryCondition[], any>>;
         /**
          * No description
          *
@@ -6580,9 +8406,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Underwriting Conditions
          * @request GET:/api/los/loan/{loanID}/conditions/underwriting
          * @secure
-         * @response `200` `(UnderwritingCondition)[]` Success
+         * @response `200` `(UnderwritingCondition)[]` OK
          */
-        getUnderwritingConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UnderwritingCondition[], any, {}>>;
+        getUnderwritingConditionsForLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UnderwritingCondition[], any>>;
         /**
          * No description
          *
@@ -6591,21 +8417,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Embedded Signing Link
          * @request POST:/api/los/loan/embeddedsigning/{envelopeId}/{userName}/{email}
          * @secure
-         * @response `200` `string` Success
+         * @response `200` `string` OK
          */
-        getLoanEmbeddedSigningLink: (envelopeId: string, userName: string, email: string, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
-        /**
-         * No description
-         *
-         * @tags LegacyLoan
-         * @name CreateLegacyLoanDocument
-         * @summary Create Document
-         * @request POST:/api/los/loan/generatedocument
-         * @deprecated
-         * @secure
-         * @response `200` `DocumentDataRequest` Success
-         */
-        createLegacyLoanDocument: (data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any, {}>>;
+        getLoanEmbeddedSigningLink: (envelopeId: string, userName: string, email: string, params?: RequestParams) => Promise<AxiosResponse<string, any>>;
         /**
          * No description
          *
@@ -6614,15 +8428,15 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Edit Draft for Loan
          * @request PUT:/api/los/loan/{loanID}/edit
          * @secure
-         * @response `200` `Draft` Success
+         * @response `200` `Draft` OK
          * @response `400` `ProblemDetails` Bad Request
          * @response `404` `ProblemDetails` Not Found
-         * @response `423` `ProblemDetails` Client Error
+         * @response `423` `ProblemDetails` Locked
          */
         createEditDraftForLoan: (loanId: string, query?: {
             /** @default false */
             isCoBorrower?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<Draft, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -6631,14 +8445,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Add
          * @request POST:/api/listings/{listingId}/files
          * @secure
-         * @response `200` `ListingFile` Success
+         * @response `200` `ListingFile` OK
          */
         addListingFile: (listingId: string, data: {
             /** @format binary */
             file?: File;
             /** @format int32 */
             weight?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<ListingFile, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingFile, any>>;
         /**
          * No description
          *
@@ -6647,9 +8461,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update
          * @request PATCH:/api/listings/{listingId}/files
          * @secure
-         * @response `200` `ListingFile` Success
+         * @response `200` `ListingFile` OK
          */
-        updateListingFiles: (listingId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<ListingFile, any, {}>>;
+        updateListingFiles: (listingId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<ListingFile, any>>;
         /**
          * No description
          *
@@ -6660,7 +8474,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `Listing` No Content
          */
-        removeListingFile: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        removeListingFile: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6669,7 +8483,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Add
          * @request POST:/api/listings/{listingId}/photos
          * @secure
-         * @response `200` `ListingPhoto` Success
+         * @response `200` `ListingPhoto` OK
          */
         addListingPhoto: (listingId: string, data: {
             name?: string;
@@ -6678,7 +8492,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             file?: File;
             /** @format int32 */
             weight?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<ListingPhoto, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPhoto, any>>;
         /**
          * No description
          *
@@ -6687,9 +8501,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update
          * @request PATCH:/api/listings/{listingId}/photos
          * @secure
-         * @response `200` `(ListingPhoto)[]` Success
+         * @response `200` `(ListingPhoto)[]` OK
          */
-        updateListingPhotos: (listingId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<ListingPhoto[], any, {}>>;
+        updateListingPhotos: (listingId: string, data: JsonPatchDocument, params?: RequestParams) => Promise<AxiosResponse<ListingPhoto[], any>>;
         /**
          * No description
          *
@@ -6700,7 +8514,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `Listing` No Content
          */
-        removeListingPhoto: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        removeListingPhoto: (listingId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6709,7 +8523,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/listings
          * @secure
-         * @response `200` `ListingPaginated` Success
+         * @response `200` `ListingPaginated` OK
          */
         getListings: (query?: {
             /** @format int32 */
@@ -6718,7 +8532,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginated, any>>;
         /**
          * No description
          *
@@ -6729,7 +8543,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `Listing` Created
          */
-        createListing: (data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        createListing: (data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6738,9 +8552,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by Slug
          * @request GET:/api/listings/slug/{slug}
          * @secure
-         * @response `200` `Listing` Success
+         * @response `200` `Listing` OK
          */
-        getListingBySlug: (slug: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        getListingBySlug: (slug: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6749,9 +8563,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/listings/{id}
          * @secure
-         * @response `200` `Listing` Success
+         * @response `200` `Listing` OK
          */
-        getListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        getListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6760,9 +8574,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/listings/{id}
          * @secure
-         * @response `200` `Listing` Success
+         * @response `200` `Listing` OK
          */
-        replaceListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any, {}>>;
+        replaceListing: (id: string, data: ListingRequest, params?: RequestParams) => Promise<AxiosResponse<Listing, any>>;
         /**
          * No description
          *
@@ -6773,7 +8587,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteListing: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6782,7 +8596,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/listings/search
          * @secure
-         * @response `200` `ListingPaginated` Success
+         * @response `200` `ListingPaginated` OK
          */
         searchListings: (data: ListingSearchCriteria, query?: {
             /** @format int32 */
@@ -6791,7 +8605,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<ListingPaginated, any>>;
         /**
          * No description
          *
@@ -6800,12 +8614,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update Background Image
          * @request PUT:/api/listings/{id}/background-image
          * @secure
-         * @response `200` `File` Success
+         * @response `200` `File` OK
          */
         updateListingBackgroundImage: (id: string, data: {
             /** @format binary */
             file?: File;
-        }, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -6816,7 +8630,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteListingBackgroundImage: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteListingBackgroundImage: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6825,9 +8639,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Open House Flyer
          * @request GET:/api/listings/{id}/open-house-flyer
          * @secure
-         * @response `200` `File` Success
+         * @response `200` `File` OK
          */
-        getListingOpenHouseFlyer: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        getListingOpenHouseFlyer: (id: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -6836,9 +8650,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get
          * @request GET:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
-         * @response `200` `RunLOCalculation` Success
+         * @response `200` `RunLOCalculation` OK
          */
-        getLoanCalculator: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculation, any, {}>>;
+        getLoanCalculator: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculation, any>>;
         /**
          * No description
          *
@@ -6847,11 +8661,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Run
          * @request POST:/api/loans/{loanID}/calculators/loan-calculator
          * @secure
-         * @response `200` `RunLOCalculation` Success
-         * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
+         * @response `200` `RunLOCalculation` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         * @response `423` `UnprocessableEntity` Locked
          */
-        runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculation, any, {}>>;
+        runLoanCalculator: (loanId: string, data: RunLOCalculationRequest, params?: RequestParams) => Promise<AxiosResponse<RunLOCalculation, any>>;
         /**
          * No description
          *
@@ -6860,9 +8674,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/loans/{loanID}/loan-comparison
          * @secure
-         * @response `200` `LoanComparison` Success
+         * @response `200` `LoanComparison` OK
          */
-        getLoanComparisons: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<LoanComparison, any, {}>>;
+        getLoanComparisons: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<LoanComparison, any>>;
         /**
          * No description
          *
@@ -6872,10 +8686,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/loan-comparison/{index}
          * @secure
          * @response `201` `LoanComparisonScenario` Created
-         * @response `422` `UnprocessableEntity` Client Error
-         * @response `423` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         * @response `423` `UnprocessableEntity` Locked
          */
-        createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonScenario, any, {}>>;
+        createLoanComparison: (loanId: string, index: number, data: LoanComparisonScenario, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonScenario, any>>;
         /**
          * No description
          *
@@ -6886,7 +8700,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteLoanComparison: (loanId: string, index: number, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteLoanComparison: (loanId: string, index: number, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6896,9 +8710,72 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/loans/{loanID}/loan-comparison/pdf
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        createLoanComparisonPdf: (loanId: string, data: PostLoanComparisonPdfRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanConsents
+         * @name ResyncLoanConsents
+         * @summary Resync loan consents to LOS
+         * @request POST:/api/loans/{loanId}/consents/resync
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        resyncLoanConsents: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanCustomFieldValues
+         * @name GetLoanCustomFieldValues
+         * @summary Get all custom field values for a loan
+         * @request GET:/api/loans/{loanId}/custom-fields
+         * @secure
+         * @response `200` `(CustomFieldValue)[]` OK
+         */
+        getLoanCustomFieldValues: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<CustomFieldValue[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanCustomFieldValues
+         * @name BulkSetLoanCustomFieldValues
+         * @summary Bulk set custom field values for a loan
+         * @request PUT:/api/loans/{loanId}/custom-fields
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        bulkSetLoanCustomFieldValues: (loanId: string, data: SetCustomFieldValueRequest[], params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanCustomFieldValues
+         * @name SetLoanCustomFieldValue
+         * @summary Set a single custom field value
+         * @request PUT:/api/loans/{loanId}/custom-fields/{definitionId}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        setLoanCustomFieldValue: (loanId: string, definitionId: string, data: SetSingleCustomFieldValueRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanCustomFieldValues
+         * @name DeleteLoanCustomFieldValue
+         * @summary Remove a custom field value
+         * @request DELETE:/api/loans/{loanId}/custom-fields/{definitionId}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deleteLoanCustomFieldValue: (loanId: string, definitionId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -6907,9 +8784,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/loans/{loanId}/documents/buckets
          * @secure
-         * @response `200` `(string)[]` Success
+         * @response `200` `(string)[]` OK
          */
-        getLoanDocumentBuckets: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<string[], any, {}>>;
+        getLoanDocumentBuckets: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
         /**
          * No description
          *
@@ -6920,7 +8797,109 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `(string)[]` Created
          */
-        createLoanDocumentBuckets: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<string[], any, {}>>;
+        createLoanDocumentBuckets: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<string[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name GetAllLoanDocumentFolders
+         * @summary Get all loan document folders for the current account
+         * @request GET:/api/loan-document-folders
+         * @secure
+         * @response `200` `(LoanDocumentFolder)[]` OK
+         */
+        getAllLoanDocumentFolders: (params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name CreateLoanDocumentFolder
+         * @summary Create a loan document folder
+         * @request POST:/api/loan-document-folders
+         * @secure
+         * @response `201` `LoanDocumentFolder` Created
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        createLoanDocumentFolder: (data: CreateLoanDocumentFolderRequest, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name GetLoanDocumentFolderById
+         * @summary Get a loan document folder by ID
+         * @request GET:/api/loan-document-folders/{id}
+         * @secure
+         * @response `200` `LoanDocumentFolder` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getLoanDocumentFolderById: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name UpdateLoanDocumentFolder
+         * @summary Update a loan document folder. Blocked when folder has ever been referenced, except for permission edits on the system-default Unassigned folder.
+         * @request PUT:/api/loan-document-folders/{id}
+         * @secure
+         * @response `200` `LoanDocumentFolder` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        updateLoanDocumentFolder: (id: string, data: UpdateLoanDocumentFolderRequest, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolder, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name DeleteLoanDocumentFolder
+         * @summary Delete a loan document folder. Allowed only when the folder has never been referenced and is not the system-default Unassigned folder.
+         * @request DELETE:/api/loan-document-folders/{id}
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `409` `ProblemDetails` Conflict
+         */
+        deleteLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name DeactivateLoanDocumentFolder
+         * @summary Deactivate a loan document folder. Rejected for the system-default Unassigned folder.
+         * @request POST:/api/loan-document-folders/{id}/deactivate
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        deactivateLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name ReactivateLoanDocumentFolder
+         * @summary Reactivate a loan document folder.
+         * @request POST:/api/loan-document-folders/{id}/reactivate
+         * @secure
+         * @response `204` `void` No Content
+         * @response `404` `ProblemDetails` Not Found
+         */
+        reactivateLoanDocumentFolder: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocumentFolders
+         * @name GetLoanDocumentFolderUsage
+         * @summary Get folder usage. Returns HasEverBeenReferenced including soft-deleted documents and tasks.
+         * @request GET:/api/loan-document-folders/{id}/usage
+         * @secure
+         * @response `200` `LoanDocumentFolderUsage` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getLoanDocumentFolderUsage: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentFolderUsage, any>>;
         /**
          * No description
          *
@@ -6929,13 +8908,25 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/loans/{loanId}/documents/{documentId}
          * @secure
-         * @response `200` `LoanDocument` Success
+         * @response `200` `LoanDocument` OK
          * @response `404` `ProblemDetails` Not Found
          */
         getLoanDocument: (loanId: string, documentId: string, query?: {
             /** @default false */
             preview?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
+         * @name GetLoanDocumentPreviews
+         * @summary Get document previews in batch
+         * @request POST:/api/loans/{loanId}/documents/previews
+         * @secure
+         * @response `200` `Record<string,string>` OK
+         * @response `400` `ProblemDetails` Bad Request
+         */
+        getLoanDocumentPreviews: (loanId: string, data: LoanDocumentPreviewsRequest, params?: RequestParams) => Promise<AxiosResponse<Record<string, string>, any>>;
         /**
          * No description
          *
@@ -6944,7 +8935,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search loan documents
          * @request POST:/api/loans/{loanId}/documents/search
          * @secure
-         * @response `200` `LoanDocumentSearchPaginated` Success
+         * @response `200` `LoanDocumentSearchPaginated` OK
          */
         searchLoanDocuments: (loanId: string, data: LoanDocumentSearchCriteria, query?: {
             /** @format int32 */
@@ -6953,7 +8944,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentSearchPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocumentSearchPaginated, any>>;
         /**
          * @description Returns all documents grouped by folder for sidebar display. Use folderNamesOnly=true to get simplified response with folder names and counts for mobile (Files array will be empty).
          *
@@ -6962,12 +8953,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get document folder hierarchy
          * @request POST:/api/loans/{loanId}/documents/folders
          * @secure
-         * @response `200` `(DocumentFolder)[]` Success
+         * @response `200` `(DocumentFolder)[]` OK
          */
         getLoanDocumentFolders: (loanId: string, data: DocumentFoldersRequest, query?: {
             /** @default false */
             folderNamesOnly?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<DocumentFolder[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DocumentFolder[], any>>;
         /**
          * No description
          *
@@ -6976,10 +8967,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Download By ID
          * @request GET:/api/loans/{loanId}/documents/{documentId}/download
          * @secure
-         * @response `200` `string` Success
+         * @response `200` `Blob` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        downloadLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<string, any, {}>>;
+        downloadLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<Blob, any>>;
         /**
          * No description
          *
@@ -6990,14 +8981,16 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `LoanDocument` Created
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         createLoanDocument: (loanId: string, data: {
             name?: string;
             /** @format binary */
             file?: File;
             bucket?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any, {}>>;
+            /** @format uuid */
+            folderID?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
          * No description
          *
@@ -7006,11 +8999,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Retry
          * @request POST:/api/loans/{loanId}/documents/{documentId}/retry
          * @secure
-         * @response `200` `LoanDocument` Success
+         * @response `200` `LoanDocument` OK
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        retryFailedLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any, {}>>;
+        retryFailedLoanDocument: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
          * No description
          *
@@ -7019,9 +9012,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Generate PDF Document
          * @request POST:/api/loans/{loanId}/documents/generate
          * @secure
-         * @response `200` `DocumentDataRequest` Success
+         * @response `200` `DocumentDataRequest` OK
          */
-        generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any, {}>>;
+        generateLoanDocument: (loanId: string, data: GenerateDocumentRequest, params?: RequestParams) => Promise<AxiosResponse<DocumentDataRequest, any>>;
         /**
          * No description
          *
@@ -7030,11 +9023,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Send existing documents to loan users or external emails
          * @request POST:/api/loans/{loanId}/documents/distribute
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          * @response `400` `ProblemDetails` Bad Request
          * @response `404` `ProblemDetails` Not Found
          */
-        sendLoanDocuments: (loanId: string, data: SendLoanDocumentsRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        sendLoanDocuments: (loanId: string, data: SendLoanDocumentsRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * @description Fetches all documents from Encompass that don't exist locally and stores them in S3
          *
@@ -7043,10 +9036,23 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Sync documents from LOS
          * @request POST:/api/loans/{loanId}/documents/sync
          * @secure
-         * @response `200` `DocumentSync` Success
+         * @response `200` `DocumentSync` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        syncLoanDocumentsFromLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentSync, any, {}>>;
+        syncLoanDocumentsFromLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<DocumentSync, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanDocuments
+         * @name ClassifyLoanDocumentManually
+         * @summary Manually classify a loan document
+         * @request POST:/api/loans/{loanId}/documents/{documentId}/classify-manual
+         * @secure
+         * @response `200` `LoanDocument` OK
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         */
+        classifyLoanDocumentManually: (loanId: string, documentId: string, data: ManualDocumentClassificationRequest, params?: RequestParams) => Promise<AxiosResponse<LoanDocument, any>>;
         /**
          * @description Re-attempts to push a failed document to LOS
          *
@@ -7055,11 +9061,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Retry syncing a document to LOS
          * @request POST:/api/loans/{loanId}/documents/{documentId}/sync/retry
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          * @response `404` `ProblemDetails` Not Found
-         * @response `423` `ProblemDetails` Client Error
+         * @response `423` `ProblemDetails` Locked
          */
-        retrySyncLoanDocumentToLos: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        retrySyncLoanDocumentToLos: (loanId: string, documentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7070,7 +9076,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `Draft` Created
          */
-        createLoanDraft: (data: DraftRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any, {}>>;
+        createLoanDraft: (data: DraftRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -7079,9 +9085,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/loans/drafts
          * @secure
-         * @response `200` `(DraftContent)[]` Success
+         * @response `200` `(DraftContent)[]` OK
          */
-        getLoanDrafts: (params?: RequestParams) => Promise<AxiosResponse<DraftContent[], any, {}>>;
+        getLoanDrafts: (params?: RequestParams) => Promise<AxiosResponse<DraftContent[], any>>;
         /**
          * No description
          *
@@ -7090,9 +9096,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/loans/drafts/{draftId}
          * @secure
-         * @response `200` `DraftContent` Success
+         * @response `200` `DraftContent` OK
          */
-        getLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<DraftContent, any, {}>>;
+        getLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<DraftContent, any>>;
         /**
          * No description
          *
@@ -7101,9 +9107,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/loans/drafts/{draftId}
          * @secure
-         * @response `200` `Draft` Success
+         * @response `200` `Draft` OK
          */
-        replaceLoanDraft: (draftId: string, data: DraftRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any, {}>>;
+        replaceLoanDraft: (draftId: string, data: DraftRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -7114,7 +9120,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7132,7 +9138,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<DraftContentPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<DraftContentPaginated, any>>;
         /**
          * No description
          *
@@ -7141,9 +9147,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Reassign Loan officer
          * @request PUT:/api/loans/drafts/{draftId}/reassign
          * @secure
-         * @response `200` `Draft` Success
+         * @response `200` `Draft` OK
          */
-        reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any, {}>>;
+        reassignLoanOfficer: (draftId: string, data: DraftLoanOfficerReassignRequest, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -7152,9 +9158,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Restore deleted draft
          * @request POST:/api/loans/drafts/{draftId}/restore
          * @secure
-         * @response `200` `Draft` Success
+         * @response `200` `Draft` OK
          */
-        restoreLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<Draft, any, {}>>;
+        restoreLoanDraft: (draftId: string, params?: RequestParams) => Promise<AxiosResponse<Draft, any>>;
         /**
          * No description
          *
@@ -7163,7 +9169,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan Imports
          * @request GET:/api/loan-imports
          * @secure
-         * @response `200` `LoanImportPaginated` Success
+         * @response `200` `LoanImportPaginated` OK
          */
         getLoanImports: (query?: {
             status?: LoanImportStatus;
@@ -7174,7 +9180,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanImportPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanImportPaginated, any>>;
         /**
          * No description
          *
@@ -7185,7 +9191,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `LoanImport` Created
          */
-        createLoanImport: (data: CreateLoanImportRequest, params?: RequestParams) => Promise<AxiosResponse<LoanImport, any, {}>>;
+        createLoanImport: (data: CreateLoanImportRequest, params?: RequestParams) => Promise<AxiosResponse<LoanImport, any>>;
         /**
          * No description
          *
@@ -7194,9 +9200,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan Import
          * @request GET:/api/loan-imports/{id}
          * @secure
-         * @response `200` `LoanImport` Success
+         * @response `200` `LoanImport` OK
          */
-        getLoanImport: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanImport, any, {}>>;
+        getLoanImport: (id: string, params?: RequestParams) => Promise<AxiosResponse<LoanImport, any>>;
         /**
          * No description
          *
@@ -7205,7 +9211,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan Import Logs
          * @request GET:/api/loan-imports/{id}/logs
          * @secure
-         * @response `200` `LoanImportLogPaginated` Success
+         * @response `200` `LoanImportLogPaginated` OK
          */
         getLoanImportLogs: (id: string, query?: {
             /** @format int32 */
@@ -7214,7 +9220,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanImportLogPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanImportLogPaginated, any>>;
         /**
          * No description
          *
@@ -7223,10 +9229,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Invites
          * @request GET:/api/loans/{loanId}/invites
          * @secure
-         * @response `200` `(Invite)[]` Success
+         * @response `200` `(Invite)[]` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanInvites: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Invite[], any, {}>>;
+        getLoanInvites: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
         /**
          * No description
          *
@@ -7235,10 +9241,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Invite Contacts
          * @request POST:/api/loans/{loanId}/invites
          * @secure
-         * @response `200` `(Invite)[]` Success
+         * @response `200` `(Invite)[]` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        inviteLoanContacts: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<Invite[], any, {}>>;
+        inviteLoanContacts: (loanId: string, data: string[], params?: RequestParams) => Promise<AxiosResponse<Invite[], any>>;
         /**
          * No description
          *
@@ -7247,7 +9253,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search loan logs
          * @request POST:/api/loans/{loanId}/logs/search
          * @secure
-         * @response `200` `LoanLogPaginated` Success
+         * @response `200` `LoanLogPaginated` OK
          */
         searchLoanLogs: (loanId: string, data: LoanLogSearchCriteria, query?: {
             /** @format int32 */
@@ -7256,7 +9262,45 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanLogPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanLogPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanLogs
+         * @name GetLoanLogById
+         * @summary Get loan log by ID
+         * @request GET:/api/loans/{loanId}/logs/{loanLogId}
+         * @secure
+         * @response `200` `LoanLogDetail` OK
+         * @response `404` `ProblemDetails` Not Found
+         */
+        getLoanLogById: (loanId: string, loanLogId: string, params?: RequestParams) => Promise<AxiosResponse<LoanLogDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanNotification
+         * @name SendLoanOptInReminder
+         * @summary Send Loan Opt-In Reminder
+         * @request POST:/api/loans/{loanID}/notifications/opt-in-reminders
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        sendLoanOptInReminder: (loanId: string, data: SendLoanOptInReminderRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LoanNotification
+         * @name SendESignatureReminder
+         * @summary Send eSignature Reminder
+         * @request POST:/api/loans/{loanID}/notifications/esignature-reminders
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        sendESignatureReminder: (loanId: string, data: SendESignatureReminderRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7265,7 +9309,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/loan-officers
          * @secure
-         * @response `200` `BranchUserPaginated` Success
+         * @response `200` `BranchUserPaginated` OK
          */
         getLoanOfficers: (query?: {
             showAll?: boolean;
@@ -7275,7 +9319,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any>>;
         /**
          * No description
          *
@@ -7284,7 +9328,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/loan-officers/search
          * @secure
-         * @response `200` `BranchUserPaginated` Success
+         * @response `200` `BranchUserPaginated` OK
          */
         searchLoanOfficers: (data: LoanOfficerSearchCriteria, query?: {
             /** @format int32 */
@@ -7293,7 +9337,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any>>;
         /**
          * No description
          *
@@ -7302,9 +9346,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/loan-officers/{id}
          * @secure
-         * @response `200` `BranchUser` Success
+         * @response `200` `BranchUser` OK
          */
-        getLoanOfficer: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any, {}>>;
+        getLoanOfficer: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any>>;
         /**
          * No description
          *
@@ -7313,10 +9357,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Site Configuration
          * @request POST:/api/loan-officers/{loanOfficerId}/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createLoanOfficerSiteConfiguration: (loanOfficerId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        createLoanOfficerSiteConfiguration: (loanOfficerId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -7325,9 +9369,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Site Configuration
          * @request GET:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfigurationWithInherited` Success
+         * @response `200` `SiteConfigurationWithInherited` OK
          */
-        getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any, {}>>;
+        getLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any>>;
         /**
          * No description
          *
@@ -7336,12 +9380,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace Site Configuration
          * @request PUT:/api/loan-officers/{loanOfficerId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         replaceLoanOfficerSiteConfiguration: (loanOfficerId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -7350,7 +9394,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/loans/queue/search
          * @secure
-         * @response `200` `LoanQueuePaginated` Success
+         * @response `200` `LoanQueuePaginated` OK
          */
         searchLoanQueue: (data: LoanQueueSearchCriteria, query?: {
             /** @format int32 */
@@ -7359,7 +9403,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanQueuePaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanQueuePaginated, any>>;
         /**
          * No description
          *
@@ -7368,10 +9412,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan Queue Record
          * @request GET:/api/loans/queue/{loanQueueId}
          * @secure
-         * @response `200` `any` Success
+         * @response `200` `any` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any, {}>>;
+        getLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
         /**
          * No description
          *
@@ -7380,10 +9424,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace Loan Queue Record
          * @request PUT:/api/loans/queue/{loanQueueId}
          * @secure
-         * @response `200` `LoanQueueWithData` Success
+         * @response `200` `LoanQueueWithData` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params?: RequestParams) => Promise<AxiosResponse<LoanQueueWithData, any, {}>>;
+        replaceLoanQueue: (loanQueueId: string, data: UpdateLoanQueueRequest, params?: RequestParams) => Promise<AxiosResponse<LoanQueueWithData, any>>;
         /**
          * No description
          *
@@ -7395,7 +9439,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7407,7 +9451,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        retryLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        retryLoanQueue: (loanQueueId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7416,10 +9460,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/loans/{loanID}
          * @secure
-         * @response `200` `Loan` Success
+         * @response `200` `Loan` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Loan, any, {}>>;
+        getLoan: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
         /**
          * No description
          *
@@ -7428,9 +9472,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loans
          * @request GET:/api/loans
          * @secure
-         * @response `200` `GetApplications` Success
+         * @response `200` `GetApplications` OK
          */
-        getLoans: (params?: RequestParams) => Promise<AxiosResponse<GetApplications, any, {}>>;
+        getLoans: (params?: RequestParams) => Promise<AxiosResponse<GetApplications, any>>;
         /**
          * No description
          *
@@ -7444,7 +9488,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `401` `ProblemDetails` Unauthorized
          * @response `403` `ProblemDetails` Forbidden
          */
-        createLoanv3: (data: LoanApplicationRequest, params?: RequestParams) => Promise<AxiosResponse<LoanApplication, any, {}>>;
+        createLoanv3: (data: LoanApplicationRequest, params?: RequestParams) => Promise<AxiosResponse<LoanApplication, any>>;
         /**
          * No description
          *
@@ -7453,7 +9497,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/loans/search
          * @secure
-         * @response `200` `LoanListPaginated` Success
+         * @response `200` `LoanListPaginated` OK
          */
         searchLoans: (data: LoanSearchCriteria, query?: {
             /** @format int32 */
@@ -7462,7 +9506,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<LoanListPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<LoanListPaginated, any>>;
         /**
          * No description
          *
@@ -7471,14 +9515,14 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update loan fields
          * @request PATCH:/api/loans/{loanId}
          * @secure
-         * @response `200` `Loan` Success
+         * @response `200` `Loan` OK
          * @response `400` `any` Bad Request
          * @response `401` `ProblemDetails` Unauthorized
          * @response `403` `ProblemDetails` Forbidden
          * @response `404` `ProblemDetails` Not Found
          * @response `409` `any` Conflict
          */
-        updateLoan: (loanId: string, data: any, params?: RequestParams) => Promise<AxiosResponse<Loan, any, {}>>;
+        updateLoan: (loanId: string, data: LoanPatchRequestGuidPatchDocument, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
         /**
          * No description
          *
@@ -7491,7 +9535,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `400` `ProblemDetails` Bad Request
          * @response `404` `ProblemDetails` Not Found
          */
-        completeBorrowerApplication: (loanId: string, borrowerId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        completeBorrowerApplication: (loanId: string, borrowerId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7500,21 +9544,47 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Import from LOS
          * @request POST:/api/loans/import-from-los/{loanId}
          * @secure
-         * @response `200` `Loan` Success
+         * @response `200` `Loan` OK
          */
-        importLoanFromLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Loan, any, {}>>;
+        importLoanFromLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<Loan, any>>;
         /**
          * No description
          *
-         * @tags LoanSensitiveDataPurge
-         * @name PurgeSensitiveLoanData
-         * @summary Manually trigger sensitive data purge for a specific loan
-         * @request POST:/api/loans/sensitive-data-purge/{loanId}
+         * @tags Loans
+         * @name SyncLoanToLos
+         * @summary Sync loan to LOS
+         * @request POST:/api/loans/{loanId}/sync-to-los
          * @secure
-         * @response `204` `void` No Content
+         * @response `202` `void` Accepted
          * @response `404` `ProblemDetails` Not Found
          */
-        purgeSensitiveLoanData: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        syncLoanToLos: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags Loans
+         * @name GetLoanOutstandingItems
+         * @summary Get outstanding items
+         * @request GET:/api/loans/{loanId}/outstanding-items
+         * @secure
+         * @response `200` `LoanOutstandingItems` OK
+         * @response `401` `ProblemDetails` Unauthorized
+         * @response `403` `ProblemDetails` Forbidden
+         */
+        getLoanOutstandingItems: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<LoanOutstandingItems, any>>;
+        /**
+         * No description
+         *
+         * @tags Loans
+         * @name TriggerAso
+         * @summary Trigger ASO services
+         * @request POST:/api/loans/{loanId}/aso
+         * @secure
+         * @response `200` `AutomatedService` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        triggerAso: (loanId: string, data: TriggerAsoRequest, params?: RequestParams) => Promise<AxiosResponse<AutomatedService, any>>;
         /**
          * No description
          *
@@ -7523,7 +9593,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/search
          * @secure
-         * @response `200` `TaskCommentPaginated` Success
+         * @response `200` `TaskCommentPaginated` OK
          * @response `404` `ProblemDetails` Not Found
          */
         searchLoanTaskComments: (loanId: string, userLoanTaskId: string, data: TaskCommentSearchCriteria, query?: {
@@ -7533,7 +9603,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<TaskCommentPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<TaskCommentPaginated, any>>;
         /**
          * No description
          *
@@ -7542,10 +9612,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{id}
          * @secure
-         * @response `200` `TaskComment` Success
+         * @response `200` `TaskComment` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any, {}>>;
+        getLoanTaskComment: (id: string, loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
@@ -7557,7 +9627,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `TaskComment` Created
          * @response `404` `ProblemDetails` Not Found
          */
-        createLoanTaskComment: (loanId: string, userLoanTaskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any, {}>>;
+        createLoanTaskComment: (loanId: string, userLoanTaskId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
@@ -7566,10 +9636,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/loans/{loanId}/tasks/{userLoanTaskId}/comments/{commentId}
          * @secure
-         * @response `200` `TaskComment` Success
+         * @response `200` `TaskComment` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        replaceLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any, {}>>;
+        replaceLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, data: TaskCommentRequest, params?: RequestParams) => Promise<AxiosResponse<TaskComment, any>>;
         /**
          * No description
          *
@@ -7581,7 +9651,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteLoanTaskComment: (loanId: string, userLoanTaskId: string, commentId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7592,66 +9662,113 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `UserLoanTask` Created
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         createLoanTaskDocument: (loanId: string, loanTaskId: string, data: {
             name?: string;
             /** @format binary */
             file?: File;
             bucket?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+            /** @format uuid */
+            folderID?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
-         * @tags LoanTaskDocuments
-         * @name CreateLoanTaskDocumentBucket
-         * @summary Create Bucket
-         * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/documents/bucket
+         * @tags LoanTaskNotifications
+         * @name SendOutstandingLoanTaskNotification
+         * @summary Send Outstanding Task Notification
+         * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
          * @secure
-         * @response `204` `UserLoanTask` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        createLoanTaskDocumentBucket: (loanId: string, loanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+        sendOutstandingLoanTaskNotification: (loanId: string, data: SendOutstandingTaskReminderRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
+         *
+         * @tags LoanTaskNotifications
+         * @name SendLoanTaskReminder
+         * @summary Send Loan Task Reminder
+         * @request POST:/api/loans/{loanID}/tasks/reminders
+         * @secure
+         * @response `204` `void` No Content
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         */
+        sendLoanTaskReminder: (loanId: string, data: SendLoanTaskReminderRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * @description Search tasks across all loans
          *
          * @tags LoanTasks
+         * @name SearchLoanTasks
+         * @summary Search
+         * @request POST:/api/loans/tasks/search
+         * @secure
+         * @response `200` `UserLoanTaskPaginated` OK
+         */
+        searchLoanTasks: (data: LoanTaskSearchRequest, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserLoanTaskPaginated, any>>;
+        /**
+         * @description Returns task counts grouped by status for loans accessible to the current user based on their role
+         *
+         * @tags LoanTasks
+         * @name SearchLoanTasksSummary
+         * @summary Search Summary
+         * @request POST:/api/loans/tasks/search/summary
+         * @secure
+         * @response `200` `(LoanTaskStatusSummary)[]` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
+         */
+        searchLoanTasksSummary: (data: LoanTaskSearchRequest, params?: RequestParams) => Promise<AxiosResponse<LoanTaskStatusSummary[], any>>;
+        /**
+         * No description
+         *
+         * @tags LoanTasksForSingleLoan
          * @name GetLoanTasks
          * @summary Get All
          * @request GET:/api/loans/{loanID}/tasks
          * @secure
-         * @response `200` `(UserLoanTask)[]` Success
+         * @response `200` `(UserLoanTask)[]` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanTasks: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any, {}>>;
+        getLoanTasks: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
          * No description
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name GetLoanTask
          * @summary Get by ID
          * @request GET:/api/loans/{loanID}/tasks/{id}
          * @secure
-         * @response `200` `UserLoanTask` Success
+         * @response `200` `UserLoanTask` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanTask: (id: string, loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+        getLoanTask: (id: string, loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * @description Get the difference between the current loan tasks and the tasks generated by business rules
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name GetLoanTaskDifference
          * @summary Get Difference
          * @request GET:/api/loans/{loanID}/tasks/diff
          * @secure
-         * @response `200` `(UserLoanTask)[]` Success
+         * @response `200` `(UserLoanTask)[]` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getLoanTaskDifference: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any, {}>>;
+        getLoanTaskDifference: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
          * No description
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name CreateLoanTask
          * @summary Create
          * @request POST:/api/loans/{loanID}/tasks/{taskID}
@@ -7659,11 +9776,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `UserLoanTask` Created
          * @response `404` `ProblemDetails` Not Found
          */
-        createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+        createLoanTask: (loanId: string, taskId: string, data: UserLoanTaskRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name ImportLoanTask
          * @summary Import
          * @request POST:/api/loans/{loanID}/tasks/import
@@ -7671,23 +9788,23 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `(UserLoanTask)[]` Created
          * @response `404` `ProblemDetails` Not Found
          */
-        importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any, {}>>;
+        importLoanTask: (loanId: string, data: ImportUserLoanTaskRequest[], params?: RequestParams) => Promise<AxiosResponse<UserLoanTask[], any>>;
         /**
          * No description
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name ReplaceLoanTask
          * @summary Replace
          * @request PUT:/api/loans/{loanID}/tasks/{userLoanTaskID}
          * @secure
-         * @response `200` `UserLoanTask` Success
+         * @response `200` `UserLoanTask` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        replaceLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+        replaceLoanTask: (loanId: string, userLoanTaskId: string, data: UserLoanTaskUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
-         * @tags LoanTasks
+         * @tags LoanTasksForSingleLoan
          * @name DeleteLoanTask
          * @summary Delete
          * @request DELETE:/api/loans/{loanID}/tasks/{userLoanTaskID}
@@ -7695,19 +9812,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteLoanTask: (loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
-        /**
-         * No description
-         *
-         * @tags LoanTasks
-         * @name SendOutstandingLoanTaskNotification
-         * @summary Send Outstanding Task Notification
-         * @request POST:/api/loans/{loanID}/tasks/reminders/outstanding
-         * @secure
-         * @response `204` `void` No Content
-         * @response `404` `ProblemDetails` Not Found
-         */
-        sendOutstandingLoanTaskNotification: (loanId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteLoanTask: (loanId: string, userLoanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7716,11 +9821,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/loans/{loanID}/tasks/{loanTaskId}/verifications
          * @secure
-         * @response `200` `UserLoanTask` Success
+         * @response `200` `UserLoanTask` OK
          * @response `404` `ProblemDetails` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createLoanTaskVerification: (loanId: string, loanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any, {}>>;
+        createLoanTaskVerification: (loanId: string, loanTaskId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanTask, any>>;
         /**
          * No description
          *
@@ -7729,9 +9834,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get User Loan Consents
          * @request GET:/api/loans/{loanId}/users/{userId}/consents
          * @secure
-         * @response `200` `(UserLoanConsent)[]` Success
+         * @response `200` `(UserLoanConsent)[]` OK
+         * @response `403` `ProblemDetails` Forbidden
          */
-        getLoanUserConsents: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanConsent[], any, {}>>;
+        getLoanUserConsents: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<UserLoanConsent[], any>>;
         /**
          * No description
          *
@@ -7740,9 +9846,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Loan User
          * @request GET:/api/loans/{loanId}/users/{userId}
          * @secure
-         * @response `200` `LoanUser` Success
+         * @response `200` `LoanUser` OK
          */
-        getLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any, {}>>;
+        getLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -7753,7 +9859,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `LoanUser` Created
          */
-        addLoanUser: (loanId: string, userId: string, data: CreateUserLoan, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any, {}>>;
+        addLoanUser: (loanId: string, userId: string, data: CreateUserLoan, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -7764,7 +9870,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `LoanUser` No Content
          */
-        removeLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any, {}>>;
+        removeLoanUser: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<LoanUser, any>>;
         /**
          * No description
          *
@@ -7775,7 +9881,25 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        sendLoanUserInviteReminderNotification: (loanId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags LosOperationTracking
+         * @name SearchLosOperationTracking
+         * @summary Search LOS operation tracking
+         * @request POST:/api/los-operation-tracking/search
+         * @secure
+         * @response `200` `LosOperationTrackingPaginated` OK
+         */
+        searchLosOperationTracking: (data: LosOperationTrackingSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<LosOperationTrackingPaginated, any>>;
         /**
          * No description
          *
@@ -7784,9 +9908,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/milestones
          * @secure
-         * @response `200` `(MilestoneConfiguration)[]` Success
+         * @response `200` `(MilestoneConfiguration)[]` OK
          */
-        getMilestones: (params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration[], any, {}>>;
+        getMilestones: (params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration[], any>>;
         /**
          * No description
          *
@@ -7796,9 +9920,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/milestones
          * @secure
          * @response `201` `MilestoneConfiguration` Created
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createMilestone: (data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any, {}>>;
+        createMilestone: (data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any>>;
         /**
          * No description
          *
@@ -7807,10 +9931,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/milestones/{id}
          * @secure
-         * @response `200` `MilestoneConfiguration` Success
+         * @response `200` `MilestoneConfiguration` OK
          * @response `404` `Error` Not Found
          */
-        getMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any, {}>>;
+        getMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any>>;
         /**
          * No description
          *
@@ -7819,11 +9943,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/milestones/{id}
          * @secure
-         * @response `200` `MilestoneConfiguration` Success
+         * @response `200` `MilestoneConfiguration` OK
          * @response `404` `Error` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any, {}>>;
+        replaceMilestone: (id: string, data: MilestoneConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<MilestoneConfiguration, any>>;
         /**
          * No description
          *
@@ -7835,7 +9959,21 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `Error` Not Found
          */
-        deleteMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteMilestone: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags MobileAppReview
+         * @name SeedMobileAppReview
+         * @summary Idempotently seed the test loan officer, site configuration, loan and completed borrower used by mobile app store reviewers.
+         * @request POST:/api/mobile-app-review/seed
+         * @secure
+         * @response `200` `MobileAppReviewSeed` OK
+         * @response `400` `ProblemDetails` Bad Request
+         * @response `404` `ProblemDetails` Not Found
+         * @response `422` `ProblemDetails` Unprocessable Content
+         */
+        seedMobileAppReview: (data: MobileAppReviewSeedRequest, params?: RequestParams) => Promise<AxiosResponse<MobileAppReviewSeed, any>>;
         /**
          * No description
          *
@@ -7844,10 +9982,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Calculate Monthly Payment
          * @request POST:/api/mortgage-calculators/monthly-payment
          * @secure
-         * @response `200` `MonthlyPaymentCalculator` Success
-         * @response `422` `ProblemDetails` Client Error
+         * @response `200` `MonthlyPaymentCalculator` OK
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        calculateMortgageMonthlyPayment: (data: MonthlyPaymentCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<MonthlyPaymentCalculator, any, {}>>;
+        calculateMortgageMonthlyPayment: (data: MonthlyPaymentCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<MonthlyPaymentCalculator, any>>;
         /**
          * No description
          *
@@ -7856,10 +9994,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Calculate Affordability
          * @request POST:/api/mortgage-calculators/affordability
          * @secure
-         * @response `200` `AffordabilityCalculator` Success
-         * @response `422` `ProblemDetails` Client Error
+         * @response `200` `AffordabilityCalculator` OK
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        calculateMortgageAffordability: (data: AffordabilityCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<AffordabilityCalculator, any, {}>>;
+        calculateMortgageAffordability: (data: AffordabilityCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<AffordabilityCalculator, any>>;
         /**
          * No description
          *
@@ -7868,10 +10006,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Calculate Loan Comparison
          * @request POST:/api/mortgage-calculators/loan-comparison
          * @secure
-         * @response `200` `LoanComparisonCalculator` Success
-         * @response `422` `ProblemDetails` Client Error
+         * @response `200` `LoanComparisonCalculator` OK
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        calculateMortgageLoanComparison: (data: LoanComparisonCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonCalculator, any, {}>>;
+        calculateMortgageLoanComparison: (data: LoanComparisonCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<LoanComparisonCalculator, any>>;
         /**
          * No description
          *
@@ -7880,34 +10018,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Calculate Refinance
          * @request POST:/api/mortgage-calculators/refinance
          * @secure
-         * @response `200` `RefinanceCalculator` Success
-         * @response `422` `ProblemDetails` Client Error
+         * @response `200` `RefinanceCalculator` OK
+         * @response `422` `ProblemDetails` Unprocessable Content
          */
-        calculateMortgageRefinance: (data: RefinanceCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<RefinanceCalculator, any, {}>>;
-        /**
-         * No description
-         *
-         * @tags Notifications
-         * @name SendNotificationForLoan
-         * @summary Send Notification for Loan
-         * @request POST:/api/notifications
-         * @secure
-         * @response `200` `void` Success
-         * @response `422` `UnprocessableEntity` Client Error
-         */
-        sendNotificationForLoan: (data: SendNotificationForLoanRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
-        /**
-         * No description
-         *
-         * @tags Notifications
-         * @name SendTestNotificationForLoan
-         * @summary Send Test Notification for Loan
-         * @request POST:/api/notifications/test
-         * @secure
-         * @response `200` `void` Success
-         * @response `422` `UnprocessableEntity` Client Error
-         */
-        sendTestNotificationForLoan: (data: TestSendNotificationForLoanRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        calculateMortgageRefinance: (data: RefinanceCalculatorRequest, params?: RequestParams) => Promise<AxiosResponse<RefinanceCalculator, any>>;
         /**
          * No description
          *
@@ -7916,11 +10030,11 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/notification-templates
          * @secure
-         * @response `200` `(NotificationTemplateBase)[]` Success
+         * @response `200` `(NotificationTemplateBase)[]` OK
          */
         getNotificationTemplates: (query?: {
             showAll?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateBase[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateBase[], any>>;
         /**
          * No description
          *
@@ -7930,9 +10044,27 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/notification-templates
          * @secure
          * @response `201` `NotificationTemplate` Created
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createNotificationTemplate: (data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any, {}>>;
+        createNotificationTemplate: (data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
+        /**
+         * No description
+         *
+         * @tags NotificationTemplates
+         * @name SearchNotificationTemplates
+         * @summary Search
+         * @request POST:/api/notification-templates/search
+         * @secure
+         * @response `200` `NotificationTemplateBasePaginated` OK
+         */
+        searchNotificationTemplates: (data: NotificationTemplateSearchCriteria, query?: {
+            /** @format int32 */
+            pageSize?: number;
+            /** @format int32 */
+            pageNumber?: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateBasePaginated, any>>;
         /**
          * No description
          *
@@ -7941,9 +10073,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/notification-templates/{id}
          * @secure
-         * @response `200` `NotificationTemplate` Success
+         * @response `200` `NotificationTemplate` OK
          */
-        getNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any, {}>>;
+        getNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -7952,10 +10084,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/notification-templates/{id}
          * @secure
-         * @response `200` `NotificationTemplate` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `NotificationTemplate` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any, {}>>;
+        replaceNotificationTemplate: (id: string, data: NotificationTemplateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -7966,7 +10098,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -7975,9 +10107,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Restore
          * @request POST:/api/notification-templates/{id}/restore
          * @secure
-         * @response `200` `NotificationTemplate` Success
+         * @response `200` `NotificationTemplate` OK
          */
-        restoreNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any, {}>>;
+        restoreNotificationTemplate: (id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplate, any>>;
         /**
          * No description
          *
@@ -7986,9 +10118,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/notification-templates/{notificationId}/versions
          * @secure
-         * @response `200` `(NotificationTemplateVersion)[]` Success
+         * @response `200` `(NotificationTemplateVersion)[]` OK
          */
-        getNotificationTemplateVersions: (notificationId: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion[], any, {}>>;
+        getNotificationTemplateVersions: (notificationId: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion[], any>>;
         /**
          * No description
          *
@@ -7997,9 +10129,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/notification-templates/{notificationId}/versions
          * @secure
-         * @response `200` `NotificationTemplateVersion` Success
+         * @response `200` `NotificationTemplateVersion` OK
          */
-        createNotificationTemplateVersion: (notificationId: string, data: NotificationTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any, {}>>;
+        createNotificationTemplateVersion: (notificationId: string, data: NotificationTemplateVersionRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -8008,9 +10140,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
-         * @response `200` `NotificationTemplateVersion` Success
+         * @response `200` `NotificationTemplateVersion` OK
          */
-        getNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any, {}>>;
+        getNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -8019,9 +10151,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
-         * @response `200` `NotificationTemplateVersion` Success
+         * @response `200` `NotificationTemplateVersion` OK
          */
-        replaceNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any, {}>>;
+        replaceNotificationTemplateVersion: (notificationId: string, id: string, data: NotificationTemplateVersionUpdateRequest, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -8030,9 +10162,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Delete
          * @request DELETE:/api/notification-templates/{notificationId}/versions/{id}
          * @secure
-         * @response `200` `NotificationTemplateVersion` Success
+         * @response `200` `NotificationTemplateVersion` OK
          */
-        deleteNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any, {}>>;
+        deleteNotificationTemplateVersion: (notificationId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<NotificationTemplateVersion, any>>;
         /**
          * No description
          *
@@ -8041,7 +10173,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/partners
          * @secure
-         * @response `200` `BranchUserPaginated` Success
+         * @response `200` `BranchUserPaginated` OK
          */
         getPartners: (query?: {
             showAll?: boolean;
@@ -8053,7 +10185,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any>>;
         /**
          * No description
          *
@@ -8062,7 +10194,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/partners/search
          * @secure
-         * @response `200` `BranchUserPaginated` Success
+         * @response `200` `BranchUserPaginated` OK
          */
         searchPartners: (data: PartnerSearchCriteria, query?: {
             /** @format int32 */
@@ -8071,7 +10203,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<BranchUserPaginated, any>>;
         /**
          * No description
          *
@@ -8080,9 +10212,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/partners/{id}
          * @secure
-         * @response `200` `BranchUser` Success
+         * @response `200` `BranchUser` OK
          */
-        getPartner: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any, {}>>;
+        getPartner: (id: string, params?: RequestParams) => Promise<AxiosResponse<BranchUser, any>>;
         /**
          * No description
          *
@@ -8091,10 +10223,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create Site Configuration
          * @request POST:/api/partners/{realtorId}/site-configurations
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createPartnerSiteConfiguration: (realtorId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        createPartnerSiteConfiguration: (realtorId: string, data: SiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -8103,9 +10235,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Site Configuration
          * @request GET:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfigurationWithInherited` Success
+         * @response `200` `SiteConfigurationWithInherited` OK
          */
-        getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any, {}>>;
+        getPartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationWithInherited, any>>;
         /**
          * No description
          *
@@ -8114,12 +10246,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace Site Configuration
          * @request PUT:/api/partners/{realtorId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         replacePartnerSiteConfiguration: (realtorId: string, siteConfigurationId: string, data: SiteConfigurationRequest, query?: {
             applyToChildren?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -8128,9 +10260,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/site-configurations/{id}
          * @secure
-         * @response `200` `SiteConfiguration` Success
+         * @response `200` `SiteConfiguration` OK
          */
-        getSiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        getSiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -8140,10 +10272,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/site-configurations/url
          * @deprecated
          * @secure
-         * @response `200` `SiteConfigurationByUrl` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfigurationByUrl` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any, {}>>;
+        searchSiteConfigurationByUrl: (data: GetSiteConfigurationRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any>>;
         /**
          * No description
          *
@@ -8152,12 +10284,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By URL
          * @request GET:/api/site-configurations
          * @secure
-         * @response `200` `SiteConfigurationByUrl` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfigurationByUrl` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         getSiteConfigurationByUrl: (query?: {
             url?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationByUrl, any>>;
         /**
          * No description
          *
@@ -8167,10 +10299,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/site-configurations/louser
          * @deprecated
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        searchSiteConfigurationByLoanOfficerUser: (data: GetSiteConfigurationByLOUserIDRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        searchSiteConfigurationByLoanOfficerUser: (data: GetSiteConfigurationByLOUserIDRequest, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -8179,10 +10311,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By Loan Officer User
          * @request GET:/api/site-configurations/louser/{loUserId}
          * @secure
-         * @response `200` `SiteConfiguration` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfiguration` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getSiteConfigurationByLoanOfficerUser: (loUserId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any, {}>>;
+        getSiteConfigurationByLoanOfficerUser: (loUserId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfiguration, any>>;
         /**
          * No description
          *
@@ -8191,8 +10323,8 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/site-configurations/search
          * @secure
-         * @response `200` `SiteConfigurationSummaryPaginated` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `SiteConfigurationSummaryPaginated` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
         searchSiteConfigurations: (data: SiteConfigurationSearchCriteria, query?: {
             /** @format int32 */
@@ -8201,7 +10333,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationSummaryPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationSummaryPaginated, any>>;
         /**
          * No description
          *
@@ -8210,9 +10342,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Forms by Site Configuration
          * @request GET:/api/site-configurations/{id}/forms
          * @secure
-         * @response `200` `(AdminAccessGetForms)[]` Success
+         * @response `200` `(AdminAccessGetForms)[]` OK
          */
-        getFormsBySiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any, {}>>;
+        getFormsBySiteConfiguration: (id: string, params?: RequestParams) => Promise<AxiosResponse<AdminAccessGetForms[], any>>;
         /**
          * No description
          *
@@ -8221,10 +10353,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Saml Metadata
          * @request GET:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
          * @secure
-         * @response `200` `File` Success
+         * @response `200` `File` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getSamlMetadata: (sSoIntegration: GetSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        getSamlMetadata: (sSoIntegration: GetSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -8233,9 +10365,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create or Replace Saml Metadata
          * @request POST:/api/site-configurations/sso/saml/{ssoIntegration}/metadata
          * @secure
-         * @response `200` `File` Success
+         * @response `200` `File` OK
          */
-        createOrReplaceSamlMetadata: (sSoIntegration: CreateOrReplaceSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any, {}>>;
+        createOrReplaceSamlMetadata: (sSoIntegration: CreateOrReplaceSamlMetadataParamsEnum, ssoIntegration: string, params?: RequestParams) => Promise<AxiosResponse<File, any>>;
         /**
          * No description
          *
@@ -8244,9 +10376,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary List all site configurations assigned to a workflow
          * @request GET:/api/workflows/{workflowId}/site-configurations
          * @secure
-         * @response `200` `(SiteConfigurationForm)[]` Success
+         * @response `200` `(SiteConfigurationForm)[]` OK
          */
-        getWorkflowSiteConfigurations: (workflowId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm[], any, {}>>;
+        getWorkflowSiteConfigurations: (workflowId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm[], any>>;
         /**
          * No description
          *
@@ -8255,10 +10387,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get the workflow-site configuration assignment by composite key
          * @request GET:/api/workflows/{workflowId}/site-configurations/{siteConfigurationId}
          * @secure
-         * @response `200` `SiteConfigurationForm` Success
+         * @response `200` `SiteConfigurationForm` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any, {}>>;
+        getWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
         /**
          * No description
          *
@@ -8269,9 +10401,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `SiteConfigurationForm` Created
          * @response `409` `ProblemDetails` Conflict
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any, {}>>;
+        createWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<SiteConfigurationForm, any>>;
         /**
          * No description
          *
@@ -8282,7 +10414,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteWorkflowSiteConfiguration: (workflowId: string, siteConfigurationId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8291,9 +10423,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By Site Configuration Slug
          * @request POST:/api/site-forms
          * @secure
-         * @response `200` `GetForm` Success
+         * @response `200` `GetForm` OK
          */
-        getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any, {}>>;
+        getFormBySiteConfigurationSlug: (data: GetSiteFormRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any>>;
         /**
          * No description
          *
@@ -8302,12 +10434,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by Users
          * @request GET:/api/surveys
          * @secure
-         * @response `200` `(SocialSurveyRecord)[]` Success
+         * @response `200` `(SocialSurveyRecord)[]` OK
          */
         getSurveysByUsers: (query?: {
             /** @format int32 */
             limit?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any>>;
         /**
          * No description
          *
@@ -8316,10 +10448,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by User
          * @request POST:/api/surveys
          * @secure
-         * @response `200` `(SocialSurveyRecord)[]` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `(SocialSurveyRecord)[]` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        getSurveysByUser: (data: SurveyEmailRequest, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any, {}>>;
+        getSurveysByUser: (data: SurveyEmailRequest, params?: RequestParams) => Promise<AxiosResponse<SocialSurveyRecord[], any>>;
         /**
          * No description
          *
@@ -8328,7 +10460,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/tasks
          * @secure
-         * @response `200` `Task` Success
+         * @response `200` `Task` OK
          * @response `404` `ProblemDetails` Not Found
          */
         getTasks: (query?: {
@@ -8338,7 +10470,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<Task, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -8349,7 +10481,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `Task` Created
          */
-        createTask: (data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<Task, any, {}>>;
+        createTask: (data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -8358,10 +10490,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get By ID
          * @request GET:/api/tasks/{id}
          * @secure
-         * @response `200` `Task` Success
+         * @response `200` `Task` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<Task, any, {}>>;
+        getTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -8370,10 +10502,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/tasks/{id}
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `Task` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        replaceTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        replaceTask: (id: string, data: TaskRequest, params?: RequestParams) => Promise<AxiosResponse<Task, any>>;
         /**
          * No description
          *
@@ -8385,7 +10517,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteTask: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8394,7 +10526,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/tasks/search
          * @secure
-         * @response `200` `TaskPaginated` Success
+         * @response `200` `TaskPaginated` OK
          */
         searchTasks: (data: TaskSearchCriteria, query?: {
             /** @format int32 */
@@ -8403,7 +10535,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<TaskPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<TaskPaginated, any>>;
         /**
          * No description
          *
@@ -8411,17 +10543,18 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name IntegrationsLosLoansCreate
          * @request POST:/api/integrations/los/loans
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          */
-        integrationsLosLoansCreate: (data: LosLoanCreationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        integrationsLosLoansCreate: (data: LosLoanCreationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
          * @tags TheBigPOS
          * @name SearchEncompassLogs
+         * @summary Search Encompass Logs
          * @request POST:/api/los/encompass/logs/{losId}/search
          * @secure
-         * @response `200` `EncompassRequestLogPaginated` Success
+         * @response `200` `EncompassRequestLogPaginated` OK
          */
         searchEncompassLogs: (losId: string, query: {
             /** @format int32 */
@@ -8430,7 +10563,92 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber: number;
             sortBy?: string;
             sortDirection?: string;
-        }, data: EncompassLogSearchCriteria, params?: RequestParams) => Promise<AxiosResponse<EncompassRequestLogPaginated, any, {}>>;
+        }, data: EncompassLogSearchCriteria, params?: RequestParams) => Promise<AxiosResponse<EncompassRequestLogPaginated, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name GetEncompassCredentials
+         * @summary Get Encompass Credentials for the current account
+         * @request GET:/api/los/encompass/credentials
+         * @secure
+         * @response `200` `EncompassCredentialsDetail` OK
+         * @response `204` `void` No Content
+         */
+        getEncompassCredentials: (params?: RequestParams) => Promise<AxiosResponse<EncompassCredentialsDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name CreateEncompassCredentials
+         * @summary Create Encompass Credentials for the current account
+         * @request POST:/api/los/encompass/credentials
+         * @secure
+         * @response `201` `LosCredentials` Created
+         */
+        createEncompassCredentials: (data: EncompassCredentialsRequest, params?: RequestParams) => Promise<AxiosResponse<LosCredentials, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name UpdateEncompassCredentials
+         * @summary Update Encompass Credentials for the current account
+         * @request PUT:/api/los/encompass/credentials
+         * @secure
+         * @response `200` `EncompassCredentialsDetail` OK
+         */
+        updateEncompassCredentials: (data: EncompassCredentialsRequest, params?: RequestParams) => Promise<AxiosResponse<EncompassCredentialsDetail, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name GetEncompassWebhooks
+         * @summary Get Encompass webhooks filtered by current domain
+         * @request GET:/api/los/encompass/webhooks
+         * @secure
+         * @response `200` `(LosWebhook)[]` OK
+         */
+        getEncompassWebhooks: (params?: RequestParams) => Promise<AxiosResponse<LosWebhook[], any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name CreateEncompassWebhook
+         * @summary Register a webhook in Encompass
+         * @request POST:/api/los/encompass/webhooks
+         * @secure
+         * @response `201` `LosWebhook` Created
+         */
+        createEncompassWebhook: (data: CreateWebhookRequest, params?: RequestParams) => Promise<AxiosResponse<LosWebhook, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name DeleteEncompassWebhook
+         * @summary Delete a webhook from Encompass
+         * @request DELETE:/api/los/encompass/webhooks/{webhookId}
+         * @secure
+         * @response `204` `void` No Content
+         */
+        deleteEncompassWebhook: (webhookId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
+        /**
+         * No description
+         *
+         * @tags TheBigPOS
+         * @name SearchLosSyncs
+         * @summary Search LOS Sync History
+         * @request POST:/api/los/encompass/syncs/{loanId}/search
+         * @secure
+         * @response `200` `LosSyncPaginated` OK
+         */
+        searchLosSyncs: (loanId: string, query: {
+            /** @format int32 */
+            pageSize: number;
+            /** @format int32 */
+            pageNumber: number;
+            sortBy?: string;
+            sortDirection?: string;
+        }, data: LosSyncSearchCriteria, params?: RequestParams) => Promise<AxiosResponse<LosSyncPaginated, any>>;
         /**
          * No description
          *
@@ -8439,10 +10657,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get usage report by ID
          * @request GET:/api/usage-reports/{id}
          * @secure
-         * @response `200` `UsageReport` Success
+         * @response `200` `UsageReport` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getUsageReportById: (id: string, params?: RequestParams) => Promise<AxiosResponse<UsageReport, any, {}>>;
+        getUsageReportById: (id: string, params?: RequestParams) => Promise<AxiosResponse<UsageReport, any>>;
         /**
          * No description
          *
@@ -8451,7 +10669,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get usage reports by month and year
          * @request GET:/api/usage-reports
          * @secure
-         * @response `200` `(UsageReport)[]` Success
+         * @response `200` `(UsageReport)[]` OK
          * @response `400` `ProblemDetails` Bad Request
          */
         getUsageReportsByPeriod: (query?: {
@@ -8459,7 +10677,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             month?: number;
             /** @format int32 */
             year?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<UsageReport[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UsageReport[], any>>;
         /**
          * No description
          *
@@ -8476,7 +10694,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             month?: number;
             /** @format int32 */
             year?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<any, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<any, any>>;
         /**
          * No description
          *
@@ -8485,9 +10703,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get usage report execution dashboard with active execution, recent history, and statistics
          * @request GET:/api/usage-reports/dashboard
          * @secure
-         * @response `200` `UsageReportDashboard` Success
+         * @response `200` `UsageReportDashboard` OK
          */
-        getUsageReportDashboard: (params?: RequestParams) => Promise<AxiosResponse<UsageReportDashboard, any, {}>>;
+        getUsageReportDashboard: (params?: RequestParams) => Promise<AxiosResponse<UsageReportDashboard, any>>;
         /**
          * No description
          *
@@ -8496,10 +10714,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get usage report execution status by correlation ID
          * @request GET:/api/usage-reports/executions/{correlationId}
          * @secure
-         * @response `200` `UsageReportExecution` Success
+         * @response `200` `UsageReportExecution` OK
          * @response `404` `ProblemDetails` Not Found
          */
-        getUsageReportExecution: (correlationId: string, params?: RequestParams) => Promise<AxiosResponse<UsageReportExecution, any, {}>>;
+        getUsageReportExecution: (correlationId: string, params?: RequestParams) => Promise<AxiosResponse<UsageReportExecution, any>>;
         /**
          * No description
          *
@@ -8508,7 +10726,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get usage report executions by month and year
          * @request GET:/api/usage-reports/executions
          * @secure
-         * @response `200` `(UsageReportExecution)[]` Success
+         * @response `200` `(UsageReportExecution)[]` OK
          * @response `400` `ProblemDetails` Bad Request
          */
         getUsageReportExecutionsByPeriod: (query?: {
@@ -8516,7 +10734,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             month?: number;
             /** @format int32 */
             year?: number;
-        }, params?: RequestParams) => Promise<AxiosResponse<UsageReportExecution[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UsageReportExecution[], any>>;
         /**
          * No description
          *
@@ -8528,7 +10746,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `201` `UserDevice` Created
          * @response `400` `ProblemDetails` Bad Request
          */
-        createUserDevice: (data: CreateUserDeviceRequest, params?: RequestParams) => Promise<AxiosResponse<UserDevice, any, {}>>;
+        createUserDevice: (data: CreateUserDeviceRequest, params?: RequestParams) => Promise<AxiosResponse<UserDevice, any>>;
         /**
          * No description
          *
@@ -8540,7 +10758,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `204` `void` No Content
          * @response `404` `ProblemDetails` Not Found
          */
-        deleteUserDevice: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteUserDevice: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8549,7 +10767,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get draft users
          * @request GET:/api/loans/drafts/{draftId}/users
          * @secure
-         * @response `200` `UserDraftPaginated` Success
+         * @response `200` `UserDraftPaginated` OK
          */
         getDraftUsers: (draftId: string, query?: {
             /** @format int32 */
@@ -8558,7 +10776,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<UserDraftPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserDraftPaginated, any>>;
         /**
          * No description
          *
@@ -8567,9 +10785,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get draft user
          * @request GET:/api/loans/drafts/{draftId}/users/{userId}
          * @secure
-         * @response `200` `UserDraft` Success
+         * @response `200` `UserDraft` OK
          */
-        getDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any, {}>>;
+        getDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any>>;
         /**
          * No description
          *
@@ -8578,9 +10796,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Add draft user
          * @request POST:/api/loans/drafts/{draftId}/users/{userId}
          * @secure
-         * @response `200` `UserDraft` Success
+         * @response `200` `UserDraft` OK
          */
-        addDraftUsers: (draftId: string, userId: string, data: CreateUserDraft, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any, {}>>;
+        addDraftUsers: (draftId: string, userId: string, data: CreateUserDraft, params?: RequestParams) => Promise<AxiosResponse<UserDraft, any>>;
         /**
          * No description
          *
@@ -8591,7 +10809,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteDraftUser: (draftId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8600,9 +10818,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/user-groups/{groupId}/scopes
          * @secure
-         * @response `200` `(UserGroupAccessScope)[]` Success
+         * @response `200` `(UserGroupAccessScope)[]` OK
          */
-        getUserGroupAccessScopes: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope[], any, {}>>;
+        getUserGroupAccessScopes: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope[], any>>;
         /**
          * No description
          *
@@ -8611,9 +10829,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create a new scope
          * @request POST:/api/user-groups/{groupId}/scopes
          * @secure
-         * @response `200` `UserGroupAccessScope` Success
+         * @response `200` `UserGroupAccessScope` OK
          */
-        createUserGroupAccessScope: (groupId: string, data: CreateAccessScopeRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope, any, {}>>;
+        createUserGroupAccessScope: (groupId: string, data: CreateAccessScopeRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroupAccessScope, any>>;
         /**
          * No description
          *
@@ -8624,7 +10842,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteUserGroupAccessScope: (groupId: string, scopeId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteUserGroupAccessScope: (groupId: string, scopeId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8633,9 +10851,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/user-groups/{groupId}/members
          * @secure
-         * @response `200` `(UserGroupMember)[]` Success
+         * @response `200` `(UserGroupMember)[]` OK
          */
-        getUserGroupMembers: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember[], any, {}>>;
+        getUserGroupMembers: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember[], any>>;
         /**
          * No description
          *
@@ -8644,12 +10862,12 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create User Group Member
          * @request POST:/api/user-groups/{groupId}/members
          * @secure
-         * @response `200` `UserGroupMember` Success
+         * @response `200` `UserGroupMember` OK
          */
         createUserGroupMember: (groupId: string, data: CreateGroupMemberRequest, query?: {
             /** @format uuid */
             userId?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserGroupMember, any>>;
         /**
          * No description
          *
@@ -8660,7 +10878,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteUserGroupMember: (groupId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteUserGroupMember: (groupId: string, userId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8669,7 +10887,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request POST:/api/user-groups/search
          * @secure
-         * @response `200` `UserGroupPaginated` Success
+         * @response `200` `UserGroupPaginated` OK
          */
         searchUserGroups: (query?: {
             searchText?: string;
@@ -8679,7 +10897,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<UserGroupPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserGroupPaginated, any>>;
         /**
          * No description
          *
@@ -8688,9 +10906,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get User Group by ID
          * @request GET:/api/user-groups/{groupId}
          * @secure
-         * @response `200` `UserGroup` Success
+         * @response `200` `UserGroup` OK
          */
-        getUserGroup: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any, {}>>;
+        getUserGroup: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any>>;
         /**
          * No description
          *
@@ -8699,9 +10917,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update User Group
          * @request PUT:/api/user-groups/{groupId}
          * @secure
-         * @response `200` `UserGroup` Success
+         * @response `200` `UserGroup` OK
          */
-        updateUserGroup: (groupId: string, data: UpdateUserGroupRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any, {}>>;
+        updateUserGroup: (groupId: string, data: UpdateUserGroupRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any>>;
         /**
          * No description
          *
@@ -8712,7 +10930,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteUserGroup: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteUserGroup: (groupId: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8723,7 +10941,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `201` `UserGroup` Created
          */
-        createUserGroup: (data: CreateUserGroupRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any, {}>>;
+        createUserGroup: (data: CreateUserGroupRequest, params?: RequestParams) => Promise<AxiosResponse<UserGroup, any>>;
         /**
          * No description
          *
@@ -8734,9 +10952,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          * @response `404` `Error` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        requestImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        requestImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8747,9 +10965,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          * @response `404` `Error` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        allowImpersonation: (data: AllowImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        allowImpersonation: (data: AllowImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8760,9 +10978,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          * @response `404` `Error` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        allowImpersonationWithGuid: (allowToken: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        allowImpersonationWithGuid: (allowToken: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8772,9 +10990,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        beginImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        beginImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8784,9 +11002,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request DELETE:/api/users/impersonation
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        stopImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        stopImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8797,9 +11015,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          * @response `404` `Error` Not Found
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        forceImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        forceImpersonation: (data: RequestImpersonationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8809,9 +11027,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/impersonation/extend
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        extendImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        extendImpersonation: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8821,9 +11039,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/invites
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        inviteUser: (data: CreateInviteRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        inviteUser: (data: CreateInviteRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8836,7 +11054,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @response `401` `UnprocessableEntity` Unauthorized
          * @response `404` `UnprocessableEntity` Not Found
          */
-        resendInviteNotification: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        resendInviteNotification: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8845,10 +11063,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Verify
          * @request GET:/api/users/invites/{token}/verify
          * @secure
-         * @response `200` `Invite` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `Invite` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        verifyUserInvite: (token: string, params?: RequestParams) => Promise<AxiosResponse<Invite, any, {}>>;
+        verifyUserInvite: (token: string, params?: RequestParams) => Promise<AxiosResponse<Invite, any>>;
         /**
          * No description
          *
@@ -8857,9 +11075,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/users/{userID}/relations
          * @secure
-         * @response `200` `(UserRelation)[]` Success
+         * @response `200` `(UserRelation)[]` OK
          */
-        getUserRelations: (userId: string, params?: RequestParams) => Promise<AxiosResponse<UserRelation[], any, {}>>;
+        getUserRelations: (userId: string, params?: RequestParams) => Promise<AxiosResponse<UserRelation[], any>>;
         /**
          * No description
          *
@@ -8870,7 +11088,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        createUserRelation: (userId: string, data: CreateUserRelationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        createUserRelation: (userId: string, data: CreateUserRelationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8879,9 +11097,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by ID
          * @request GET:/api/users/{userID}/relations/{id}
          * @secure
-         * @response `200` `UserRelation` Success
+         * @response `200` `UserRelation` OK
          */
-        getUserRelation: (userId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<UserRelation, any, {}>>;
+        getUserRelation: (userId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<UserRelation, any>>;
         /**
          * No description
          *
@@ -8892,7 +11110,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteUserRelation: (userId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteUserRelation: (userId: string, id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -8901,7 +11119,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get All
          * @request GET:/api/users
          * @secure
-         * @response `200` `(User)[]` Success
+         * @response `200` `(User)[]` OK
          */
         getUsers: (query?: {
             /** @format int32 */
@@ -8910,7 +11128,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<User[], any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<User[], any>>;
         /**
          * No description
          *
@@ -8919,10 +11137,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Create
          * @request POST:/api/users
          * @secure
-         * @response `200` `DetailedUser` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `DetailedUser` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        createUser: (data: CreateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any, {}>>;
+        createUser: (data: CreateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -8931,7 +11149,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Search
          * @request POST:/api/users/search
          * @secure
-         * @response `200` `UserPaginated` Success
+         * @response `200` `UserPaginated` OK
          */
         searchUsers: (data: UserSearchCriteria, query?: {
             /** @format int32 */
@@ -8940,7 +11158,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
             pageNumber?: number;
             sortBy?: string;
             sortDirection?: string;
-        }, params?: RequestParams) => Promise<AxiosResponse<UserPaginated, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<UserPaginated, any>>;
         /**
          * No description
          *
@@ -8949,9 +11167,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get by Email
          * @request POST:/api/users/byemail
          * @secure
-         * @response `200` `AdminAccessUser` Success
+         * @response `200` `AdminAccessUser` OK
          */
-        getUserByEmail: (data: GetUserByEmailRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessUser, any, {}>>;
+        getUserByEmail: (data: GetUserByEmailRequest, params?: RequestParams) => Promise<AxiosResponse<AdminAccessUser, any>>;
         /**
          * No description
          *
@@ -8960,10 +11178,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Sign Up
          * @request POST:/api/users/register
          * @secure
-         * @response `200` `User` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `User` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<AxiosResponse<User, any, {}>>;
+        signUp: (data: RegisterUserRequest, params?: RequestParams) => Promise<AxiosResponse<User, any>>;
         /**
          * No description
          *
@@ -8972,10 +11190,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Update
          * @request PUT:/api/users/{id}
          * @secure
-         * @response `200` `DetailedUser` Success
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `200` `DetailedUser` OK
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        replaceUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any, {}>>;
+        replaceUser: (id: string, data: UpdateUserRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -8989,7 +11207,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         deleteUser: (id: string, query?: {
             /** @default false */
             permanent?: boolean;
-        }, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        }, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9000,7 +11218,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        restoreUser: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        restoreUser: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9010,9 +11228,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/change-password
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        changePassword: (data: ChangePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        changePassword: (data: ChangePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9022,9 +11240,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/verify-password
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        verifyPassword: (data: VerifyPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        verifyPassword: (data: VerifyPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9034,9 +11252,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/{id}/override-password
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        overridePassword: (id: string, data: OverridePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        overridePassword: (id: string, data: OverridePasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9046,9 +11264,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/forgot-password
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        forgotPassword: (data: SendForgotPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        forgotPassword: (data: SendForgotPasswordRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9058,9 +11276,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request POST:/api/users/mobile-phone/send-code
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        sendMobilePhoneVerificationCode: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        sendMobilePhoneVerificationCode: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9070,9 +11288,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request PUT:/api/users/mobile-phone/verify-code
          * @secure
          * @response `204` `void` No Content
-         * @response `422` `UnprocessableEntity` Client Error
+         * @response `422` `UnprocessableEntity` Unprocessable Content
          */
-        verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        verifyUserMobilePhone: (data: UserMobilePhoneVerificationRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9081,10 +11299,10 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get
          * @request GET:/api/users/me
          * @secure
-         * @response `200` `ImpersonatedDetailedUser` Success
+         * @response `200` `ImpersonatedDetailedUser` OK
          * @response `401` `ProblemDetails` Unauthorized
          */
-        getMe: (params?: RequestParams) => Promise<AxiosResponse<ImpersonatedDetailedUser, any, {}>>;
+        getMe: (params?: RequestParams) => Promise<AxiosResponse<ImpersonatedDetailedUser, any>>;
         /**
          * No description
          *
@@ -9093,9 +11311,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Replace
          * @request PUT:/api/users/me
          * @secure
-         * @response `200` `DetailedUser` Success
+         * @response `200` `DetailedUser` OK
          */
-        replaceMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any, {}>>;
+        replaceMe: (data: UpdateMeRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * @description Update the phone number If changed will send a verification code to the new number
          *
@@ -9106,7 +11324,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `DetailedUser` No Content
          */
-        updateMyPhone: (data: UpdateMobilePhoneRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any, {}>>;
+        updateMyPhone: (data: UpdateMobilePhoneRequest, params?: RequestParams) => Promise<AxiosResponse<DetailedUser, any>>;
         /**
          * No description
          *
@@ -9115,9 +11333,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Relationships
          * @request GET:/api/users/me/relationships
          * @secure
-         * @response `200` `(UserRelationship)[]` Success
+         * @response `200` `(UserRelationship)[]` OK
          */
-        getMyRelationships: (params?: RequestParams) => Promise<AxiosResponse<UserRelationship[], any, {}>>;
+        getMyRelationships: (params?: RequestParams) => Promise<AxiosResponse<UserRelationship[], any>>;
         /**
          * No description
          *
@@ -9126,9 +11344,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Relationship Prospects
          * @request GET:/api/users/me/relationships/prospects
          * @secure
-         * @response `200` `(UserRelationshipProspect)[]` Success
+         * @response `200` `(UserRelationshipProspect)[]` OK
          */
-        getMyRelationshipProspects: (params?: RequestParams) => Promise<AxiosResponse<UserRelationshipProspect[], any, {}>>;
+        getMyRelationshipProspects: (params?: RequestParams) => Promise<AxiosResponse<UserRelationshipProspect[], any>>;
         /**
          * No description
          *
@@ -9139,7 +11357,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteRelationshipProspect: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteRelationshipProspect: (id: string, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9150,7 +11368,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @secure
          * @response `204` `void` No Content
          */
-        deleteMe: (data: UserAccountDeletionRequest, params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        deleteMe: (data: UserAccountDeletionRequest, params?: RequestParams) => Promise<AxiosResponse<void, any>>;
         /**
          * No description
          *
@@ -9159,9 +11377,9 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Get Workflow
          * @request POST:/api/workflow
          * @secure
-         * @response `200` `GetForm` Success
+         * @response `200` `GetForm` OK
          */
-        getWorkflow: (data: GetWorkflowRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any, {}>>;
+        getWorkflow: (data: GetWorkflowRequest, params?: RequestParams) => Promise<AxiosResponse<GetForm, any>>;
     };
     sso: {
         /**
@@ -9171,8 +11389,8 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @name LogoutList
          * @request GET:/sso/logout
          * @secure
-         * @response `200` `void` Success
+         * @response `200` `void` OK
          */
-        logoutList: (params?: RequestParams) => Promise<AxiosResponse<void, any, {}>>;
+        logoutList: (params?: RequestParams) => Promise<AxiosResponse<void, any>>;
     };
 }
