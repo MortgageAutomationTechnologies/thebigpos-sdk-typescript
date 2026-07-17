@@ -1,5 +1,12 @@
 # Publishing the POS Typescript SDK
 
+> **Automated pre-release path:** PRs labeled `sdk` in `thebigpos-api` and
+> pushes to its `develop` branch automatically regenerate this SDK and publish
+> a pre-release (`pr-<number>` or `next` npm tag respectively) — see
+> `thebigpos-api/.github/workflows/sdk-generation.yaml`. The manual process
+> below is still how you cut a **real release** (`latest` tag, git tag, GitHub
+> Release).
+
 ## Prerequisites
 
 1. Clone the repository (if you haven't already):
