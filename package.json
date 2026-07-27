@@ -42,7 +42,7 @@
   },
   "resolutions": {
     "diff": "^4.0.4",
-    "brace-expansion": "^5.0.6",
+    "brace-expansion": "^5.0.8",
     "follow-redirects": "^1.16.0",
     "form-data": "^4.0.6"
   }
