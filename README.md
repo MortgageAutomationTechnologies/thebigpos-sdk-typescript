@@ -54,6 +54,16 @@ Replace `{version}` with the target API version (e.g. `v2.34.0`):
 npx swagger-typescript-api generate -p https://api.thebigpos.dev/swagger/v2.34.0/swagger.json -o ./src -n index.ts -r true --axios --enum-names-as-values --enum-style union
 ```
 
+Then apply the PATCH content-type fixup, passing the **same** spec that was given
+to the generator. The generator does not propagate `application/json-patch+json`,
+so this step sets each PATCH method's content type from the spec (no hard-coded
+endpoint list):
+
+```bash
+node scripts/apply-json-patch-content-type.js https://api.thebigpos.dev/swagger/v2.34.0/swagger.json
+yarn build
+```
+
 ## Publishing
 
 1. Update the `version` field in `package.json` before publishing.
