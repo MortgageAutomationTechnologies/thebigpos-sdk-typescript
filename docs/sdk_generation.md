@@ -2,19 +2,10 @@
 
 > **Automated pre-release path:** PRs labeled `sdk` in `thebigpos-api` and
 > pushes to its `develop` branch automatically regenerate this SDK and publish
-> a pre-release (`auto-pr-<number>` or `auto-develop` npm tag respectively) —
-> see `thebigpos-api/.github/workflows/publish-sdk.yaml`. The manual process
+> a pre-release (`pr-<number>` or `next` npm tag respectively) — see
+> `thebigpos-api/.github/workflows/sdk-generation.yaml`. The manual process
 > below is still how you cut a **real release** (`latest` tag, git tag, GitHub
 > Release).
->
-> **npm versions are immutable once published.** Republishing the same
-> version fails with a 403. `npm unpublish` only works within 72 hours of
-> publishing, and afterwards npm blocks republishing that exact version
-> string for a cooldown period — a deliberate anti-abuse rule (it stops
-> "unpublish the real thing, publish something else under the same version"
-> attacks), not a bug to work around. If you ever hit a version collision,
-> the fix is to publish a new version, never to unpublish and reuse the old
-> one.
 
 ## Prerequisites
 
