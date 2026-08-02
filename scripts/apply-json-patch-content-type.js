@@ -81,21 +81,61 @@ function setContentType(block, member) {
 	return block.replace(/\n(\s*)\.\.\.params,/, `\n$1${target},\n$1...params,`)
 }
 
+const CONTENT_TYPE_ENUM = /export enum ContentType\s*{([\s\S]*?)}/
+
 function ensureJsonPatchEnum(content) {
-	return content.replace(/export enum ContentType\s*{([\s\S]*?)}/, (match, enumBody) => {
-		if (enumBody.includes('JsonPatch')) return match
-		return `export enum ContentType {\n  JsonPatch = "application/json-patch+json",\n  ${enumBody.trim()}\n}`
-	})
+	const found = content.match(CONTENT_TYPE_ENUM)
+	if (!found) {
+		throw new Error(
+			'ensureJsonPatchEnum: no `export enum ContentType` in the generated SDK.\n' +
+				'Either the generator stopped emitting it or its shape changed. Without the enum ' +
+				'the PATCH content-type rewrite below has nothing to reference, so JSON Patch ' +
+				'requests go out with the wrong Content-Type.'
+		)
+	}
+
+	if (found[1].includes('JsonPatch')) return content
+
+	return content.replace(
+		CONTENT_TYPE_ENUM,
+		(match, enumBody) =>
+			`export enum ContentType {\n  JsonPatch = "application/json-patch+json",\n  ${enumBody.trim()}\n}`
+	)
 }
 
+const OPERATION_INTERFACE = /export interface Operation\s*{([\s\S]*?)}/
+const OPERATION_VALUE_MEMBER = /value\?:[^;]*;/
+const RELAXED_OPERATION_VALUE = 'value?: string | number | boolean | null | object;'
+
 function relaxOperationValue(content) {
-	return content.replace(/export interface Operation\s*{([\s\S]*?)}/, (match, body) => {
-		const updated = body.replace(
-			/value\?:\s*object\s*\|?\s*null?;/,
-			'value?: string | number | boolean | null | object;'
+	const found = content.match(OPERATION_INTERFACE)
+	if (!found) {
+		throw new Error(
+			'relaxOperationValue: no `export interface Operation` in the generated SDK.\n' +
+				'JSON Patch operations would then be typed by whatever the generator emitted, ' +
+				'rejecting primitive `value`s at compile time in consumers.'
 		)
-		return `export interface Operation {\n  ${updated.trim()}\n}`
-	})
+	}
+
+	const body = found[1]
+	if (body.includes(RELAXED_OPERATION_VALUE)) return content
+
+	// The previous version rewrote (and reformatted) the interface even when the
+	// inner replace matched nothing, so a renamed or restructured member looked
+	// like a successful run while `value` stayed narrow.
+	if (!OPERATION_VALUE_MEMBER.test(body)) {
+		throw new Error(
+			'relaxOperationValue: found `export interface Operation` but no `value?:` member.\n' +
+				`Body was:\n${body.trim()}\n` +
+				'Update OPERATION_VALUE_MEMBER in this script.'
+		)
+	}
+
+	const updated = body.replace(OPERATION_VALUE_MEMBER, RELAXED_OPERATION_VALUE)
+	return content.replace(
+		OPERATION_INTERFACE,
+		() => `export interface Operation {\n  ${updated.trim()}\n}`
+	)
 }
 
 const RN_FILE_MARKER = 'isReactNativeFile'
