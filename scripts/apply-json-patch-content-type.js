@@ -108,11 +108,33 @@ const RN_FILE_MARKER = 'isReactNativeFile'
 //
 // The React Native check runs first so the `instanceof` operands are never even
 // evaluated on that path.
+//
+// The pattern is deliberately whitespace-tolerant instead of matching one exact
+// line. As generated today that statement is exactly 80 characters wide, which is
+// Prettier's default printWidth — so the moment the generator nests it one level
+// deeper, or renames `formItem`, Prettier reflows it across two lines. Anchoring
+// on the single-line form would then quietly stop matching.
+const GENERATED_FILE_CHECK =
+	/^([ \t]*)const isFileType\s*=\s*formItem instanceof Blob\s*\|\|\s*formItem instanceof File;/m
+
 function applyReactNativeFileSupport(content) {
 	if (content.includes(RN_FILE_MARKER)) return content
 
+	// Never fail open. A silent no-op here ships an SDK where every React Native
+	// upload is serialised as "[object Object]", with nothing in the build to
+	// suggest anything went wrong.
+	if (!GENERATED_FILE_CHECK.test(content)) {
+		throw new Error(
+			'applyReactNativeFileSupport: could not find the generated `isFileType` check in ' +
+				'createFormData.\n' +
+				'swagger-typescript-api has most likely changed its output. Update ' +
+				'GENERATED_FILE_CHECK in this script — do not skip this step, or React Native ' +
+				'file uploads will break with no visible error.'
+		)
+	}
+
 	return content.replace(
-		/^(\s*)const isFileType = formItem instanceof Blob \|\| formItem instanceof File;$/m,
+		GENERATED_FILE_CHECK,
 		(match, indent) =>
 			[
 				`${indent}// React Native files are plain { uri, name, type } objects, not Blob/File.`,
