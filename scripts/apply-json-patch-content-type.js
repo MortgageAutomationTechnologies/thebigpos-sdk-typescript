@@ -195,17 +195,36 @@ function applyContentTypes(content, patchPaths) {
 	content = content.replace(/ContentType\.JsonPatch(?:Patch)+\b/g, 'ContentType.JsonPatch')
 
 	const METHOD_BLOCK = /[a-zA-Z0-9_]+:\s*\([\s\S]*?\)\s*=>\s*this\.request<[^>]*>\(\{[\s\S]*?\.\.\.params,/g
-	return content.replace(METHOD_BLOCK, (block) => {
+	let methods = 0
+	let patchMethods = 0
+
+	const rewritten = content.replace(METHOD_BLOCK, (block) => {
+		methods += 1
 		if (!/method:\s*"PATCH"/.test(block)) {
 			// Non-PATCH methods must never be JSON Patch.
 			return /type:\s*ContentType\.JsonPatch\b/.test(block)
 				? block.replace(/type:\s*ContentType\.JsonPatch\b/, 'type: ContentType.Json')
 				: block
 		}
+		patchMethods += 1
 		const routeMatch = block.match(/path:\s*`([^`]*)`/)
 		const route = routeMatch ? normalizePath(routeMatch[1]) : ''
 		return setContentType(block, patchPaths.has(route) ? 'JsonPatch' : 'Json')
 	})
+
+	// METHOD_BLOCK is the most brittle pattern here — it has to track the exact
+	// shape of a generated request method. If it drifts, every block silently
+	// stops matching and the whole point of this script is lost while it still
+	// reports success.
+	if (methods === 0) {
+		throw new Error(
+			'applyContentTypes: METHOD_BLOCK matched no generated request methods.\n' +
+				'swagger-typescript-api has changed the shape it emits — update the pattern, or ' +
+				'no PATCH endpoint gets a Content-Type.'
+		)
+	}
+
+	return { content: rewritten, methods, patchMethods }
 }
 
 ;(async () => {
@@ -239,10 +258,13 @@ function applyContentTypes(content, patchPaths) {
 	}
 
 	const patchPaths = jsonPatchPaths(spec)
-	content = applyContentTypes(content, patchPaths)
+	const { content: rewritten, methods, patchMethods } = applyContentTypes(content, patchPaths)
 
-	fs.writeFileSync(SRC, content)
-	console.log(`SDK patch complete: PATCH content types set from the OpenAPI spec (${patchPaths.size} json-patch endpoint(s)).`)
+	fs.writeFileSync(SRC, rewritten)
+	console.log(
+		`SDK patch complete: ${patchMethods} PATCH method(s) of ${methods} set from the OpenAPI spec ` +
+			`(${patchPaths.size} json-patch endpoint(s) in the spec).`
+	)
 })().catch((err) => {
 	console.error(err)
 	process.exit(1)
