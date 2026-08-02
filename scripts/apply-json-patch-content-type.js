@@ -17,6 +17,13 @@
   endpoints to keep in sync. It also ensures the ContentType enum includes
   JsonPatch and relaxes the Operation interface `value` to accept any value.
 
+  It additionally teaches `createFormData` to recognise React Native files. The
+  generator assumes a browser and detects file parts with `instanceof Blob ||
+  instanceof File`; in React Native a file is a plain `{ uri, name, type }`
+  object, so without the extra branch every mobile upload is serialised as the
+  string "[object Object]". This used to live as a patch-package patch in
+  pos-mobile-v2, which had to be re-created on every SDK bump.
+
   Usage (pass the SAME spec given to `swagger-typescript-api -p`):
     node scripts/apply-json-patch-content-type.js https://api.thebigpos.dev/swagger/<version>/swagger.json
     node scripts/apply-json-patch-content-type.js ./swagger.json
@@ -91,6 +98,36 @@ function relaxOperationValue(content) {
 	})
 }
 
+const RN_FILE_MARKER = 'isReactNativeFile'
+
+// swagger-typescript-api assumes a browser: it detects multipart file parts with
+// `instanceof Blob || instanceof File`. React Native has neither in a usable form —
+// a file there is a plain `{ uri, name, type }` object. Without this branch those
+// objects fall through to `stringifyFormItem` and every upload from the mobile app
+// goes out as the string "[object Object]".
+//
+// The React Native check runs first so the `instanceof` operands are never even
+// evaluated on that path.
+function applyReactNativeFileSupport(content) {
+	if (content.includes(RN_FILE_MARKER)) return content
+
+	return content.replace(
+		/^(\s*)const isFileType = formItem instanceof Blob \|\| formItem instanceof File;$/m,
+		(match, indent) =>
+			[
+				`${indent}// React Native files are plain { uri, name, type } objects, not Blob/File.`,
+				`${indent}const ${RN_FILE_MARKER} =`,
+				`${indent}  !!formItem &&`,
+				`${indent}  typeof formItem === "object" &&`,
+				`${indent}  "uri" in formItem &&`,
+				`${indent}  "name" in formItem &&`,
+				`${indent}  "type" in formItem;`,
+				`${indent}const isFileType =`,
+				`${indent}  ${RN_FILE_MARKER} || formItem instanceof Blob || formItem instanceof File;`,
+			].join('\n')
+	)
+}
+
 function applyContentTypes(content, patchPaths) {
 	// Heal any earlier double-application (ContentType.JsonPatchPatch...).
 	content = content.replace(/ContentType\.JsonPatch(?:Patch)+\b/g, 'ContentType.JsonPatch')
@@ -127,6 +164,7 @@ function applyContentTypes(content, patchPaths) {
 	let content = fs.readFileSync(SRC, 'utf8')
 	content = ensureJsonPatchEnum(content)
 	content = relaxOperationValue(content)
+	content = applyReactNativeFileSupport(content)
 
 	if (!spec) {
 		console.warn(
