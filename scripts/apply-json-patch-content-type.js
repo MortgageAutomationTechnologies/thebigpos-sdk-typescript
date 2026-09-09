@@ -17,6 +17,13 @@
   endpoints to keep in sync. It also ensures the ContentType enum includes
   JsonPatch and relaxes the Operation interface `value` to accept any value.
 
+  It additionally teaches `createFormData` to recognise React Native files. The
+  generator assumes a browser and detects file parts with `instanceof Blob ||
+  instanceof File`; in React Native a file is a plain `{ uri, name, type }`
+  object, so without the extra branch every mobile upload is serialised as the
+  string "[object Object]". This used to live as a patch-package patch in
+  pos-mobile-v2, which had to be re-created on every SDK bump.
+
   Usage (pass the SAME spec given to `swagger-typescript-api -p`):
     node scripts/apply-json-patch-content-type.js https://api.thebigpos.dev/swagger/<version>/swagger.json
     node scripts/apply-json-patch-content-type.js ./swagger.json
@@ -91,6 +98,58 @@ function relaxOperationValue(content) {
 	})
 }
 
+const RN_FILE_MARKER = 'isReactNativeFile'
+
+// swagger-typescript-api assumes a browser: it detects multipart file parts with
+// `instanceof Blob || instanceof File`. React Native has neither in a usable form —
+// a file there is a plain `{ uri, name, type }` object. Without this branch those
+// objects fall through to `stringifyFormItem` and every upload from the mobile app
+// goes out as the string "[object Object]".
+//
+// The React Native check runs first so the `instanceof` operands are never even
+// evaluated on that path.
+//
+// The pattern is deliberately whitespace-tolerant instead of matching one exact
+// line. As generated today that statement is exactly 80 characters wide, which is
+// Prettier's default printWidth — so the moment the generator nests it one level
+// deeper, or renames `formItem`, Prettier reflows it across two lines. Anchoring
+// on the single-line form would then quietly stop matching.
+const GENERATED_FILE_CHECK =
+	/^([ \t]*)const isFileType\s*=\s*formItem instanceof Blob\s*\|\|\s*formItem instanceof File;/m
+
+function applyReactNativeFileSupport(content) {
+	if (content.includes(RN_FILE_MARKER)) return content
+
+	// Never fail open. A silent no-op here ships an SDK where every React Native
+	// upload is serialised as "[object Object]", with nothing in the build to
+	// suggest anything went wrong.
+	if (!GENERATED_FILE_CHECK.test(content)) {
+		throw new Error(
+			'applyReactNativeFileSupport: could not find the generated `isFileType` check in ' +
+				'createFormData.\n' +
+				'swagger-typescript-api has most likely changed its output. Update ' +
+				'GENERATED_FILE_CHECK in this script — do not skip this step, or React Native ' +
+				'file uploads will break with no visible error.'
+		)
+	}
+
+	return content.replace(
+		GENERATED_FILE_CHECK,
+		(match, indent) =>
+			[
+				`${indent}// React Native files are plain { uri, name, type } objects, not Blob/File.`,
+				`${indent}const ${RN_FILE_MARKER} =`,
+				`${indent}  !!formItem &&`,
+				`${indent}  typeof formItem === "object" &&`,
+				`${indent}  "uri" in formItem &&`,
+				`${indent}  "name" in formItem &&`,
+				`${indent}  "type" in formItem;`,
+				`${indent}const isFileType =`,
+				`${indent}  ${RN_FILE_MARKER} || formItem instanceof Blob || formItem instanceof File;`,
+			].join('\n')
+	)
+}
+
 function applyContentTypes(content, patchPaths) {
 	// Heal any earlier double-application (ContentType.JsonPatchPatch...).
 	content = content.replace(/ContentType\.JsonPatch(?:Patch)+\b/g, 'ContentType.JsonPatch')
@@ -127,6 +186,7 @@ function applyContentTypes(content, patchPaths) {
 	let content = fs.readFileSync(SRC, 'utf8')
 	content = ensureJsonPatchEnum(content)
 	content = relaxOperationValue(content)
+	content = applyReactNativeFileSupport(content)
 
 	if (!spec) {
 		console.warn(
