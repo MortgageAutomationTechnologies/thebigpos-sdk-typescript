@@ -6254,7 +6254,15 @@ export class HttpClient<SecurityDataType = unknown> {
         property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || formItem instanceof File;
+        // React Native files are plain { uri, name, type } objects, not Blob/File.
+        const isReactNativeFile =
+          !!formItem &&
+          typeof formItem === "object" &&
+          "uri" in formItem &&
+          "name" in formItem &&
+          "type" in formItem;
+        const isFileType =
+          isReactNativeFile || formItem instanceof Blob || formItem instanceof File;
         formData.append(
           key,
           isFileType ? formItem : this.stringifyFormItem(formItem),
