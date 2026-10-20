@@ -4,6 +4,11 @@
   "description": "The Big POS Typescript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "index.js"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc",
     "browserify": "tsc && esbuild dist/index.js --bundle --minify --sourcemap --global-name=thebigpos --outfile=dist/thebigpos.min.js",
