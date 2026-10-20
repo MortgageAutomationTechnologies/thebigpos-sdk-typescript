@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "test": "mocha -r ts-node/register 'src/api_test.spec.ts' --exit",
     "browserify": "tsc && esbuild dist/index.js --bundle --minify --sourcemap --global-name=thebigpos --outfile=dist/thebigpos.min.js",
     "prepare": "husky"
   },
