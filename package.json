@@ -2,10 +2,12 @@
   "name": "@matech/thebigpos-sdk",
   "version": "2.36.4",
   "description": "The Big POS Typescript SDK",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "react-native": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && esbuild dist/index.js --format=cjs --platform=node --packages=external --sourcemap --outfile=dist/index.cjs",
     "browserify": "tsc && esbuild dist/index.js --bundle --minify --sourcemap --global-name=thebigpos --outfile=dist/thebigpos.min.js",
     "prepare": "husky"
   },
