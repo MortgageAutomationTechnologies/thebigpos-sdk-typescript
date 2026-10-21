@@ -6,6 +6,11 @@
   "module": "dist/index.js",
   "react-native": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "index.js"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc && esbuild dist/index.js --format=cjs --platform=node --packages=external --sourcemap --outfile=dist/index.cjs",
     "postbuild": "node -e \"if (typeof require('./').Api !== 'function') { console.error('Smoke check failed: the CommonJS entry does not export Api'); process.exit(1) }\"",
